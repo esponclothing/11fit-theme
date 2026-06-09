@@ -254,6 +254,10 @@
 
   /* ── DESKTOP ADJUSTMENTS ── */
   @media (min-width: 769px) {
+    .ullu-tabs-wrapper {
+      background: radial-gradient(circle at bottom, #ffffff 0%, {{ section.settings.bg_color }} 100%);
+      padding: 100px 0;
+    }
     .ullu-tabs-nav { justify-content: center; overflow: visible; padding-bottom: 0; }
     .ullu-tab-slider { justify-content: flex-start; padding: 20px 0; }
     .ullu-tab-card { flex: 0 0 calc(25% - 12px); }
@@ -274,9 +278,9 @@
   }
 </style>
 
-<div class="ullu-tabs-wrapper" id="ulluTabsWrapper-{{ section.id }}" data-speed="{{ section.settings.autoplay_speed | times: 1000 }}">
+<div class="ullu-tabs-wrapper pc-reveal" id="ulluTabsWrapper-{{ section.id }}" data-speed="{{ section.settings.autoplay_speed | times: 1000 }}">
   
-  <div class="ullu-tabs-header-wrap">
+  <div class="ullu-tabs-header-wrap pc-reveal">
     <div class="ullu-tabs-title-row">
       <div class="ullu-tabs-icon"><i class="ti ti-star"></i></div>
       <h2 class="ullu-tabs-main-heading">{{ section.settings.heading }}</h2>
@@ -298,7 +302,7 @@
       {% assign collection = collections[block.settings.collection] %}
       
       <div class="ullu-tab-panel {% if forloop.first %}active{% endif %}" id="panel-{{ section.id }}-{{ forloop.index }}">
-        <div class="ullu-tab-slider">
+        <div class="ullu-tab-slider pc-reveal-stagger">
           
           {% if collection != blank and collection.products_count > 0 %}
             {% for product in collection.products limit: block.settings.product_limit %}

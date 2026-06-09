@@ -115,12 +115,23 @@
      DESKTOP REFINEMENTS
   ============================== */
   @media (min-width: 769px) {
+    .fit-reviews-wrapper {
+      padding: 100px 0 120px;
+      background: radial-gradient(circle at center, #111111 0%, {{ section.settings.bg_color }} 80%);
+    }
     .fit-reviews-track {
       justify-content: center;
       min-width: 100%;
     }
     .fit-review-card {
       width: 320px; flex: 0 0 320px; height: 480px;
+    }
+    .fit-review-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+    }
+    .fit-review-card:hover .fit-review-bg img {
+      transform: scale(1.1);
     }
   }
 
@@ -176,21 +187,21 @@
   }
 {% endstyle %}
 
-<section class="fit-reviews-section" id="fit-reviews-{{ section.id }}">
+<section class="fit-reviews-section pc-reveal" id="fit-reviews-{{ section.id }}">
 
-  <div class="fit-reviews-header fit-r-reveal">
+  <div class="fit-reviews-header pc-reveal">
     <h2 class="fit-reviews-title">{{ section.settings.section_title }}</h2>
     <p class="fit-reviews-subtitle">{{ section.settings.section_subtitle }}</p>
   </div>
 
-  <div class="fit-reviews-nav-row fit-r-reveal">
+  <div class="fit-reviews-nav-row pc-reveal">
 
     <button class="fit-review-nav prev" aria-label="Previous review">
       <i class="fa fa-chevron-left"></i>
     </button>
 
     <div class="fit-reviews-scroll" id="fitReviewScroll-{{ section.id }}">
-      <div class="fit-reviews-track">
+      <div class="fit-reviews-track pc-reveal-stagger">
         {% for block in section.blocks %}
           {% if block.type == 'review' %}
             <div class="fit-review-card" {{ block.shopify_attributes }}>

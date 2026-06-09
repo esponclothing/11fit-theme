@@ -421,6 +421,13 @@
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
   }
 
+  /* Timer Pulse for PC */
+  @keyframes luxe-pulse {
+    0% { box-shadow: inset 0 0 20px rgba(255,255,255,0.5); }
+    50% { box-shadow: inset 0 0 30px rgba(197,160,89,0.4), 0 0 15px rgba(197,160,89,0.3); border-color: rgba(197,160,89,0.5); }
+    100% { box-shadow: inset 0 0 20px rgba(255,255,255,0.5); }
+  }
+
   /* PC Refinements */
   @media (min-width: 769px) {
     #luxe-wrapper-{{ section.id }} {
@@ -434,9 +441,12 @@
         "textarea dots";
       align-items: center;
       gap: 20px 60px;
-      padding: var(--padding-y) 40px;
-      background-color: transparent; /* or var(--color-bg) if needed */
+      padding: 100px 40px;
+      background: radial-gradient(circle at left, #ffffff 0%, var(--color-bg) 80%);
+      border-radius: 20px;
     }
+    
+    .luxe-timer-box { animation: luxe-pulse 2.5s infinite ease-in-out; }
     
     .luxe-header { grid-area: header; text-align: left; margin-bottom: 0; align-self: end; }
     .luxe-timer-wrap { grid-area: timer; justify-content: flex-start; margin-bottom: 0; align-self: start; }
@@ -447,9 +457,9 @@
   }
 </style>
 
-<div class="luxe-wrapper" id="luxe-wrapper-{{ section.id }}" data-speed="{{ section.settings.autoplay_speed | times: 1000 }}" data-timer="{{ section.settings.timer_hours }}">
+<div class="luxe-wrapper pc-reveal" id="luxe-wrapper-{{ section.id }}" data-speed="{{ section.settings.autoplay_speed | times: 1000 }}" data-timer="{{ section.settings.timer_hours }}">
   
-  <div class="luxe-header">
+  <div class="luxe-header pc-reveal-stagger">
     <h2 class="luxe-heading">{{ section.settings.heading }}</h2>
     <p class="luxe-subheading">{{ section.settings.subheading }}</p>
   </div>
@@ -658,6 +668,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Pause on Interaction
     track.addEventListener('touchstart', stopAutoPlay, {passive: true});
     track.addEventListener('touchend', () => { if(!isPriceUnlocked) startAutoPlay(); }, {passive: true});
+    track.addEventListener('mouseenter', stopAutoPlay);
+    track.addEventListener('mouseleave', () => { if(!isPriceUnlocked) startAutoPlay(); });
 
     startAutoPlay();
 });
