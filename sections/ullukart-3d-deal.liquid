@@ -431,29 +431,61 @@
   /* PC Refinements */
   @media (min-width: 769px) {
     #luxe-wrapper-{{ section.id }} {
-      max-width: 1300px;
+      max-width: 1000px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1.2fr;
       grid-template-areas: 
         "header slider"
         "timer slider"
-        "textarea dots";
+        ". dots"
+        ". textarea";
       align-items: center;
-      gap: 20px 60px;
-      padding: 100px 40px;
+      gap: 20px 40px;
+      padding: 80px 50px;
       background: radial-gradient(circle at left, #ffffff 0%, var(--color-bg) 80%);
       border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.03);
     }
     
     .luxe-timer-box { animation: luxe-pulse 2.5s infinite ease-in-out; }
     
     .luxe-header { grid-area: header; text-align: left; margin-bottom: 0; align-self: end; }
     .luxe-timer-wrap { grid-area: timer; justify-content: flex-start; margin-bottom: 0; align-self: start; }
-    .luxe-text-area { grid-area: textarea; text-align: left; margin: 20px 0 0 0; align-self: start; }
-    .luxe-price-row { justify-content: flex-start; }
-    .luxe-slider-wrap { grid-area: slider; margin: 0; max-width: 600px; width: 100%; align-self: center; }
-    .luxe-dots { grid-area: dots; margin-top: 10px; align-self: start; }
+    
+    /* Move text area to the right column below slider */
+    .luxe-text-area { grid-area: textarea; text-align: center; margin: 0 auto; max-width: 400px; }
+    .luxe-price-row { justify-content: center; }
+    
+    .luxe-slider-wrap { grid-area: slider; margin: 0 auto; max-width: 500px; width: 100%; align-self: center; position: relative; }
+    .luxe-dots { grid-area: dots; margin-top: 10px; justify-content: center; }
+  }
+
+  /* Carousel Arrows */
+  .luxe-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--color-text);
+    color: var(--color-bg);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    opacity: 0.8;
+  }
+  .luxe-arrow:hover { opacity: 1; transform: translateY(-50%) scale(1.1); }
+  .luxe-arrow.prev { left: -20px; }
+  .luxe-arrow.next { right: -20px; }
+  @media (max-width: 768px) {
+    .luxe-arrow { display: none; } /* Hide arrows on mobile where touch swipe is natural */
   }
 </style>
 
@@ -482,6 +514,8 @@
   </div>
 
   <div class="luxe-slider-wrap">
+    <button class="luxe-arrow prev" id="luxePrev-{{ section.id }}" aria-label="Previous Deal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+    <button class="luxe-arrow next" id="luxeNext-{{ section.id }}" aria-label="Next Deal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
     <div class="luxe-track" id="luxeTrack-{{ section.id }}">
       {% for block in section.blocks %}
         {% assign product = block.settings.product %}
@@ -664,6 +698,29 @@ document.addEventListener('DOMContentLoaded', function() {
         track.scrollTo({ left: clickedIndex * track.clientWidth, behavior: 'smooth' });
       });
     });
+
+    const prevBtn = document.getElementById('luxePrev-' + sectionId);
+    const nextBtn = document.getElementById('luxeNext-' + sectionId);
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        stopAutoPlay();
+        let nextIdx = currentIndex - 1;
+        if (nextIdx < 0) nextIdx = slides.length - 1;
+        track.scrollTo({ left: nextIdx * track.clientWidth, behavior: 'smooth' });
+        if(!isPriceUnlocked) startAutoPlay();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        stopAutoPlay();
+        let nextIdx = currentIndex + 1;
+        if (nextIdx >= slides.length) nextIdx = 0;
+        track.scrollTo({ left: nextIdx * track.clientWidth, behavior: 'smooth' });
+        if(!isPriceUnlocked) startAutoPlay();
+      });
+    }
 
     // Pause on Interaction
     track.addEventListener('touchstart', stopAutoPlay, {passive: true});
