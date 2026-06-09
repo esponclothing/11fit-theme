@@ -209,7 +209,7 @@
       <div class="ullu-gallery-box">
         <div class="ullu-slides" id="ulluSlides">
           {% for image in product.images %}
-            <div class="ullu-slide"><img src="{{ image | img_url: '1000x1250' }}" alt="{{ image.alt | escape }}"></div>
+            <div class="ullu-slide" data-image-id="{{ image.id }}"><img src="{{ image | img_url: '1000x1250' }}" alt="{{ image.alt | escape }}"></div>
           {% endfor %}
         </div>
         <div class="ullu-dots" id="ulluDots">
@@ -464,25 +464,27 @@
 (function() {
   /* GALLERY SYNC */
   var slides = document.getElementById('ulluSlides'), dotsWrap = document.getElementById('ulluDots'), thumbsWrap = document.getElementById('ulluThumbs');
-  if (!slides) return;
-  var dots = dotsWrap ? dotsWrap.querySelectorAll('.ullu-dot') : [], thumbs = thumbsWrap ? thumbsWrap.querySelectorAll('.ullu-thumb') : [];
-  var total = dots.length, cur = 0;
-  function goTo(n) {
-    if (n < 0) n = total - 1; if (n >= total) n = 0;
-    if (dots[cur]) dots[cur].classList.remove('on'); if (thumbs[cur]) thumbs[cur].classList.remove('on');
-    cur = n; slides.scrollTo({ left: cur * slides.clientWidth, behavior: 'smooth' });
-    if (dots[cur]) dots[cur].classList.add('on'); if (thumbs[cur]) thumbs[cur].classList.add('on');
-  }
-  slides.addEventListener('scroll', function() {
-    var idx = Math.round(slides.scrollLeft / slides.clientWidth);
-    if (idx !== cur && idx >= 0 && idx < total) {
+  var goTo = function(n) {};
+  if (slides) {
+    var dots = dotsWrap ? dotsWrap.querySelectorAll('.ullu-dot') : [], thumbs = thumbsWrap ? thumbsWrap.querySelectorAll('.ullu-thumb') : [];
+    var total = dots.length, cur = 0;
+    goTo = function(n) {
+      if (n < 0) n = total - 1; if (n >= total) n = 0;
       if (dots[cur]) dots[cur].classList.remove('on'); if (thumbs[cur]) thumbs[cur].classList.remove('on');
-      cur = idx;
+      cur = n; slides.scrollTo({ left: cur * slides.clientWidth, behavior: 'smooth' });
       if (dots[cur]) dots[cur].classList.add('on'); if (thumbs[cur]) thumbs[cur].classList.add('on');
-    }
-  });
-  dots.forEach(function(d, i) { d.addEventListener('click', function() { goTo(i); }); });
-  thumbs.forEach(function(t, i) { t.addEventListener('click', function() { goTo(i); }); });
+    };
+    slides.addEventListener('scroll', function() {
+      var idx = Math.round(slides.scrollLeft / slides.clientWidth);
+      if (idx !== cur && idx >= 0 && idx < total) {
+        if (dots[cur]) dots[cur].classList.remove('on'); if (thumbs[cur]) thumbs[cur].classList.remove('on');
+        cur = idx;
+        if (dots[cur]) dots[cur].classList.add('on'); if (thumbs[cur]) thumbs[cur].classList.add('on');
+      }
+    });
+    dots.forEach(function(d, i) { d.addEventListener('click', function() { goTo(i); }); });
+    thumbs.forEach(function(t, i) { t.addEventListener('click', function() { goTo(i); }); });
+  }
 
   /* SMART STICKY BAR LOGIC */
   var stickyBar = document.getElementById('ulluStickyBar');
@@ -590,6 +592,18 @@
       if (matchedVariant && variantIdInput) {
         variantIdInput.value = matchedVariant.id;
         window.history.replaceState({}, '', '?variant=' + matchedVariant.id);
+        
+        if (matchedVariant.featured_image && matchedVariant.featured_image.id) {
+          var imageId = matchedVariant.featured_image.id;
+          var targetSlide = document.querySelector('.ullu-slide[data-image-id="' + imageId + '"]');
+          if (targetSlide) {
+            var slideElements = Array.from(document.querySelectorAll('.ullu-slide'));
+            var targetIndex = slideElements.indexOf(targetSlide);
+            if (targetIndex !== -1 && typeof goTo === 'function') {
+              goTo(targetIndex);
+            }
+          }
+        }
       }
     }
 
