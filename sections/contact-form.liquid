@@ -8,28 +8,96 @@
 
   @media screen and (min-width: 750px) {
     .section-{{ section.id }}-padding {
+    .section-{{ section.id }}-padding {
       padding-top: {{ section.settings.padding_top }}px;
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
+    .contact.page-width--narrow {
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .contact-heading-area {
+      position: sticky;
+      top: 120px;
+      padding-top: 20px;
+    }
+    .contact-heading-area .title { 
+      font-size: 3.5rem; 
+      font-weight: 300;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 20px; 
+    }
+    .contact-subtext {
+      color: #666;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-top: 20px;
+    }
+    .contact-form-area {
+      background: #ffffff;
+      padding: 60px;
+      border-radius: 20px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.03);
+    }
+    .contact .field__input {
+      border: none;
+      border-bottom: 1px solid #ddd;
+      border-radius: 0;
+      padding-left: 0;
+      background: transparent;
+      box-shadow: none;
+      transition: all 0.3s ease;
+    }
+    .contact .field__input:focus {
+      border-bottom-color: #C5A059;
+      box-shadow: none;
+    }
+    .contact .field__label { left: 0; font-size: 1.2rem; color: #999; font-weight: 300; }
+    .contact .field__input:focus ~ .field__label, .contact .field__input:not(:placeholder-shown) ~ .field__label {
+      transform: scale(0.8) translateY(-1.5rem);
+      letter-spacing: 1px;
+    }
+    .contact__button .button {
+      width: 100%;
+      background: #111;
+      color: #fff;
+      padding: 18px;
+      font-size: 14px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      border-radius: 4px;
+      transition: background 0.3s ease;
+    }
+    .contact__button .button:hover { background: #C5A059; }
   }
 {%- endstyle -%}
 
 <div class="color-{{ section.settings.color_scheme }} gradient">
-  <div class="contact page-width page-width--narrow section-{{ section.id }}-padding">
-    {%- if section.settings.heading != blank -%}
-      <h2 class="title title-wrapper--no-top-margin inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
-        {{ section.settings.heading }}
-      </h2>
-    {%- else -%}
-      <h2 class="visually-hidden">{{ 'templates.contact.form.title' | t }}</h2>
-    {%- endif -%}
-    {%- liquid
-      assign contact_form_class = 'isolate'
-      if settings.animations_reveal_on_scroll
-        assign contact_form_class = 'isolate scroll-trigger animate--slide-in'
-      endif
-    -%}
-    {%- form 'contact', id: 'ContactForm', class: contact_form_class -%}
+  <div class="contact page-width page-width--narrow section-{{ section.id }}-padding pc-reveal">
+    <div class="contact-heading-area pc-reveal-stagger">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="title title-wrapper--no-top-margin inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+          {{ section.settings.heading }}
+        </h2>
+      {%- else -%}
+        <h2 class="visually-hidden">{{ 'templates.contact.form.title' | t }}</h2>
+      {%- endif -%}
+      <p class="contact-subtext">We'd love to hear from you. Whether you have a question about sizing, styling, or your order status, our dedicated team is here to assist you.</p>
+    </div>
+
+    <div class="contact-form-area pc-reveal-stagger">
+      {%- liquid
+        assign contact_form_class = 'isolate'
+        if settings.animations_reveal_on_scroll
+          assign contact_form_class = 'isolate scroll-trigger animate--slide-in'
+        endif
+      -%}
+      {%- form 'contact', id: 'ContactForm', class: contact_form_class -%}
       {%- if form.posted_successfully? -%}
         <h2 class="form-status form-status-list form__message" tabindex="-1" autofocus>
           {{- 'icon-success.svg' | inline_asset_content -}}
@@ -132,6 +200,7 @@
         </button>
       </div>
     {%- endform -%}
+    </div>
   </div>
 </div>
 
