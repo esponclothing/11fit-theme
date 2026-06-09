@@ -23,8 +23,8 @@
 
   /* ── GLOBAL STRICT CONSTRAINTS ── */
   .ullu-page, .ullu-page * { box-sizing: border-box !important; }
-  .ullu-page { max-width: 1300px; margin: 0 auto; padding-top: 40px; padding-bottom: 140px; color: var(--lux-text); background: var(--lux-bg); font-family: var(--font-body); width: 100%; overflow-x: hidden; }
-  .ullu-grid { display: grid; grid-template-columns: 55% 45%; gap: 40px; align-items: start; padding: 0 20px; width: 100%; }
+  .ullu-page { padding-top: 40px; padding-bottom: 140px; color: var(--lux-text); background: var(--lux-bg); font-family: var(--font-body); width: 100%; overflow-x: hidden; }
+  .ullu-grid { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 55% 45%; gap: 40px; align-items: start; padding: 0 20px; width: 100%; }
 
   /* ── GALLERY ── */
   .ullu-gallery-wrap { position: sticky; top: 40px; display: flex; flex-direction: column; gap: 12px; width: 100%; }
@@ -331,8 +331,25 @@
                       
                       <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="ullu-variant-pill">
                         {% if is_color_option %}
-                          {% assign css_color = value | downcase | remove: ' ' %}
-                          <span class="ullu-color-swatch" style="background-color: {{ css_color }};"></span>
+                          {% assign color_handle = value | handle %}
+                          {% assign css_color = color_handle %}
+                          {% case color_handle %}
+                            {% when 'navy-blue' %}{% assign css_color = '#000080' %}
+                            {% when 'bottle-green' %}{% assign css_color = '#006A4E' %}
+                            {% when 'light-baby-pink' %}{% assign css_color = '#F4C2C2' %}
+                            {% when 'lavender' %}{% assign css_color = '#E6E6FA' %}
+                            {% when 'baby-blue' %}{% assign css_color = '#89CFF0' %}
+                            {% when 'flamingo' %}{% assign css_color = '#FC8EAC' %}
+                            {% when 'jade' %}{% assign css_color = '#00A86B' %}
+                            {% when 'off-white' %}{% assign css_color = '#FAF9F6' %}
+                            {% when 'maroon' %}{% assign css_color = '#800000' %}
+                            {% when 'white' %}{% assign css_color = '#FFFFFF' %}
+                            {% when 'black' %}{% assign css_color = '#000000' %}
+                            {% when 'red' %}{% assign css_color = '#FF0000' %}
+                            {% else %}{% assign css_color = value | split: ' ' | last | downcase %}
+                          {% endcase %}
+                          {% assign swatch_image = color_handle | append: '.png' %}
+                          <span class="ullu-color-swatch" style="background-color: {{ css_color }}; background-image: url('{{ swatch_image | file_url }}'); background-size: cover; background-position: center;"></span>
                         {% endif %}
                         {{ value }}
                       </label>
