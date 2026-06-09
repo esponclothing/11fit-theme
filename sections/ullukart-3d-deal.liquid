@@ -594,7 +594,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTimer(); 
     setInterval(updateTimer, 1000);
 
-    // --- 2. SWIPE & REVEAL LOGIC ---
+    // --- 2. ROBUST SLIDER LOGIC ---
     const track = document.getElementById('luxeTrack-' + sectionId);
     if (!track) return;
     
@@ -609,7 +609,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const speed = parseInt(wrapper.getAttribute('data-speed')) || 4000;
     let currentIndex = 0;
-    let autoPlayInterval;
+    let autoPlayInterval = null;
     let swipeDirection = 1;
     let isPriceUnlocked = false; 
 
@@ -636,8 +636,6 @@ document.addEventListener('DOMContentLoaded', function() {
         btnEl.href = activeSlide.getAttribute('data-url');
         
         isPriceUnlocked = true;
-        
-        // Stop autoplay so user can click
         stopAutoPlay();
       }
     });
@@ -664,17 +662,34 @@ document.addEventListener('DOMContentLoaded', function() {
       }, 400);
     }
 
+    // Initialize Intersection Observer to reliably track the active slide
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const index = parseInt(entry.target.getAttribute('data-index'));
+          if (index !== currentIndex) {
+            currentIndex = index;
+            dots.forEach(d => d.classList.remove('is-active'));
+            if(dots[index]) dots[index].classList.add('is-active');
+            updateTextForSlide(index);
+          }
+        }
+      });
+    }, {
+      root: track,
+      threshold: 0.6
+    });
+
+    slides.forEach(slide => observer.observe(slide));
+
+    // Force initialization of the first slide text
     updateTextForSlide(0);
 
-    track.addEventListener('scroll', function() {
-      const index = Math.round(track.scrollLeft / track.clientWidth);
-      if (index !== currentIndex && slides[index]) {
-        currentIndex = index;
-        dots.forEach(d => d.classList.remove('is-active'));
-        if(dots[index]) dots[index].classList.add('is-active');
-        updateTextForSlide(index);
+    function scrollToSlide(index) {
+      if (slides[index]) {
+        track.scrollTo({ left: slides[index].offsetLeft, behavior: 'smooth' });
       }
-    });
+    }
 
     function autoScroll() {
       if (currentIndex >= slides.length - 1 && swipeDirection === 1) {
@@ -683,19 +698,24 @@ document.addEventListener('DOMContentLoaded', function() {
         swipeDirection = 1;
       }
       const nextIndex = currentIndex + swipeDirection;
-      track.scrollTo({ left: nextIndex * track.clientWidth, behavior: 'smooth' });
+      scrollToSlide(nextIndex);
     }
 
     function startAutoPlay() { 
-        clearInterval(autoPlayInterval);
+        if (autoPlayInterval) clearInterval(autoPlayInterval);
         autoPlayInterval = setInterval(autoScroll, speed); 
     }
-    function stopAutoPlay() { clearInterval(autoPlayInterval); }
+    
+    function stopAutoPlay() { 
+        if (autoPlayInterval) clearInterval(autoPlayInterval);
+    }
 
     dots.forEach((dot) => {
       dot.addEventListener('click', (e) => {
+        stopAutoPlay();
         const clickedIndex = parseInt(e.target.getAttribute('data-index'));
-        track.scrollTo({ left: clickedIndex * track.clientWidth, behavior: 'smooth' });
+        scrollToSlide(clickedIndex);
+        if(!isPriceUnlocked) startAutoPlay();
       });
     });
 
@@ -707,7 +727,7 @@ document.addEventListener('DOMContentLoaded', function() {
         stopAutoPlay();
         let nextIdx = currentIndex - 1;
         if (nextIdx < 0) nextIdx = slides.length - 1;
-        track.scrollTo({ left: nextIdx * track.clientWidth, behavior: 'smooth' });
+        scrollToSlide(nextIdx);
         if(!isPriceUnlocked) startAutoPlay();
       });
     }
@@ -717,7 +737,7 @@ document.addEventListener('DOMContentLoaded', function() {
         stopAutoPlay();
         let nextIdx = currentIndex + 1;
         if (nextIdx >= slides.length) nextIdx = 0;
-        track.scrollTo({ left: nextIdx * track.clientWidth, behavior: 'smooth' });
+        scrollToSlide(nextIdx);
         if(!isPriceUnlocked) startAutoPlay();
       });
     }
@@ -728,6 +748,7 @@ document.addEventListener('DOMContentLoaded', function() {
     track.addEventListener('mouseenter', stopAutoPlay);
     track.addEventListener('mouseleave', () => { if(!isPriceUnlocked) startAutoPlay(); });
 
+    // Start auto-play initially
     startAutoPlay();
 });
 </script>

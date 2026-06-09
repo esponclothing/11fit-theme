@@ -156,7 +156,8 @@
     .fit-review-card {
       width: calc(100vw - 96px) !important;
       flex: 0 0 calc(100vw - 96px) !important;
-      height: 460px !important;   /* Taller so content isn't cramped */
+      height: auto !important;
+      aspect-ratio: 3 / 4;
       border-radius: 14px !important;
     }
 
@@ -181,27 +182,28 @@
     .fit-review-card {
       width: calc(100vw - 88px) !important;
       flex: 0 0 calc(100vw - 88px) !important;
-      height: 440px !important;
+      height: auto !important;
+      aspect-ratio: 3 / 4;
     }
     .fit-review-text { font-size: 0.95rem !important; -webkit-line-clamp: 3 !important; }
   }
 {% endstyle %}
 
-<section class="fit-reviews-section pc-reveal" id="fit-reviews-{{ section.id }}">
+<section class="fit-reviews-section fit-r-reveal" id="fit-reviews-{{ section.id }}">
 
-  <div class="fit-reviews-header pc-reveal">
+  <div class="fit-reviews-header fit-r-reveal">
     <h2 class="fit-reviews-title">{{ section.settings.section_title }}</h2>
     <p class="fit-reviews-subtitle">{{ section.settings.section_subtitle }}</p>
   </div>
 
-  <div class="fit-reviews-nav-row pc-reveal">
+  <div class="fit-reviews-nav-row fit-r-reveal">
 
     <button class="fit-review-nav prev" aria-label="Previous review">
       <i class="fa fa-chevron-left"></i>
     </button>
 
     <div class="fit-reviews-scroll" id="fitReviewScroll-{{ section.id }}">
-      <div class="fit-reviews-track pc-reveal-stagger">
+      <div class="fit-reviews-track">
         {% for block in section.blocks %}
           {% if block.type == 'review' %}
             <div class="fit-review-card" {{ block.shopify_attributes }}>
@@ -275,15 +277,21 @@
 
     function moveSlider(dir) {
       var cardW = getCardWidth();
-      var maxScroll = scrollEl.scrollWidth - scrollEl.clientWidth;
+      var maxScroll = Math.floor(scrollEl.scrollWidth - scrollEl.clientWidth);
+      var currentLeft = Math.ceil(scrollEl.scrollLeft);
+      
       if (dir === 'next') {
-        scrollEl.scrollLeft >= maxScroll - 5
-          ? scrollEl.scrollTo({ left: 0, behavior: 'smooth' })
-          : scrollEl.scrollBy({ left: cardW, behavior: 'smooth' });
+        if (currentLeft >= maxScroll - 10) {
+          scrollEl.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          scrollEl.scrollBy({ left: cardW, behavior: 'smooth' });
+        }
       } else {
-        scrollEl.scrollLeft <= 5
-          ? scrollEl.scrollTo({ left: maxScroll, behavior: 'smooth' })
-          : scrollEl.scrollBy({ left: -cardW, behavior: 'smooth' });
+        if (currentLeft <= 10) {
+          scrollEl.scrollTo({ left: maxScroll, behavior: 'smooth' });
+        } else {
+          scrollEl.scrollBy({ left: -cardW, behavior: 'smooth' });
+        }
       }
     }
 

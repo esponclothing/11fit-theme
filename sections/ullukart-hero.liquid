@@ -47,6 +47,16 @@
           "id": "link",
           "label": "Banner Link",
           "info": "Link this banner to a product, collection, or page."
+        },
+        {
+          "type": "text",
+          "id": "asset_mobile",
+          "label": "Asset Mobile Filename (Fallback)"
+        },
+        {
+          "type": "text",
+          "id": "asset_desktop",
+          "label": "Asset Desktop Filename (Fallback)"
         }
       ]
     }
@@ -150,12 +160,16 @@
         
         {% if block.settings.image_desktop %}
           <img src="{{ block.settings.image_desktop | img_url: '1920x' }}" class="img-desktop" alt="Desktop Banner" loading="lazy">
+        {% elsif block.settings.asset_desktop != blank %}
+          <img src="{{ block.settings.asset_desktop | asset_url }}" class="img-desktop" alt="Desktop Banner" loading="lazy">
         {% else %}
           <div class="img-desktop" style="background:#e2e8f0; width:100%; height:100%; display:flex; align-items:center; justify-content:center;">Add Desktop Image</div>
         {% endif %}
 
         {% if block.settings.image_mobile %}
           <img src="{{ block.settings.image_mobile | img_url: '800x' }}" class="img-mobile" alt="Mobile Banner" loading="lazy">
+        {% elsif block.settings.asset_mobile != blank %}
+          <img src="{{ block.settings.asset_mobile | asset_url }}" class="img-mobile" alt="Mobile Banner" loading="lazy">
         {% else %}
           <div class="img-mobile" style="background:#cbd5e1; width:100%; height:100%; display:flex; align-items:center; justify-content:center;">Add Mobile Image (2:1)</div>
         {% endif %}
