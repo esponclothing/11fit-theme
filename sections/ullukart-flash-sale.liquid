@@ -149,6 +149,16 @@
     .ullu-trend-title { font-size: 28px; }
     .ullu-trend-prod-title { font-size: 18px; }
   }
+
+  /* ── PC REFINEMENTS ── */
+  @media (min-width: 768px) {
+    .ullu-trend-carousel-wrap {
+      max-width: 1200px;
+    }
+    .ullu-trend-card {
+      flex: 0 0 calc(25% - 15px); /* 4 items with 20px gap */
+    }
+  }
 </style>
 
 <div class="ullu-trend-wrapper" id="ulluTrendWrapper-{{ section.id }}" data-speed="{{ section.settings.autoplay_speed | times: 1000 }}">

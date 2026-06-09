@@ -420,6 +420,31 @@
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
   }
+
+  /* PC Refinements */
+  @media (min-width: 769px) {
+    #luxe-wrapper-{{ section.id }} {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas: 
+        "header slider"
+        "timer slider"
+        "textarea dots";
+      align-items: center;
+      gap: 20px 60px;
+      padding: var(--padding-y) 40px;
+      background-color: transparent; /* or var(--color-bg) if needed */
+    }
+    
+    .luxe-header { grid-area: header; text-align: left; margin-bottom: 0; align-self: end; }
+    .luxe-timer-wrap { grid-area: timer; justify-content: flex-start; margin-bottom: 0; align-self: start; }
+    .luxe-text-area { grid-area: textarea; text-align: left; margin: 20px 0 0 0; align-self: start; }
+    .luxe-price-row { justify-content: flex-start; }
+    .luxe-slider-wrap { grid-area: slider; margin: 0; max-width: 600px; width: 100%; align-self: center; }
+    .luxe-dots { grid-area: dots; margin-top: 10px; align-self: start; }
+  }
 </style>
 
 <div class="luxe-wrapper" id="luxe-wrapper-{{ section.id }}" data-speed="{{ section.settings.autoplay_speed | times: 1000 }}" data-timer="{{ section.settings.timer_hours }}">

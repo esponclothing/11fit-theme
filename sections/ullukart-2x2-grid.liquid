@@ -244,8 +244,8 @@
   /* Desktop Adjustments */
   @media (min-width: 769px) {
     .lux-grid-wrapper { padding: 80px 40px; }
-    .lux-grid-card { padding: 50px 40px; }
-    .lux-grid-container { gap: 30px; }
+    .lux-grid-card { padding: 50px 40px; max-width: 1200px; }
+    .lux-grid-container { grid-template-columns: repeat(4, 1fr); gap: 30px; }
     .lux-grid-title { font-size: 32px; }
   }
 {%- endstyle -%}
