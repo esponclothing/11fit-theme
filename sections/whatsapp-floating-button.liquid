@@ -1,0 +1,169 @@
+{%- assign phone = section.settings.phone_number | replace: '+', '' | replace: ' ', '' | replace: '-', '' -%}
+{%- assign text = section.settings.prefilled_text | url_encode -%}
+{%- assign whatsapp_url = "https://wa.me/" | append: phone | append: "?text=" | append: text -%}
+
+{%- style -%}
+  .whatsapp-float-{{ section.id }} {
+    position: fixed;
+    bottom: {{ section.settings.offset_y }}px;
+    {% if section.settings.horizontal_placement == 'left' %}
+      left: {{ section.settings.offset_x }}px;
+    {% else %}
+      right: {{ section.settings.offset_x }}px;
+    {% endif %}
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.icon_color }};
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+    z-index: 99999;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+  }
+  
+  .whatsapp-float-{{ section.id }}:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0px 6px 16px rgba(0,0,0,0.25);
+    color: {{ section.settings.icon_color }};
+  }
+
+  .whatsapp-float-{{ section.id }} svg {
+    width: 34px;
+    height: 34px;
+    fill: currentColor;
+    display: block;
+  }
+
+  @media screen and (max-width: 749px) {
+    .whatsapp-float-{{ section.id }} {
+      width: 50px;
+      height: 50px;
+      bottom: {{ section.settings.offset_y_mobile }}px;
+      {% if section.settings.horizontal_placement == 'left' %}
+        left: {{ section.settings.offset_x_mobile }}px;
+      {% else %}
+        right: {{ section.settings.offset_x_mobile }}px;
+      {% endif %}
+    }
+    
+    .whatsapp-float-{{ section.id }} svg {
+      width: 28px;
+      height: 28px;
+    }
+  }
+{%- endstyle -%}
+
+{% if section.settings.phone_number != blank %}
+  <a href="{{ whatsapp_url }}" target="_blank" class="whatsapp-float-{{ section.id }}" aria-label="Chat with us on WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+      <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-23.1-115-65-157zM223.9 414.7c-32.9 0-65-8.8-93-25.5l-6.7-4-69.2 18.2 18.6-67.4-4.4-7C50.9 299.7 41.5 262.3 41.5 224c0-100.5 81.8-182.3 182.4-182.3 48.7 0 94.5 19 128.9 53.5 34.4 34.4 53.4 80.2 53.4 129 0 100.5-81.8 182.3-182.4 182.3zM323.5 277.6c-5.4-2.7-32-15.8-37-17.6-5-1.9-8.6-2.7-12.2 2.7-3.6 5.4-14.1 17.6-17.2 21.3-3.1 3.6-6.3 4.1-11.8 1.4-5.4-2.7-22.8-8.4-43.5-26.9-16.1-14.4-26.9-32.2-29.6-37.6-2.7-5.4-.3-8.3 2.4-11 2.5-2.5 5.4-6.3 8.1-9.5 2.7-3.2 3.6-5.4 5.4-9 1.8-3.6.9-6.8-.5-9.5-1.4-2.7-12.2-29.4-16.8-40.3-4.4-10.7-8.9-9.3-12.2-9.4-3.1-.1-6.8-.1-10.4-.1-3.6 0-9.5 1.4-14.5 6.8-5 5.4-19.1 18.6-19.1 45.4s19.5 52.7 22.2 56.3c2.7 3.6 38.4 58.7 93.1 82.4 13.1 5.7 23.3 9.1 31.2 11.6 13.1 4.2 25 3.6 34.4 2.2 10.6-1.6 32-13.1 36.5-25.8 4.5-12.7 4.5-23.6 3.1-25.8-1.4-2.2-5-3.6-10.4-6.3z"/>
+    </svg>
+  </a>
+{% endif %}
+
+{% schema %}
+{
+  "name": "WhatsApp Button",
+  "settings": [
+    {
+      "type": "header",
+      "content": "WhatsApp Details"
+    },
+    {
+      "type": "text",
+      "id": "phone_number",
+      "label": "WhatsApp Number",
+      "info": "Include country code without '+' (e.g., 919876543210)"
+    },
+    {
+      "type": "textarea",
+      "id": "prefilled_text",
+      "label": "Pre-filled Text",
+      "default": "Hello! I have a question about my order."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#C5A059"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Placement"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_placement",
+      "label": "Side Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "range",
+      "id": "offset_x",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "X-Axis Offset (Side Margin)",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "offset_y",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Y-Axis Offset (Bottom Margin)",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Mobile Placement"
+    },
+    {
+      "type": "range",
+      "id": "offset_x_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile X-Axis Offset",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "offset_y_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile Y-Axis Offset",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "WhatsApp Button"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,520 @@
+{% comment %}
+  ============================================================
+  ULLUKART — tabbed-slider.liquid (ELEGANT UPGRADE + TEXT COLORS)
+  Drop this file into: sections/tabbed-slider.liquid
+  ============================================================
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+
+<style>
+  .ullu-tabs-wrapper {
+    background-color: {{ section.settings.bg_color }};
+    padding: 60px 0 50px 0;
+    font-family: 'Outfit', sans-serif;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .ullu-tabs-wrapper * {
+    box-sizing: border-box;
+  }
+
+  /* ── HEADER ── */
+  .ullu-tabs-header-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+    margin-bottom: 32px;
+    max-width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  .ullu-tabs-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .ullu-tabs-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: {{ section.settings.accent_color }};
+    border-radius: 50%;
+    color: #fff;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .ullu-tabs-main-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: {{ section.settings.accent_color }};
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── CATEGORY TABS (SCROLLABLE) ── */
+  .ullu-tabs-nav {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    gap: 12px;
+    padding: 4px 20px 12px 20px;
+    width: 100%;
+    max-width: 800px;
+  }
+
+  .ullu-tabs-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ullu-tab-btn {
+    background: #ffffff;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    padding: 10px 24px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    scroll-snap-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .ullu-tab-btn:hover {
+    border-color: #cbd5e1;
+    color: {{ section.settings.accent_color }};
+  }
+
+  /* Active Tab State */
+  .ullu-tab-btn.active {
+    background: {{ section.settings.active_tab_color }};
+    color: #ffffff;
+    border-color: {{ section.settings.active_tab_color }};
+    box-shadow: 0 4px 12px {{ section.settings.active_tab_color | color_modify: 'alpha', 0.25 }};
+  }
+
+  /* ── CONTENT PANELS ── */
+  .ullu-tabs-content-wrap {
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  .ullu-tab-panel {
+    display: none;
+    animation: ulluFadeIn 0.4s ease-in-out;
+  }
+
+  .ullu-tab-panel.active {
+    display: block;
+  }
+
+  @keyframes ulluFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── PRODUCT SLIDER ── */
+  .ullu-tab-slider {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding: 10px 20px 30px 20px;
+    gap: 16px;
+  }
+
+  .ullu-tab-slider::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ── PRODUCT CARD (MATCHING TRENDING SEC) ── */
+  .ullu-tab-card {
+    flex: 0 0 240px;
+    scroll-snap-align: start;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    padding: 12px;
+    text-decoration: none;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+  }
+
+  .ullu-tab-card:hover {
+    border-color: #cbd5e0;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+  }
+
+  .ullu-tab-badge {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: #48bb78;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    z-index: 2;
+    text-transform: capitalize;
+  }
+
+  .ullu-tab-img-wrap {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #f8fafc;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ullu-tab-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .ullu-tab-card:hover .ullu-tab-img-wrap img {
+    transform: scale(1.05);
+  }
+
+  .ullu-tab-vendor {
+    font-size: 11px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  .ullu-tab-prod-title {
+    font-family: 'Playfair Display', serif;
+    color: {{ section.settings.accent_color }};
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.3;
+    margin: 0 0 12px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .ullu-tab-price-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+  }
+
+  .ullu-tab-price {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a202c;
+    line-height: 1;
+  }
+
+  .ullu-tab-compare {
+    font-size: 13px;
+    color: #94a3b8;
+    text-decoration: line-through;
+    font-weight: 500;
+  }
+
+  /* ── DESKTOP ADJUSTMENTS ── */
+  @media (min-width: 769px) {
+    .ullu-tabs-nav { justify-content: center; overflow: visible; padding-bottom: 0; }
+  }
+
+  /* ── MOBILE OVERRIDES ── */
+  @media (max-width: 767px) {
+    .ullu-tabs-wrapper { padding: 40px 0; }
+    .ullu-tabs-main-heading { font-size: 26px; }
+    .ullu-tab-btn { padding: 8px 20px; font-size: 13px; }
+    
+    .ullu-tab-card { flex: 0 0 180px; padding: 10px; }
+    .ullu-tab-badge { top: 16px; left: 16px; font-size: 10px; padding: 2px 6px; }
+    .ullu-tab-img-wrap { margin-bottom: 12px; }
+    .ullu-tab-prod-title { font-size: 16px; margin-bottom: 8px; }
+    .ullu-tab-price { font-size: 16px; }
+    .ullu-tab-compare { font-size: 12px; }
+  }
+</style>
+
+<div class="ullu-tabs-wrapper" id="ulluTabsWrapper-{{ section.id }}" data-speed="{{ section.settings.autoplay_speed | times: 1000 }}">
+  
+  <div class="ullu-tabs-header-wrap">
+    <div class="ullu-tabs-title-row">
+      <div class="ullu-tabs-icon"><i class="ti ti-star"></i></div>
+      <h2 class="ullu-tabs-main-heading">{{ section.settings.heading }}</h2>
+    </div>
+    
+    <div class="ullu-tabs-nav" id="ulluTabsNav-{{ section.id }}">
+      {% for block in section.blocks %}
+        <button class="ullu-tab-btn {% if forloop.first %}active{% endif %}" 
+                data-target="panel-{{ section.id }}-{{ forloop.index }}" 
+                {{ block.shopify_attributes }}>
+          {{ block.settings.tab_name }}
+        </button>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="ullu-tabs-content-wrap">
+    {% for block in section.blocks %}
+      {% assign collection = collections[block.settings.collection] %}
+      
+      <div class="ullu-tab-panel {% if forloop.first %}active{% endif %}" id="panel-{{ section.id }}-{{ forloop.index }}">
+        <div class="ullu-tab-slider">
+          
+          {% if collection != blank and collection.products_count > 0 %}
+            {% for product in collection.products limit: block.settings.product_limit %}
+              <a href="{{ product.url }}" class="ullu-tab-card">
+                
+                {% if product.compare_at_price > product.price %}
+                  {% assign saving = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round %}
+                  <div class="ullu-tab-badge">{{ saving }}% OFF</div>
+                {% endif %}
+
+                <div class="ullu-tab-img-wrap">
+                  <img src="{{ product.featured_image | img_url: '400x400', crop: 'center' }}" alt="{{ product.title | escape }}" loading="lazy">
+                </div>
+
+                <div class="ullu-tab-vendor">{{ product.vendor | default: 'Espon Sports' }}</div>
+                <div class="ullu-tab-prod-title">{{ product.title }}</div>
+                
+                <div class="ullu-tab-price-row">
+                  <span class="ullu-tab-price">{{ product.price | money_without_trailing_zeros }}</span>
+                  {% if product.compare_at_price > product.price %}
+                    <span class="ullu-tab-compare">{{ product.compare_at_price | money_without_trailing_zeros }}</span>
+                  {% endif %}
+                </div>
+              </a>
+            {% endfor %}
+          {% else %}
+            {% comment %} Fallback UI if no collection is selected {% endcomment %}
+            {% for i in (1..4) %}
+              <div class="ullu-tab-card">
+                <div class="ullu-tab-badge">Special</div>
+                <div class="ullu-tab-img-wrap">
+                  <span style="font-size:12px; color:#94a3b8; font-weight:500;">Select Collection</span>
+                </div>
+                <div class="ullu-tab-vendor">Espon Sports</div>
+                <div class="ullu-tab-prod-title">Premium {{ block.settings.tab_name }} Example {{ i }}</div>
+                <div class="ullu-tab-price-row">
+                  <span class="ullu-tab-price">₹1,999</span>
+                  <span class="ullu-tab-compare">₹2,499</span>
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const wrapper = document.getElementById('ulluTabsWrapper-{{ section.id }}');
+    if (!wrapper) return;
+
+    const navTrack = wrapper.querySelector('#ulluTabsNav-{{ section.id }}');
+    const tabButtons = wrapper.querySelectorAll('.ullu-tab-btn');
+    const tabPanels = wrapper.querySelectorAll('.ullu-tab-panel');
+    
+    // Auto-swipe settings
+    const speed = parseInt(wrapper.getAttribute('data-speed')) || 3000;
+    let autoPlayInterval;
+    
+    let navDirection = 1; 
+    let prodDirections = {}; // Keeps track of swipe direction for each individual tab panel
+
+    // --- MANUAL TAB CLICKING LOGIC ---
+    tabButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabPanels.forEach(panel => panel.classList.remove('active'));
+
+        this.classList.add('active');
+        const targetPanel = document.getElementById(this.getAttribute('data-target'));
+        if (targetPanel) {
+          targetPanel.classList.add('active');
+        }
+        
+        // Center the clicked tab smoothly on mobile
+        this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      });
+    });
+
+    // --- AUTO-SWIPE LOGIC ---
+    function performAutoSwipes() {
+      // 1. Auto-swipe the Category Tabs Navigation (If it overflows on mobile)
+      if (navTrack.scrollWidth > navTrack.clientWidth) {
+        const maxNavScroll = navTrack.scrollWidth - navTrack.clientWidth;
+        
+        if (navTrack.scrollLeft >= maxNavScroll - 5 && navDirection === 1) {
+          navDirection = -1; // Reverse to left
+        } else if (navTrack.scrollLeft <= 5 && navDirection === -1) {
+          navDirection = 1; // Reverse to right
+        }
+        navTrack.scrollBy({ left: 120 * navDirection, behavior: 'smooth' }); 
+      }
+
+      // 2. Auto-swipe the active Product Slider
+      const activeSlider = wrapper.querySelector('.ullu-tab-panel.active .ullu-tab-slider');
+      if (activeSlider && activeSlider.scrollWidth > activeSlider.clientWidth) {
+        const panelId = activeSlider.closest('.ullu-tab-panel').id;
+        
+        if (!prodDirections[panelId]) prodDirections[panelId] = 1;
+
+        const maxProdScroll = activeSlider.scrollWidth - activeSlider.clientWidth;
+        const card = activeSlider.querySelector('.ullu-tab-card');
+        const scrollAmount = card ? card.offsetWidth + 16 : 256;
+
+        // Ping-pong reversal
+        if (activeSlider.scrollLeft >= maxProdScroll - 10 && prodDirections[panelId] === 1) {
+          prodDirections[panelId] = -1;
+        } else if (activeSlider.scrollLeft <= 10 && prodDirections[panelId] === -1) {
+          prodDirections[panelId] = 1;
+        }
+
+        activeSlider.scrollBy({ left: scrollAmount * prodDirections[panelId], behavior: 'smooth' });
+      }
+    }
+
+    function startAutoPlay() {
+      autoPlayInterval = setInterval(performAutoSwipes, speed);
+    }
+
+    function stopAutoPlay() {
+      clearInterval(autoPlayInterval);
+    }
+
+    // Pause everything if the user touches or hovers over the section
+    wrapper.addEventListener('touchstart', stopAutoPlay, {passive: true});
+    wrapper.addEventListener('touchend', startAutoPlay, {passive: true});
+    wrapper.addEventListener('mouseenter', stopAutoPlay);
+    wrapper.addEventListener('mouseleave', startAutoPlay);
+
+    // Start auto-play globally (it detects automatically if scrolling is needed)
+    startAutoPlay();
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Curated Tabbed Slider",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FAFAFA"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Luxury Accent Color",
+      "default": "#9A7B4F",
+      "info": "Used for headings, icons, and product titles."
+    },
+    {
+      "type": "color",
+      "id": "active_tab_color",
+      "label": "Active Tab Background",
+      "default": "#9A7B4F",
+      "info": "Color for the selected category pill. Usually matches the accent color."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "CURATED COLLECTIONS"
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "sec",
+      "label": "Auto-Swipe Speed",
+      "default": 3,
+      "info": "Controls how fast the tabs and products auto-scroll."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab_collection",
+      "name": "Category Tab",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_name",
+          "label": "Tab Name",
+          "default": "Athletic Wear"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection"
+        },
+        {
+          "type": "range",
+          "id": "product_limit",
+          "min": 4,
+          "max": 12,
+          "step": 2,
+          "label": "Products to Show",
+          "default": 6
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Curated Tabbed Slider",
+      "blocks": [
+        { "type": "tab_collection", "settings": { "tab_name": "New Arrivals" } },
+        { "type": "tab_collection", "settings": { "tab_name": "Best Sellers" } },
+        { "type": "tab_collection", "settings": { "tab_name": "Activewear" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
