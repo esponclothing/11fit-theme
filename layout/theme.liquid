@@ -483,6 +483,22 @@
       slider.addEventListener('touchstart', () => slider.isHovered = true, {passive: true});
       slider.addEventListener('touchend', () => { setTimeout(() => slider.isHovered = false, 3000); }, {passive: true});
     });
+
+    // Color Swatch Clicks
+    document.querySelectorAll('.fit-color-dot').forEach(dot => {
+      dot.addEventListener('click', (e) => {
+        e.preventDefault();
+        const slideIndex = parseInt(dot.getAttribute('data-slide-index') || '0', 10);
+        const cardMedia = dot.closest('.card__media');
+        const slider = cardMedia ? cardMedia.querySelector('.fit-card-slider') : null;
+        if (slider) {
+          slider.scrollTo({ left: slideIndex * slider.clientWidth, behavior: 'smooth' });
+          // Temporarily pause autoplay
+          slider.isHovered = true;
+          setTimeout(() => slider.isHovered = false, 5000);
+        }
+      });
+    });
   });
   setTimeout(removeFit11Preloader, 2000);
   window.addEventListener('load', function() { setTimeout(removeFit11Preloader, 400); });
