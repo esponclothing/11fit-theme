@@ -23,7 +23,7 @@
 
   /* ── GLOBAL STRICT CONSTRAINTS ── */
   .ullu-page, .ullu-page * { box-sizing: border-box !important; }
-  .ullu-page { padding-top: 0px; padding-bottom: 140px; color: var(--lux-text); background: var(--lux-bg); font-family: var(--font-body); width: 100%; overflow-x: hidden; }
+  .ullu-page { padding-top: 0px; padding-bottom: 140px; color: var(--lux-text); background: var(--lux-bg); font-family: var(--font-body); width: 100%; /* overflow-x: hidden removed to enable sticky scrolling */ }
   .ullu-grid { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 50% 50%; gap: 40px; align-items: start; padding: 0 20px; width: 100%; }
 
   /* ── GALLERY ── */
@@ -165,6 +165,66 @@
   .ullu-modal-content { background: var(--lux-surface); padding: 32px; border-radius: 12px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; transform: translateY(20px); transition: transform 0.3s ease; }
   .ullu-modal-overlay.open .ullu-modal-content { transform: translateY(0); }
   .ullu-modal-close { position: absolute; top: 16px; right: 16px; background: transparent; border: none; font-size: 22px; cursor: pointer; color: var(--lux-text-muted); }
+
+  /* ── SIZE GUIDE DRAWER / BOTTOM SHEET ── */
+  .ullu-size-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 100000; display: flex; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+  .ullu-size-modal-overlay.open { opacity: 1; pointer-events: auto; }
+
+  .ullu-size-drawer {
+    background: var(--lux-surface);
+    position: absolute;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+    display: flex; flex-direction: column;
+  }
+
+  /* PC: Right Side Drawer */
+  @media(min-width: 768px) {
+    .ullu-size-modal-overlay { justify-content: flex-end; align-items: flex-start; }
+    .ullu-size-drawer {
+      width: 450px;
+      height: 100vh;
+      top: 0; right: 0;
+      transform: translateX(100%);
+      border-radius: 20px 0 0 20px;
+    }
+    .ullu-size-modal-overlay.open .ullu-size-drawer { transform: translateX(0); }
+  }
+
+  /* Mobile: Bottom Sheet */
+  @media(max-width: 767px) {
+    .ullu-size-modal-overlay { justify-content: flex-end; align-items: flex-end; }
+    .ullu-size-drawer {
+      width: 100%;
+      max-height: 85vh;
+      bottom: 0; left: 0;
+      transform: translateY(100%);
+      border-radius: 24px 24px 0 0;
+    }
+    .ullu-size-modal-overlay.open .ullu-size-drawer { transform: translateY(0); }
+  }
+
+  .ullu-size-header { padding: 24px 30px 20px; border-bottom: 1px solid var(--lux-border); display: flex; justify-content: space-between; align-items: center; position: relative; }
+  @media(max-width: 767px) {
+    .ullu-size-header::before {
+      content: ''; position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+      width: 40px; height: 5px; border-radius: 4px; background: #cbd5e1;
+    }
+  }
+  .ullu-size-header h3 { font-family: var(--font-heading); font-size: 26px; font-weight: 500; margin: 0; color: var(--lux-text); }
+  .ullu-size-close { background: #f1f5f9; border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; color: var(--lux-text); transition: background 0.3s; }
+  .ullu-size-close:hover { background: #e2e8f0; }
+
+  .ullu-size-body { padding: 30px; overflow-y: auto; flex: 1; }
+  @media(max-width: 767px) { .ullu-size-body { padding: 20px; } }
+
+  .ullu-size-table-lux { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid var(--lux-border); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+  .ullu-size-table-lux th { background: #f8fafc; padding: 16px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; border-bottom: 2px solid var(--lux-border); text-align: center; }
+  .ullu-size-table-lux th:first-child { text-align: left; }
+  .ullu-size-table-lux td { padding: 16px; font-size: 14px; text-align: center; color: var(--lux-text); border-bottom: 1px solid #f1f5f9; }
+  .ullu-size-table-lux td:first-child { text-align: left; font-weight: 600; background: #fafafa; }
+  .ullu-size-table-lux tr:last-child td { border-bottom: none; }
+  .ullu-size-table-lux tbody tr:hover td { background: #f1f5f9; }
 
   /* ── FULL MOBILE OVERRIDES ── */
   @media(max-width:1024px){ 
@@ -446,28 +506,38 @@
 </div>
 {% endif %}
 
-{% comment %} ── SIZE CHART MODAL ── {% endcomment %}
-<div class="ullu-modal-overlay" id="ulluSizeModal" onclick="if(event.target === this) ulluToggleModal(false);">
-  <div class="ullu-modal-content">
-    <button type="button" class="ullu-modal-close" onclick="ulluToggleModal(false);"><i class="ti ti-x"></i></button>
-    <h3 style="font-family: var(--font-heading); font-size: 24px; font-weight: 400; margin: 0 0 20px 0; border-bottom: 1px solid var(--lux-border); padding-bottom: 12px;">Size Guide</h3>
-    <div class="ullu-modal-body">
+{% comment %} ── SIZE GUIDE MODAL (DRAWER/BOTTOM-SHEET) ── {% endcomment %}
+<div class="ullu-size-modal-overlay" id="ulluSizeModal" onclick="if(event.target === this) ulluToggleModal(false);">
+  <div class="ullu-size-drawer">
+    <div class="ullu-size-header">
+      <h3>Size Guide</h3>
+      <button type="button" class="ullu-size-close" onclick="ulluToggleModal(false);"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="ullu-size-body">
       {% if section.settings.size_chart_image != blank %}
-        <img src="{{ section.settings.size_chart_image | img_url: '800x' }}" alt="Size Chart" style="width:100%; height:auto; display:block; border-radius:4px;">
+        <img src="{{ section.settings.size_chart_image | img_url: '800x' }}" alt="Size Chart" style="width:100%; height:auto; display:block; border-radius:8px;">
       {% elsif section.settings.size_chart_page != blank %}
-        {{ pages[section.settings.size_chart_page].content }}
+        <div style="line-height: 1.6; color: var(--lux-text-muted);">
+          {{ pages[section.settings.size_chart_page].content }}
+        </div>
       {% else %}
-        <table class="ullu-spec-table" style="text-align: left;">
+        <table class="ullu-size-table-lux">
           <thead>
-            <tr style="border-bottom: 2px solid var(--lux-border); font-weight:500;"><th>Size</th><th>Chest (in)</th><th>Waist (in)</th><th>Hips (in)</th></tr>
+            <tr><th>Size</th><th>Chest (in)</th><th>Waist (in)</th><th>Hips (in)</th></tr>
           </thead>
           <tbody>
             <tr><td>S</td><td>34 - 36</td><td>28 - 30</td><td>35 - 37</td></tr>
             <tr><td>M</td><td>38 - 40</td><td>32 - 34</td><td>39 - 41</td></tr>
             <tr><td>L</td><td>42 - 44</td><td>36 - 38</td><td>43 - 45</td></tr>
             <tr><td>XL</td><td>46 - 48</td><td>40 - 42</td><td>47 - 49</td></tr>
+            <tr><td>XXL</td><td>50 - 52</td><td>44 - 46</td><td>51 - 53</td></tr>
           </tbody>
         </table>
+        
+        <div style="margin-top: 24px; padding: 16px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #9A7B4F;">
+          <h4 style="margin: 0 0 8px; font-size: 14px; font-weight: 600; color: #0f172a;"><i class="ti ti-info-circle"></i> How to Measure</h4>
+          <p style="margin: 0; font-size: 13px; color: #475569; line-height: 1.5;">Use a soft tape measure. Keep the tape comfortably loose, measuring around the fullest part of the chest, narrowest part of the waist, and fullest part of the hips.</p>
+        </div>
       {% endif %}
     </div>
   </div>
