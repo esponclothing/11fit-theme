@@ -257,10 +257,12 @@
     width: 100%;
     height: 100%;
     overflow-x: auto;
+    overflow-y: hidden;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
+    touch-action: pan-y;
   }
 
   .luxe-track::-webkit-scrollbar { display: none; }
@@ -687,7 +689,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function scrollToSlide(index) {
       if (slides[index]) {
-        track.scrollTo({ left: slides[index].offsetLeft, behavior: 'smooth' });
+        track.scrollTo({ left: index * track.clientWidth, behavior: 'smooth' });
       }
     }
 
