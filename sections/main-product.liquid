@@ -48,7 +48,7 @@
   .ullu-info { display: flex; flex-direction: column; gap: 16px; width: 100%; padding-top: 0px; }
   
   .ullu-header-group { display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid var(--lux-border); padding-bottom: 16px; width: 100%; }
-  .ullu-title { font-size: 28px; font-weight: 400; line-height: 1.2; color: var(--lux-text); font-family: var(--font-heading); word-wrap: break-word; }
+  .ullu-title { font-size: 28px; font-weight: 400; line-height: 1.2; color: var(--lux-text); font-family: var(--font-heading); word-wrap: break-word; margin: 0; }
   
   /* ── RATINGS ROW & SIZE CHART LINK (MOVED BELOW PRICE) ── */
   .ullu-rating-row { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 8px; gap: 12px; }
@@ -56,7 +56,7 @@
   .ullu-size-chart-link:hover { color: var(--lux-text); }
   
   /* ── PRICE ── */
-  .ullu-price-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+  .ullu-price-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 4px; margin-bottom: 0; }
   .ullu-price-main { font-size: 24px; font-weight: 400; color: var(--lux-text); }
   .ullu-price-old { font-size: 16px; color: var(--lux-text-muted); text-decoration: line-through; font-weight: 300; }
   .ullu-price-off { font-size: 12px; font-weight: 500; color: var(--lux-accent); text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid var(--lux-accent); padding: 2px 8px; }
@@ -91,13 +91,19 @@
   .ullu-variant-radio.is-disabled + .ullu-variant-pill { 
     opacity: 0.5; text-decoration: line-through; cursor: not-allowed; 
   }
-  .ullu-color-swatch {
-    display: inline-block; width: 14px; height: 14px; border-radius: 50%;
-    margin-right: 8px; border: 1px solid var(--lux-border);
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); background-color: var(--lux-surface);
+
+  /* COLOR DOT OVERRIDES */
+  .ullu-variant-pill.is-color {
+    padding: 2px; border-radius: 50%; width: 34px; height: 34px; background: transparent; border: 2px solid transparent;
   }
-  .ullu-variant-radio:checked + .ullu-variant-pill .ullu-color-swatch {
-    border-color: var(--lux-surface);
+  .ullu-variant-pill.is-color:hover { border-color: var(--lux-border); }
+  .ullu-variant-radio:checked + .ullu-variant-pill.is-color {
+    border-color: var(--lux-text); background: transparent;
+  }
+  .ullu-color-swatch {
+    display: inline-block; width: 100%; height: 100%; border-radius: 50%;
+    margin: 0; border: 1px solid var(--lux-border);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); background-color: var(--lux-surface);
   }
 
   /* ── OFFERS & DISCOUNTS SECTION (SIMPLIFIED) ── */
@@ -172,15 +178,15 @@
     .ullu-grid { display: flex; flex-direction: column; width: 100%; padding: 0; }
     
     .ullu-gallery-wrap { width: 100%; margin: 0; padding: 0; }
-    .ullu-gallery-box { width: 100%; aspect-ratio: 4/5; height: auto; border-radius: 0; border: none; border-bottom: 1px solid var(--lux-border); }
+    .ullu-gallery-box { width: 100%; aspect-ratio: 4/5; height: auto; border-radius: 0; border: none; border-bottom: 1px solid var(--lux-border); max-height: none; }
     .ullu-slide { width: 100%; padding: 0; }
     .ullu-slide img { width: 100%; height: 100%; object-fit: contain; padding: 0; } 
     .ullu-thumbs { padding: 8px 16px; }
     
-    .ullu-info { width: 100%; padding: 32px 20px; gap: 24px; text-align: left; margin: 0; }
-    .ullu-header-group { padding-bottom: 20px; border-bottom: 1px solid var(--lux-border); align-items: flex-start; }
-    .ullu-title { font-size: 28px; text-align: left; line-height: 1.25; } 
-    .ullu-price-row { justify-content: flex-start; }
+    .ullu-info { width: 100%; padding: 12px 16px; gap: 16px; text-align: left; margin: 0; }
+    .ullu-header-group { padding-bottom: 12px; border-bottom: 1px solid var(--lux-border); align-items: flex-start; }
+    .ullu-title { font-size: 24px; text-align: left; line-height: 1.25; margin: 0; } 
+    .ullu-price-row { justify-content: flex-start; margin: 0; }
     
     .ullu-main-action-btns { width: 100%; padding: 24px 0; border-left: none; border-right: none; border-radius: 0; margin: 0; background: transparent; }
     .ullu-app-wrapper { width: 100%; padding: 4px; padding-top: 15px; margin-left: -4px; overflow: visible; }
@@ -285,7 +291,12 @@
                 {% endif %}
 
                 <fieldset class="ullu-option-fieldset">
-                  <legend class="ullu-option-name">{{ option.name }}</legend>
+                  <legend class="ullu-option-name" style="display: flex; align-items: center;">
+                    {{ option.name }}
+                    {% if is_color_option %}
+                      <span class="ullu-selected-color-label" style="margin-left: 8px; color: var(--lux-text); font-weight: 600; text-transform: capitalize;">{{ option.selected_value }}</span>
+                    {% endif %}
+                  </legend>
                   <div class="ullu-variant-pills">
                     {% for value in option.values %}
                       <input type="radio" 
@@ -293,9 +304,10 @@
                              name="{{ option.name }}" 
                              value="{{ value | escape }}"
                              {% if option.selected_value == value %}checked{% endif %}
-                             class="ullu-variant-radio">
+                             class="ullu-variant-radio"
+                             {% if is_color_option %}data-is-color="true"{% endif %}>
                       
-                      <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="ullu-variant-pill">
+                      <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="ullu-variant-pill {% if is_color_option %}is-color{% endif %}" title="{{ value }}">
                         {% if is_color_option %}
                           {% assign color_handle = value | handle %}
                           {% assign css_color = color_handle %}
@@ -316,8 +328,9 @@
                           {% endcase %}
                           {% assign swatch_image = color_handle | append: '.png' %}
                           <span class="ullu-color-swatch" style="background-color: {{ css_color }}; background-image: url('{{ swatch_image | file_url }}'); background-size: cover; background-position: center;"></span>
+                        {% else %}
+                          {{ value }}
                         {% endif %}
-                        {{ value }}
                       </label>
                     {% endfor %}
                   </div>
@@ -597,6 +610,10 @@
         var checkedRadio = fieldset.querySelector('.ullu-variant-radio:checked');
         if (checkedRadio) {
           selectedOptions.push(checkedRadio.value);
+          if (checkedRadio.getAttribute('data-is-color') === 'true') {
+            var colorLabel = fieldset.querySelector('.ullu-selected-color-label');
+            if (colorLabel) colorLabel.innerText = checkedRadio.value;
+          }
         }
       });
 
