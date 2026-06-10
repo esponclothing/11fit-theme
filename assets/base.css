@@ -3659,9 +3659,9 @@ details-disclosure > details {
 
 .card__heading {
   font-family: 'Outfit', sans-serif !important;
-  font-weight: 800 !important;
-  font-size: 1.3rem !important;
-  letter-spacing: 0.5px;
+  font-weight: 600 !important;
+  font-size: 1.15rem !important;
+  letter-spacing: 0px;
   color: #000000;
 }
 
@@ -3676,12 +3676,12 @@ details-disclosure > details {
 /* Quick Add to Cart Button on Cards */
 .quick-add__submit {
   font-family: 'Outfit', sans-serif !important;
-  font-weight: 800 !important;
-  background-color: #F5C842 !important; /* Ullu Gold */
+  font-weight: 700 !important;
+  background: linear-gradient(135deg, #F5C842 0%, #d4a017 100%) !important;
   color: #000000 !important;
   border-radius: 8px !important;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   border: none !important;
   box-shadow: 0 4px 10px rgba(245, 200, 66, 0.3);
   transition: all 0.3s ease !important;
@@ -3689,21 +3689,23 @@ details-disclosure > details {
 }
 
 .quick-add__submit:hover {
-  background-color: #000000 !important;
+  background: #000000 !important;
   color: #F5C842 !important;
-  transform: scale(1.03);
+  transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
 }
 
 /* Sale / Sold Out Badges */
 .badge {
-  background-color: #0A0A0F !important;
-  color: #F5C842 !important;
+  background: linear-gradient(135deg, #F5C842 0%, #d4a017 100%) !important;
+  color: #000000 !important;
   font-family: 'Outfit', sans-serif !important;
-  font-weight: 800 !important;
-  border-radius: 6px !important;
-  border: 1px solid #F5C842 !important;
-  letter-spacing: 1px;
-  padding: 6px 12px !important;
+  font-weight: 700 !important;
+  border-radius: 4px !important;
+  border: none !important;
+  box-shadow: 0 4px 10px rgba(245, 200, 66, 0.3) !important;
+  letter-spacing: 0.5px !important;
+  padding: 5px 10px !important;
   text-transform: uppercase;
+  font-size: 1.1rem !important;
 }
