@@ -3,6 +3,16 @@
   height: 100%;
   position: relative;
   text-decoration: none;
+  --hover-lift-amount: 4px;
+  --hover-scale-amount: 1.03;
+  --hover-transition-duration: 0.25s;
+  --hover-transition-timing: ease-out;
+  transition: transform var(--hover-transition-duration) var(--hover-transition-timing),
+              box-shadow var(--hover-transition-duration) var(--hover-transition-timing);
+}
+.card-wrapper:hover {
+  transform: translateY(calc(-1 * var(--hover-lift-amount)));
+  z-index: 2;
 }
 
 .card {

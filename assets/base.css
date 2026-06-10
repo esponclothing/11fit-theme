@@ -3709,3 +3709,21 @@ details-disclosure > details {
   text-transform: uppercase;
   font-size: 1.1rem !important;
 }
+
+/* Global Scroll Animations */
+.scroll-trigger, .pc-reveal, .pc-reveal-stagger {
+  opacity: 0;
+  transform: translateY(40px);
+}
+.scroll-trigger--animate, .pc-reveal.is-visible, .pc-reveal-stagger.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+@media screen and (prefers-reduced-motion: reduce) {
+  .scroll-trigger, .scroll-trigger--animate {
+    transition: none !important;
+    opacity: 1;
+    transform: none;
+  }
+}
