@@ -23,12 +23,12 @@
 
   /* ── GLOBAL STRICT CONSTRAINTS ── */
   .ullu-page, .ullu-page * { box-sizing: border-box !important; }
-  .ullu-page { padding-top: 40px; padding-bottom: 140px; color: var(--lux-text); background: var(--lux-bg); font-family: var(--font-body); width: 100%; overflow-x: hidden; }
-  .ullu-grid { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 55% 45%; gap: 40px; align-items: start; padding: 0 20px; width: 100%; }
+  .ullu-page { padding-top: 0px; padding-bottom: 140px; color: var(--lux-text); background: var(--lux-bg); font-family: var(--font-body); width: 100%; overflow-x: hidden; }
+  .ullu-grid { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 50% 50%; gap: 40px; align-items: start; padding: 0 20px; width: 100%; }
 
   /* ── GALLERY ── */
-  .ullu-gallery-wrap { position: sticky; top: 40px; display: flex; flex-direction: column; gap: 12px; width: 100%; }
-  .ullu-gallery-box { width: 100%; aspect-ratio: 3/4; background: var(--lux-surface); overflow: hidden; position: relative; border-radius: 8px; border: 1px solid var(--lux-border); }
+  .ullu-gallery-wrap { position: sticky; top: 10px; display: flex; flex-direction: column; gap: 8px; width: 100%; }
+  .ullu-gallery-box { width: 100%; aspect-ratio: 4/5; max-height: 75vh; background: var(--lux-surface); overflow: hidden; position: relative; border-radius: 8px; border: 1px solid var(--lux-border); }
   .ullu-slides { display: flex; height: 100%; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; }
   .ullu-slides::-webkit-scrollbar { display: none; }
   .ullu-slide { flex: 0 0 100%; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; width: 100%; height: 100%; }
@@ -45,10 +45,10 @@
   .ullu-thumb img { width: 100%; height: 100%; object-fit: contain; }
 
   /* ── DETAILS PANEL ── */
-  .ullu-info { display: flex; flex-direction: column; gap: 24px; width: 100%; padding-top: 10px; }
+  .ullu-info { display: flex; flex-direction: column; gap: 16px; width: 100%; padding-top: 0px; }
   
-  .ullu-header-group { display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid var(--lux-border); padding-bottom: 24px; width: 100%; }
-  .ullu-title { font-size: 32px; font-weight: 400; line-height: 1.2; color: var(--lux-text); font-family: var(--font-heading); word-wrap: break-word; }
+  .ullu-header-group { display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid var(--lux-border); padding-bottom: 16px; width: 100%; }
+  .ullu-title { font-size: 28px; font-weight: 400; line-height: 1.2; color: var(--lux-text); font-family: var(--font-heading); word-wrap: break-word; }
   
   /* ── RATINGS ROW & SIZE CHART LINK (MOVED BELOW PRICE) ── */
   .ullu-rating-row { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 8px; gap: 12px; }
@@ -62,8 +62,8 @@
   .ullu-price-off { font-size: 12px; font-weight: 500; color: var(--lux-accent); text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid var(--lux-accent); padding: 2px 8px; }
 
   /* ── MAIN DESKTOP BUTTON & APP BLOCKS ── */
-  .ullu-main-action-btns { background: var(--lux-surface); padding: 24px; border: 1px solid var(--lux-border); width: 100%; border-radius: 8px; }
-  .ullu-combo-title { font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+  .ullu-main-action-btns { background: var(--lux-surface); padding: 16px 20px; border: 1px solid var(--lux-border); width: 100%; border-radius: 8px; }
+  .ullu-combo-title { font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
   .ullu-combo-title::before { content: ''; width: 4px; height: 14px; background: var(--lux-accent); display: block; }
 
   .ullu-app-wrapper { width: 100%; margin-bottom: 20px; }
