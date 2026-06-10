@@ -650,7 +650,7 @@
         });
         
         if (typeof window.publish !== 'undefined' && typeof PUB_SUB_EVENTS !== 'undefined') {
-          window.publish(PUB_SUB_EVENTS.cartUpdate, { source: 'discount-apply', cartData: {} });
+          window.publish(PUB_SUB_EVENTS.cartUpdate, { source: 'cart-items', cartData: parsedState });
         }
         
         const updatedMessageBox = document.getElementById('ullu-coupon-message');
