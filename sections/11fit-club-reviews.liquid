@@ -189,14 +189,14 @@
   }
 {% endstyle %}
 
-<section class="fit-reviews-section fit-r-reveal" id="fit-reviews-{{ section.id }}">
+<section class="fit-reviews-section" id="fit-reviews-{{ section.id }}">
 
-  <div class="fit-reviews-header fit-r-reveal">
+  <div class="fit-reviews-header">
     <h2 class="fit-reviews-title">{{ section.settings.section_title }}</h2>
     <p class="fit-reviews-subtitle">{{ section.settings.section_subtitle }}</p>
   </div>
 
-  <div class="fit-reviews-nav-row fit-r-reveal">
+  <div class="fit-reviews-nav-row">
 
     <button class="fit-review-nav prev" aria-label="Previous review">
       <i class="fa fa-chevron-left"></i>
@@ -252,7 +252,7 @@
 <script>
 (function() {
   var sectionId = {{ section.id | json }};
-  document.addEventListener("DOMContentLoaded", function() {
+  function initReviews() {
     var scrollEl = document.getElementById('fitReviewScroll-' + sectionId);
     var sectionEl = document.getElementById('fit-reviews-' + sectionId);
     if (!scrollEl || !sectionEl) return;
@@ -306,9 +306,20 @@
     if (prevBtn) prevBtn.addEventListener('click', function() { moveSlider('prev'); resetAuto(); });
     scrollEl.addEventListener('touchstart', stopAuto, { passive: true });
     scrollEl.addEventListener('touchend', function() { setTimeout(startAuto, 2500); });
-    scrollEl.addEventListener('mouseenter', stopAuto);
     scrollEl.addEventListener('mouseleave', startAuto);
-  });
+  }
+
+  // Run initialization immediately since script is at the bottom
+  initReviews();
+
+  // Support for Shopify theme editor events
+  if (window.Shopify && Shopify.designMode) {
+    document.addEventListener('shopify:section:load', function(event) {
+      if (event.detail.sectionId === sectionId) {
+        initReviews();
+      }
+    });
+  }
 })();
 </script>
 
