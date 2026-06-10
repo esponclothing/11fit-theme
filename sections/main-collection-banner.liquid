@@ -9,6 +9,26 @@
   }
 {%- endstyle -%}
 
+<style>
+  /* Remove blank gaps from the bottom of the banner */
+  .collection-hero, .collection-hero__inner, .collection-hero__text-wrapper {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
+  .collection-hero__title {
+    margin-bottom: 10px !important; /* Small gap only */
+    display: inline-block;
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), text-shadow 0.4s ease, color 0.4s ease;
+    animation: slideUpFade 0.8s ease-out forwards;
+  }
+  /* 3D hover effect for the title */
+  .collection-hero__title:hover {
+    transform: perspective(600px) translateZ(40px) translateY(-5px) rotateX(10deg);
+    text-shadow: 0 15px 25px rgba(245, 200, 66, 0.4);
+    color: #F5C842;
+  }
+</style>
+
 <div class="collection-hero{% if section.settings.show_collection_image and collection.image %} collection-hero--with-image{% endif %} color-{{ section.settings.color_scheme }} gradient">
   <div class="collection-hero__inner page-width {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
     <div class="collection-hero__text-wrapper">
