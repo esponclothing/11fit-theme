@@ -625,3 +625,55 @@
   }
 }
 
+/* ── PRODUCT CARD SLIDER & SWATCHES ── */
+.fit-card-slider {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none; /* Hide Firefox scrollbar */
+  -webkit-overflow-scrolling: touch;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.fit-card-slider::-webkit-scrollbar {
+  display: none; /* Hide Chrome/Safari scrollbar */
+}
+.fit-card-slider__slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  height: 100%;
+  position: relative;
+}
+.fit-card-slider__slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Color Swatches */
+.fit-card-colors {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+.fit-color-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 1px solid rgba(0,0,0,0.2);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.fit-color-dot:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
