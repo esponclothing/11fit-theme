@@ -652,11 +652,10 @@
 /* Color Swatch Overlay */
 .fit-card-colors-overlay {
   position: absolute;
-  bottom: 12px;
-  left: 0;
-  width: 100%;
+  bottom: 8px;
+  left: 8px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 6px;
   z-index: 4;
   pointer-events: none; /* Let clicks pass through except on dots */
