@@ -634,7 +634,8 @@
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
-  z-index: 1;
+  z-index: 3; /* Must sit above the global card link */
+  pointer-events: auto;
 }
 .fit-card-slider::-webkit-scrollbar {
   display: none;
@@ -657,7 +658,7 @@
   display: flex;
   justify-content: center;
   gap: 6px;
-  z-index: 2;
+  z-index: 4;
   pointer-events: none; /* Let clicks pass through except on dots */
 }
 .fit-color-dot {
@@ -677,46 +678,46 @@
   box-shadow: 0 4px 8px rgba(0,0,0,0.4);
 }
 
-/* Redesigned Text Info */
-.card-information.center {
-  text-align: center;
-  padding: 1rem 0.5rem;
+/* Redesigned Text Info (Beyoung Reference) */
+.card-information {
+  text-align: left;
+  padding: 1rem 0;
 }
 .card__heading {
   font-family: var(--font-heading-family) !important;
-  font-weight: 600 !important;
-  font-size: 1.25rem !important;
-  letter-spacing: 0.5px;
-  color: #111111;
+  font-weight: 500 !important;
+  font-size: 1.15rem !important;
+  letter-spacing: 0px;
+  color: #333333;
   margin-bottom: 0.5rem;
-  text-transform: capitalize;
 }
 .price {
   font-family: var(--font-body-family) !important;
   font-size: 1.3rem !important;
-  font-weight: 800 !important;
+  font-weight: 700 !important;
   color: #111111 !important;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: baseline;
   gap: 8px;
   margin-top: 0.5rem;
+  flex-wrap: wrap;
 }
 .price--on-sale .price-item--regular {
   color: #888888 !important;
-  font-size: 1.1rem !important;
+  font-size: 1.05rem !important;
   text-decoration: line-through;
-  font-weight: 500 !important;
+  font-weight: 400 !important;
 }
 .price--on-sale .price-item--sale {
-  color: #e53e3e !important; /* Standout sale price */
-  font-size: 1.35rem !important;
-  font-weight: 800 !important;
+  color: #111111 !important;
+  font-size: 1.3rem !important;
+  font-weight: 700 !important;
 }
 
-/* Center AirReviews Stars */
+/* Left-align AirReviews Stars */
 .AirReviews-Widget {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   margin-bottom: 0.5rem;
 }
