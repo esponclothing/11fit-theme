@@ -565,13 +565,22 @@
               
               {% for block in section.blocks %}
                 {% assign min_spend = block.settings.min_spend | times: 100 %}
-                <div class="ullu-offer-card" data-code="{{ block.settings.code }}" {{ block.shopify_attributes }}>
+                {% assign is_applied = false %}
+                {% for discount in cart.cart_level_discount_applications %}
+                  {% if discount.title == block.settings.code %}
+                    {% assign is_applied = true %}
+                  {% endif %}
+                {% endfor %}
+                
+                <div class="ullu-offer-card {% if is_applied %}ullu-applied-state{% endif %}" data-code="{{ block.settings.code }}" {{ block.shopify_attributes }}>
                   
                   <div class="ullu-offer-content-wrap">
                     <div class="ullu-offer-code">{{ block.settings.code }}</div>
                     <div class="ullu-offer-desc">{{ block.settings.desc }}</div>
                     <div class="ullu-coupon-action">
-                      {% if cart_total >= min_spend %}
+                      {% if is_applied %}
+                        <span class="ullu-applied-text"><i class="ti ti-check"></i> Applied</span>
+                      {% elsif cart_total >= min_spend %}
                         <button type="button" class="ullu-apply-btn" onclick="applyPremiumCoupon('{{ block.settings.code }}', this)">Apply Discount</button>
                       {% else %}
                         {% assign difference = min_spend | minus: cart_total | divided_by: 100.0 | round %}
@@ -600,38 +609,14 @@
 </cart-items>
 
 <script>
-  function restoreAppliedCouponState() {
-    const appliedCode = localStorage.getItem('ullu_applied_coupon');
-    if (appliedCode) {
-      const card = document.querySelector(`.ullu-offer-card[data-code="${appliedCode}"]`);
-      if (card) {
-        card.classList.add('ullu-applied-state');
-        const actionContainer = card.querySelector('.ullu-coupon-action');
-        if (actionContainer) {
-          actionContainer.innerHTML = `<span class="ullu-applied-text"><i class="ti ti-check"></i> Applied</span>`;
-        }
-      }
-    }
-  }
-
-  // On page load
-  document.addEventListener("DOMContentLoaded", restoreAppliedCouponState);
-
-  // After dynamic cart updates
-  if (window.subscribe) {
-    window.subscribe(typeof PUB_SUB_EVENTS !== 'undefined' ? PUB_SUB_EVENTS.cartUpdate : 'cart-update', restoreAppliedCouponState);
-  } else {
-    document.addEventListener('cart:updated', restoreAppliedCouponState);
-  }
-
   async function applyPremiumCoupon(code, btnElement) {
     const messageBox = document.getElementById('ullu-coupon-message');
     
-    // Show loading state
-    messageBox.style.display = "flex";
-    messageBox.className = "ullu-message-box"; 
-    messageBox.innerHTML = `⏳ Applying <b>${code}</b>...`;
-    messageBox.classList.add('ullu-message-success');
+    if (messageBox) {
+      messageBox.style.display = "flex";
+      messageBox.className = "ullu-message-box ullu-message-success"; 
+      messageBox.innerHTML = `⏳ Applying <b>${code}</b>...`;
+    }
     btnElement.innerText = "Applying...";
     btnElement.style.opacity = "0.7";
     btnElement.disabled = true;
@@ -650,7 +635,9 @@
       const cartItemsEl = document.querySelector('cart-items');
       if (cartItemsEl && typeof cartItemsEl.getSectionsToRender === 'function') {
         const sectionsToRender = cartItemsEl.getSectionsToRender();
-        const sectionIds = sectionsToRender.map(s => s.section).join(',');
+        // Remove duplicates if any
+        const uniqueSections = [...new Set(sectionsToRender.map(s => s.section))];
+        const sectionIds = uniqueSections.join(',');
         
         const sectionsResponse = await fetch(`${window.location.pathname}?sections=${sectionIds}`);
         const parsedState = await sectionsResponse.json();
@@ -661,10 +648,6 @@
             elementToReplace.innerHTML = new DOMParser().parseFromString(parsedState[section.section], 'text/html').querySelector(section.selector).innerHTML;
           }
         });
-        
-        // Save to localStorage so it stays checked
-        localStorage.setItem('ullu_applied_coupon', code);
-        restoreAppliedCouponState();
         
         if (typeof window.publish !== 'undefined' && typeof PUB_SUB_EVENTS !== 'undefined') {
           window.publish(PUB_SUB_EVENTS.cartUpdate, { source: 'discount-apply', cartData: {} });
@@ -677,8 +660,6 @@
           updatedMessageBox.innerHTML = `<i class="ti ti-check" style="font-size: 16px;"></i> <b>${code}</b> applied successfully!`;
         }
       } else {
-        // Fallback
-        localStorage.setItem('ullu_applied_coupon', code);
         location.reload();
       }
       
@@ -686,9 +667,12 @@
       btnElement.innerText = "Apply Discount";
       btnElement.style.opacity = "1";
       btnElement.disabled = false;
-      messageBox.innerHTML = `⚠️ Couldn't apply the coupon. It might be invalid.`;
-      messageBox.classList.remove('ullu-message-success');
-      messageBox.classList.add('ullu-message-error');
+      const updatedMessageBox = document.getElementById('ullu-coupon-message');
+      if (updatedMessageBox) {
+        updatedMessageBox.style.display = "flex";
+        updatedMessageBox.innerHTML = `⚠️ Couldn't apply the coupon. It might be invalid.`;
+        updatedMessageBox.className = "ullu-message-box ullu-message-error";
+      }
     }
   }
 </script>
