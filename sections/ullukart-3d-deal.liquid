@@ -689,7 +689,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function scrollToSlide(index) {
       if (slides[index]) {
-        track.scrollTo({ left: index * track.clientWidth, behavior: 'smooth' });
+        track.scrollTo({ left: slides[index].offsetLeft, behavior: 'smooth' });
       }
     }
 
@@ -744,11 +744,9 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
 
-    // Pause on Interaction
+    // Pause on Interaction (touch only to keep desktop auto-play reliable)
     track.addEventListener('touchstart', stopAutoPlay, {passive: true});
     track.addEventListener('touchend', () => { if(!isPriceUnlocked) startAutoPlay(); }, {passive: true});
-    track.addEventListener('mouseenter', stopAutoPlay);
-    track.addEventListener('mouseleave', () => { if(!isPriceUnlocked) startAutoPlay(); });
 
     // Start auto-play initially
     startAutoPlay();

@@ -155,12 +155,14 @@
   .luxe-track {
     display: flex;
     overflow-x: auto;
+    overflow-y: hidden;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     padding: 20px 24px; 
     gap: 24px; 
     scroll-snap-type: x mandatory;
+    touch-action: pan-y;
   }
 
   .luxe-track::-webkit-scrollbar {
@@ -226,8 +228,6 @@
   /* PC Refinements */
   @media (min-width: 769px) {
     .luxe-track {
-      justify-content: center;
-      flex-wrap: wrap;
       gap: 60px;
       padding: 40px 20px;
     }
@@ -312,10 +312,7 @@
       clearInterval(autoPlayInterval);
     }
 
-    if (enableAutoplay) {
-      wrapper.addEventListener('mouseenter', pauseLuxe);
-      wrapper.addEventListener('mouseleave', playLuxe);
-    }
+
 
     let isDragging = false;
     let startX, startY;
