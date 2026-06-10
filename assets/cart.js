@@ -120,7 +120,7 @@ class CartItems extends HTMLElement {
   }
 
   getSectionsToRender() {
-    return [
+    const sections = [
       {
         id: 'main-cart-items',
         section: document.getElementById('main-cart-items').dataset.id,
@@ -142,6 +142,16 @@ class CartItems extends HTMLElement {
         selector: '.js-contents',
       },
     ];
+
+    if (document.getElementById('main-cart-offers')) {
+      sections.push({
+        id: 'main-cart-offers',
+        section: document.getElementById('main-cart-items').dataset.id,
+        selector: '.js-offers-contents',
+      });
+    }
+
+    return sections;
   }
 
   updateQuantity(line, quantity, event, name, variantId) {

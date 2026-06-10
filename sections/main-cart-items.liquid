@@ -549,55 +549,58 @@
     </form>
 
     {% comment %} ── SYNCED OFFERS & DISCOUNTS SECTION (SHOWS EVEN IF EMPTY) ── {% endcomment %}
-    {% if section.blocks.size > 0 %}
-      <div class="ullu-offers-wrapper">
-        <div class="ullu-offers-header">
-          <div class="ullu-offers-title-wrap">
-            <div class="ullu-offers-icon"><i class="ti ti-percentage"></i></div>
-            <span class="ullu-offers-title">Available Offers</span>
-          </div>
-        </div>
-        
-        <div class="ullu-offers-scroll">
-          {% assign cart_total = cart.total_price | default: 0 %}
-          
-          {% for block in section.blocks %}
-            {% assign min_spend = block.settings.min_spend | times: 100 %}
-            <div class="ullu-offer-card" data-code="{{ block.settings.code }}" {{ block.shopify_attributes }}>
-              
-              <div class="ullu-offer-content-wrap">
-                <div class="ullu-offer-code">{{ block.settings.code }}</div>
-                <div class="ullu-offer-desc">{{ block.settings.desc }}</div>
-                <div class="ullu-coupon-action">
-                  {% if cart_total >= min_spend %}
-                    <button type="button" class="ullu-apply-btn" onclick="applyPremiumCoupon('{{ block.settings.code }}', this)">Apply Discount</button>
-                  {% else %}
-                    {% assign difference = min_spend | minus: cart_total | divided_by: 100.0 | round %}
-                    {% assign percent = cart_total | times: 100 | divided_by: min_spend %}
-                    <div class="ullu-lock-container">
-                      <span class="ullu-lock-msg"><i class="ti ti-lock"></i> Add ₹{{ difference }} to unlock</span>
-                      <div class="ullu-progress-bg">
-                        <div class="ullu-progress-fill" style="width: {{ percent }}%;"></div>
-                      </div>
-                    </div>
-                  {% endif %}
-                </div>
+    <div id="main-cart-offers" data-id="{{ section.id }}">
+      <div class="js-offers-contents">
+        {% if section.blocks.size > 0 %}
+          <div class="ullu-offers-wrapper">
+            <div class="ullu-offers-header">
+              <div class="ullu-offers-title-wrap">
+                <div class="ullu-offers-icon"><i class="ti ti-percentage"></i></div>
+                <span class="ullu-offers-title">Available Offers</span>
               </div>
-              
             </div>
-          {% endfor %}
-        </div>
-        
-        <div id="ullu-coupon-message" class="ullu-message-box" style="display: none;"></div>
+            
+            <div class="ullu-offers-scroll">
+              {% assign cart_total = cart.total_price | default: 0 %}
+              
+              {% for block in section.blocks %}
+                {% assign min_spend = block.settings.min_spend | times: 100 %}
+                <div class="ullu-offer-card" data-code="{{ block.settings.code }}" {{ block.shopify_attributes }}>
+                  
+                  <div class="ullu-offer-content-wrap">
+                    <div class="ullu-offer-code">{{ block.settings.code }}</div>
+                    <div class="ullu-offer-desc">{{ block.settings.desc }}</div>
+                    <div class="ullu-coupon-action">
+                      {% if cart_total >= min_spend %}
+                        <button type="button" class="ullu-apply-btn" onclick="applyPremiumCoupon('{{ block.settings.code }}', this)">Apply Discount</button>
+                      {% else %}
+                        {% assign difference = min_spend | minus: cart_total | divided_by: 100.0 | round %}
+                        {% assign percent = cart_total | times: 100 | divided_by: min_spend %}
+                        <div class="ullu-lock-container">
+                          <span class="ullu-lock-msg"><i class="ti ti-lock"></i> Add ₹{{ difference }} to unlock</span>
+                          <div class="ullu-progress-bg">
+                            <div class="ullu-progress-fill" style="width: {{ percent }}%;"></div>
+                          </div>
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                  
+                </div>
+              {% endfor %}
+            </div>
+            
+            <div id="ullu-coupon-message" class="ullu-message-box" style="display: none;"></div>
+          </div>
+        {% endif %}
       </div>
-    {% endif %}
+    </div>
 
   </div>
 </cart-items>
 
 <script>
-  // On page load, check if a coupon was successfully applied previously
-  document.addEventListener("DOMContentLoaded", function() {
+  function restoreAppliedCouponState() {
     const appliedCode = localStorage.getItem('ullu_applied_coupon');
     if (appliedCode) {
       const card = document.querySelector(`.ullu-offer-card[data-code="${appliedCode}"]`);
@@ -609,7 +612,17 @@
         }
       }
     }
-  });
+  }
+
+  // On page load
+  document.addEventListener("DOMContentLoaded", restoreAppliedCouponState);
+
+  // After dynamic cart updates
+  if (window.subscribe) {
+    window.subscribe(typeof PUB_SUB_EVENTS !== 'undefined' ? PUB_SUB_EVENTS.cartUpdate : 'cart-update', restoreAppliedCouponState);
+  } else {
+    document.addEventListener('cart:updated', restoreAppliedCouponState);
+  }
 
   async function applyPremiumCoupon(code, btnElement) {
     const messageBox = document.getElementById('ullu-coupon-message');
