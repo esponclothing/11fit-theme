@@ -250,40 +250,6 @@
         </div>
       </div>
       
-      {% comment %} ── NEW OFFERS & DISCOUNTS SECTION ── {% endcomment %}
-      {% assign offer_blocks = section.blocks | where: "type", "offer" %}
-      
-      {% if offer_blocks.size > 0 %}
-        <div class="ullu-offers-wrapper">
-          <div class="ullu-offers-header">
-            <div class="ullu-offers-title-wrap">
-              <div class="ullu-offers-icon"><i class="ti ti-percentage"></i></div>
-              <span class="ullu-offers-title">{{ section.settings.offers_heading | default: "Offers & Discounts" }}</span>
-            </div>
-            {% if section.settings.show_view_all %}
-              <div class="ullu-offers-view-all" onclick="ulluToggleOffersModal(true)">View all Offers</div>
-            {% endif %}
-          </div>
-          
-          <div class="ullu-offers-scroll">
-            {% for block in offer_blocks %}
-              <div class="ullu-offer-card" onclick="ulluCopyCoupon(this, '{{ block.settings.offer_code }}')" {{ block.shopify_attributes }}>
-                <div class="ullu-offer-content-wrap">
-                  <div class="ullu-offer-code">{{ block.settings.offer_code }}</div>
-                  <div class="ullu-offer-desc">{{ block.settings.offer_desc }}</div>
-                  {% if block.settings.offer_code != blank %}
-                    <div class="ullu-copy-hint"><i class="ti ti-copy"></i> Click to Copy</div>
-                  {% endif %}
-                </div>
-                {% if block.settings.offer_timer != blank %}
-                  <div class="ullu-offer-timer">{{ block.settings.offer_timer }}</div>
-                {% endif %}
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      {% endif %}
-
       {% comment %} ── HIGHLIGHTED COMBO SELECTION AREA (APP + VARIANTS) ── {% endcomment %}
       <div class="ullu-main-action-btns" id="ulluMainBtnContainer">
         
@@ -371,6 +337,40 @@
           </button>
         {% endform %}
       </div>
+
+      {% comment %} ── NEW OFFERS & DISCOUNTS SECTION ── {% endcomment %}
+      {% assign offer_blocks = section.blocks | where: "type", "offer" %}
+      
+      {% if offer_blocks.size > 0 %}
+        <div class="ullu-offers-wrapper">
+          <div class="ullu-offers-header">
+            <div class="ullu-offers-title-wrap">
+              <div class="ullu-offers-icon"><i class="ti ti-percentage"></i></div>
+              <span class="ullu-offers-title">{{ section.settings.offers_heading | default: "Offers & Discounts" }}</span>
+            </div>
+            {% if section.settings.show_view_all %}
+              <div class="ullu-offers-view-all" onclick="ulluToggleOffersModal(true)">View all Offers</div>
+            {% endif %}
+          </div>
+          
+          <div class="ullu-offers-scroll">
+            {% for block in offer_blocks %}
+              <div class="ullu-offer-card" onclick="ulluCopyCoupon(this, '{{ block.settings.offer_code }}')" {{ block.shopify_attributes }}>
+                <div class="ullu-offer-content-wrap">
+                  <div class="ullu-offer-code">{{ block.settings.offer_code }}</div>
+                  <div class="ullu-offer-desc">{{ block.settings.offer_desc }}</div>
+                  {% if block.settings.offer_code != blank %}
+                    <div class="ullu-copy-hint"><i class="ti ti-copy"></i> Click to Copy</div>
+                  {% endif %}
+                </div>
+                {% if block.settings.offer_timer != blank %}
+                  <div class="ullu-offer-timer">{{ block.settings.offer_timer }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
 
       {% comment %} ── ACCORDIONS ── {% endcomment %}
       <div class="ullu-accord-group">
