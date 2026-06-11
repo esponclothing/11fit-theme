@@ -138,6 +138,7 @@
         "category_JzGtHK": {
           "type": "category",
           "name": "Joggers",
+          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/Joggers.png",
             "title": "Joggers",
