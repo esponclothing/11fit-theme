@@ -213,15 +213,15 @@
 
     <div class="AirReviews-Widget AirReviews-Widget--Stars" style="margin-top:0.7rem" data-review-avg="{{ card_product.metafields.air_reviews_product.review_avg }}" data-review-count="{{ card_product.metafields.air_reviews_product.review_count }}"></div>
 
-            <!-- Custom Myntra-style price block -->
+            <!-- Price block -->
             {% if card_product.compare_at_price > card_product.price %}
               {% assign discount_amount = card_product.compare_at_price | minus: card_product.price %}
               {% assign discount_percentage = discount_amount | times: 100.0 | divided_by: card_product.compare_at_price | round %}
               <div class="fit11-card-price-row">
                 <span class="fit11-price-final">{{ card_product.price | money_without_trailing_zeros }}</span>
                 <s class="fit11-price-compare">{{ card_product.compare_at_price | money_without_trailing_zeros }}</s>
-                <span class="fit11-price-discount">{{ discount_percentage }}% off</span>
               </div>
+              <span class="fit11-price-discount">{{ discount_percentage }}% off</span>
             {% else %}
               <div class="fit11-card-price-row">
                 <span class="fit11-price-final">{{ card_product.price | money_without_trailing_zeros }}</span>

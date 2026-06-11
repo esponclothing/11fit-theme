@@ -868,27 +868,31 @@
 .fit11-card-price-row {
   display: flex;
   align-items: baseline;
-  gap: 5px;
+  gap: 6px;
   flex-wrap: wrap;
   margin-top: 4px;
 }
 
 .fit11-price-final {
-  color: #282c3f;
+  color: rgb(var(--color-foreground));
   font-weight: 700;
   font-size: 14px;
 }
 
 .fit11-price-compare {
-  color: #7e818c;
+  color: rgba(var(--color-foreground), 0.5);
   font-size: 12px;
   text-decoration: line-through;
   font-weight: 400;
 }
 
 .fit11-price-discount {
-  color: #03a685;
+  display: inline-block;
+  margin-top: 3px;
+  color: #c5a059;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 11px;
+  letter-spacing: 0.3px;
 }
+
 
