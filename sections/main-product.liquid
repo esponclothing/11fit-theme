@@ -329,86 +329,97 @@
         {%- endfor -%}
 
 
-        {% form 'product', product, id: '11fit-form-cart-main', class: '11fit-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
-          
-          {%- for block in section.blocks -%}
-            {%- if block.type == '@app' -%}
-              <div class="fit11-app-wrapper">
-                {% render block %}
-              </div>
-            {%- endif -%}
-          {%- endfor -%}
-          
-          {% comment %} ── VARIANT SELECTOR (LUXURY PILLS) ── {% endcomment %}
-          {% unless product.has_only_default_variant %}
-            <div class="fit11-variant-selectors">
-              {% for option in product.options_with_values %}
-                
-                {% assign option_name_lower = option.name | downcase %}
-                {% assign is_color_option = false %}
-                {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
-                  {% assign is_color_option = true %}
-                {% endif %}
+        <product-form class="product-form">
+          <div class="product-form__error-message-wrapper" role="alert" hidden>
+            <span class="product-form__error-message"></span>
+          </div>
+          {% form 'product', product, id: '11fit-form-cart-main', class: '11fit-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
+            
+            {%- for block in section.blocks -%}
+              {%- if block.type == '@app' -%}
+                <div class="fit11-app-wrapper">
+                  {% render block %}
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+            
+            {% comment %} ── VARIANT SELECTOR (LUXURY PILLS) ── {% endcomment %}
+            {% unless product.has_only_default_variant %}
+              <div class="fit11-variant-selectors">
+                {% for option in product.options_with_values %}
+                  
+                  {% assign option_name_lower = option.name | downcase %}
+                  {% assign is_color_option = false %}
+                  {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
+                    {% assign is_color_option = true %}
+                  {% endif %}
 
-                <fieldset class="fit11-option-fieldset">
-                  <legend class="fit11-option-name" style="display: flex; align-items: center;">
-                    {{ option.name }}
-                    {% if is_color_option %}
-                      <span class="fit11-selected-color-label" style="margin-left: 8px; color: var(--lux-text); font-weight: 600; text-transform: capitalize;">{{ option.selected_value }}</span>
-                    {% endif %}
-                  </legend>
-                  <div class="fit11-variant-pills">
-                    {% for value in option.values %}
-                      <input type="radio" 
-                             id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
-                             name="{{ option.name }}" 
-                             value="{{ value | escape }}"
-                             {% if option.selected_value == value %}checked{% endif %}
-                             class="fit11-variant-radio"
-                             {% if is_color_option %}data-is-color="true"{% endif %}>
-                      
-                      <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="fit11-variant-pill {% if is_color_option %}is-color{% endif %}" title="{{ value }}">
-                        {% if is_color_option %}
-                          {% assign color_handle = value | handle %}
-                          {% assign css_color = color_handle %}
-                          {% case color_handle %}
-                            {% when 'navy-blue' %}{% assign css_color = '#000080' %}
-                            {% when 'bottle-green' %}{% assign css_color = '#006A4E' %}
-                            {% when 'light-baby-pink' %}{% assign css_color = '#F4C2C2' %}
-                            {% when 'lavender' %}{% assign css_color = '#E6E6FA' %}
-                            {% when 'baby-blue' %}{% assign css_color = '#89CFF0' %}
-                            {% when 'flamingo' %}{% assign css_color = '#FC8EAC' %}
-                            {% when 'jade' %}{% assign css_color = '#00A86B' %}
-                            {% when 'off-white' %}{% assign css_color = '#FAF9F6' %}
-                            {% when 'maroon' %}{% assign css_color = '#800000' %}
-                            {% when 'white' %}{% assign css_color = '#FFFFFF' %}
-                            {% when 'black' %}{% assign css_color = '#000000' %}
-                            {% when 'red' %}{% assign css_color = '#FF0000' %}
-                            {% else %}{% assign css_color = value | split: ' ' | last | downcase %}
-                          {% endcase %}
-                          {% assign swatch_image = color_handle | append: '.png' %}
-                          <span class="fit11-color-swatch" style="background-color: {{ css_color }}; background-image: url('{{ swatch_image | file_url }}'); background-size: cover; background-position: center;"></span>
-                        {% else %}
-                          {{ value }}
-                        {% endif %}
-                      </label>
-                    {% endfor %}
-                  </div>
-                </fieldset>
-              {% endfor %}
-              
-              <script type="application/json" id="ProductVariantsData">
-                {{ product.variants | json }}
-              </script>
-            </div>
-          {% endunless %}
-          
-          <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
-          <input type="hidden" name="quantity" value="1" class="qty-input">
-          <button type="submit" name="add" class="fit11-btn-cart product-form__submit">
-            <span>Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
-          </button>
-        {% endform %}
+                  <fieldset class="fit11-option-fieldset">
+                    <legend class="fit11-option-name" style="display: flex; align-items: center;">
+                      {{ option.name }}
+                      {% if is_color_option %}
+                        <span class="fit11-selected-color-label" style="margin-left: 8px; color: var(--lux-text); font-weight: 600; text-transform: capitalize;">{{ option.selected_value }}</span>
+                      {% endif %}
+                    </legend>
+                    <div class="fit11-variant-pills">
+                      {% for value in option.values %}
+                        <input type="radio" 
+                               id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                               name="{{ option.name }}" 
+                               value="{{ value | escape }}"
+                               {% if option.selected_value == value %}checked{% endif %}
+                               class="fit11-variant-radio"
+                               {% if is_color_option %}data-is-color="true"{% endif %}>
+                        
+                        <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="fit11-variant-pill {% if is_color_option %}is-color{% endif %}" title="{{ value }}">
+                          {% if is_color_option %}
+                            {% assign color_handle = value | handle %}
+                            {% assign css_color = color_handle %}
+                            {% case color_handle %}
+                              {% when 'navy-blue' %}{% assign css_color = '#000080' %}
+                              {% when 'bottle-green' %}{% assign css_color = '#006A4E' %}
+                              {% when 'light-baby-pink' %}{% assign css_color = '#F4C2C2' %}
+                              {% when 'lavender' %}{% assign css_color = '#E6E6FA' %}
+                              {% when 'baby-blue' %}{% assign css_color = '#89CFF0' %}
+                              {% when 'flamingo' %}{% assign css_color = '#FC8EAC' %}
+                              {% when 'jade' %}{% assign css_color = '#00A86B' %}
+                              {% when 'off-white' %}{% assign css_color = '#FAF9F6' %}
+                              {% when 'maroon' %}{% assign css_color = '#800000' %}
+                              {% when 'white' %}{% assign css_color = '#FFFFFF' %}
+                              {% when 'black' %}{% assign css_color = '#000000' %}
+                              {% when 'red' %}{% assign css_color = '#FF0000' %}
+                              {% else %}{% assign css_color = value | split: ' ' | last | downcase %}
+                            {% endcase %}
+                            {% assign swatch_image = color_handle | append: '.png' %}
+                            <span class="fit11-color-swatch" style="background-color: {{ css_color }}; background-image: url('{{ swatch_image | file_url }}'); background-size: cover; background-position: center;"></span>
+                          {% else %}
+                            {{ value }}
+                          {% endif %}
+                        </label>
+                      {% endfor %}
+                    </div>
+                  </fieldset>
+                {% endfor %}
+                
+                <script type="application/json" id="ProductVariantsData">
+                  {{ product.variants | json }}
+                </script>
+              </div>
+            {% endunless %}
+            
+            <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
+            <input type="hidden" name="quantity" value="1" class="qty-input">
+            <button type="submit" name="add" class="fit11-btn-cart product-form__submit">
+              <span>Add to Cart</span>
+              <div class="loading__spinner hidden">
+                <svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                  <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                </svg>
+              </div>
+            </button>
+          {% endform %}
+        </product-form>
+        <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
       </div>
 
       {% comment %} ── NEW OFFERS & DISCOUNTS SECTION ── {% endcomment %}

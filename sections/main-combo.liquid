@@ -313,22 +313,33 @@
       {% comment %} ── HIGHLIGHTED COMBO SELECTION AREA ── {% endcomment %}
       <div class="fit11-main-action-btns" id="fit11MainBtnContainer">
         <div class="fit11-combo-title">Curate Your Combo</div>
-        {% form 'product', product, id: '11fit-form-cart-main', class: '11fit-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
-          
-          {%- for block in section.blocks -%}
-            {%- if block.type == '@app' -%}
-              <div class="fit11-app-wrapper">
-                {% render block %}
+        <product-form class="product-form">
+          <div class="product-form__error-message-wrapper" role="alert" hidden>
+            <span class="product-form__error-message"></span>
+          </div>
+          {% form 'product', product, id: '11fit-form-cart-main', class: '11fit-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
+            
+            {%- for block in section.blocks -%}
+              {%- if block.type == '@app' -%}
+                <div class="fit11-app-wrapper">
+                  {% render block %}
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+            
+            <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
+            <input type="hidden" name="quantity" value="1" class="qty-input">
+            <button type="submit" name="add" class="fit11-btn-cart product-form__submit">
+              <span>Add to Cart</span>
+              <div class="loading__spinner hidden">
+                <svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                  <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                </svg>
               </div>
-            {%- endif -%}
-          {%- endfor -%}
-          
-          <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
-          <input type="hidden" name="quantity" value="1" class="qty-input">
-          <button type="submit" name="add" class="fit11-btn-cart product-form__submit">
-            <span>Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
-          </button>
-        {% endform %}
+            </button>
+          {% endform %}
+        </product-form>
+        <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
       </div>
 
       {% comment %} ── NEW OFFERS & DISCOUNTS SECTION (Moved below Add to Cart) ── {% endcomment %}

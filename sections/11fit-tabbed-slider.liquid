@@ -371,7 +371,7 @@
 
     // --- MANUAL TAB CLICKING LOGIC ---
     tabButtons.forEach(button => {
-      button.addEventListener('click', function() {
+      button.addEventListener('click', function(e) {
         tabButtons.forEach(btn => btn.classList.remove('active'));
         tabPanels.forEach(panel => panel.classList.remove('active'));
 
@@ -381,8 +381,11 @@
           targetPanel.classList.add('active');
         }
         
-        // Center the clicked tab smoothly on mobile
-        this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        // Center the clicked tab smoothly without scrolling the entire page vertically
+        if (navTrack) {
+          const scrollLeft = this.offsetLeft - (navTrack.clientWidth / 2) + (this.clientWidth / 2);
+          navTrack.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+        }
       });
     });
 
