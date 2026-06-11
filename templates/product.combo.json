@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main_combo_rTJBJB": {
@@ -50,6 +59,7 @@
     },
     "related-products": {
       "type": "related-products",
+      "disabled": true,
       "settings": {
         "heading": "You may also like",
         "heading_size": "h2",
@@ -64,6 +74,47 @@
         "show_rating": false,
         "padding_top": 0,
         "padding_bottom": 0
+      }
+    },
+    "collection_list_JpCgRW": {
+      "type": "collection-list",
+      "blocks": {
+        "featured_collection_VhUVTM": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "trackpants"
+          }
+        },
+        "featured_collection_CrPdNn": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "shorts"
+          }
+        },
+        "featured_collection_bQF6kq": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "t-shirts"
+          }
+        }
+      },
+      "block_order": [
+        "featured_collection_VhUVTM",
+        "featured_collection_CrPdNn",
+        "featured_collection_bQF6kq"
+      ],
+      "name": "t:sections.collection-list.presets.name",
+      "settings": {
+        "title": "Collections",
+        "heading_size": "h1",
+        "image_ratio": "square",
+        "columns_desktop": 3,
+        "color_scheme": "",
+        "show_view_all": false,
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     },
     "177953350468f29684": {
@@ -144,7 +195,7 @@
       "settings": {
         "section_title": "Support & FAQ",
         "section_subtitle": "Everything You Need To Know",
-        "bg_color": "#F4F4F4",
+        "bg_color": "#f4f4f4",
         "title_color": "#080808",
         "question_font": "Poppins",
         "question_font_size": 13,
@@ -164,6 +215,7 @@
   "order": [
     "main_combo_rTJBJB",
     "related-products",
+    "collection_list_JpCgRW",
     "177953350468f29684",
     "11fit_support_faq_mHK3q8",
     "floating-video-pip"

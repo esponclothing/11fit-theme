@@ -1,1 +1,588 @@
-{"sections":{"image_banner":{"type":"image-banner","disabled":true,"settings":{"image_overlay_opacity":40,"image_height":"large","image_behavior":"none","desktop_content_position":"bottom-center","desktop_content_alignment":"center","show_text_box":false,"color_scheme":"scheme-3","stack_images_on_mobile":false,"mobile_content_alignment":"center","show_text_below":false}},"11fit_hero_LwyDx3":{"type":"11fit-hero","blocks":{"slide_AAXJXD":{"type":"slide","settings":{"image_mobile":"shopify:\/\/shop_images\/WhatsApp_Image_2026-05-28_at_5.33.02_PM_1.jpg","image_desktop":"shopify:\/\/shop_images\/ChatGPT_Image_May_22_2026_11_33_53_AM.png","link":""}},"slide_AI_1":{"type":"slide","settings":{"asset_mobile":"hero_concept1_mob.png","asset_desktop":"hero_concept1_pc.png","link":"shopify:\/\/collections\/all"}},"slide_GqHUEb":{"type":"slide","settings":{"image_mobile":"shopify:\/\/shop_images\/WhatsApp_Image_2026-05-28_at_5.27.14_PM.jpg","image_desktop":"shopify:\/\/shop_images\/WhatsApp_Image_2026-05-28_at_5.33.02_PM_1.jpg","link":""}},"slide_AI_2":{"type":"slide","settings":{"asset_mobile":"hero_concept2_mob.png","asset_desktop":"hero_concept2_pc.png","link":"shopify:\/\/collections\/all"}}},"block_order":["slide_AAXJXD","slide_AI_1","slide_GqHUEb","slide_AI_2"],"name":"11 fit Hero Carousel","settings":{"autoplay_speed":2,"dot_color":"#ff7a00"}},"11fit_marquee1_GXAPyT":{"type":"11fit-marquee1","blocks":{"announcement_g8Jdjq":{"type":"announcement","settings":{"text":"FREE SHIPPING ON ORDERS OVER ₹499","icon":"fa-solid fa-truck-fast"}}},"block_order":["announcement_g8Jdjq"],"name":"11 fit Marquee","settings":{"bg_color":"#c5a059","text_color":"#ffffff","marquee_font":"work_sans_n7","font_size_desktop":10,"font_size_mobile":10,"text_bold":true,"text_uppercase":true,"speed":5,"direction":"reverse","padding_y":5}},"11fit_category_bubbles_wmm7Lw":{"type":"11fit-category-bubbles","blocks":{"category_D6qQPw":{"type":"category","name":"Swimwear","settings":{"image":"shopify:\/\/shop_images\/Untitleddesign_48.jpg","title":"Swimwear","link":"shopify:\/\/collections\/swimwear"}},"category_QgxK7J":{"type":"category","name":"Trackpants","settings":{"image":"shopify:\/\/shop_images\/Untitleddesign_50.jpg","title":"Trackpants","link":"shopify:\/\/collections\/trackpants"}},"category_cLGiAM":{"type":"category","name":"Shorts","settings":{"image":"shopify:\/\/shop_images\/4.png","title":"Shorts","link":"shopify:\/\/collections\/shorts"}},"category_JzGtHK":{"type":"category","name":"Joggers","settings":{"image":"shopify:\/\/shop_images\/Joggers.png","title":"Joggers","link":"shopify:\/\/collections\/joggers"}},"category_k7wwaT":{"type":"category","name":"T-shirts","settings":{"image":"shopify:\/\/shop_images\/T-shirt.png","title":"T-shirts","link":"shopify:\/\/collections\/t-shirts"}},"category_WKnXtX":{"type":"category","name":"Accessories","disabled":true,"settings":{"image":"shopify:\/\/shop_images\/Accesories.png","title":"Accessories","link":"shopify:\/\/collections\/accessories"}}},"block_order":["category_D6qQPw","category_QgxK7J","category_cLGiAM","category_JzGtHK","category_k7wwaT","category_WKnXtX"],"name":"11 fit Category Bubbles","settings":{"bg_color":"#ffffff","text_color":"#c7a460","accent_color":"#c5a059","font_size_desktop":12,"font_size_mobile":10,"letter_spacing":2,"text_transform":"uppercase","padding_vertical":10,"enable_autoplay":false,"autoplay_speed":2}},"11fit_3d_deal_LLyATX":{"type":"11fit-3d-deal","blocks":{"deal_NHLpGF":{"type":"deal","settings":{"product":"espon-e0010-ns-terry-lycra-30-active-shorts"}},"deal_44V8Ap":{"type":"deal","settings":{"product":"espon-e0013-air-lite-reflective-track-pant"}}},"block_order":["deal_NHLpGF","deal_44V8Ap"],"name":"11 fit 3D Deal Focus","settings":{"heading_font":"playfair_display_n4","body_font":"lato_n4","heading":"DEAL OF THE DAY","subheading":"Unlock limited-time privileges","bg_color":"#ffffff","text_color":"#9a7b4f","accent_color":"#9a7b4f","btn_bg_color":"#1a1a1a","btn_text_color":"#ffffff","autoplay_speed":2,"timer_hours":12,"show_luxury_border":true,"padding_vertical":40}},"11fit_2x2_grid_F4nxF3":{"type":"11fit-2x2-grid","blocks":{"grid_item_aX38br":{"type":"grid_item","settings":{"image":"shopify:\/\/shop_images\/Untitleddesign_50.jpg","label":"Track Pants","subtext":"Explore","link":"shopify:\/\/collections\/trackpants"}},"grid_item_igBG8Q":{"type":"grid_item","settings":{"image":"shopify:\/\/shop_images\/T-shirt.png","label":"T Shirts","subtext":"Explore","link":"shopify:\/\/collections\/t-shirts"}},"grid_item_cJYDXY":{"type":"grid_item","settings":{"image":"shopify:\/\/shop_images\/Untitleddesign_48.jpg","label":"Swim Wear","subtext":"Explore","link":"shopify:\/\/collections\/swimwear"}},"grid_item_gxHi3c":{"type":"grid_item","settings":{"image":"shopify:\/\/shop_images\/Joggers.png","label":"Joggers","subtext":"Explore","link":"shopify:\/\/collections\/joggers"}}},"block_order":["grid_item_aX38br","grid_item_igBG8Q","grid_item_cJYDXY","grid_item_gxHi3c"],"name":"11 fit 2x2 Grid","settings":{"heading_font":"playfair_display_n4","body_font":"work_sans_n4","bg_color":"#f1f5f9","card_bg":"#ffffff","text_color":"#9a7b4f","accent_color":"#737373","subtitle":"CURATED COLLECTION","title":"Trending in Accessories","view_all_text":"Discover More","view_all_link":"","image_ratio":"3 \/ 4"}},"11fit_flash_sale_L4kxCW":{"type":"11fit-flash-sale","blocks":{"product_item_b8WBX6":{"type":"product_item","settings":{"product":"espon-e006-imported-spandex-compression-shorts"}},"product_item_LA68h4":{"type":"product_item","settings":{"product":"espon-e0013-air-lite-reflective-track-pant"}},"product_item_8xVkir":{"type":"product_item","settings":{"product":"espon-e009-air-lite-ns-silver-line-shorts"}},"product_item_aQejpW":{"type":"product_item","settings":{"product":"espon-e001-air-flex-jeans-pocket-track-pant"}},"product_item_Dw6QHP":{"type":"product_item","settings":{"product":"espon-e008-air-flex-4-way-lycra-active-shorts"}}},"block_order":["product_item_b8WBX6","product_item_LA68h4","product_item_8xVkir","product_item_aQejpW","product_item_Dw6QHP"],"name":"11 fit Flash Sale","settings":{"bg_color":"#ffffff","accent_color":"#9a7b4f","heading":"Trending","subheading":"DISCOVER OUR BESTSELLERS","autoplay_speed":2}},"11fit_dual_promos_67YCGA":{"type":"11fit-dual-promos","blocks":{"promo_banner_kq3Xnb":{"type":"promo_banner","settings":{"image":"shopify:\/\/shop_images\/ChatGPT_Image_May_29_2026_12_40_05_PM.png","link":"shopify:\/\/collections"}},"promo_banner_7Hra3w":{"type":"promo_banner","settings":{"image":"shopify:\/\/shop_images\/ChatGPT_Image_May_29_2026_12_50_32_PM.png","link":"shopify:\/\/products\/espon-e008-air-flex-4-way-lycra-active-shorts"}}},"block_order":["promo_banner_kq3Xnb","promo_banner_7Hra3w"],"name":"11 fit Dual Promos","settings":{"bg_color":"#f8f9fa","padding_vertical":20}},"11fit_tabbed_slider_wJVpcN":{"type":"11fit-tabbed-slider","blocks":{"tab_collection_7MRGGJ":{"type":"tab_collection","settings":{"tab_name":"Shorts","collection":"shorts","product_limit":6}},"tab_collection_m46pkG":{"type":"tab_collection","settings":{"tab_name":"Swimwear","collection":"swimwear","product_limit":6}},"tab_collection_UfQ8rK":{"type":"tab_collection","settings":{"tab_name":"Trackpants","collection":"trackpants","product_limit":6}},"tab_collection_FxFPaQ":{"type":"tab_collection","settings":{"tab_name":"Joggers","collection":"joggers","product_limit":6}},"tab_collection_JLWpFH":{"type":"tab_collection","settings":{"tab_name":"T-shirts","collection":"t-shirts","product_limit":4}}},"block_order":["tab_collection_7MRGGJ","tab_collection_m46pkG","tab_collection_UfQ8rK","tab_collection_FxFPaQ","tab_collection_JLWpFH"],"name":"11 fit Tabbed Slider","settings":{"bg_color":"#f8f9fa","accent_color":"#c5a059","active_tab_color":"#c5a059","heading":"TOP PICKS FOR YOU","autoplay_speed":2}},"1779990702925557f3":{"type":"_blocks","settings":{}},"11fit_club_reviews_dzNCHU":{"type":"11fit-club-reviews","blocks":{"review_QERBAr":{"type":"review","settings":{"review_image":"shopify:\/\/shop_images\/ChatGPT_Image_Jun_1_2026_01_35_11_PM.png","star_rating":5,"review_text":"The compression on these track pants is unmatched. I've tried every brand, but 11FIT holds up through the toughest sessions.","author_name":"Rahul S.","author_location":"Delhi, India"}},"review_fGFNWC":{"type":"review","settings":{"review_image":"shopify:\/\/shop_images\/ChatGPT_Image_Jun_1_2026_01_39_49_PM.png","star_rating":5,"review_text":"Finally, shorts that actually fit perfectly and support high-impact cardio. The lycra fabric is so soft yet durable. Worth every rupee.","author_name":"Priya M.","author_location":"Mumbai, India"}},"review_yz4XEb":{"type":"review","settings":{"review_image":"shopify:\/\/shop_images\/3_3be7e8fd-34b9-4355-bbec-105ef47b68e7.jpg","star_rating":5,"review_text":"I wore the Air Flex track pants for my morning run and had zero discomfort. Absolutely premium quality gear for this price.","author_name":"Arjun T.","author_location":"Bangalore, India"}},"review_mQabat":{"type":"review","settings":{"review_image":"shopify:\/\/shop_images\/3_e8604dc8-aa30-4634-8ed0-704e6b7d6b76.jpg","star_rating":5,"review_text":"The aesthetics are on point. I wear the joggers to the gym and out for chai. Fits perfectly and looks great.","author_name":"Sneha D.","author_location":"Pune, India"}},"review_Cg4UEG":{"type":"review","settings":{"review_image":"shopify:\/\/shop_images\/Untitleddesign_50.jpg","star_rating":5,"review_text":"Fast delivery and the packaging was premium. You can tell 11FIT cares about every detail. Ordered again within a week.","author_name":"Vikram K.","author_location":"Hyderabad, India"}}},"block_order":["review_QERBAr","review_fGFNWC","review_yz4XEb","review_mQabat","review_Cg4UEG"],"name":"11FIT Club Reviews","settings":{"section_title":"Club Reviews","section_subtitle":"Athletes Trust 11FIT","bg_color":"#ffffff","title_color":"#c5a059","auto_scroll_delay":"3500"}},"11fit_support_faq_BAdFVN":{"type":"11fit-support-faq","blocks":{"faq_item_cACHir":{"type":"faq_item","settings":{"question":"What fabric is used in 11FIT products?","answer":"All our products use premium imported fabrics including Four-Way Lycra (250+ GSM), NS Terry Lycra, and Air-Lite NS — highly stretchable, breathable, and built for performance."}},"faq_item_Dpd77t":{"type":"faq_item","settings":{"question":"What fabric is used in 11FIT products?","answer":"We use premium quality sportswear fabrics. Our activewear features Imported Four-Way Lycra, which is highly stretchable, breathable, and has a heavy 250+ GSM for a rich feel. For casual wear we offer lightweight NS (Non-Stretchable) fabrics, as well as premium NS Terry Lycra and Air-Lite NS fabrics."}},"faq_item_97FP4R":{"type":"faq_item","settings":{"question":"How do I find my correct size?","answer":"We offer sizes from M to XXL. For track pants: Medium fits a 28–30 inch waist, Large fits 30–32 inches, XL fits 32–34 inches, and XXL fits 34–36 inches. Detailed size charts are available on every product page."}},"faq_item_RKrK8a":{"type":"faq_item","settings":{"question":"Which courier services do you use?","answer":"We provide doorstep delivery across India using trusted courier partners including Blue Dart, DTDC, Delhivery, and Xpressbees — ensuring your gear arrives quickly and safely."}},"faq_item_KqR6Bn":{"type":"faq_item","settings":{"question":"What is your return and refund policy?","answer":"We want you to train in gear you love! If there is a sizing issue or you are not completely satisfied, we offer a hassle-free return and refund within 7 days of receiving your order. Just contact our support team."}},"faq_item_gpprcn":{"type":"faq_item","settings":{"question":"What payment methods do you accept?","answer":"We offer a variety of secure payment options. You can pay via Cash on Delivery (COD), or use prepaid options including UPI, GPay, Paytm, PhonePe, and Credit\/Debit Cards."}},"faq_item_EqCqhz":{"type":"faq_item","settings":{"question":"Is free shipping available?","answer":"Yes! We offer free shipping on all orders above ₹499. Orders below this amount will have a nominal delivery charge applied at checkout."}}},"block_order":["faq_item_cACHir","faq_item_Dpd77t","faq_item_97FP4R","faq_item_RKrK8a","faq_item_KqR6Bn","faq_item_gpprcn","faq_item_EqCqhz"],"name":"11FIT Support & FAQ","settings":{"section_title":"Support & FAQ","section_subtitle":"Everything You Need To Know","bg_color":"#f4f4f4","title_color":"#c5a059","question_font":"Poppins","question_font_size":13,"answer_font":"Poppins","answer_font_size":12,"faq_image":"shopify:\/\/shop_images\/ChatGPT_Image_Jun_1_2026_05_12_52_PM.png","image_brightness":65,"overlay_heading":"Premium","overlay_subtext":"Engineered For Athletes"}}},"order":["image_banner","11fit_hero_LwyDx3","11fit_marquee1_GXAPyT","11fit_category_bubbles_wmm7Lw","11fit_3d_deal_LLyATX","11fit_2x2_grid_F4nxF3","11fit_flash_sale_L4kxCW","11fit_dual_promos_67YCGA","11fit_tabbed_slider_wJVpcN","1779990702925557f3","11fit_club_reviews_dzNCHU","11fit_support_faq_BAdFVN"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "image_banner": {
+      "type": "image-banner",
+      "disabled": true,
+      "settings": {
+        "image_overlay_opacity": 40,
+        "image_height": "large",
+        "image_behavior": "none",
+        "desktop_content_position": "bottom-center",
+        "desktop_content_alignment": "center",
+        "show_text_box": false,
+        "color_scheme": "scheme-3",
+        "stack_images_on_mobile": false,
+        "mobile_content_alignment": "center",
+        "show_text_below": false
+      }
+    },
+    "11fit_hero_LwyDx3": {
+      "type": "11fit-hero",
+      "blocks": {
+        "slide_AAXJXD": {
+          "type": "slide",
+          "settings": {
+            "image_mobile": "shopify://shop_images/WhatsApp_Image_2026-05-28_at_5.33.02_PM_1.jpg",
+            "image_desktop": "shopify://shop_images/ChatGPT_Image_May_22_2026_11_33_53_AM.png",
+            "link": ""
+          }
+        },
+        "slide_AI_1": {
+          "type": "slide",
+          "settings": {
+            "asset_mobile": "hero_concept1_mob.png",
+            "asset_desktop": "hero_concept1_pc.png",
+            "link": "shopify://collections/all"
+          }
+        },
+        "slide_GqHUEb": {
+          "type": "slide",
+          "settings": {
+            "image_mobile": "shopify://shop_images/WhatsApp_Image_2026-05-28_at_5.27.14_PM.jpg",
+            "image_desktop": "shopify://shop_images/WhatsApp_Image_2026-05-28_at_5.33.02_PM_1.jpg",
+            "link": ""
+          }
+        },
+        "slide_AI_2": {
+          "type": "slide",
+          "settings": {
+            "asset_mobile": "hero_concept2_mob.png",
+            "asset_desktop": "hero_concept2_pc.png",
+            "link": "shopify://collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "slide_AAXJXD",
+        "slide_AI_1",
+        "slide_GqHUEb",
+        "slide_AI_2"
+      ],
+      "name": "11 fit Hero Carousel",
+      "settings": {
+        "autoplay_speed": 2,
+        "dot_color": "#ff7a00"
+      }
+    },
+    "11fit_marquee1_GXAPyT": {
+      "type": "11fit-marquee1",
+      "blocks": {
+        "announcement_g8Jdjq": {
+          "type": "announcement",
+          "settings": {
+            "text": "FREE SHIPPING ON ORDERS OVER ₹499",
+            "icon": "fa-solid fa-truck-fast"
+          }
+        }
+      },
+      "block_order": [
+        "announcement_g8Jdjq"
+      ],
+      "name": "11 fit Marquee",
+      "settings": {
+        "bg_color": "#c5a059",
+        "text_color": "#ffffff",
+        "marquee_font": "work_sans_n7",
+        "font_size_desktop": 10,
+        "font_size_mobile": 10,
+        "text_bold": true,
+        "text_uppercase": true,
+        "speed": 5,
+        "direction": "reverse",
+        "padding_y": 5
+      }
+    },
+    "11fit_category_bubbles_wmm7Lw": {
+      "type": "11fit-category-bubbles",
+      "blocks": {
+        "category_D6qQPw": {
+          "type": "category",
+          "name": "Swimwear",
+          "settings": {
+            "image": "shopify://shop_images/Untitleddesign_48.jpg",
+            "title": "Swimwear",
+            "link": "shopify://collections/swimwear"
+          }
+        },
+        "category_QgxK7J": {
+          "type": "category",
+          "name": "Trackpants",
+          "settings": {
+            "image": "shopify://shop_images/Untitleddesign_50.jpg",
+            "title": "Trackpants",
+            "link": "shopify://collections/trackpants"
+          }
+        },
+        "category_cLGiAM": {
+          "type": "category",
+          "name": "Shorts",
+          "settings": {
+            "image": "shopify://shop_images/4.png",
+            "title": "Shorts",
+            "link": "shopify://collections/shorts"
+          }
+        },
+        "category_JzGtHK": {
+          "type": "category",
+          "name": "Joggers",
+          "settings": {
+            "image": "shopify://shop_images/Joggers.png",
+            "title": "Joggers",
+            "link": "shopify://collections/joggers"
+          }
+        },
+        "category_k7wwaT": {
+          "type": "category",
+          "name": "T-shirts",
+          "settings": {
+            "image": "shopify://shop_images/T-shirt.png",
+            "title": "T-shirts",
+            "link": "shopify://collections/t-shirts"
+          }
+        },
+        "category_WKnXtX": {
+          "type": "category",
+          "name": "Accessories",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/Accesories.png",
+            "title": "Accessories",
+            "link": "shopify://collections/accessories"
+          }
+        }
+      },
+      "block_order": [
+        "category_D6qQPw",
+        "category_QgxK7J",
+        "category_cLGiAM",
+        "category_JzGtHK",
+        "category_k7wwaT",
+        "category_WKnXtX"
+      ],
+      "name": "11 fit Category Bubbles",
+      "settings": {
+        "bg_color": "#ffffff",
+        "text_color": "#c7a460",
+        "accent_color": "#c5a059",
+        "font_size_desktop": 12,
+        "font_size_mobile": 10,
+        "letter_spacing": 2,
+        "text_transform": "uppercase",
+        "padding_vertical": 10,
+        "enable_autoplay": false,
+        "autoplay_speed": 2
+      }
+    },
+    "11fit_3d_deal_LLyATX": {
+      "type": "11fit-3d-deal",
+      "blocks": {
+        "deal_NHLpGF": {
+          "type": "deal",
+          "settings": {
+            "product": "espon-e0010-ns-terry-lycra-30-active-shorts"
+          }
+        },
+        "deal_44V8Ap": {
+          "type": "deal",
+          "settings": {
+            "product": "espon-e0013-air-lite-reflective-track-pant"
+          }
+        }
+      },
+      "block_order": [
+        "deal_NHLpGF",
+        "deal_44V8Ap"
+      ],
+      "name": "11 fit 3D Deal Focus",
+      "settings": {
+        "heading_font": "playfair_display_n4",
+        "body_font": "lato_n4",
+        "heading": "DEAL OF THE DAY",
+        "subheading": "Unlock limited-time privileges",
+        "bg_color": "#ffffff",
+        "text_color": "#9a7b4f",
+        "accent_color": "#9a7b4f",
+        "btn_bg_color": "#1a1a1a",
+        "btn_text_color": "#ffffff",
+        "autoplay_speed": 2,
+        "timer_hours": 12,
+        "show_luxury_border": true,
+        "padding_vertical": 40
+      }
+    },
+    "11fit_2x2_grid_F4nxF3": {
+      "type": "11fit-2x2-grid",
+      "blocks": {
+        "grid_item_aX38br": {
+          "type": "grid_item",
+          "settings": {
+            "image": "shopify://shop_images/Untitleddesign_50.jpg",
+            "label": "Track Pants",
+            "subtext": "Explore",
+            "link": "shopify://collections/trackpants"
+          }
+        },
+        "grid_item_igBG8Q": {
+          "type": "grid_item",
+          "settings": {
+            "image": "shopify://shop_images/T-shirt.png",
+            "label": "T Shirts",
+            "subtext": "Explore",
+            "link": "shopify://collections/t-shirts"
+          }
+        },
+        "grid_item_cJYDXY": {
+          "type": "grid_item",
+          "settings": {
+            "image": "shopify://shop_images/Untitleddesign_48.jpg",
+            "label": "Swim Wear",
+            "subtext": "Explore",
+            "link": "shopify://collections/swimwear"
+          }
+        },
+        "grid_item_gxHi3c": {
+          "type": "grid_item",
+          "settings": {
+            "image": "shopify://shop_images/Joggers.png",
+            "label": "Joggers",
+            "subtext": "Explore",
+            "link": "shopify://collections/joggers"
+          }
+        }
+      },
+      "block_order": [
+        "grid_item_aX38br",
+        "grid_item_igBG8Q",
+        "grid_item_cJYDXY",
+        "grid_item_gxHi3c"
+      ],
+      "name": "11 fit 2x2 Grid",
+      "settings": {
+        "heading_font": "playfair_display_n4",
+        "body_font": "work_sans_n4",
+        "bg_color": "#f1f5f9",
+        "card_bg": "#ffffff",
+        "text_color": "#9a7b4f",
+        "accent_color": "#737373",
+        "subtitle": "CURATED COLLECTION",
+        "title": "Trending in Accessories",
+        "view_all_text": "Discover More",
+        "view_all_link": "",
+        "image_ratio": "3 / 4"
+      }
+    },
+    "11fit_flash_sale_L4kxCW": {
+      "type": "11fit-flash-sale",
+      "blocks": {
+        "product_item_b8WBX6": {
+          "type": "product_item",
+          "settings": {
+            "product": "espon-e006-imported-spandex-compression-shorts"
+          }
+        },
+        "product_item_LA68h4": {
+          "type": "product_item",
+          "settings": {
+            "product": "espon-e0013-air-lite-reflective-track-pant"
+          }
+        },
+        "product_item_8xVkir": {
+          "type": "product_item",
+          "settings": {
+            "product": "espon-e009-air-lite-ns-silver-line-shorts"
+          }
+        },
+        "product_item_aQejpW": {
+          "type": "product_item",
+          "settings": {
+            "product": "espon-e001-air-flex-jeans-pocket-track-pant"
+          }
+        },
+        "product_item_Dw6QHP": {
+          "type": "product_item",
+          "settings": {
+            "product": "espon-e008-air-flex-4-way-lycra-active-shorts"
+          }
+        }
+      },
+      "block_order": [
+        "product_item_b8WBX6",
+        "product_item_LA68h4",
+        "product_item_8xVkir",
+        "product_item_aQejpW",
+        "product_item_Dw6QHP"
+      ],
+      "name": "11 fit Flash Sale",
+      "settings": {
+        "bg_color": "#ffffff",
+        "accent_color": "#9a7b4f",
+        "heading": "Trending",
+        "subheading": "DISCOVER OUR BESTSELLERS",
+        "autoplay_speed": 2
+      }
+    },
+    "11fit_dual_promos_67YCGA": {
+      "type": "11fit-dual-promos",
+      "blocks": {
+        "promo_banner_kq3Xnb": {
+          "type": "promo_banner",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_May_29_2026_12_40_05_PM.png",
+            "link": "shopify://collections"
+          }
+        },
+        "promo_banner_7Hra3w": {
+          "type": "promo_banner",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_May_29_2026_12_50_32_PM.png",
+            "link": "shopify://products/espon-e008-air-flex-4-way-lycra-active-shorts"
+          }
+        }
+      },
+      "block_order": [
+        "promo_banner_kq3Xnb",
+        "promo_banner_7Hra3w"
+      ],
+      "name": "11 fit Dual Promos",
+      "settings": {
+        "bg_color": "#f8f9fa",
+        "padding_vertical": 20
+      }
+    },
+    "11fit_tabbed_slider_wJVpcN": {
+      "type": "11fit-tabbed-slider",
+      "blocks": {
+        "tab_collection_7MRGGJ": {
+          "type": "tab_collection",
+          "settings": {
+            "tab_name": "Shorts",
+            "collection": "shorts",
+            "product_limit": 6
+          }
+        },
+        "tab_collection_m46pkG": {
+          "type": "tab_collection",
+          "settings": {
+            "tab_name": "Swimwear",
+            "collection": "swimwear",
+            "product_limit": 6
+          }
+        },
+        "tab_collection_UfQ8rK": {
+          "type": "tab_collection",
+          "settings": {
+            "tab_name": "Trackpants",
+            "collection": "trackpants",
+            "product_limit": 6
+          }
+        },
+        "tab_collection_FxFPaQ": {
+          "type": "tab_collection",
+          "settings": {
+            "tab_name": "Joggers",
+            "collection": "joggers",
+            "product_limit": 6
+          }
+        },
+        "tab_collection_JLWpFH": {
+          "type": "tab_collection",
+          "settings": {
+            "tab_name": "T-shirts",
+            "collection": "t-shirts",
+            "product_limit": 4
+          }
+        }
+      },
+      "block_order": [
+        "tab_collection_7MRGGJ",
+        "tab_collection_m46pkG",
+        "tab_collection_UfQ8rK",
+        "tab_collection_FxFPaQ",
+        "tab_collection_JLWpFH"
+      ],
+      "name": "11 fit Tabbed Slider",
+      "settings": {
+        "bg_color": "#f8f9fa",
+        "accent_color": "#c5a059",
+        "active_tab_color": "#c5a059",
+        "heading": "TOP PICKS FOR YOU",
+        "autoplay_speed": 2
+      }
+    },
+    "1779990702925557f3": {
+      "type": "_blocks",
+      "settings": {}
+    },
+    "11fit_club_reviews_dzNCHU": {
+      "type": "11fit-club-reviews",
+      "blocks": {
+        "review_QERBAr": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/ChatGPT_Image_Jun_1_2026_01_35_11_PM.png",
+            "star_rating": 5,
+            "review_text": "The compression on these track pants is unmatched. I've tried every brand, but 11FIT holds up through the toughest sessions.",
+            "author_name": "Rahul S.",
+            "author_location": "Delhi, India"
+          }
+        },
+        "review_fGFNWC": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/ChatGPT_Image_Jun_1_2026_01_39_49_PM.png",
+            "star_rating": 5,
+            "review_text": "Finally, shorts that actually fit perfectly and support high-impact cardio. The lycra fabric is so soft yet durable. Worth every rupee.",
+            "author_name": "Priya M.",
+            "author_location": "Mumbai, India"
+          }
+        },
+        "review_yz4XEb": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/3_3be7e8fd-34b9-4355-bbec-105ef47b68e7.jpg",
+            "star_rating": 5,
+            "review_text": "I wore the Air Flex track pants for my morning run and had zero discomfort. Absolutely premium quality gear for this price.",
+            "author_name": "Arjun T.",
+            "author_location": "Bangalore, India"
+          }
+        },
+        "review_mQabat": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/3_e8604dc8-aa30-4634-8ed0-704e6b7d6b76.jpg",
+            "star_rating": 5,
+            "review_text": "The aesthetics are on point. I wear the joggers to the gym and out for chai. Fits perfectly and looks great.",
+            "author_name": "Sneha D.",
+            "author_location": "Pune, India"
+          }
+        },
+        "review_Cg4UEG": {
+          "type": "review",
+          "settings": {
+            "review_image": "shopify://shop_images/Untitleddesign_50.jpg",
+            "star_rating": 5,
+            "review_text": "Fast delivery and the packaging was premium. You can tell 11FIT cares about every detail. Ordered again within a week.",
+            "author_name": "Vikram K.",
+            "author_location": "Hyderabad, India"
+          }
+        }
+      },
+      "block_order": [
+        "review_QERBAr",
+        "review_fGFNWC",
+        "review_yz4XEb",
+        "review_mQabat",
+        "review_Cg4UEG"
+      ],
+      "name": "11FIT Club Reviews",
+      "settings": {
+        "section_title": "Club Reviews",
+        "section_subtitle": "Athletes Trust 11FIT",
+        "bg_color": "#ffffff",
+        "title_color": "#c5a059",
+        "auto_scroll_delay": "3500"
+      }
+    },
+    "11fit_support_faq_BAdFVN": {
+      "type": "11fit-support-faq",
+      "blocks": {
+        "faq_item_cACHir": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What fabric is used in 11FIT products?",
+            "answer": "All our products use premium imported fabrics including Four-Way Lycra (250+ GSM), NS Terry Lycra, and Air-Lite NS — highly stretchable, breathable, and built for performance."
+          }
+        },
+        "faq_item_Dpd77t": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What fabric is used in 11FIT products?",
+            "answer": "We use premium quality sportswear fabrics. Our activewear features Imported Four-Way Lycra, which is highly stretchable, breathable, and has a heavy 250+ GSM for a rich feel. For casual wear we offer lightweight NS (Non-Stretchable) fabrics, as well as premium NS Terry Lycra and Air-Lite NS fabrics."
+          }
+        },
+        "faq_item_97FP4R": {
+          "type": "faq_item",
+          "settings": {
+            "question": "How do I find my correct size?",
+            "answer": "We offer sizes from M to XXL. For track pants: Medium fits a 28–30 inch waist, Large fits 30–32 inches, XL fits 32–34 inches, and XXL fits 34–36 inches. Detailed size charts are available on every product page."
+          }
+        },
+        "faq_item_RKrK8a": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Which courier services do you use?",
+            "answer": "We provide doorstep delivery across India using trusted courier partners including Blue Dart, DTDC, Delhivery, and Xpressbees — ensuring your gear arrives quickly and safely."
+          }
+        },
+        "faq_item_KqR6Bn": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is your return and refund policy?",
+            "answer": "We want you to train in gear you love! If there is a sizing issue or you are not completely satisfied, we offer a hassle-free return and refund within 7 days of receiving your order. Just contact our support team."
+          }
+        },
+        "faq_item_gpprcn": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What payment methods do you accept?",
+            "answer": "We offer a variety of secure payment options. You can pay via Cash on Delivery (COD), or use prepaid options including UPI, GPay, Paytm, PhonePe, and Credit/Debit Cards."
+          }
+        },
+        "faq_item_EqCqhz": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Is free shipping available?",
+            "answer": "Yes! We offer free shipping on all orders above ₹499. Orders below this amount will have a nominal delivery charge applied at checkout."
+          }
+        }
+      },
+      "block_order": [
+        "faq_item_cACHir",
+        "faq_item_Dpd77t",
+        "faq_item_97FP4R",
+        "faq_item_RKrK8a",
+        "faq_item_KqR6Bn",
+        "faq_item_gpprcn",
+        "faq_item_EqCqhz"
+      ],
+      "name": "11FIT Support & FAQ",
+      "settings": {
+        "section_title": "Support & FAQ",
+        "section_subtitle": "Everything You Need To Know",
+        "bg_color": "#f4f4f4",
+        "title_color": "#c5a059",
+        "question_font": "Poppins",
+        "question_font_size": 13,
+        "answer_font": "Poppins",
+        "answer_font_size": 12,
+        "faq_image": "shopify://shop_images/ChatGPT_Image_Jun_1_2026_05_12_52_PM.png",
+        "image_brightness": 65,
+        "overlay_heading": "Premium",
+        "overlay_subtext": "Engineered For Athletes"
+      }
+    }
+  },
+  "order": [
+    "image_banner",
+    "11fit_hero_LwyDx3",
+    "11fit_marquee1_GXAPyT",
+    "11fit_category_bubbles_wmm7Lw",
+    "11fit_3d_deal_LLyATX",
+    "11fit_2x2_grid_F4nxF3",
+    "11fit_flash_sale_L4kxCW",
+    "11fit_dual_promos_67YCGA",
+    "11fit_tabbed_slider_wJVpcN",
+    "1779990702925557f3",
+    "11fit_club_reviews_dzNCHU",
+    "11fit_support_faq_BAdFVN"
+  ]
+}
