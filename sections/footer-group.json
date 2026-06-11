@@ -27,8 +27,8 @@
         "offset_y_mobile": 96
       }
     },
-    "ullu_footer_6AeTLz": {
-      "type": "ullu-footer",
+    "11fit_footer_6AeTLz": {
+      "type": "11fit-footer",
       "name": "11 fit Footer",
       "settings": {
         "heading_font": "work_sans_n7",
@@ -109,7 +109,7 @@
   },
   "order": [
     "whatsapp_floating_button_TVMFb9",
-    "ullu_footer_6AeTLz",
+    "11fit_footer_6AeTLz",
     "footer"
   ]
 }

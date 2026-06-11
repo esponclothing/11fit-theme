@@ -1,6 +1,6 @@
 {% comment %}
   ============================================================
-  ULLUKART — main-product-combo.liquid (LAYOUT, COUPON & VARIANTS UPDATED)
+  11FIT — main-product-combo.liquid (LAYOUT, COUPON & VARIANTS UPDATED)
   Drop this file into: sections/main-product-combo.liquid
   ============================================================
 {% endcomment %}
@@ -22,155 +22,155 @@
   }
 
   /* ── GLOBAL STRICT CONSTRAINTS ── */
-  .ullu-page, .ullu-page * { box-sizing: border-box !important; }
-  .ullu-page { padding-top: 0px; padding-bottom: 140px; color: var(--lux-text); background: var(--lux-bg); font-family: var(--font-body); width: 100%; /* overflow-x: hidden removed to enable sticky scrolling */ }
-  .ullu-grid { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 50% 50%; gap: 40px; align-items: start; padding: 0 20px; width: 100%; }
+  .fit11-page, .fit11-page * { box-sizing: border-box !important; }
+  .fit11-page { padding-top: 0px; padding-bottom: 140px; color: var(--lux-text); background: var(--lux-bg); font-family: var(--font-body); width: 100%; /* overflow-x: hidden removed to enable sticky scrolling */ }
+  .fit11-grid { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 50% 50%; gap: 40px; align-items: start; padding: 0 20px; width: 100%; }
 
   /* ── GALLERY ── */
-  .ullu-gallery-wrap { position: sticky; top: 10px; display: flex; flex-direction: column; gap: 8px; width: 100%; }
-  .ullu-gallery-box { width: 100%; aspect-ratio: 4/5; max-height: 75vh; background: var(--lux-surface); overflow: hidden; position: relative; border-radius: 8px; border: 1px solid var(--lux-border); }
-  .ullu-slides { display: flex; height: 100%; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; }
-  .ullu-slides::-webkit-scrollbar { display: none; }
-  .ullu-slide { flex: 0 0 100%; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; width: 100%; height: 100%; }
-  .ullu-slide img { width: 100%; height: 100%; object-fit: contain; } 
+  .fit11-gallery-wrap { position: sticky; top: 10px; display: flex; flex-direction: column; gap: 8px; width: 100%; }
+  .fit11-gallery-box { width: 100%; aspect-ratio: 4/5; max-height: 75vh; background: var(--lux-surface); overflow: hidden; position: relative; border-radius: 8px; border: 1px solid var(--lux-border); }
+  .fit11-slides { display: flex; height: 100%; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; }
+  .fit11-slides::-webkit-scrollbar { display: none; }
+  .fit11-slide { flex: 0 0 100%; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; width: 100%; height: 100%; }
+  .fit11-slide img { width: 100%; height: 100%; object-fit: contain; } 
   
-  .ullu-dots { position: absolute; bottom: 16px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; pointer-events: none; z-index: 2; }
-  .ullu-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.2); transition: all .4s ease; pointer-events: auto; cursor: pointer; }
-  .ullu-dot.on { background: var(--lux-text); transform: scale(1.2); border-color: transparent; }
+  .fit11-dots { position: absolute; bottom: 16px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; pointer-events: none; z-index: 2; }
+  .fit11-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.2); transition: all .4s ease; pointer-events: auto; cursor: pointer; }
+  .fit11-dot.on { background: var(--lux-text); transform: scale(1.2); border-color: transparent; }
   
-  .ullu-thumbs { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; }
-  .ullu-thumbs::-webkit-scrollbar { display: none; }
-  .ullu-thumb { width: 72px; height: 90px; flex-shrink: 0; overflow: hidden; cursor: pointer; opacity: 0.6; transition: all .3s ease; background: var(--lux-surface); border-radius: 6px; border: 1px solid transparent; }
-  .ullu-thumb.on { opacity: 1; border-color: var(--lux-text); }
-  .ullu-thumb img { width: 100%; height: 100%; object-fit: contain; }
+  .fit11-thumbs { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; }
+  .fit11-thumbs::-webkit-scrollbar { display: none; }
+  .fit11-thumb { width: 72px; height: 90px; flex-shrink: 0; overflow: hidden; cursor: pointer; opacity: 0.6; transition: all .3s ease; background: var(--lux-surface); border-radius: 6px; border: 1px solid transparent; }
+  .fit11-thumb.on { opacity: 1; border-color: var(--lux-text); }
+  .fit11-thumb img { width: 100%; height: 100%; object-fit: contain; }
 
   /* ── DETAILS PANEL ── */
-  .ullu-info { display: flex; flex-direction: column; gap: 16px; width: 100%; padding-top: 0px; }
+  .fit11-info { display: flex; flex-direction: column; gap: 16px; width: 100%; padding-top: 0px; }
   
-  .ullu-header-group { display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid var(--lux-border); padding-bottom: 16px; width: 100%; }
-  .ullu-title { font-size: 28px; font-weight: 400; line-height: 1.2; color: var(--lux-text); font-family: var(--font-heading); word-wrap: break-word; margin: 0; }
+  .fit11-header-group { display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid var(--lux-border); padding-bottom: 16px; width: 100%; }
+  .fit11-title { font-size: 28px; font-weight: 400; line-height: 1.2; color: var(--lux-text); font-family: var(--font-heading); word-wrap: break-word; margin: 0; }
   
   /* ── RATINGS ROW & SIZE CHART LINK (MOVED BELOW PRICE) ── */
-  .ullu-rating-row { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 8px; gap: 12px; }
-  .ullu-size-chart-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--lux-accent); cursor: pointer; text-decoration: underline; text-underline-offset: 4px; transition: color 0.3s ease; }
-  .ullu-size-chart-link:hover { color: var(--lux-text); }
+  .fit11-rating-row { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 8px; gap: 12px; }
+  .fit11-size-chart-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--lux-accent); cursor: pointer; text-decoration: underline; text-underline-offset: 4px; transition: color 0.3s ease; }
+  .fit11-size-chart-link:hover { color: var(--lux-text); }
   
   /* ── PRICE ── */
-  .ullu-price-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 4px; margin-bottom: 0; }
-  .ullu-price-main { font-size: 24px; font-weight: 400; color: var(--lux-text); }
-  .ullu-price-old { font-size: 16px; color: var(--lux-text-muted); text-decoration: line-through; font-weight: 300; }
-  .ullu-price-off { font-size: 12px; font-weight: 500; color: var(--lux-accent); text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid var(--lux-accent); padding: 2px 8px; }
+  .fit11-price-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 4px; margin-bottom: 0; }
+  .fit11-price-main { font-size: 24px; font-weight: 400; color: var(--lux-text); }
+  .fit11-price-old { font-size: 16px; color: var(--lux-text-muted); text-decoration: line-through; font-weight: 300; }
+  .fit11-price-off { font-size: 12px; font-weight: 500; color: var(--lux-accent); text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid var(--lux-accent); padding: 2px 8px; }
 
   /* ── MAIN DESKTOP BUTTON & APP BLOCKS ── */
-  .ullu-main-action-btns { background: var(--lux-surface); padding: 16px 20px; border: 1px solid var(--lux-border); width: 100%; border-radius: 8px; }
-  .ullu-combo-title { font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
-  .ullu-combo-title::before { content: ''; width: 4px; height: 14px; background: var(--lux-accent); display: block; }
+  .fit11-main-action-btns { background: var(--lux-surface); padding: 16px 20px; border: 1px solid var(--lux-border); width: 100%; border-radius: 8px; }
+  .fit11-combo-title { font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+  .fit11-combo-title::before { content: ''; width: 4px; height: 14px; background: var(--lux-accent); display: block; }
 
-  .ullu-app-wrapper { width: 100%; margin-bottom: 20px; }
-  .ullu-app-wrapper > div, .ullu-app-wrapper > iframe { box-sizing: border-box !important; max-width: 100% !important; }
+  .fit11-app-wrapper { width: 100%; margin-bottom: 20px; }
+  .fit11-app-wrapper > div, .fit11-app-wrapper > iframe { box-sizing: border-box !important; max-width: 100% !important; }
   
-  .ullu-btn-cart { width: 100% !important; height: 54px !important; margin: 24px 0 0 0 !important; background: var(--lux-text); color: var(--lux-surface); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; border: none; display: flex; align-items: center; justify-content: center; gap: 12px; transition: opacity 0.3s ease, background 0.4s ease; cursor: pointer; font-family: var(--font-body); border-radius: 4px; }
-  .ullu-btn-cart:hover { opacity: 0.9; }
+  .fit11-btn-cart { width: 100% !important; height: 54px !important; margin: 24px 0 0 0 !important; background: var(--lux-text); color: var(--lux-surface); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; border: none; display: flex; align-items: center; justify-content: center; gap: 12px; transition: opacity 0.3s ease, background 0.4s ease; cursor: pointer; font-family: var(--font-body); border-radius: 4px; }
+  .fit11-btn-cart:hover { opacity: 0.9; }
 
   /* ── VARIANT SELECTORS (LUXURY ADAPTATION) ── */
-  .ullu-variant-selectors { display: flex; flex-direction: column; gap: 20px; margin-bottom: 8px; width: 100%; }
-  .ullu-option-fieldset { border: none; padding: 0; margin: 0; }
-  .ullu-option-name { font-size: 12px; font-weight: 500; color: var(--lux-text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-family: var(--font-body); }
-  .ullu-variant-pills { display: flex; flex-wrap: wrap; gap: 10px; }
-  .ullu-variant-radio { display: none; }
-  .ullu-variant-pill { 
+  .fit11-variant-selectors { display: flex; flex-direction: column; gap: 20px; margin-bottom: 8px; width: 100%; }
+  .fit11-option-fieldset { border: none; padding: 0; margin: 0; }
+  .fit11-option-name { font-size: 12px; font-weight: 500; color: var(--lux-text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-family: var(--font-body); }
+  .fit11-variant-pills { display: flex; flex-wrap: wrap; gap: 10px; }
+  .fit11-variant-radio { display: none; }
+  .fit11-variant-pill { 
     display: inline-flex; align-items: center; justify-content: center; 
     padding: 10px 18px; border: 1px solid var(--lux-border); border-radius: 4px; 
     font-size: 13px; color: var(--lux-text); cursor: pointer; transition: all 0.3s ease; 
     background: var(--lux-surface); user-select: none; font-weight: 400;
   }
-  .ullu-variant-pill:hover { border-color: var(--lux-text-muted); }
-  .ullu-variant-radio:checked + .ullu-variant-pill { 
+  .fit11-variant-pill:hover { border-color: var(--lux-text-muted); }
+  .fit11-variant-radio:checked + .fit11-variant-pill { 
     border-color: var(--lux-text); background: var(--lux-text); color: var(--lux-surface); 
   }
-  .ullu-variant-radio.is-disabled + .ullu-variant-pill { 
+  .fit11-variant-radio.is-disabled + .fit11-variant-pill { 
     opacity: 0.5; text-decoration: line-through; cursor: not-allowed; 
   }
 
   /* COLOR DOT OVERRIDES */
-  .ullu-variant-pill.is-color {
+  .fit11-variant-pill.is-color {
     padding: 2px; border-radius: 50%; width: 34px; height: 34px; background: transparent; border: 2px solid transparent;
   }
-  .ullu-variant-pill.is-color:hover { border-color: var(--lux-border); }
-  .ullu-variant-radio:checked + .ullu-variant-pill.is-color {
+  .fit11-variant-pill.is-color:hover { border-color: var(--lux-border); }
+  .fit11-variant-radio:checked + .fit11-variant-pill.is-color {
     border-color: var(--lux-text); background: transparent;
   }
-  .ullu-color-swatch {
+  .fit11-color-swatch {
     display: inline-block; width: 100%; height: 100%; border-radius: 50%;
     margin: 0; border: 1px solid var(--lux-border);
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); background-color: var(--lux-surface);
   }
 
   /* ── OFFERS & DISCOUNTS SECTION (SIMPLIFIED) ── */
-  .ullu-offers-wrapper { background: #eef6f0; border-radius: 4px; padding: 16px; width: 100%; margin-top: 8px; }
-  .ullu-offers-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-  .ullu-offers-title-wrap { display: flex; align-items: center; gap: 8px; }
-  .ullu-offers-icon { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: #cba86a; border-radius: 50%; color: #fff; font-size: 14px; }
-  .ullu-offers-title { font-size: 16px; font-weight: 600; color: #1a202c; }
-  .ullu-offers-view-all { font-size: 13px; font-weight: 600; color: #b89356; cursor: pointer; }
+  .fit11-offers-wrapper { background: #eef6f0; border-radius: 4px; padding: 16px; width: 100%; margin-top: 8px; }
+  .fit11-offers-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .fit11-offers-title-wrap { display: flex; align-items: center; gap: 8px; }
+  .fit11-offers-icon { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: #cba86a; border-radius: 50%; color: #fff; font-size: 14px; }
+  .fit11-offers-title { font-size: 16px; font-weight: 600; color: #1a202c; }
+  .fit11-offers-view-all { font-size: 13px; font-weight: 600; color: #b89356; cursor: pointer; }
   
-  .ullu-offers-scroll { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding-bottom: 12px; scroll-snap-type: x mandatory; }
-  .ullu-offers-scroll::-webkit-scrollbar { display: none; }
+  .fit11-offers-scroll { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding-bottom: 12px; scroll-snap-type: x mandatory; }
+  .fit11-offers-scroll::-webkit-scrollbar { display: none; }
   
-  .ullu-offer-card { background: #ffffff; border: 1px dashed #cbd5e0; border-radius: 6px; min-width: 250px; display: flex; position: relative; flex-shrink: 0; cursor: pointer; transition: transform 0.1s ease, opacity 0.3s ease; scroll-snap-align: start; }
-  .ullu-offer-card:active { transform: scale(0.98); }
-  .ullu-offer-card.expired { opacity: 0.6; pointer-events: none; filter: grayscale(100%); }
+  .fit11-offer-card { background: #ffffff; border: 1px dashed #cbd5e0; border-radius: 6px; min-width: 250px; display: flex; position: relative; flex-shrink: 0; cursor: pointer; transition: transform 0.1s ease, opacity 0.3s ease; scroll-snap-align: start; }
+  .fit11-offer-card:active { transform: scale(0.98); }
+  .fit11-offer-card.expired { opacity: 0.6; pointer-events: none; filter: grayscale(100%); }
   
-  .ullu-offer-content-wrap { padding: 16px 16px 24px 16px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .fit11-offer-content-wrap { padding: 16px 16px 24px 16px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
   
-  .ullu-offer-code { font-size: 14px; font-weight: 600; color: #1a202c; letter-spacing: 0.02em; }
-  .ullu-offer-desc { font-size: 11px; color: #718096; line-height: 1.4; margin-top: 4px; }
+  .fit11-offer-code { font-size: 14px; font-weight: 600; color: #1a202c; letter-spacing: 0.02em; }
+  .fit11-offer-desc { font-size: 11px; color: #718096; line-height: 1.4; margin-top: 4px; }
   
-  .ullu-copy-hint { font-size: 10px; color: #3182ce; margin-top: 6px; font-weight: 600; text-transform: uppercase; transition: color 0.3s; display: flex; align-items: center; gap: 4px; }
-  .ullu-copy-hint i { font-size: 12px; }
-  .ullu-copy-hint.success { color: #38a169; }
+  .fit11-copy-hint { font-size: 10px; color: #3182ce; margin-top: 6px; font-weight: 600; text-transform: uppercase; transition: color 0.3s; display: flex; align-items: center; gap: 4px; }
+  .fit11-copy-hint i { font-size: 12px; }
+  .fit11-copy-hint.success { color: #38a169; }
 
-  .ullu-offer-timer { position: absolute; bottom: -10px; right: 16px; background: #ed8936; color: #ffffff; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; z-index: 2; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: background 0.3s; }
-  .ullu-offer-card.expired .ullu-offer-timer { background: #a0aec0; }
+  .fit11-offer-timer { position: absolute; bottom: -10px; right: 16px; background: #ed8936; color: #ffffff; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; z-index: 2; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: background 0.3s; }
+  .fit11-offer-card.expired .fit11-offer-timer { background: #a0aec0; }
 
   /* ── ACCORDIONS ── */
-  .ullu-accord-group { border-top: 1px solid var(--lux-border); margin-top: 10px; width: 100%; }
-  .ullu-accord { border-bottom: 1px solid var(--lux-border); width: 100%; }
-  .ullu-accord summary { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; cursor: pointer; list-style: none; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--lux-text); user-select: none; }
-  .ullu-accord summary::-webkit-details-marker { display: none; }
-  .ullu-accord summary i { font-size: 18px; color: var(--lux-text-muted); transition: transform .4s cubic-bezier(0.4, 0, 0.2, 1); font-weight: 300; flex-shrink: 0; }
-  .ullu-accord[open] summary i { transform: rotate(135deg); color: var(--lux-text); }
+  .fit11-accord-group { border-top: 1px solid var(--lux-border); margin-top: 10px; width: 100%; }
+  .fit11-accord { border-bottom: 1px solid var(--lux-border); width: 100%; }
+  .fit11-accord summary { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; cursor: pointer; list-style: none; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--lux-text); user-select: none; }
+  .fit11-accord summary::-webkit-details-marker { display: none; }
+  .fit11-accord summary i { font-size: 18px; color: var(--lux-text-muted); transition: transform .4s cubic-bezier(0.4, 0, 0.2, 1); font-weight: 300; flex-shrink: 0; }
+  .fit11-accord[open] summary i { transform: rotate(135deg); color: var(--lux-text); }
   
-  .ullu-acc-body { padding-bottom: 24px; font-size: 14px; color: var(--lux-text-muted); line-height: 1.8; font-weight: 300; word-break: break-word; }
-  .ullu-spec-table { width: 100%; border-collapse: collapse; }
-  .ullu-spec-table tr { border-bottom: 1px solid var(--lux-border); }
-  .ullu-spec-table td { padding: 12px 0; font-size: 14px; vertical-align: top; }
-  .ullu-spec-table td:first-child { color: var(--lux-text-muted); width: 40%; }
-  .ullu-spec-table td:last-child { color: var(--lux-text); font-weight: 400; word-break: break-word; }
+  .fit11-acc-body { padding-bottom: 24px; font-size: 14px; color: var(--lux-text-muted); line-height: 1.8; font-weight: 300; word-break: break-word; }
+  .fit11-spec-table { width: 100%; border-collapse: collapse; }
+  .fit11-spec-table tr { border-bottom: 1px solid var(--lux-border); }
+  .fit11-spec-table td { padding: 12px 0; font-size: 14px; vertical-align: top; }
+  .fit11-spec-table td:first-child { color: var(--lux-text-muted); width: 40%; }
+  .fit11-spec-table td:last-child { color: var(--lux-text); font-weight: 400; word-break: break-word; }
 
   /* ── STICKY BAR ── */
-  .ullu-sticky { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--lux-border); z-index: 99999; transform: translateY(110%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-  .ullu-sticky.show { transform: translateY(0); }
-  .ullu-sticky-inner { max-width: 1300px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 14px 20px !important; }
-  .ullu-sticky-meta { display: flex; align-items: center; gap: 16px; }
-  .ullu-sticky-img { width: 50px; height: 65px; object-fit: contain; }
-  .ullu-sticky-text h3 { font-size: 14px; font-family: var(--font-heading); font-weight: 500; color: var(--lux-text); margin: 0 0 4px; }
-  .ullu-sticky-text p { font-size: 13px; color: var(--lux-text-muted); margin: 0; }
-  .ullu-sticky-btns { width: 280px; flex-shrink: 0; }
-  .ullu-sticky-btns .ullu-btn-cart { margin: 0 !important; height: 48px !important; }
+  .fit11-sticky { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--lux-border); z-index: 99999; transform: translateY(110%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+  .fit11-sticky.show { transform: translateY(0); }
+  .fit11-sticky-inner { max-width: 1300px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 14px 20px !important; }
+  .fit11-sticky-meta { display: flex; align-items: center; gap: 16px; }
+  .fit11-sticky-img { width: 50px; height: 65px; object-fit: contain; }
+  .fit11-sticky-text h3 { font-size: 14px; font-family: var(--font-heading); font-weight: 500; color: var(--lux-text); margin: 0 0 4px; }
+  .fit11-sticky-text p { font-size: 13px; color: var(--lux-text-muted); margin: 0; }
+  .fit11-sticky-btns { width: 280px; flex-shrink: 0; }
+  .fit11-sticky-btns .fit11-btn-cart { margin: 0 !important; height: 48px !important; }
 
   /* ── MODALS ── */
-  .ullu-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 100000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-  .ullu-modal-overlay.open { opacity: 1; pointer-events: auto; }
-  .ullu-modal-content { background: var(--lux-surface); padding: 32px; border-radius: 12px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; transform: translateY(20px); transition: transform 0.3s ease; }
-  .ullu-modal-overlay.open .ullu-modal-content { transform: translateY(0); }
-  .ullu-modal-close { position: absolute; top: 16px; right: 16px; background: transparent; border: none; font-size: 22px; cursor: pointer; color: var(--lux-text-muted); }
+  .fit11-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 100000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+  .fit11-modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .fit11-modal-content { background: var(--lux-surface); padding: 32px; border-radius: 12px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; transform: translateY(20px); transition: transform 0.3s ease; }
+  .fit11-modal-overlay.open .fit11-modal-content { transform: translateY(0); }
+  .fit11-modal-close { position: absolute; top: 16px; right: 16px; background: transparent; border: none; font-size: 22px; cursor: pointer; color: var(--lux-text-muted); }
 
   /* ── SIZE GUIDE DRAWER / BOTTOM SHEET ── */
-  .ullu-size-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 100000; display: flex; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
-  .ullu-size-modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .fit11-size-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 100000; display: flex; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+  .fit11-size-modal-overlay.open { opacity: 1; pointer-events: auto; }
 
-  .ullu-size-drawer {
+  .fit11-size-drawer {
     background: var(--lux-surface);
     position: absolute;
     transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
@@ -180,113 +180,113 @@
 
   /* PC: Right Side Drawer */
   @media(min-width: 768px) {
-    .ullu-size-modal-overlay { justify-content: flex-end; align-items: flex-start; }
-    .ullu-size-drawer {
+    .fit11-size-modal-overlay { justify-content: flex-end; align-items: flex-start; }
+    .fit11-size-drawer {
       width: 450px;
       height: 100vh;
       top: 0; right: 0;
       transform: translateX(100%);
       border-radius: 20px 0 0 20px;
     }
-    .ullu-size-modal-overlay.open .ullu-size-drawer { transform: translateX(0); }
+    .fit11-size-modal-overlay.open .fit11-size-drawer { transform: translateX(0); }
   }
 
   /* Mobile: Bottom Sheet */
   @media(max-width: 767px) {
-    .ullu-size-modal-overlay { justify-content: flex-end; align-items: flex-end; }
-    .ullu-size-drawer {
+    .fit11-size-modal-overlay { justify-content: flex-end; align-items: flex-end; }
+    .fit11-size-drawer {
       width: 100%;
       max-height: 85vh;
       bottom: 0; left: 0;
       transform: translateY(100%);
       border-radius: 24px 24px 0 0;
     }
-    .ullu-size-modal-overlay.open .ullu-size-drawer { transform: translateY(0); }
+    .fit11-size-modal-overlay.open .fit11-size-drawer { transform: translateY(0); }
   }
 
-  .ullu-size-header { padding: 24px 30px 20px; border-bottom: 1px solid var(--lux-border); display: flex; justify-content: space-between; align-items: center; position: relative; }
+  .fit11-size-header { padding: 24px 30px 20px; border-bottom: 1px solid var(--lux-border); display: flex; justify-content: space-between; align-items: center; position: relative; }
   @media(max-width: 767px) {
-    .ullu-size-header::before {
+    .fit11-size-header::before {
       content: ''; position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
       width: 40px; height: 5px; border-radius: 4px; background: #cbd5e1;
     }
   }
-  .ullu-size-header h3 { font-family: var(--font-heading); font-size: 26px; font-weight: 500; margin: 0; color: var(--lux-text); }
-  .ullu-size-close { background: #f1f5f9; border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; color: var(--lux-text); transition: background 0.3s; }
-  .ullu-size-close:hover { background: #e2e8f0; }
+  .fit11-size-header h3 { font-family: var(--font-heading); font-size: 26px; font-weight: 500; margin: 0; color: var(--lux-text); }
+  .fit11-size-close { background: #f1f5f9; border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; color: var(--lux-text); transition: background 0.3s; }
+  .fit11-size-close:hover { background: #e2e8f0; }
 
-  .ullu-size-body { padding: 30px; overflow-y: auto; flex: 1; }
-  @media(max-width: 767px) { .ullu-size-body { padding: 20px; } }
+  .fit11-size-body { padding: 30px; overflow-y: auto; flex: 1; }
+  @media(max-width: 767px) { .fit11-size-body { padding: 20px; } }
 
-  .ullu-size-table-lux { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid var(--lux-border); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-  .ullu-size-table-lux th { background: #f8fafc; padding: 16px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; border-bottom: 2px solid var(--lux-border); text-align: center; }
-  .ullu-size-table-lux th:first-child { text-align: left; }
-  .ullu-size-table-lux td { padding: 16px; font-size: 14px; text-align: center; color: var(--lux-text); border-bottom: 1px solid #f1f5f9; }
-  .ullu-size-table-lux td:first-child { text-align: left; font-weight: 600; background: #fafafa; }
-  .ullu-size-table-lux tr:last-child td { border-bottom: none; }
-  .ullu-size-table-lux tbody tr:hover td { background: #f1f5f9; }
+  .fit11-size-table-lux { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid var(--lux-border); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+  .fit11-size-table-lux th { background: #f8fafc; padding: 16px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; border-bottom: 2px solid var(--lux-border); text-align: center; }
+  .fit11-size-table-lux th:first-child { text-align: left; }
+  .fit11-size-table-lux td { padding: 16px; font-size: 14px; text-align: center; color: var(--lux-text); border-bottom: 1px solid #f1f5f9; }
+  .fit11-size-table-lux td:first-child { text-align: left; font-weight: 600; background: #fafafa; }
+  .fit11-size-table-lux tr:last-child td { border-bottom: none; }
+  .fit11-size-table-lux tbody tr:hover td { background: #f1f5f9; }
 
   /* ── FULL MOBILE OVERRIDES ── */
   @media(max-width:1024px){ 
-    .ullu-grid { grid-template-columns: 1fr; gap: 0; padding: 0; } 
-    .ullu-gallery-wrap { position: relative; top: 0; } 
-    .ullu-info { padding: 24px; }
+    .fit11-grid { grid-template-columns: 1fr; gap: 0; padding: 0; } 
+    .fit11-gallery-wrap { position: relative; top: 0; } 
+    .fit11-info { padding: 24px; }
   }
   
   @media(max-width:767px){ 
-    .ullu-page { padding-top: 0; padding-bottom: 90px; width: 100%; overflow: hidden; } 
-    .ullu-grid { display: flex; flex-direction: column; width: 100%; padding: 0; }
+    .fit11-page { padding-top: 0; padding-bottom: 90px; width: 100%; overflow: hidden; } 
+    .fit11-grid { display: flex; flex-direction: column; width: 100%; padding: 0; }
     
-    .ullu-gallery-wrap { width: 100%; margin: 0; padding: 0; }
-    .ullu-gallery-box { width: 100%; aspect-ratio: 4/5; height: auto; border-radius: 0; border: none; border-bottom: 1px solid var(--lux-border); max-height: none; }
-    .ullu-slide { width: 100%; padding: 0; }
-    .ullu-slide img { width: 100%; height: 100%; object-fit: contain; padding: 0; } 
-    .ullu-thumbs { padding: 8px 16px; }
+    .fit11-gallery-wrap { width: 100%; margin: 0; padding: 0; }
+    .fit11-gallery-box { width: 100%; aspect-ratio: 4/5; height: auto; border-radius: 0; border: none; border-bottom: 1px solid var(--lux-border); max-height: none; }
+    .fit11-slide { width: 100%; padding: 0; }
+    .fit11-slide img { width: 100%; height: 100%; object-fit: contain; padding: 0; } 
+    .fit11-thumbs { padding: 8px 16px; }
     
-    .ullu-info { width: 100%; padding: 12px 16px; gap: 16px; text-align: left; margin: 0; }
-    .ullu-header-group { padding-bottom: 12px; border-bottom: 1px solid var(--lux-border); align-items: flex-start; }
-    .ullu-title { font-size: 24px; text-align: left; line-height: 1.25; margin: 0; } 
-    .ullu-price-row { justify-content: flex-start; margin: 0; }
+    .fit11-info { width: 100%; padding: 12px 16px; gap: 16px; text-align: left; margin: 0; }
+    .fit11-header-group { padding-bottom: 12px; border-bottom: 1px solid var(--lux-border); align-items: flex-start; }
+    .fit11-title { font-size: 24px; text-align: left; line-height: 1.25; margin: 0; } 
+    .fit11-price-row { justify-content: flex-start; margin: 0; }
     
-    .ullu-main-action-btns { width: 100%; padding: 8px 0 24px 0; border: none; border-radius: 0; margin: 0; background: transparent; }
-    .ullu-app-wrapper { width: 100%; padding: 4px; padding-top: 15px; margin-left: -4px; overflow: visible; }
+    .fit11-main-action-btns { width: 100%; padding: 8px 0 24px 0; border: none; border-radius: 0; margin: 0; background: transparent; }
+    .fit11-app-wrapper { width: 100%; padding: 4px; padding-top: 15px; margin-left: -4px; overflow: visible; }
     
-    #ullu-form-cart-main { width: 100%; margin: 0; padding: 0; }
-    .ullu-main-action-btns .ullu-btn-cart { display: flex !important; width: 100% !important; height: 52px !important; margin: 16px 0 0 0 !important; }
+    #11fit-form-cart-main { width: 100%; margin: 0; padding: 0; }
+    .fit11-main-action-btns .fit11-btn-cart { display: flex !important; width: 100% !important; height: 52px !important; margin: 16px 0 0 0 !important; }
     
     /* Responsive snappy coupon layout */
-    .ullu-offers-wrapper { width: 100%; padding: 16px 12px; }
-    .ullu-offer-card { min-width: 85%; max-width: none; scroll-snap-align: center; }
+    .fit11-offers-wrapper { width: 100%; padding: 16px 12px; }
+    .fit11-offer-card { min-width: 85%; max-width: none; scroll-snap-align: center; }
     
-    .ullu-accord-group { width: 100%; }
+    .fit11-accord-group { width: 100%; }
     
-    .ullu-sticky-inner { display: block !important; padding: 12px 16px !important; } 
-    .ullu-sticky-meta { display: none !important; } 
-    .ullu-sticky-btns { width: 100% !important; margin: 0 auto; display: block; } 
-    .ullu-sticky-btns .ullu-btn-cart { height: 48px !important; width: 100% !important; }
+    .fit11-sticky-inner { display: block !important; padding: 12px 16px !important; } 
+    .fit11-sticky-meta { display: none !important; } 
+    .fit11-sticky-btns { width: 100% !important; margin: 0 auto; display: block; } 
+    .fit11-sticky-btns .fit11-btn-cart { height: 48px !important; width: 100% !important; }
   }
 </style>
 
-<div class="ullu-page">
-  <div class="ullu-grid">
+<div class="fit11-page">
+  <div class="fit11-grid">
 
     {% comment %} ── LEFT: EDITORIAL GALLERY ── {% endcomment %}
-    <div class="ullu-gallery-wrap">
-      <div class="ullu-gallery-box">
-        <div class="ullu-slides" id="ulluSlides">
+    <div class="fit11-gallery-wrap">
+      <div class="fit11-gallery-box">
+        <div class="fit11-slides" id="fit11Slides">
           {% for image in product.images %}
-            <div class="ullu-slide" data-image-id="{{ image.id }}"><img src="{{ image | img_url: '1000x1250' }}" alt="{{ image.alt | escape }}"></div>
+            <div class="fit11-slide" data-image-id="{{ image.id }}"><img src="{{ image | img_url: '1000x1250' }}" alt="{{ image.alt | escape }}"></div>
           {% endfor %}
         </div>
-        <div class="ullu-dots" id="ulluDots">
-          {% for image in product.images %}<div class="ullu-dot{% if forloop.first %} on{% endif %}"></div>{% endfor %}
+        <div class="fit11-dots" id="fit11Dots">
+          {% for image in product.images %}<div class="fit11-dot{% if forloop.first %} on{% endif %}"></div>{% endfor %}
         </div>
       </div>
       
       {% if product.images.size > 1 %}
-        <div class="ullu-thumbs" id="ulluThumbs">
+        <div class="fit11-thumbs" id="fit11Thumbs">
           {% for image in product.images %}
-            <div class="ullu-thumb{% if forloop.first %} on{% endif %}" data-index="{{ forloop.index0 }}">
+            <div class="fit11-thumb{% if forloop.first %} on{% endif %}" data-index="{{ forloop.index0 }}">
               <img src="{{ image | img_url: '200x250' }}" alt="{{ image.alt | escape }}" loading="lazy">
             </div>
           {% endfor %}
@@ -295,29 +295,29 @@
     </div>
 
     {% comment %} ── RIGHT: DETAILS ── {% endcomment %}
-    <div class="ullu-info">
+    <div class="fit11-info">
       
-      <div class="ullu-header-group">
-        <h1 class="ullu-title">{{ product.title }}</h1>
-        <div class="ullu-price-row">
-          <span class="ullu-price-main">{{ product.price | money }}</span>
+      <div class="fit11-header-group">
+        <h1 class="fit11-title">{{ product.title }}</h1>
+        <div class="fit11-price-row">
+          <span class="fit11-price-main">{{ product.price | money }}</span>
           {% if product.compare_at_price > product.price %}
-            <span class="ullu-price-old">{{ product.compare_at_price | money }}</span>
-            <span class="ullu-price-off">{{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price | round }}% off</span>
+            <span class="fit11-price-old">{{ product.compare_at_price | money }}</span>
+            <span class="fit11-price-off">{{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price | round }}% off</span>
           {% endif %}
         </div>
 
         {% comment %} Ratings & Size Guide now below MRP {% endcomment %}
-        <div class="ullu-rating-row">
+        <div class="fit11-rating-row">
           <div class="AirReviews-Widget AirReviews-Widget--Stars"></div>
-          <div class="ullu-size-chart-link" onclick="ulluToggleModal(true)">
+          <div class="fit11-size-chart-link" onclick="fit11ToggleModal(true)">
             <i class="ti ti-ruler-2"></i><span>Size Guide</span>
           </div>
         </div>
       </div>
       
       {% comment %} ── HIGHLIGHTED COMBO SELECTION AREA (APP + VARIANTS) ── {% endcomment %}
-      <div class="ullu-main-action-btns" id="ulluMainBtnContainer">
+      <div class="fit11-main-action-btns" id="fit11MainBtnContainer">
         
         {% comment %} Check if an App block is added in the theme editor {% endcomment %}
         {%- assign has_app_block = false -%}
@@ -329,11 +329,11 @@
         {%- endfor -%}
 
 
-        {% form 'product', product, id: 'ullu-form-cart-main', class: 'ullu-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
+        {% form 'product', product, id: '11fit-form-cart-main', class: '11fit-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
           
           {%- for block in section.blocks -%}
             {%- if block.type == '@app' -%}
-              <div class="ullu-app-wrapper">
+              <div class="fit11-app-wrapper">
                 {% render block %}
               </div>
             {%- endif -%}
@@ -341,7 +341,7 @@
           
           {% comment %} ── VARIANT SELECTOR (LUXURY PILLS) ── {% endcomment %}
           {% unless product.has_only_default_variant %}
-            <div class="ullu-variant-selectors">
+            <div class="fit11-variant-selectors">
               {% for option in product.options_with_values %}
                 
                 {% assign option_name_lower = option.name | downcase %}
@@ -350,24 +350,24 @@
                   {% assign is_color_option = true %}
                 {% endif %}
 
-                <fieldset class="ullu-option-fieldset">
-                  <legend class="ullu-option-name" style="display: flex; align-items: center;">
+                <fieldset class="fit11-option-fieldset">
+                  <legend class="fit11-option-name" style="display: flex; align-items: center;">
                     {{ option.name }}
                     {% if is_color_option %}
-                      <span class="ullu-selected-color-label" style="margin-left: 8px; color: var(--lux-text); font-weight: 600; text-transform: capitalize;">{{ option.selected_value }}</span>
+                      <span class="fit11-selected-color-label" style="margin-left: 8px; color: var(--lux-text); font-weight: 600; text-transform: capitalize;">{{ option.selected_value }}</span>
                     {% endif %}
                   </legend>
-                  <div class="ullu-variant-pills">
+                  <div class="fit11-variant-pills">
                     {% for value in option.values %}
                       <input type="radio" 
                              id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
                              name="{{ option.name }}" 
                              value="{{ value | escape }}"
                              {% if option.selected_value == value %}checked{% endif %}
-                             class="ullu-variant-radio"
+                             class="fit11-variant-radio"
                              {% if is_color_option %}data-is-color="true"{% endif %}>
                       
-                      <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="ullu-variant-pill {% if is_color_option %}is-color{% endif %}" title="{{ value }}">
+                      <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="fit11-variant-pill {% if is_color_option %}is-color{% endif %}" title="{{ value }}">
                         {% if is_color_option %}
                           {% assign color_handle = value | handle %}
                           {% assign css_color = color_handle %}
@@ -387,7 +387,7 @@
                             {% else %}{% assign css_color = value | split: ' ' | last | downcase %}
                           {% endcase %}
                           {% assign swatch_image = color_handle | append: '.png' %}
-                          <span class="ullu-color-swatch" style="background-color: {{ css_color }}; background-image: url('{{ swatch_image | file_url }}'); background-size: cover; background-position: center;"></span>
+                          <span class="fit11-color-swatch" style="background-color: {{ css_color }}; background-image: url('{{ swatch_image | file_url }}'); background-size: cover; background-position: center;"></span>
                         {% else %}
                           {{ value }}
                         {% endif %}
@@ -403,9 +403,9 @@
             </div>
           {% endunless %}
           
-          <input type="hidden" name="id" id="ullu-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
+          <input type="hidden" name="id" id="11fit-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
           <input type="hidden" name="quantity" value="1" class="qty-input">
-          <button type="submit" name="add" class="ullu-btn-cart product-form__submit">
+          <button type="submit" name="add" class="fit11-btn-cart product-form__submit">
             <span>Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
           </button>
         {% endform %}
@@ -415,29 +415,29 @@
       {% assign offer_blocks = section.blocks | where: "type", "offer" %}
       
       {% if offer_blocks.size > 0 %}
-        <div class="ullu-offers-wrapper">
-          <div class="ullu-offers-header">
-            <div class="ullu-offers-title-wrap">
-              <div class="ullu-offers-icon"><i class="ti ti-percentage"></i></div>
-              <span class="ullu-offers-title">{{ section.settings.offers_heading | default: "Offers & Discounts" }}</span>
+        <div class="fit11-offers-wrapper">
+          <div class="fit11-offers-header">
+            <div class="fit11-offers-title-wrap">
+              <div class="fit11-offers-icon"><i class="ti ti-percentage"></i></div>
+              <span class="fit11-offers-title">{{ section.settings.offers_heading | default: "Offers & Discounts" }}</span>
             </div>
             {% if section.settings.show_view_all %}
-              <div class="ullu-offers-view-all" onclick="ulluToggleOffersModal(true)">View all Offers</div>
+              <div class="fit11-offers-view-all" onclick="fit11ToggleOffersModal(true)">View all Offers</div>
             {% endif %}
           </div>
           
-          <div class="ullu-offers-scroll">
+          <div class="fit11-offers-scroll">
             {% for block in offer_blocks %}
-              <div class="ullu-offer-card" onclick="ulluCopyCoupon(this, '{{ block.settings.offer_code }}')" {{ block.shopify_attributes }}>
-                <div class="ullu-offer-content-wrap">
-                  <div class="ullu-offer-code">{{ block.settings.offer_code }}</div>
-                  <div class="ullu-offer-desc">{{ block.settings.offer_desc }}</div>
+              <div class="fit11-offer-card" onclick="fit11CopyCoupon(this, '{{ block.settings.offer_code }}')" {{ block.shopify_attributes }}>
+                <div class="fit11-offer-content-wrap">
+                  <div class="fit11-offer-code">{{ block.settings.offer_code }}</div>
+                  <div class="fit11-offer-desc">{{ block.settings.offer_desc }}</div>
                   {% if block.settings.offer_code != blank %}
-                    <div class="ullu-copy-hint"><i class="ti ti-copy"></i> Click to Copy</div>
+                    <div class="fit11-copy-hint"><i class="ti ti-copy"></i> Click to Copy</div>
                   {% endif %}
                 </div>
                 {% if block.settings.offer_timer != blank %}
-                  <div class="ullu-offer-timer">{{ block.settings.offer_timer }}</div>
+                  <div class="fit11-offer-timer">{{ block.settings.offer_timer }}</div>
                 {% endif %}
               </div>
             {% endfor %}
@@ -446,17 +446,17 @@
       {% endif %}
 
       {% comment %} ── ACCORDIONS ── {% endcomment %}
-      <div class="ullu-accord-group">
+      <div class="fit11-accord-group">
         {% if product.description != blank %}
-          <details class="ullu-accord">
+          <details class="fit11-accord">
             <summary>Description <i class="ti ti-plus" aria-hidden="true"></i></summary>
-            <div class="ullu-acc-body">{{ product.description }}</div>
+            <div class="fit11-acc-body">{{ product.description }}</div>
           </details>
         {% endif %}
-        <details class="ullu-accord" open>
+        <details class="fit11-accord" open>
           <summary>Specifications <i class="ti ti-plus" aria-hidden="true"></i></summary>
-          <div class="ullu-acc-body">
-            <table class="ullu-spec-table">
+          <div class="fit11-acc-body">
+            <table class="fit11-spec-table">
               <tr><td>Brand</td><td>{{ product.vendor }}</td></tr>
               {% if product.type != blank %}<tr><td>Category</td><td>{{ product.type }}</td></tr>{% endif %}
               {% for tag in product.tags %}
@@ -469,9 +469,9 @@
           </div>
         </details>
         {% if section.settings.delivery_text != blank %}
-          <details class="ullu-accord">
+          <details class="fit11-accord">
             <summary>Shipping &amp; Returns <i class="ti ti-plus" aria-hidden="true"></i></summary>
-            <div class="ullu-acc-body">{{ section.settings.delivery_text }}</div>
+            <div class="fit11-acc-body">{{ section.settings.delivery_text }}</div>
           </details>
         {% endif %}
       </div>
@@ -482,22 +482,22 @@
 
 {% comment %} ── OFFERS MODAL ── {% endcomment %}
 {% if offer_blocks.size > 0 %}
-<div class="ullu-modal-overlay" id="ulluOffersModal" onclick="if(event.target === this) ulluToggleOffersModal(false);">
-  <div class="ullu-modal-content">
-    <button type="button" class="ullu-modal-close" onclick="ulluToggleOffersModal(false);"><i class="ti ti-x"></i></button>
+<div class="fit11-modal-overlay" id="fit11OffersModal" onclick="if(event.target === this) fit11ToggleOffersModal(false);">
+  <div class="fit11-modal-content">
+    <button type="button" class="fit11-modal-close" onclick="fit11ToggleOffersModal(false);"><i class="ti ti-x"></i></button>
     <h3 style="font-family: var(--font-heading); font-size: 24px; font-weight: 400; margin: 0 0 20px 0; border-bottom: 1px solid var(--lux-border); padding-bottom: 12px;">All Offers & Discounts</h3>
-    <div class="ullu-modal-body" style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="fit11-modal-body" style="display: flex; flex-direction: column; gap: 16px;">
       {% for block in offer_blocks %}
-        <div class="ullu-offer-card" onclick="ulluCopyCoupon(this, '{{ block.settings.offer_code }}')" style="width: 100%; min-width: 100%; scroll-snap-align: none;">
-          <div class="ullu-offer-content-wrap">
-            <div class="ullu-offer-code">{{ block.settings.offer_code }}</div>
-            <div class="ullu-offer-desc">{{ block.settings.offer_desc }}</div>
+        <div class="fit11-offer-card" onclick="fit11CopyCoupon(this, '{{ block.settings.offer_code }}')" style="width: 100%; min-width: 100%; scroll-snap-align: none;">
+          <div class="fit11-offer-content-wrap">
+            <div class="fit11-offer-code">{{ block.settings.offer_code }}</div>
+            <div class="fit11-offer-desc">{{ block.settings.offer_desc }}</div>
             {% if block.settings.offer_code != blank %}
-              <div class="ullu-copy-hint"><i class="ti ti-copy"></i> Click to Copy</div>
+              <div class="fit11-copy-hint"><i class="ti ti-copy"></i> Click to Copy</div>
             {% endif %}
           </div>
           {% if block.settings.offer_timer != blank %}
-            <div class="ullu-offer-timer">{{ block.settings.offer_timer }}</div>
+            <div class="fit11-offer-timer">{{ block.settings.offer_timer }}</div>
           {% endif %}
         </div>
       {% endfor %}
@@ -507,13 +507,13 @@
 {% endif %}
 
 {% comment %} ── SIZE GUIDE MODAL (DRAWER/BOTTOM-SHEET) ── {% endcomment %}
-<div class="ullu-size-modal-overlay" id="ulluSizeModal" onclick="if(event.target === this) ulluToggleModal(false);">
-  <div class="ullu-size-drawer">
-    <div class="ullu-size-header">
+<div class="fit11-size-modal-overlay" id="fit11SizeModal" onclick="if(event.target === this) fit11ToggleModal(false);">
+  <div class="fit11-size-drawer">
+    <div class="fit11-size-header">
       <h3>Size Guide</h3>
-      <button type="button" class="ullu-size-close" onclick="ulluToggleModal(false);"><i class="ti ti-x"></i></button>
+      <button type="button" class="fit11-size-close" onclick="fit11ToggleModal(false);"><i class="ti ti-x"></i></button>
     </div>
-    <div class="ullu-size-body">
+    <div class="fit11-size-body">
       {% if section.settings.size_chart_image != blank %}
         <img src="{{ section.settings.size_chart_image | img_url: '800x' }}" alt="Size Chart" style="width:100%; height:auto; display:block; border-radius:8px;">
       {% elsif section.settings.size_chart_page != blank %}
@@ -521,7 +521,7 @@
           {{ pages[section.settings.size_chart_page].content }}
         </div>
       {% else %}
-        <table class="ullu-size-table-lux">
+        <table class="fit11-size-table-lux">
           <thead>
             <tr><th>Size</th><th>Chest (in)</th><th>Waist (in)</th><th>Hips (in)</th></tr>
           </thead>
@@ -544,15 +544,15 @@
 </div>
 
 {% comment %} ── STICKY BAR ── {% endcomment %}
-<div class="ullu-sticky" id="ulluStickyBar">
-  <div class="ullu-sticky-inner">
-    <div class="ullu-sticky-meta">
-      <img class="ullu-sticky-img" src="{{ product.featured_image | img_url: '100x125' }}" alt="{{ product.title | escape }}" loading="lazy">
-      <div class="ullu-sticky-text"><h3>{{ product.title }}</h3><p>{{ product.price | money }}</p></div>
+<div class="fit11-sticky" id="fit11StickyBar">
+  <div class="fit11-sticky-inner">
+    <div class="fit11-sticky-meta">
+      <img class="fit11-sticky-img" src="{{ product.featured_image | img_url: '100x125' }}" alt="{{ product.title | escape }}" loading="lazy">
+      <div class="fit11-sticky-text"><h3>{{ product.title }}</h3><p>{{ product.price | money }}</p></div>
     </div>
-    <div class="ullu-sticky-btns">
-      <div class="ullu-form-inline">
-        <button type="button" class="ullu-btn-cart product-form__submit" onclick="document.querySelector('#ullu-form-cart-main .ullu-btn-cart').click();">
+    <div class="fit11-sticky-btns">
+      <div class="11fit-form-inline">
+        <button type="button" class="fit11-btn-cart product-form__submit" onclick="document.querySelector('#11fit-form-cart-main .fit11-btn-cart').click();">
           <span>Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
         </button>
       </div>
@@ -563,10 +563,10 @@
 <script>
 (function() {
   /* GALLERY SYNC */
-  var slides = document.getElementById('ulluSlides'), dotsWrap = document.getElementById('ulluDots'), thumbsWrap = document.getElementById('ulluThumbs');
+  var slides = document.getElementById('fit11Slides'), dotsWrap = document.getElementById('fit11Dots'), thumbsWrap = document.getElementById('fit11Thumbs');
   var goTo = function(n) {};
   if (slides) {
-    var dots = dotsWrap ? dotsWrap.querySelectorAll('.ullu-dot') : [], thumbs = thumbsWrap ? thumbsWrap.querySelectorAll('.ullu-thumb') : [];
+    var dots = dotsWrap ? dotsWrap.querySelectorAll('.fit11-dot') : [], thumbs = thumbsWrap ? thumbsWrap.querySelectorAll('.fit11-thumb') : [];
     var total = dots.length, cur = 0;
     goTo = function(n) {
       if (n < 0) n = total - 1; if (n >= total) n = 0;
@@ -587,8 +587,8 @@
   }
 
   /* SMART STICKY BAR LOGIC */
-  var stickyBar = document.getElementById('ulluStickyBar');
-  var mainBtnBox = document.getElementById('ulluMainBtnContainer');
+  var stickyBar = document.getElementById('fit11StickyBar');
+  var mainBtnBox = document.getElementById('fit11MainBtnContainer');
   
   if (stickyBar && mainBtnBox) {
     function checkSticky() {
@@ -604,8 +604,8 @@
   }
 
   /* SIZE MODAL */
-  window.ulluToggleModal = function(show) {
-    var modal = document.getElementById('ulluSizeModal');
+  window.fit11ToggleModal = function(show) {
+    var modal = document.getElementById('fit11SizeModal');
     if(!modal) return;
     if(show) {
       modal.classList.add('open');
@@ -617,8 +617,8 @@
   };
 
   /* OFFERS MODAL */
-  window.ulluToggleOffersModal = function(show) {
-    var modal = document.getElementById('ulluOffersModal');
+  window.fit11ToggleOffersModal = function(show) {
+    var modal = document.getElementById('fit11OffersModal');
     if(!modal) return;
     if(show) {
       modal.classList.add('open');
@@ -630,7 +630,7 @@
   };
 
   /* REAL-TIME COUNTDOWN LOGIC */
-  document.querySelectorAll('.ullu-offer-timer').forEach(function(el) {
+  document.querySelectorAll('.fit11-offer-timer').forEach(function(el) {
     var text = el.innerText;
     // Look for format like "Ends in 07h 06m 05s"
     var match = text.match(/(\d+)h\s*(\d+)m\s*(\d+)s/i);
@@ -647,10 +647,10 @@
         if(totalSeconds <= 0) {
           clearInterval(interval);
           el.innerText = "Expired";
-          var card = el.closest('.ullu-offer-card');
+          var card = el.closest('.fit11-offer-card');
           if(card) {
             card.classList.add('expired');
-            var hint = card.querySelector('.ullu-copy-hint');
+            var hint = card.querySelector('.fit11-copy-hint');
             if(hint) hint.innerHTML = "Code Expired";
           }
         } else {
@@ -667,8 +667,8 @@
   });
 
   /* ── VARIANT SELECTION LOGIC ── */
-  var variantRadios = document.querySelectorAll('.ullu-variant-radio');
-  var variantIdInput = document.getElementById('ullu-variant-id');
+  var variantRadios = document.querySelectorAll('.fit11-variant-radio');
+  var variantIdInput = document.getElementById('11fit-variant-id');
   var variantsJsonEl = document.getElementById('ProductVariantsData');
   
   if (variantsJsonEl) {
@@ -676,12 +676,12 @@
 
     function updateSelectedVariant() {
       var selectedOptions = [];
-      document.querySelectorAll('.ullu-option-fieldset').forEach(function(fieldset) {
-        var checkedRadio = fieldset.querySelector('.ullu-variant-radio:checked');
+      document.querySelectorAll('.fit11-option-fieldset').forEach(function(fieldset) {
+        var checkedRadio = fieldset.querySelector('.fit11-variant-radio:checked');
         if (checkedRadio) {
           selectedOptions.push(checkedRadio.value);
           if (checkedRadio.getAttribute('data-is-color') === 'true') {
-            var colorLabel = fieldset.querySelector('.ullu-selected-color-label');
+            var colorLabel = fieldset.querySelector('.fit11-selected-color-label');
             if (colorLabel) colorLabel.innerText = checkedRadio.value;
           }
         }
@@ -699,9 +699,9 @@
         
         if (matchedVariant.featured_image && matchedVariant.featured_image.id) {
           var imageId = matchedVariant.featured_image.id;
-          var targetSlide = document.querySelector('.ullu-slide[data-image-id="' + imageId + '"]');
+          var targetSlide = document.querySelector('.fit11-slide[data-image-id="' + imageId + '"]');
           if (targetSlide) {
-            var slideElements = Array.from(document.querySelectorAll('.ullu-slide'));
+            var slideElements = Array.from(document.querySelectorAll('.fit11-slide'));
             var targetIndex = slideElements.indexOf(targetSlide);
             if (targetIndex !== -1 && typeof goTo === 'function') {
               goTo(targetIndex);
@@ -719,7 +719,7 @@
 })();
 
 /* CLICK TO COPY COUPON LOGIC */
-window.ulluCopyCoupon = function(cardElement, code) {
+window.fit11CopyCoupon = function(cardElement, code) {
   if(cardElement.classList.contains('expired')) return;
   if(!code) return;
 
@@ -732,7 +732,7 @@ window.ulluCopyCoupon = function(cardElement, code) {
     document.body.removeChild(el);
   }
   
-  var hint = cardElement.querySelector('.ullu-copy-hint');
+  var hint = cardElement.querySelector('.fit11-copy-hint');
   if(hint) {
     var origHTML = hint.innerHTML;
     hint.innerHTML = '<i class="ti ti-check"></i> Code Copied!';

@@ -3596,25 +3596,25 @@ details-disclosure > details {
   }
 }
 
-/* ── UlluKart overrides ── */
+/* ── 11Fit overrides ── */
 .card, .card--product {
-  background-color: var(--ullu-card-bg) !important;
-  border: 1px solid var(--ullu-card-border) !important;
+  background-color: var(--11fit-card-bg) !important;
+  border: 1px solid var(--11fit-card-border) !important;
   border-radius: 12px !important;
   transition: transform 0.22s ease, box-shadow 0.22s ease !important;
 }
 .card:hover, .card--product:hover {
   transform: translateY(-5px) !important;
   box-shadow: 0 8px 32px rgba(0,0,0,0.10) !important;
-  border-color: var(--ullu-accent) !important;
+  border-color: var(--11fit-accent) !important;
 }
 .price__regular .price-item--regular,
 .price-item--sale {
-  color: var(--ullu-price) !important;
+  color: var(--11fit-price) !important;
   font-weight: 700 !important;
 }
 .button, .btn {
-  background: var(--ullu-accent) !important;
+  background: var(--11fit-accent) !important;
   color: #0A0A0F !important;
   border: none !important;
   font-weight: 700 !important;
@@ -3625,7 +3625,7 @@ details-disclosure > details {
 }
 
 /* =========================================
-   ULLUKART PREMIUM PRODUCT CARDS 
+   11FIT PREMIUM PRODUCT CARDS 
 ========================================= */
 
 /* Card Container Hover & Glow */
@@ -3640,7 +3640,7 @@ details-disclosure > details {
 
 .card-wrapper:hover {
   transform: translateY(-10px);
-  box-shadow: 0 15px 30px rgba(245, 200, 66, 0.15); /* Soft Ullu Gold Glow */
+  box-shadow: 0 15px 30px rgba(245, 200, 66, 0.15); /* Soft 11Fit Gold Glow */
   border-color: rgba(245, 200, 66, 0.8);
 }
 

@@ -1,6 +1,6 @@
 {% comment %}
   ============================================================
-  ULLUKART — tabbed-slider.liquid (ELEGANT UPGRADE + TEXT COLORS)
+  11FIT — tabbed-slider.liquid (ELEGANT UPGRADE + TEXT COLORS)
   Drop this file into: sections/tabbed-slider.liquid
   ============================================================
 {% endcomment %}
@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 
 <style>
-  .ullu-tabs-wrapper {
+  .11fit-tabs-wrapper {
     background-color: {{ section.settings.bg_color }};
     padding: 60px 0 50px 0;
     font-family: 'Outfit', sans-serif;
@@ -19,12 +19,12 @@
     box-sizing: border-box;
   }
   
-  .ullu-tabs-wrapper * {
+  .11fit-tabs-wrapper * {
     box-sizing: border-box;
   }
 
   /* ── HEADER ── */
-  .ullu-tabs-header-wrap {
+  .11fit-tabs-header-wrap {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -36,7 +36,7 @@
     text-align: center;
   }
 
-  .ullu-tabs-title-row {
+  .11fit-tabs-title-row {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -44,7 +44,7 @@
     margin-bottom: 24px;
   }
 
-  .ullu-tabs-icon {
+  .11fit-tabs-icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -57,7 +57,7 @@
     flex-shrink: 0;
   }
 
-  .ullu-tabs-main-heading {
+  .11fit-tabs-main-heading {
     font-family: 'Playfair Display', serif;
     font-size: 32px;
     font-weight: 400;
@@ -68,7 +68,7 @@
   }
 
   /* ── CATEGORY TABS (SCROLLABLE) ── */
-  .ullu-tabs-nav {
+  .11fit-tabs-nav {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -80,11 +80,11 @@
     max-width: 800px;
   }
 
-  .ullu-tabs-nav::-webkit-scrollbar {
+  .11fit-tabs-nav::-webkit-scrollbar {
     display: none;
   }
 
-  .ullu-tab-btn {
+  .11fit-tab-btn {
     background: #ffffff;
     color: #64748b;
     border: 1px solid #e2e8f0;
@@ -102,13 +102,13 @@
     font-family: 'Outfit', sans-serif;
   }
 
-  .ullu-tab-btn:hover {
+  .11fit-tab-btn:hover {
     border-color: #cbd5e1;
     color: {{ section.settings.accent_color }};
   }
 
   /* Active Tab State */
-  .ullu-tab-btn.active {
+  .11fit-tab-btn.active {
     background: {{ section.settings.active_tab_color }};
     color: #ffffff;
     border-color: {{ section.settings.active_tab_color }};
@@ -116,27 +116,27 @@
   }
 
   /* ── CONTENT PANELS ── */
-  .ullu-tabs-content-wrap {
+  .11fit-tabs-content-wrap {
     max-width: 1300px;
     margin: 0 auto;
   }
 
-  .ullu-tab-panel {
+  .11fit-tab-panel {
     display: none;
-    animation: ulluFadeIn 0.4s ease-in-out;
+    animation: 11fitFadeIn 0.4s ease-in-out;
   }
 
-  .ullu-tab-panel.active {
+  .11fit-tab-panel.active {
     display: block;
   }
 
-  @keyframes ulluFadeIn {
+  @keyframes 11fitFadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
   /* ── PRODUCT SLIDER ── */
-  .ullu-tab-slider {
+  .11fit-tab-slider {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -146,12 +146,12 @@
     gap: 16px;
   }
 
-  .ullu-tab-slider::-webkit-scrollbar {
+  .11fit-tab-slider::-webkit-scrollbar {
     display: none;
   }
 
   /* ── PRODUCT CARD (MATCHING TRENDING SEC) ── */
-  .ullu-tab-card {
+  .11fit-tab-card {
     flex: 0 0 240px;
     scroll-snap-align: start;
     background: #ffffff;
@@ -165,13 +165,13 @@
     transition: all 0.3s ease;
   }
 
-  .ullu-tab-card:hover {
+  .11fit-tab-card:hover {
     border-color: #cbd5e0;
     transform: translateY(-4px);
     box-shadow: 0 10px 20px rgba(0,0,0,0.04);
   }
 
-  .ullu-tab-badge {
+  .11fit-tab-badge {
     position: absolute;
     top: 20px;
     left: 20px;
@@ -185,7 +185,7 @@
     text-transform: capitalize;
   }
 
-  .ullu-tab-img-wrap {
+  .11fit-tab-img-wrap {
     width: 100%;
     aspect-ratio: 1 / 1;
     background: #f8fafc;
@@ -198,18 +198,18 @@
     position: relative;
   }
 
-  .ullu-tab-img-wrap img {
+  .11fit-tab-img-wrap img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
   }
 
-  .ullu-tab-card:hover .ullu-tab-img-wrap img {
+  .11fit-tab-card:hover .11fit-tab-img-wrap img {
     transform: scale(1.05);
   }
 
-  .ullu-tab-vendor {
+  .11fit-tab-vendor {
     font-size: 11px;
     color: #94a3b8;
     text-transform: uppercase;
@@ -218,7 +218,7 @@
     font-weight: 500;
   }
 
-  .ullu-tab-prod-title {
+  .11fit-tab-prod-title {
     font-family: 'Playfair Display', serif;
     color: {{ section.settings.accent_color }};
     font-size: 18px;
@@ -231,21 +231,21 @@
     overflow: hidden;
   }
 
-  .ullu-tab-price-row {
+  .11fit-tab-price-row {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-top: auto;
   }
 
-  .ullu-tab-price {
+  .11fit-tab-price {
     font-size: 18px;
     font-weight: 700;
     color: #1a202c;
     line-height: 1;
   }
 
-  .ullu-tab-compare {
+  .11fit-tab-compare {
     font-size: 13px;
     color: #94a3b8;
     text-decoration: line-through;
@@ -254,41 +254,41 @@
 
   /* ── DESKTOP ADJUSTMENTS ── */
   @media (min-width: 769px) {
-    .ullu-tabs-wrapper {
+    .11fit-tabs-wrapper {
       background: radial-gradient(circle at bottom, #ffffff 0%, {{ section.settings.bg_color }} 100%);
       padding: 100px 0;
     }
-    .ullu-tabs-nav { justify-content: center; overflow: visible; padding-bottom: 0; }
-    .ullu-tab-slider { justify-content: flex-start; padding: 20px 0; }
-    .ullu-tab-card { flex: 0 0 calc(25% - 12px); }
+    .11fit-tabs-nav { justify-content: center; overflow: visible; padding-bottom: 0; }
+    .11fit-tab-slider { justify-content: flex-start; padding: 20px 0; }
+    .11fit-tab-card { flex: 0 0 calc(25% - 12px); }
   }
 
   /* ── MOBILE OVERRIDES ── */
   @media (max-width: 767px) {
-    .ullu-tabs-wrapper { padding: 40px 0; }
-    .ullu-tabs-main-heading { font-size: 26px; }
-    .ullu-tab-btn { padding: 8px 20px; font-size: 13px; }
+    .11fit-tabs-wrapper { padding: 40px 0; }
+    .11fit-tabs-main-heading { font-size: 26px; }
+    .11fit-tab-btn { padding: 8px 20px; font-size: 13px; }
     
-    .ullu-tab-card { flex: 0 0 180px; padding: 10px; }
-    .ullu-tab-badge { top: 16px; left: 16px; font-size: 10px; padding: 2px 6px; }
-    .ullu-tab-img-wrap { margin-bottom: 12px; }
-    .ullu-tab-prod-title { font-size: 16px; margin-bottom: 8px; }
-    .ullu-tab-price { font-size: 16px; }
-    .ullu-tab-compare { font-size: 12px; }
+    .11fit-tab-card { flex: 0 0 180px; padding: 10px; }
+    .11fit-tab-badge { top: 16px; left: 16px; font-size: 10px; padding: 2px 6px; }
+    .11fit-tab-img-wrap { margin-bottom: 12px; }
+    .11fit-tab-prod-title { font-size: 16px; margin-bottom: 8px; }
+    .11fit-tab-price { font-size: 16px; }
+    .11fit-tab-compare { font-size: 12px; }
   }
 </style>
 
-<div class="ullu-tabs-wrapper pc-reveal" id="ulluTabsWrapper-{{ section.id }}" data-speed="{{ section.settings.autoplay_speed | times: 1000 }}">
+<div class="11fit-tabs-wrapper pc-reveal" id="11fitTabsWrapper-{{ section.id }}" data-speed="{{ section.settings.autoplay_speed | times: 1000 }}">
   
-  <div class="ullu-tabs-header-wrap pc-reveal">
-    <div class="ullu-tabs-title-row">
-      <div class="ullu-tabs-icon"><i class="ti ti-star"></i></div>
-      <h2 class="ullu-tabs-main-heading">{{ section.settings.heading }}</h2>
+  <div class="11fit-tabs-header-wrap pc-reveal">
+    <div class="11fit-tabs-title-row">
+      <div class="11fit-tabs-icon"><i class="ti ti-star"></i></div>
+      <h2 class="11fit-tabs-main-heading">{{ section.settings.heading }}</h2>
     </div>
     
-    <div class="ullu-tabs-nav" id="ulluTabsNav-{{ section.id }}">
+    <div class="11fit-tabs-nav" id="11fitTabsNav-{{ section.id }}">
       {% for block in section.blocks %}
-        <button class="ullu-tab-btn {% if forloop.first %}active{% endif %}" 
+        <button class="11fit-tab-btn {% if forloop.first %}active{% endif %}" 
                 data-target="panel-{{ section.id }}-{{ forloop.index }}" 
                 {{ block.shopify_attributes }}>
           {{ block.settings.tab_name }}
@@ -297,33 +297,33 @@
     </div>
   </div>
 
-  <div class="ullu-tabs-content-wrap">
+  <div class="11fit-tabs-content-wrap">
     {% for block in section.blocks %}
       {% assign collection = collections[block.settings.collection] %}
       
-      <div class="ullu-tab-panel {% if forloop.first %}active{% endif %}" id="panel-{{ section.id }}-{{ forloop.index }}">
-        <div class="ullu-tab-slider pc-reveal-stagger">
+      <div class="11fit-tab-panel {% if forloop.first %}active{% endif %}" id="panel-{{ section.id }}-{{ forloop.index }}">
+        <div class="11fit-tab-slider pc-reveal-stagger">
           
           {% if collection != blank and collection.products_count > 0 %}
             {% for product in collection.products limit: block.settings.product_limit %}
-              <a href="{{ product.url }}" class="ullu-tab-card">
+              <a href="{{ product.url }}" class="11fit-tab-card">
                 
                 {% if product.compare_at_price > product.price %}
                   {% assign saving = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round %}
-                  <div class="ullu-tab-badge">{{ saving }}% OFF</div>
+                  <div class="11fit-tab-badge">{{ saving }}% OFF</div>
                 {% endif %}
 
-                <div class="ullu-tab-img-wrap">
+                <div class="11fit-tab-img-wrap">
                   <img src="{{ product.featured_image | img_url: '400x400', crop: 'center' }}" alt="{{ product.title | escape }}" loading="lazy">
                 </div>
 
-                <div class="ullu-tab-vendor">{{ product.vendor | default: 'Espon Sports' }}</div>
-                <div class="ullu-tab-prod-title">{{ product.title }}</div>
+                <div class="11fit-tab-vendor">{{ product.vendor | default: 'Espon Sports' }}</div>
+                <div class="11fit-tab-prod-title">{{ product.title }}</div>
                 
-                <div class="ullu-tab-price-row">
-                  <span class="ullu-tab-price">{{ product.price | money_without_trailing_zeros }}</span>
+                <div class="11fit-tab-price-row">
+                  <span class="11fit-tab-price">{{ product.price | money_without_trailing_zeros }}</span>
                   {% if product.compare_at_price > product.price %}
-                    <span class="ullu-tab-compare">{{ product.compare_at_price | money_without_trailing_zeros }}</span>
+                    <span class="11fit-tab-compare">{{ product.compare_at_price | money_without_trailing_zeros }}</span>
                   {% endif %}
                 </div>
               </a>
@@ -331,16 +331,16 @@
           {% else %}
             {% comment %} Fallback UI if no collection is selected {% endcomment %}
             {% for i in (1..4) %}
-              <div class="ullu-tab-card">
-                <div class="ullu-tab-badge">Special</div>
-                <div class="ullu-tab-img-wrap">
+              <div class="11fit-tab-card">
+                <div class="11fit-tab-badge">Special</div>
+                <div class="11fit-tab-img-wrap">
                   <span style="font-size:12px; color:#94a3b8; font-weight:500;">Select Collection</span>
                 </div>
-                <div class="ullu-tab-vendor">Espon Sports</div>
-                <div class="ullu-tab-prod-title">Premium {{ block.settings.tab_name }} Example {{ i }}</div>
-                <div class="ullu-tab-price-row">
-                  <span class="ullu-tab-price">₹1,999</span>
-                  <span class="ullu-tab-compare">₹2,499</span>
+                <div class="11fit-tab-vendor">Espon Sports</div>
+                <div class="11fit-tab-prod-title">Premium {{ block.settings.tab_name }} Example {{ i }}</div>
+                <div class="11fit-tab-price-row">
+                  <span class="11fit-tab-price">₹1,999</span>
+                  <span class="11fit-tab-compare">₹2,499</span>
                 </div>
               </div>
             {% endfor %}
@@ -355,12 +355,12 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const wrapper = document.getElementById('ulluTabsWrapper-{{ section.id }}');
+    const wrapper = document.getElementById('11fitTabsWrapper-{{ section.id }}');
     if (!wrapper) return;
 
-    const navTrack = wrapper.querySelector('#ulluTabsNav-{{ section.id }}');
-    const tabButtons = wrapper.querySelectorAll('.ullu-tab-btn');
-    const tabPanels = wrapper.querySelectorAll('.ullu-tab-panel');
+    const navTrack = wrapper.querySelector('#11fitTabsNav-{{ section.id }}');
+    const tabButtons = wrapper.querySelectorAll('.11fit-tab-btn');
+    const tabPanels = wrapper.querySelectorAll('.11fit-tab-panel');
     
     // Auto-swipe settings
     const speed = parseInt(wrapper.getAttribute('data-speed')) || 3000;
@@ -401,14 +401,14 @@
       }
 
       // 2. Auto-swipe the active Product Slider
-      const activeSlider = wrapper.querySelector('.ullu-tab-panel.active .ullu-tab-slider');
+      const activeSlider = wrapper.querySelector('.11fit-tab-panel.active .11fit-tab-slider');
       if (activeSlider && activeSlider.scrollWidth > activeSlider.clientWidth) {
-        const panelId = activeSlider.closest('.ullu-tab-panel').id;
+        const panelId = activeSlider.closest('.11fit-tab-panel').id;
         
         if (!prodDirections[panelId]) prodDirections[panelId] = 1;
 
         const maxProdScroll = activeSlider.scrollWidth - activeSlider.clientWidth;
-        const card = activeSlider.querySelector('.ullu-tab-card');
+        const card = activeSlider.querySelector('.11fit-tab-card');
         const scrollAmount = card ? card.offsetWidth + 16 : 256;
 
         // Ping-pong reversal

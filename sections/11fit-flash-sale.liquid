@@ -1,6 +1,6 @@
 {% comment %}
   ============================================================
-  ULLUKART — trending-products.liquid (ELEGANT AUTO-SWIPER)
+  11FIT — trending-products.liquid (ELEGANT AUTO-SWIPER)
   Drop this file into: sections/trending-products.liquid
   ============================================================
 {% endcomment %}
@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap">
 
 <style>
-  .ullu-trend-wrapper {
+  .11fit-trend-wrapper {
     background-color: {{ section.settings.bg_color }};
     padding: 60px 20px;
     font-family: 'Outfit', sans-serif;
@@ -19,19 +19,19 @@
     text-align: center;
   }
   
-  .ullu-trend-wrapper * {
+  .11fit-trend-wrapper * {
     box-sizing: border-box;
   }
 
   /* ── HEADER & TYPOGRAPHY ── */
-  .ullu-trend-header {
+  .11fit-trend-header {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 40px;
   }
 
-  .ullu-trend-title {
+  .11fit-trend-title {
     font-family: 'Playfair Display', serif;
     font-size: 32px;
     font-weight: 400;
@@ -41,7 +41,7 @@
     text-transform: uppercase;
   }
 
-  .ullu-trend-subtitle {
+  .11fit-trend-subtitle {
     font-size: 11px;
     font-weight: 500;
     color: {{ section.settings.accent_color }};
@@ -52,13 +52,13 @@
   }
 
   /* ── CAROUSEL TRACK ── */
-  .ullu-trend-carousel-wrap {
+  .11fit-trend-carousel-wrap {
     max-width: 400px;
     margin: 0 auto;
     position: relative;
   }
 
-  .ullu-trend-track {
+  .11fit-trend-track {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -68,12 +68,12 @@
     padding-bottom: 10px;
   }
 
-  .ullu-trend-track::-webkit-scrollbar {
+  .11fit-trend-track::-webkit-scrollbar {
     display: none;
   }
 
   /* ── PRODUCT CARD ── */
-  .ullu-trend-card {
+  .11fit-trend-card {
     flex: 0 0 100%;
     scroll-snap-align: center;
     text-decoration: none;
@@ -83,7 +83,7 @@
     transition: opacity 0.3s ease;
   }
 
-  .ullu-trend-img-wrap {
+  .11fit-trend-img-wrap {
     width: 100%;
     aspect-ratio: 4 / 5;
     background: #f8fafc;
@@ -94,13 +94,13 @@
     overflow: hidden;
   }
 
-  .ullu-trend-img-wrap img {
+  .11fit-trend-img-wrap img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
-  .ullu-trend-prod-title {
+  .11fit-trend-prod-title {
     font-family: 'Playfair Display', serif;
     color: {{ section.settings.accent_color }};
     font-size: 20px;
@@ -114,7 +114,7 @@
     overflow: hidden;
   }
 
-  .ullu-trend-price {
+  .11fit-trend-price {
     font-family: 'Outfit', sans-serif;
     font-size: 16px;
     font-weight: 500;
@@ -122,14 +122,14 @@
   }
 
   /* ── DOTS PAGINATION ── */
-  .ullu-trend-dots {
+  .11fit-trend-dots {
     display: flex;
     justify-content: center;
     gap: 8px;
     margin-top: 24px;
   }
 
-  .ullu-dot {
+  .fit11-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
@@ -138,61 +138,61 @@
     cursor: pointer;
   }
 
-  .ullu-dot.active {
+  .fit11-dot.active {
     background: {{ section.settings.accent_color }};
     transform: scale(1.2);
   }
 
   /* ── MOBILE OVERRIDES ── */
   @media (max-width: 767px) {
-    .ullu-trend-wrapper { padding: 40px 16px; }
-    .ullu-trend-title { font-size: 28px; }
-    .ullu-trend-prod-title { font-size: 18px; }
+    .11fit-trend-wrapper { padding: 40px 16px; }
+    .11fit-trend-title { font-size: 28px; }
+    .11fit-trend-prod-title { font-size: 18px; }
   }
 
   /* ── PC REFINEMENTS ── */
   @media (min-width: 768px) {
-    .ullu-trend-wrapper {
+    .11fit-trend-wrapper {
       background: radial-gradient(circle at top, #ffffff 0%, {{ section.settings.bg_color }} 100%);
       padding: 80px 20px;
     }
-    .ullu-trend-carousel-wrap {
+    .11fit-trend-carousel-wrap {
       max-width: 1200px;
     }
-    .ullu-trend-card {
+    .11fit-trend-card {
       flex: 0 0 calc(25% - 15px); /* 4 items with 20px gap */
       transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease;
       border-radius: 12px;
       padding-bottom: 20px;
     }
-    .ullu-trend-card:hover {
+    .11fit-trend-card:hover {
       transform: translateY(-8px);
       box-shadow: 0 20px 40px rgba(0,0,0,0.04);
       background: #ffffff;
     }
-    .ullu-trend-img-wrap img {
+    .11fit-trend-img-wrap img {
       transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
-    .ullu-trend-card:hover .ullu-trend-img-wrap img {
+    .11fit-trend-card:hover .11fit-trend-img-wrap img {
       transform: scale(1.06);
     }
   }
 </style>
 
-<div class="ullu-trend-wrapper pc-reveal" id="ulluTrendWrapper-{{ section.id }}" data-speed="{{ section.settings.autoplay_speed | times: 1000 }}">
+<div class="11fit-trend-wrapper pc-reveal" id="11fitTrendWrapper-{{ section.id }}" data-speed="{{ section.settings.autoplay_speed | times: 1000 }}">
   
-  <div class="ullu-trend-header pc-reveal">
-    <h2 class="ullu-trend-title">{{ section.settings.heading }}</h2>
-    <p class="ullu-trend-subtitle">{{ section.settings.subheading }}</p>
+  <div class="11fit-trend-header pc-reveal">
+    <h2 class="11fit-trend-title">{{ section.settings.heading }}</h2>
+    <p class="11fit-trend-subtitle">{{ section.settings.subheading }}</p>
   </div>
 
-  <div class="ullu-trend-carousel-wrap">
-    <div class="ullu-trend-track pc-reveal-stagger" id="ulluTrendTrack-{{ section.id }}">
+  <div class="11fit-trend-carousel-wrap">
+    <div class="11fit-trend-track pc-reveal-stagger" id="11fitTrendTrack-{{ section.id }}">
       {% for block in section.blocks %}
         {% assign product = block.settings.product %}
         
-        <a href="{{ product.url | default: '#' }}" class="ullu-trend-card" {{ block.shopify_attributes }}>
-          <div class="ullu-trend-img-wrap">
+        <a href="{{ product.url | default: '#' }}" class="11fit-trend-card" {{ block.shopify_attributes }}>
+          <div class="11fit-trend-img-wrap">
             {% if product != blank and product.featured_image %}
               <img src="{{ product.featured_image | img_url: '600x750', crop: 'center' }}" alt="{{ product.title | escape }}" loading="lazy">
             {% else %}
@@ -200,11 +200,11 @@
             {% endif %}
           </div>
 
-          <h3 class="ullu-trend-prod-title">
+          <h3 class="11fit-trend-prod-title">
             {{ product.title | default: 'ESPON NS Terry Lycra 30% Active Shorts' }}
           </h3>
           
-          <div class="ullu-trend-price">
+          <div class="11fit-trend-price">
             {{ product.price | default: 199900 | money_without_trailing_zeros }}
           </div>
         </a>
@@ -212,9 +212,9 @@
     </div>
 
     {% if section.blocks.size > 1 %}
-      <div class="ullu-trend-dots" id="ulluTrendDots-{{ section.id }}">
+      <div class="11fit-trend-dots" id="11fitTrendDots-{{ section.id }}">
         {% for block in section.blocks %}
-          <div class="ullu-dot {% if forloop.first %}active{% endif %}" data-index="{{ forloop.index0 }}"></div>
+          <div class="fit11-dot {% if forloop.first %}active{% endif %}" data-index="{{ forloop.index0 }}"></div>
         {% endfor %}
       </div>
     {% endif %}
@@ -226,13 +226,13 @@
   document.addEventListener('DOMContentLoaded', function() {
     
     // --- CAROUSEL AUTO-SWIPE & DOTS SYNC LOGIC ---
-    const track = document.getElementById('ulluTrendTrack-{{ section.id }}');
-    const dotsWrap = document.getElementById('ulluTrendDots-{{ section.id }}');
-    const wrapper = document.getElementById('ulluTrendWrapper-{{ section.id }}');
+    const track = document.getElementById('11fitTrendTrack-{{ section.id }}');
+    const dotsWrap = document.getElementById('11fitTrendDots-{{ section.id }}');
+    const wrapper = document.getElementById('11fitTrendWrapper-{{ section.id }}');
     
     if (!track) return;
 
-    const dots = dotsWrap ? dotsWrap.querySelectorAll('.ullu-dot') : [];
+    const dots = dotsWrap ? dotsWrap.querySelectorAll('.fit11-dot') : [];
     const totalItems = dots.length;
     let currentIndex = 0;
     

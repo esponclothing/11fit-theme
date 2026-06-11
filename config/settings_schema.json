@@ -1453,7 +1453,7 @@
     ]
   },
 {
-  "name": "UlluKart",
+  "name": "11Fit",
   "settings": [
     {
       "type": "header",
@@ -1461,48 +1461,48 @@
     },
     {
       "type": "color",
-      "id": "ullu_accent",
+      "id": "11fit_accent",
       "label": "Accent color (buttons, prices, badges)",
       "default": "#F5C842"
     },
     {
       "type": "color",
-      "id": "ullu_card_bg",
+      "id": "11fit_card_bg",
       "label": "Product card background",
       "default": "#FFFFFF"
     },
     {
       "type": "color",
-      "id": "ullu_card_border",
+      "id": "11fit_card_border",
       "label": "Card border color",
       "default": "#E8E8EE"
     },
     {
       "type": "color",
-      "id": "ullu_price_color",
+      "id": "11fit_price_color",
       "label": "Price text color",
       "default": "#1A6B3C"
     },
     {
       "type": "header",
-      "content": "Ullu Owl"
+      "content": "11Fit Owl"
     },
     {
       "type": "checkbox",
-      "id": "ullu_owl_enabled",
-      "label": "Show Ullu owl animation",
+      "id": "11fit_owl_enabled",
+      "label": "Show 11Fit owl animation",
       "default": true
     },
     {
       "type": "range",
-      "id": "ullu_owl_size",
+      "id": "11fit_owl_size",
       "label": "Owl size (px)",
       "min": 50, "max": 120, "step": 5,
       "default": 80
     },
     {
       "type": "range",
-      "id": "ullu_owl_freq",
+      "id": "11fit_owl_freq",
       "label": "Owl peek frequency (seconds)",
       "min": 1, "max": 20, "step": 1,
       "default": 6

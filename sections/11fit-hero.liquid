@@ -1,6 +1,6 @@
 {% schema %}
 {
-  "name": "Ullu-Kart Hero Carousel",
+  "name": "11Fit Hero Carousel",
   "settings": [
     {
       "type": "header",
@@ -22,7 +22,7 @@
       "id": "dot_color",
       "label": "Active Dot Color",
       "default": "#FF7A00",
-      "info": "Matches the Ullu-Kart brand color"
+      "info": "Matches the 11Fit brand color"
     }
   ],
   "blocks": [
@@ -63,7 +63,7 @@
   ],
   "presets": [
     {
-      "name": "Ullu-Kart Hero Carousel",
+      "name": "11Fit Hero Carousel",
       "blocks": [
         { "type": "slide" },
         { "type": "slide" }
@@ -74,14 +74,14 @@
 {% endschema %}
 
 <style>
-  .uk-hero-wrapper {
+  .fit11-hero-wrapper {
     position: relative;
     width: 100%;
     overflow: hidden;
     background: #f1f5f9;
   }
   
-  .uk-carousel-track {
+  .fit11-carousel-track {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -89,11 +89,11 @@
     -webkit-overflow-scrolling: touch;
   }
   
-  .uk-carousel-track::-webkit-scrollbar {
+  .fit11-carousel-track::-webkit-scrollbar {
     display: none; /* Chrome/Safari */
   }
 
-  .uk-slide {
+  .fit11-slide {
     flex: 0 0 100%;
     scroll-snap-align: start;
     position: relative;
@@ -102,7 +102,7 @@
   }
 
   /* Force Marketplace Aspect Ratios */
-  .uk-slide img {
+  .fit11-slide img {
     width: 100%;
     height: auto;
     object-fit: cover;
@@ -111,8 +111,8 @@
 
   /* Desktop View */
   @media (min-width: 769px) {
-    .uk-slide .img-mobile { display: none; }
-    .uk-slide .img-desktop { 
+    .fit11-slide .img-mobile { display: none; }
+    .fit11-slide .img-desktop { 
       display: block; 
       aspect-ratio: 1920 / 600; 
     }
@@ -120,8 +120,8 @@
 
   /* Mobile View - Flipkart/Snapdeal Style */
   @media (max-width: 768px) {
-    .uk-slide .img-desktop { display: none; }
-    .uk-slide .img-mobile { 
+    .fit11-slide .img-desktop { display: none; }
+    .fit11-slide .img-mobile { 
       display: block; 
       aspect-ratio: 2 / 1; 
     }
@@ -138,7 +138,7 @@
     z-index: 2;
   }
 
-  .uk-dot {
+  .fit11-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
@@ -146,17 +146,17 @@
     transition: all 0.3s ease;
   }
 
-  .uk-dot.active {
+  .fit11-dot.active {
     width: 20px;
     border-radius: 4px;
     background: {{ section.settings.dot_color }};
   }
 </style>
 
-<div class="uk-hero-wrapper" id="ukCarousel-{{ section.id }}" data-speed="{{ section.settings.autoplay_speed | times: 1000 }}">
-  <div class="uk-carousel-track" id="ukTrack-{{ section.id }}">
+<div class="fit11-hero-wrapper" id="ukCarousel-{{ section.id }}" data-speed="{{ section.settings.autoplay_speed | times: 1000 }}">
+  <div class="fit11-carousel-track" id="ukTrack-{{ section.id }}">
     {% for block in section.blocks %}
-      <a href="{{ block.settings.link | default: '#' }}" class="uk-slide" {{ block.shopify_attributes }}>
+      <a href="{{ block.settings.link | default: '#' }}" class="fit11-slide" {{ block.shopify_attributes }}>
         
         {% if block.settings.image_desktop %}
           <img src="{{ block.settings.image_desktop | img_url: '1920x' }}" class="img-desktop" alt="Desktop Banner" loading="lazy">
@@ -181,7 +181,7 @@
   {% if section.blocks.size > 1 %}
     <div class="uk-indicators" id="ukDots-{{ section.id }}">
       {% for block in section.blocks %}
-        <div class="uk-dot {% if forloop.first %}active{% endif %}"></div>
+        <div class="fit11-dot {% if forloop.first %}active{% endif %}"></div>
       {% endfor %}
     </div>
   {% endif %}
@@ -190,7 +190,7 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const track = document.getElementById('ukTrack-{{ section.id }}');
-    const dots = document.querySelectorAll('#ukDots-{{ section.id }} .uk-dot');
+    const dots = document.querySelectorAll('#ukDots-{{ section.id }} .fit11-dot');
     const wrapper = document.getElementById('ukCarousel-{{ section.id }}');
     
     // Grabs the speed from the theme editor settings dynamically
