@@ -27,19 +27,6 @@
         "offset_y_mobile": 96
       }
     },
-    "11fitchatbot_RreTXM": {
-      "type": "11fitchatbot",
-      "disabled": true,
-      "name": "FIT11 Chat Widget",
-      "settings": {
-        "widget_enabled": true,
-        "fa_icon": "fa-headset",
-        "icon_size": 60,
-        "corner": "bottom-right",
-        "position_x": 30,
-        "position_y": 60
-      }
-    },
     "ullu_footer_6AeTLz": {
       "type": "ullu-footer",
       "name": "11 fit Footer",
@@ -122,7 +109,6 @@
   },
   "order": [
     "whatsapp_floating_button_TVMFb9",
-    "11fitchatbot_RreTXM",
     "ullu_footer_6AeTLz",
     "footer"
   ]

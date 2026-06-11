@@ -1,0 +1,399 @@
+{%- liquid
+  assign video_url = ''
+  if product.metafields.custom.floating_video != blank
+    if product.metafields.custom.floating_video contains 'http'
+      assign video_url = product.metafields.custom.floating_video
+    elsif product.metafields.custom.floating_video.value.url != blank
+      assign video_url = product.metafields.custom.floating_video.value.url
+    else
+      assign video_url = product.metafields.custom.floating_video | file_url
+    endif
+  endif
+-%}
+
+{%- if video_url != blank -%}
+<style>
+  /* Floating Thumbnail Preview */
+  .fit-floating-video {
+    position: fixed;
+    bottom: 96px;
+    right: 24px;
+    width: 80px;
+    height: 142px; /* 9:16 aspect ratio */
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 999;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    border: 2px solid #c5a059;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .fit-floating-video:hover {
+    transform: scale(1.05) translateY(-4px);
+    border-color: #ffffff;
+  }
+
+  .fit-floating-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .fit-floating-video__play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 28px;
+    height: 28px;
+    background: rgba(197, 160, 89, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 12px;
+    pointer-events: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+
+  /* Video Popup overlay */
+  .fit-video-popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .fit-video-popup-overlay.is-active {
+    display: flex;
+    opacity: 1;
+  }
+
+  /* Locked scroll helper */
+  html.fit-video-popup-open,
+  body.fit-video-popup-open {
+    overflow: hidden;
+    height: 100%;
+  }
+
+  /* Modal layout */
+  .fit-video-popup {
+    width: 90%;
+    max-width: 340px;
+    height: 80vh;
+    max-height: 600px;
+    background: #000000;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .fit-video-popup video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Close button */
+  .fit-video-popup-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .fit-video-popup-close:hover {
+    background: rgba(197, 160, 89, 0.9);
+    transform: scale(1.1);
+  }
+
+  /* Glassmorphic Controls Bar at the bottom */
+  .fit-video-popup-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0) 100%);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 5;
+  }
+
+  .fit-video-popup-controls select,
+  .fit-video-popup-controls input {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 14px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .fit-video-popup-controls select:focus,
+  .fit-video-popup-controls input:focus {
+    border-color: #c5a059;
+  }
+
+  .fit-video-popup-controls select option {
+    background: #111111;
+    color: #ffffff;
+  }
+
+  .fit-video-qty-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .fit-video-qty-row select {
+    flex: 2;
+  }
+
+  .fit-video-qty-row input {
+    flex: 1;
+    text-align: center;
+  }
+
+  /* Add to Cart button styling */
+  .fit-video-popup-atc button {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(90deg, #c5a059 0%, #e6ca94 100%);
+    color: #111111;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .fit-video-popup-atc button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(197, 160, 89, 0.4);
+  }
+
+  .fit-video-popup-atc button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Spinner for ATC */
+  .fit-video-popup-atc button.loading {
+    color: transparent;
+  }
+
+  .fit-video-popup-atc button.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border: 2.5px solid rgba(0, 0, 0, 0.2);
+    border-top-color: #111111;
+    border-radius: 50%;
+    animation: fit-pip-spin 0.6s linear infinite;
+  }
+
+  @keyframes fit-pip-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Mobile positioning adjustments */
+  @media (max-width: 768px) {
+    .fit-floating-video {
+      bottom: 120px;
+      right: 16px;
+      width: 75px;
+      height: 133px;
+    }
+    .fit-video-popup {
+      height: 75vh;
+      max-height: 520px;
+    }
+  }
+</style>
+
+<!-- Floating Preview -->
+<div class="fit-floating-video" id="fitFloatingVideo">
+  <video autoplay muted loop playsinline>
+    <source src="{{ video_url }}" type="video/mp4">
+  </video>
+  <div class="fit-floating-video__play-icon">
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+  </div>
+</div>
+
+<!-- Modal Popup -->
+<div class="fit-video-popup-overlay" id="fitVideoPopup">
+  <div class="fit-video-popup">
+    <button class="fit-video-popup-close" id="fitClosePopup" aria-label="Close video player">✕</button>
+
+    <video autoplay muted loop playsinline id="fitPopupVideo">
+      <source src="{{ video_url }}" type="video/mp4">
+    </video>
+
+    <div class="fit-video-popup-controls">
+      <div class="fit-video-qty-row">
+        {% if product.variants.size > 1 %}
+          <select id="fitPopupVariant">
+            {% for variant in product.variants %}
+              <option value="{{ variant.id }}" {% unless variant.available %}disabled{% endunless %}>
+                {{ variant.title }}{% unless variant.available %} - Sold Out{% endunless %}
+              </option>
+            {% endfor %}
+          </select>
+        {% else %}
+          <input type="hidden" id="fitPopupVariant" value="{{ product.selected_or_first_available_variant.id }}">
+        {% endif %}
+
+        <input type="number" id="fitPopupQty" value="1" min="1" aria-label="Quantity">
+      </div>
+
+      <div class="fit-video-popup-atc">
+        <button id="fitPopupAddToCart">Add to Bag</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const floatingVideo = document.getElementById('fitFloatingVideo');
+  const popup = document.getElementById('fitVideoPopup');
+  const popupVideo = document.getElementById('fitPopupVideo');
+  const closeBtn = document.getElementById('fitClosePopup');
+  const addToCartBtn = document.getElementById('fitPopupAddToCart');
+  const variantSelect = document.getElementById('fitPopupVariant');
+  const qtyInput = document.getElementById('fitPopupQty');
+
+  if (!floatingVideo || !popup) return;
+
+  // Click floating button to open popup
+  floatingVideo.addEventListener('click', function () {
+    popup.classList.add('is-active');
+    document.documentElement.classList.add('fit-video-popup-open');
+    document.body.classList.add('fit-video-popup-open');
+    if (popupVideo) {
+      popupVideo.muted = false;
+      popupVideo.play();
+    }
+  });
+
+  // Close popup logic
+  function closePopup() {
+    popup.classList.remove('is-active');
+    document.documentElement.classList.remove('fit-video-popup-open');
+    document.body.classList.remove('fit-video-popup-open');
+    if (popupVideo) {
+      popupVideo.muted = true;
+    }
+  }
+
+  closeBtn.addEventListener('click', closePopup);
+  popup.addEventListener('click', function (e) {
+    if (e.target === popup) closePopup();
+  });
+
+  // Add to cart via AJAX without page reload
+  addToCartBtn.addEventListener('click', function () {
+    const variantId = variantSelect ? variantSelect.value : document.getElementById('fitPopupVariant').value;
+    const qty = parseInt(qtyInput.value, 10) || 1;
+    
+    addToCartBtn.classList.add('loading');
+    addToCartBtn.disabled = true;
+
+    const cart = document.querySelector('cart-notification') || document.querySelector('cart-drawer');
+    const sections = cart ? cart.getSectionsToRender().map((s) => s.id) : [];
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: JSON.stringify({
+        id: variantId,
+        quantity: qty,
+        sections: sections,
+        sections_url: window.location.pathname
+      })
+    })
+    .then(response => response.json())
+    .then(parsedState => {
+      if (parsedState.status) {
+        alert(parsedState.description || parsedState.message);
+        return;
+      }
+      closePopup();
+      if (cart) {
+        if (cart.classList.contains('is-empty')) cart.classList.remove('is-empty');
+        cart.renderContents(parsedState);
+      } else {
+        window.location = '/cart';
+      }
+    })
+    .catch(err => {
+      console.error('Error adding to cart from video player:', err);
+    })
+    .finally(() => {
+      addToCartBtn.classList.remove('loading');
+      addToCartBtn.disabled = false;
+    });
+  });
+});
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Floating Video PIP",
+  "tag": "section",
+  "class": "section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Floating Video PIP"
+    }
+  ]
+}
+{% endschema %}

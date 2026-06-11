@@ -730,3 +730,98 @@
   justify-content: flex-start;
   margin-bottom: 0.5rem;
 }
+
+/* Quick size swatches overlay */
+.fit-card-sizes-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 8px 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  transform: translateY(101%);
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 10;
+  flex-wrap: wrap;
+  pointer-events: auto;
+}
+
+.card-wrapper:hover .fit-card-sizes-overlay {
+  transform: translateY(0);
+}
+
+.fit-size-pill {
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  color: #111111;
+  padding: 5px 9px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  min-width: 32px;
+  text-align: center;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fit-size-pill:hover:not(:disabled) {
+  background: #111111;
+  color: #ffffff;
+  border-color: #111111;
+  transform: translateY(-1px);
+}
+
+.fit-size-pill:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  background: #f5f5f5;
+  border-color: #e5e5e5;
+  color: #888888;
+}
+
+.fit-size-pill.loading {
+  color: transparent !important;
+}
+
+.fit-size-pill.loading .loading-spinner-inline {
+  display: block !important;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-top-color: #111111;
+  border-radius: 50%;
+  animation: size-pill-spin 0.6s linear infinite;
+}
+
+@keyframes size-pill-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media screen and (max-width: 768px) {
+  .fit-card-sizes-overlay {
+    transform: translateY(0);
+    background: rgba(255, 255, 255, 0.85);
+    padding: 4px 2px;
+    gap: 4px;
+    border-top: none;
+  }
+  .fit-size-pill {
+    padding: 3px 6px;
+    font-size: 9px;
+    min-width: 24px;
+    border-radius: 2px;
+  }
+}

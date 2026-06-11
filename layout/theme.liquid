@@ -17,6 +17,13 @@
     {%- unless settings.type_header_font.system? and settings.type_body_font.system? -%}
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
     {%- endunless -%}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&display=swap">
+    </noscript>
 
     <title>
       {{ page_title }}
@@ -337,8 +344,6 @@
         }
       </script>
       <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&display=swap');
-        
         .preloader-container {
           display: flex;
           flex-direction: column;
@@ -603,6 +608,56 @@
     }
     sessionStorage.setItem('fit11_loaded', 'true');
   }
+  
+  function addVariantToCart(variantId, button) {
+    if (!variantId) return;
+    if (button) {
+      button.classList.add('loading');
+      button.disabled = true;
+    }
+
+    const cart = document.querySelector('cart-notification') || document.querySelector('cart-drawer');
+    const sections = cart ? cart.getSectionsToRender().map((s) => s.id) : [];
+
+    const body = JSON.stringify({
+      id: variantId,
+      quantity: 1,
+      sections: sections,
+      sections_url: window.location.pathname
+    });
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: body
+    })
+    .then(response => response.json())
+    .then(parsedState => {
+      if (parsedState.status) {
+        alert(parsedState.description || parsedState.message);
+        return;
+      }
+      if (cart) {
+        if (cart.classList.contains('is-empty')) cart.classList.remove('is-empty');
+        cart.renderContents(parsedState);
+      } else {
+        window.location = '/cart';
+      }
+    })
+    .catch(error => {
+      console.error('Error adding variant to cart:', error);
+    })
+    .finally(() => {
+      if (button) {
+        button.classList.remove('loading');
+        button.disabled = false;
+      }
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function() { 
     setTimeout(removeFit11Preloader, 600); 
 

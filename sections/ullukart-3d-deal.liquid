@@ -392,10 +392,34 @@
     text-decoration: none;
     padding: 18px 24px;
     letter-spacing: 2px;
-    transition: all 0.4s ease;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .luxe-btn-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 0%;
+    background: var(--color-accent);
+    opacity: 0.25;
+    transition: none;
+    pointer-events: none;
+  }
+  .luxe-btn.is-holding {
+    transform: scale(0.97);
+  }
+  @keyframes unlock-shake {
+    0%, 100% { transform: scale(1); }
+    20%, 60% { transform: scale(1.05) rotate(-2deg); }
+    40%, 80% { transform: scale(1.05) rotate(2deg); }
+  }
+  .unlocked-shake {
+    animation: unlock-shake 0.4s ease;
   }
 
   /* Locked State = Elegant Outline */
@@ -552,7 +576,8 @@
     </div>
 
     <a href="#" class="luxe-btn is-locked" id="luxeBtn-{{ section.id }}">
-      Unlock Privilege
+      <span class="luxe-btn-progress"></span>
+      <span class="luxe-btn-text">Hold to Unlock</span>
     </a>
   </div>
 
@@ -616,28 +641,145 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (slides.length < 1) return;
 
-    // UNLOCK BUTTON LOGIC
-    btnEl.addEventListener('click', function(e) {
-      if (!isPriceUnlocked) {
-        e.preventDefault(); 
-        
-        // Reveal Price
-        const activeSlide = slides[currentIndex];
-        priceEl.innerHTML = '<span class="luxe-unlocked-text">' + activeSlide.getAttribute('data-price') + '</span>';
-        
-        if (activeSlide.getAttribute('data-compare')) {
-          compareEl.innerText = activeSlide.getAttribute('data-compare');
-          compareEl.classList.add('is-visible');
-        }
+    // UNLOCK BUTTON LOGIC - PRESS AND HOLD TO UNLOCK
+    let holdTimeout = null;
+    let holdInterval = null;
+    let holdPercent = 0;
+    let isHolding = false;
 
-        // Transform Button to Add to Cart
+    const btnProgress = btnEl.querySelector('.luxe-btn-progress');
+    const btnText = btnEl.querySelector('.luxe-btn-text');
+
+    function startHold(e) {
+      if (isPriceUnlocked || isHolding) return;
+      e.preventDefault();
+      isHolding = true;
+      holdPercent = 0;
+      btnEl.classList.add('is-holding');
+
+      holdInterval = setInterval(() => {
+        if (holdPercent < 100) {
+          holdPercent += 5; // increment progress (takes ~1s)
+          if (btnProgress) btnProgress.style.width = holdPercent + '%';
+        } else {
+          clearInterval(holdInterval);
+        }
+      }, 50);
+
+      holdTimeout = setTimeout(() => {
+        triggerUnlock();
+      }, 1000);
+    }
+
+    function cancelHold() {
+      if (isPriceUnlocked || !isHolding) return;
+      isHolding = false;
+      btnEl.classList.remove('is-holding');
+      clearTimeout(holdTimeout);
+      clearInterval(holdInterval);
+
+      // Smooth reset
+      if (btnProgress) {
+        btnProgress.style.transition = 'width 0.3s ease-out';
+        btnProgress.style.width = '0%';
+        setTimeout(() => {
+          btnProgress.style.transition = 'none';
+        }, 300);
+      }
+    }
+
+    function triggerUnlock() {
+      isHolding = false;
+      clearTimeout(holdTimeout);
+      clearInterval(holdInterval);
+      isPriceUnlocked = true;
+      stopAutoPlay();
+
+      if (btnProgress) btnProgress.style.width = '100%';
+
+      // Reveal Price
+      const activeSlide = slides[currentIndex];
+      priceEl.innerHTML = '<span class="luxe-unlocked-text">' + activeSlide.getAttribute('data-price') + '</span>';
+      
+      if (activeSlide.getAttribute('data-compare')) {
+        compareEl.innerText = activeSlide.getAttribute('data-compare');
+        compareEl.classList.add('is-visible');
+      }
+
+      btnEl.classList.add('unlocked-shake');
+      
+      setTimeout(() => {
         btnEl.classList.remove('is-locked');
         btnEl.classList.add('is-unlocked');
-        btnEl.innerText = 'Add To Bag';
+        if (btnText) btnText.innerText = 'Add To Bag';
         btnEl.href = activeSlide.getAttribute('data-url');
+        if (btnProgress) btnProgress.style.display = 'none';
+        btnEl.classList.remove('unlocked-shake');
+      }, 400);
+
+      createGoldParticles(btnEl);
+    }
+
+    function createGoldParticles(parent) {
+      const rect = parent.getBoundingClientRect();
+      const count = 30;
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.style.position = 'fixed';
+        p.style.width = Math.random() * 6 + 4 + 'px';
+        p.style.height = p.style.width;
+        p.style.background = 'radial-gradient(circle, #fff, #c5a059)';
+        p.style.borderRadius = '50%';
+        p.style.pointerEvents = 'none';
+        p.style.zIndex = '99999';
         
-        isPriceUnlocked = true;
-        stopAutoPlay();
+        const startX = rect.left + rect.width / 2;
+        const startY = rect.top + rect.height / 2;
+        p.style.left = startX + 'px';
+        p.style.top = startY + 'px';
+        
+        document.body.appendChild(p);
+
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 8 + 4;
+        let vx = Math.cos(angle) * speed;
+        let vy = Math.sin(angle) * speed - 2;
+        let opacity = 1;
+        let scale = 1;
+        let currentX = startX;
+        let currentY = startY;
+
+        const anim = setInterval(() => {
+          currentX += vx;
+          currentY += vy;
+          vy += 0.35;
+          vx *= 0.96;
+          opacity -= 0.03;
+          scale -= 0.02;
+          
+          p.style.left = currentX + 'px';
+          p.style.top = currentY + 'px';
+          p.style.opacity = opacity;
+          p.style.transform = `scale(${scale})`;
+
+          if (opacity <= 0 || scale <= 0) {
+            clearInterval(anim);
+            p.remove();
+          }
+        }, 16);
+      }
+    }
+
+    btnEl.addEventListener('mousedown', startHold);
+    btnEl.addEventListener('touchstart', startHold, {passive: false});
+
+    window.addEventListener('mouseup', cancelHold);
+    window.addEventListener('touchend', cancelHold);
+    btnEl.addEventListener('mouseleave', cancelHold);
+
+    btnEl.addEventListener('click', function(e) {
+      if (!isPriceUnlocked) {
+        e.preventDefault();
       }
     });
 
@@ -656,7 +798,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
         btnEl.classList.add('is-locked');
         btnEl.classList.remove('is-unlocked');
-        btnEl.innerText = 'Unlock Privilege';
+        const slideBtnText = btnEl.querySelector('.luxe-btn-text');
+        const slideBtnProgress = btnEl.querySelector('.luxe-btn-progress');
+        if (slideBtnText) slideBtnText.innerText = 'Hold to Unlock';
+        if (slideBtnProgress) {
+          slideBtnProgress.style.display = 'block';
+          slideBtnProgress.style.width = '0%';
+        }
         btnEl.href = '#'; 
         
         textArea.classList.remove('is-fading');
