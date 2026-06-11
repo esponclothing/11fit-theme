@@ -329,14 +329,160 @@
   </head>
 
   <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
-    <div id="fit11-preloader" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#fff;z-index:999999;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:20px;transition:opacity 0.5s ease,visibility 0.5s ease;">
-  <div style="width:56px;height:56px;border-radius:50%;border:3px solid #e5e5e5;border-top-color:#111;animation:fit11spin 0.9s linear infinite;"></div>
-  <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:20px;font-weight:600;letter-spacing:0.14em;color:#111;text-transform:uppercase;">11 Fit</div>
-</div>
+    <div id="fit11-preloader" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:radial-gradient(circle, #1a1a1e 0%, #08080a 100%);z-index:999999;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:25px;transition:opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1),visibility 0.6s cubic-bezier(0.25, 1, 0.5, 1);overflow:hidden;">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&display=swap');
+        
+        .preloader-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+        }
+        
+        .preloader-svg {
+          width: 110px;
+          height: 110px;
+          margin-bottom: 15px;
+          filter: drop-shadow(0 0 15px rgba(197, 160, 89, 0.3));
+        }
+        
+        /* Rotate Outer Ring Clockwise */
+        .outer-ring {
+          transform-origin: 50% 50%;
+          animation: spin-clockwise 3s linear infinite;
+        }
+        
+        /* Rotate Inner Ring Counter-Clockwise */
+        .inner-ring {
+          transform-origin: 50% 50%;
+          animation: spin-counter 2s linear infinite;
+        }
+        
+        /* Pulses for the 11 bars - athletic / fitness feel */
+        .bar-left {
+          transform-origin: 43% 50%;
+          animation: stretch-left 1.2s ease-in-out infinite alternate;
+        }
+        
+        .bar-right {
+          transform-origin: 57% 50%;
+          animation: stretch-right 1.2s ease-in-out infinite alternate;
+          animation-delay: 0.3s;
+        }
+        
+        @keyframes spin-clockwise {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes spin-counter {
+          0% { transform: rotate(360deg); }
+          100% { transform: rotate(0deg); }
+        }
+        
+        @keyframes stretch-left {
+          0% { transform: scaleY(0.7); opacity: 0.7; }
+          100% { transform: scaleY(1.3); opacity: 1; filter: drop-shadow(0 0 8px rgba(197, 160, 89, 0.6)); }
+        }
+        
+        @keyframes stretch-right {
+          0% { transform: scaleY(0.7); opacity: 0.7; }
+          100% { transform: scaleY(1.3); opacity: 1; filter: drop-shadow(0 0 8px rgba(197, 160, 89, 0.6)); }
+        }
+        
+        /* Preloader Text Styling */
+        .preloader-text-wrap {
+          text-align: center;
+        }
+        
+        .preloader-title {
+          font-family: 'Outfit', sans-serif;
+          font-size: 26px;
+          font-weight: 800;
+          letter-spacing: 0.25em;
+          margin: 0;
+          padding-left: 0.25em; /* Center text with letter-spacing */
+          text-transform: uppercase;
+          background: linear-gradient(90deg, #c5a059 0%, #fffdec 25%, #c5a059 50%, #fffdec 75%, #c5a059 100%);
+          background-size: 200% auto;
+          color: transparent;
+          -webkit-background-clip: text;
+          background-clip: text;
+          animation: gold-shine 4s linear infinite, fade-in-scale 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        
+        .preloader-subtitle {
+          font-family: 'Outfit', sans-serif;
+          font-size: 10px;
+          font-weight: 300;
+          letter-spacing: 0.5em;
+          margin-top: 8px;
+          margin-bottom: 0;
+          color: rgba(255, 255, 255, 0.5);
+          text-transform: uppercase;
+          padding-left: 0.5em;
+          animation: pulse-sub 2s ease-in-out infinite;
+        }
+        
+        @keyframes gold-shine {
+          to { background-position: -200% center; }
+        }
+        
+        @keyframes fade-in-scale {
+          0% { opacity: 0; transform: scale(0.92); letter-spacing: 0.15em; }
+          100% { opacity: 1; transform: scale(1); letter-spacing: 0.25em; }
+        }
+        
+        @keyframes pulse-sub {
+          0%, 100% { opacity: 0.4; }
+          50% { opacity: 0.8; color: rgba(197, 160, 89, 0.7); }
+        }
 
-    <style>
-  @keyframes fit11spin { to { transform: rotate(360deg); } }
-</style>
+        /* Subtle background glow for extra premium visual */
+        .preloader-bg-glow {
+          position: absolute;
+          width: 400px;
+          height: 400px;
+          background: radial-gradient(circle, rgba(197, 160, 89, 0.12) 0%, rgba(197, 160, 89, 0) 70%);
+          pointer-events: none;
+          z-index: -1;
+          animation: glow-pulse 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow-pulse {
+          0% { transform: scale(0.8); opacity: 0.6; }
+          100% { transform: scale(1.2); opacity: 1; }
+        }
+      </style>
+
+      <div class="preloader-bg-glow"></div>
+      
+      <div class="preloader-container">
+        <svg class="preloader-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Background subtle circle ring -->
+          <circle cx="50" cy="50" r="44" stroke="rgba(255, 255, 255, 0.03)" stroke-width="4" />
+          
+          <!-- Outer gold dashed rotating ring -->
+          <circle class="outer-ring" cx="50" cy="50" r="44" stroke="#c5a059" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="35 150" />
+          
+          <!-- Inner white/silver dashed counter-rotating ring -->
+          <circle class="inner-ring" cx="50" cy="50" r="36" stroke="rgba(255, 255, 255, 0.4)" stroke-width="2" stroke-linecap="round" stroke-dasharray="60 120" />
+          
+          <!-- '11' Bars (Fit Logo) -->
+          <!-- Left Bar of 11 -->
+          <rect class="bar-left" x="41" y="32" width="6" height="36" rx="3" fill="#c5a059" />
+          <!-- Right Bar of 11 -->
+          <rect class="bar-right" x="53" y="32" width="6" height="36" rx="3" fill="#c5a059" />
+        </svg>
+        
+        <div class="preloader-text-wrap">
+          <h1 class="preloader-title">11 Fit</h1>
+          <p class="preloader-subtitle">Elite Performance</p>
+        </div>
+      </div>
+    </div>
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>
