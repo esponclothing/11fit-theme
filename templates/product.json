@@ -103,6 +103,47 @@
         "padding_bottom": 36
       }
     },
+    "collection_list_nyGQ3i": {
+      "type": "collection-list",
+      "blocks": {
+        "featured_collection_JD3jgN": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "trackpants"
+          }
+        },
+        "featured_collection_rcDiEp": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "shorts"
+          }
+        },
+        "featured_collection_BTyaPV": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "t-shirts"
+          }
+        }
+      },
+      "block_order": [
+        "featured_collection_JD3jgN",
+        "featured_collection_rcDiEp",
+        "featured_collection_BTyaPV"
+      ],
+      "name": "t:sections.collection-list.presets.name",
+      "settings": {
+        "title": "Collections",
+        "heading_size": "h1",
+        "image_ratio": "square",
+        "columns_desktop": 3,
+        "color_scheme": "",
+        "show_view_all": false,
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
     "177953350468f29684": {
       "type": "apps",
       "blocks": {
@@ -132,6 +173,7 @@
     "main",
     "related-products",
     "featured_collection_gAYirN",
+    "collection_list_nyGQ3i",
     "177953350468f29684",
     "floating-video-pip"
   ]
