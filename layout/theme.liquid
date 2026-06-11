@@ -330,6 +330,12 @@
 
   <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
     <div id="fit11-preloader" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:radial-gradient(circle, #1a1a1e 0%, #08080a 100%);z-index:999999;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:25px;transition:opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1),visibility 0.6s cubic-bezier(0.25, 1, 0.5, 1);overflow:hidden;">
+      <script>
+        if (sessionStorage.getItem('fit11_loaded')) {
+          document.getElementById('fit11-preloader').style.display = 'none';
+          document.documentElement.classList.add('page-loaded');
+        }
+      </script>
       <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&display=swap');
         
@@ -593,7 +599,9 @@
     if (p && p.style.visibility !== 'hidden') {
       p.style.opacity = '0';
       p.style.visibility = 'hidden';
+      document.documentElement.classList.add('page-loaded');
     }
+    sessionStorage.setItem('fit11_loaded', 'true');
   }
   document.addEventListener('DOMContentLoaded', function() { 
     setTimeout(removeFit11Preloader, 600); 
