@@ -262,6 +262,7 @@
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
+    position: relative;
   }
 
   .luxe-track::-webkit-scrollbar { display: none; }
@@ -490,6 +491,7 @@
     .luxe-price-row { justify-content: center; }
     
     .luxe-slider-wrap { grid-area: slider; margin: 0 auto; max-width: 500px; width: 100%; align-self: center; position: relative; }
+    .luxe-track { scroll-snap-type: none; }
     .luxe-dots { grid-area: dots; margin-top: 10px; justify-content: center; }
   }
 
@@ -843,7 +845,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function scrollToSlide(index) {
       if (slides[index]) {
-        track.scrollTo({ left: slides[index].offsetLeft, behavior: 'smooth' });
+        track.scrollLeft = track.clientWidth * index;
       }
     }
 

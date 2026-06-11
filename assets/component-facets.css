@@ -1255,3 +1255,65 @@ input.mobile-facets__checkbox {
     padding: 0 1rem 1rem;
   }
 }
+
+/* --- FIT11 MOBILE STICKY BAR --- */
+.fit11-sticky-mobile-bar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: #fff;
+  z-index: 99;
+  display: flex !important;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 50px;
+}
+
+/* Ensure the wrapper doesnt have default padding */
+.mobile-facets__open-wrapper.fit11-sticky-mobile-bar {
+  justify-content: center;
+}
+
+.fit11-sticky-mobile-bar .mobile-facets__open {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+}
+
+.fit11-mobile-bar-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 100%;
+  color: #282c3f;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.fit11-mobile-bar-divider {
+  width: 1px;
+  height: 24px;
+  background-color: #d4d5d9;
+}
+
+.fit11-mobile-filter-badge {
+  background: #ff3f6c;
+  color: white;
+  font-size: 10px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
