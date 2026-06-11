@@ -597,10 +597,16 @@
     const minEl = document.getElementById('luxeMin-' + sectionId);
     const secEl = document.getElementById('luxeSec-' + sectionId);
     
-    let endTime = localStorage.getItem('luxe_timer_' + sectionId);
-    if (!endTime || new Date().getTime() > endTime) {
+    let endTime;
+    try {
+      endTime = localStorage.getItem('luxe_timer_' + sectionId);
+      if (!endTime || new Date().getTime() > endTime) {
+        endTime = new Date().getTime() + (timerHours * 60 * 60 * 1000);
+        localStorage.setItem('luxe_timer_' + sectionId, endTime);
+      }
+    } catch (e) {
+      // Fallback if localStorage is blocked (e.g. incognito or Shopify Theme Editor iframe)
       endTime = new Date().getTime() + (timerHours * 60 * 60 * 1000);
-      localStorage.setItem('luxe_timer_' + sectionId, endTime);
     }
 
     function updateTimer() {
@@ -608,7 +614,7 @@
       let distance = endTime - now;
       if (distance < 0) {
         endTime = new Date().getTime() + (timerHours * 60 * 60 * 1000);
-        localStorage.setItem('luxe_timer_' + sectionId, endTime);
+        try { localStorage.setItem('luxe_timer_' + sectionId, endTime); } catch (e) {}
         distance = endTime - now;
       }
       let h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -906,7 +912,6 @@
     let startX;
     let scrollLeft;
 
-    // VERY IMPORTANT FIX: Only use drag logic on non-touch pointer events!
     track.addEventListener('pointerdown', (e) => {
       if (e.pointerType !== 'mouse') return;
       isDown = true;
