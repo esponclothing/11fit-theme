@@ -599,7 +599,7 @@
               {% endfor %}
             </div>
             
-            <div id="11fit-coupon-message" class="fit11-message-box" style="display: none;"></div>
+            <div id="fit11-coupon-message" class="fit11-message-box" style="display: none;"></div>
           </div>
         {% endif %}
       </div>
@@ -610,7 +610,7 @@
 
 <script>
   async function applyPremiumCoupon(code, btnElement) {
-    const messageBox = document.getElementById('11fit-coupon-message');
+    const messageBox = document.getElementById('fit11-coupon-message');
     
     if (messageBox) {
       messageBox.style.display = "flex";
@@ -653,7 +653,7 @@
           window.publish(PUB_SUB_EVENTS.cartUpdate, { source: 'cart-items', cartData: parsedState });
         }
         
-        const updatedMessageBox = document.getElementById('11fit-coupon-message');
+        const updatedMessageBox = document.getElementById('fit11-coupon-message');
         if (updatedMessageBox) {
           updatedMessageBox.style.display = "flex";
           updatedMessageBox.className = "fit11-message-box fit11-message-success";
@@ -667,7 +667,7 @@
       btnElement.innerText = "Apply Discount";
       btnElement.style.opacity = "1";
       btnElement.disabled = false;
-      const updatedMessageBox = document.getElementById('11fit-coupon-message');
+      const updatedMessageBox = document.getElementById('fit11-coupon-message');
       if (updatedMessageBox) {
         updatedMessageBox.style.display = "flex";
         updatedMessageBox.innerHTML = `⚠️ Couldn't apply the coupon. It might be invalid.`;

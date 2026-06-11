@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 
 <style>
-  .11fit-tabs-wrapper {
+  .fit11-tabs-wrapper {
     background-color: {{ section.settings.bg_color }};
     padding: 60px 0 50px 0;
     font-family: 'Outfit', sans-serif;
@@ -19,12 +19,12 @@
     box-sizing: border-box;
   }
   
-  .11fit-tabs-wrapper * {
+  .fit11-tabs-wrapper * {
     box-sizing: border-box;
   }
 
   /* ── HEADER ── */
-  .11fit-tabs-header-wrap {
+  .fit11-tabs-header-wrap {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -36,7 +36,7 @@
     text-align: center;
   }
 
-  .11fit-tabs-title-row {
+  .fit11-tabs-title-row {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -44,7 +44,7 @@
     margin-bottom: 24px;
   }
 
-  .11fit-tabs-icon {
+  .fit11-tabs-icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -57,7 +57,7 @@
     flex-shrink: 0;
   }
 
-  .11fit-tabs-main-heading {
+  .fit11-tabs-main-heading {
     font-family: 'Playfair Display', serif;
     font-size: 32px;
     font-weight: 400;
@@ -68,7 +68,7 @@
   }
 
   /* ── CATEGORY TABS (SCROLLABLE) ── */
-  .11fit-tabs-nav {
+  .fit11-tabs-nav {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -80,11 +80,11 @@
     max-width: 800px;
   }
 
-  .11fit-tabs-nav::-webkit-scrollbar {
+  .fit11-tabs-nav::-webkit-scrollbar {
     display: none;
   }
 
-  .11fit-tab-btn {
+  .fit11-tab-btn {
     background: #ffffff;
     color: #64748b;
     border: 1px solid #e2e8f0;
@@ -102,13 +102,13 @@
     font-family: 'Outfit', sans-serif;
   }
 
-  .11fit-tab-btn:hover {
+  .fit11-tab-btn:hover {
     border-color: #cbd5e1;
     color: {{ section.settings.accent_color }};
   }
 
   /* Active Tab State */
-  .11fit-tab-btn.active {
+  .fit11-tab-btn.active {
     background: {{ section.settings.active_tab_color }};
     color: #ffffff;
     border-color: {{ section.settings.active_tab_color }};
@@ -116,17 +116,17 @@
   }
 
   /* ── CONTENT PANELS ── */
-  .11fit-tabs-content-wrap {
+  .fit11-tabs-content-wrap {
     max-width: 1300px;
     margin: 0 auto;
   }
 
-  .11fit-tab-panel {
+  .fit11-tab-panel {
     display: none;
     animation: 11fitFadeIn 0.4s ease-in-out;
   }
 
-  .11fit-tab-panel.active {
+  .fit11-tab-panel.active {
     display: block;
   }
 
@@ -136,7 +136,7 @@
   }
 
   /* ── PRODUCT SLIDER ── */
-  .11fit-tab-slider {
+  .fit11-tab-slider {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -146,12 +146,12 @@
     gap: 16px;
   }
 
-  .11fit-tab-slider::-webkit-scrollbar {
+  .fit11-tab-slider::-webkit-scrollbar {
     display: none;
   }
 
   /* ── PRODUCT CARD (MATCHING TRENDING SEC) ── */
-  .11fit-tab-card {
+  .fit11-tab-card {
     flex: 0 0 240px;
     scroll-snap-align: start;
     background: #ffffff;
@@ -165,13 +165,13 @@
     transition: all 0.3s ease;
   }
 
-  .11fit-tab-card:hover {
+  .fit11-tab-card:hover {
     border-color: #cbd5e0;
     transform: translateY(-4px);
     box-shadow: 0 10px 20px rgba(0,0,0,0.04);
   }
 
-  .11fit-tab-badge {
+  .fit11-tab-badge {
     position: absolute;
     top: 20px;
     left: 20px;
@@ -185,7 +185,7 @@
     text-transform: capitalize;
   }
 
-  .11fit-tab-img-wrap {
+  .fit11-tab-img-wrap {
     width: 100%;
     aspect-ratio: 1 / 1;
     background: #f8fafc;
@@ -198,18 +198,18 @@
     position: relative;
   }
 
-  .11fit-tab-img-wrap img {
+  .fit11-tab-img-wrap img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
   }
 
-  .11fit-tab-card:hover .11fit-tab-img-wrap img {
+  .fit11-tab-card:hover .fit11-tab-img-wrap img {
     transform: scale(1.05);
   }
 
-  .11fit-tab-vendor {
+  .fit11-tab-vendor {
     font-size: 11px;
     color: #94a3b8;
     text-transform: uppercase;
@@ -218,7 +218,7 @@
     font-weight: 500;
   }
 
-  .11fit-tab-prod-title {
+  .fit11-tab-prod-title {
     font-family: 'Playfair Display', serif;
     color: {{ section.settings.accent_color }};
     font-size: 18px;
@@ -231,21 +231,21 @@
     overflow: hidden;
   }
 
-  .11fit-tab-price-row {
+  .fit11-tab-price-row {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-top: auto;
   }
 
-  .11fit-tab-price {
+  .fit11-tab-price {
     font-size: 18px;
     font-weight: 700;
     color: #1a202c;
     line-height: 1;
   }
 
-  .11fit-tab-compare {
+  .fit11-tab-compare {
     font-size: 13px;
     color: #94a3b8;
     text-decoration: line-through;
@@ -254,41 +254,41 @@
 
   /* ── DESKTOP ADJUSTMENTS ── */
   @media (min-width: 769px) {
-    .11fit-tabs-wrapper {
+    .fit11-tabs-wrapper {
       background: radial-gradient(circle at bottom, #ffffff 0%, {{ section.settings.bg_color }} 100%);
       padding: 100px 0;
     }
-    .11fit-tabs-nav { justify-content: center; overflow: visible; padding-bottom: 0; }
-    .11fit-tab-slider { justify-content: flex-start; padding: 20px 0; }
-    .11fit-tab-card { flex: 0 0 calc(25% - 12px); }
+    .fit11-tabs-nav { justify-content: center; overflow: visible; padding-bottom: 0; }
+    .fit11-tab-slider { justify-content: flex-start; padding: 20px 0; }
+    .fit11-tab-card { flex: 0 0 calc(25% - 12px); }
   }
 
   /* ── MOBILE OVERRIDES ── */
   @media (max-width: 767px) {
-    .11fit-tabs-wrapper { padding: 40px 0; }
-    .11fit-tabs-main-heading { font-size: 26px; }
-    .11fit-tab-btn { padding: 8px 20px; font-size: 13px; }
+    .fit11-tabs-wrapper { padding: 40px 0; }
+    .fit11-tabs-main-heading { font-size: 26px; }
+    .fit11-tab-btn { padding: 8px 20px; font-size: 13px; }
     
-    .11fit-tab-card { flex: 0 0 180px; padding: 10px; }
-    .11fit-tab-badge { top: 16px; left: 16px; font-size: 10px; padding: 2px 6px; }
-    .11fit-tab-img-wrap { margin-bottom: 12px; }
-    .11fit-tab-prod-title { font-size: 16px; margin-bottom: 8px; }
-    .11fit-tab-price { font-size: 16px; }
-    .11fit-tab-compare { font-size: 12px; }
+    .fit11-tab-card { flex: 0 0 180px; padding: 10px; }
+    .fit11-tab-badge { top: 16px; left: 16px; font-size: 10px; padding: 2px 6px; }
+    .fit11-tab-img-wrap { margin-bottom: 12px; }
+    .fit11-tab-prod-title { font-size: 16px; margin-bottom: 8px; }
+    .fit11-tab-price { font-size: 16px; }
+    .fit11-tab-compare { font-size: 12px; }
   }
 </style>
 
-<div class="11fit-tabs-wrapper pc-reveal" id="11fitTabsWrapper-{{ section.id }}" data-speed="{{ section.settings.autoplay_speed | times: 1000 }}">
+<div class="fit11-tabs-wrapper pc-reveal" id="11fitTabsWrapper-{{ section.id }}" data-speed="{{ section.settings.autoplay_speed | times: 1000 }}">
   
-  <div class="11fit-tabs-header-wrap pc-reveal">
-    <div class="11fit-tabs-title-row">
-      <div class="11fit-tabs-icon"><i class="ti ti-star"></i></div>
-      <h2 class="11fit-tabs-main-heading">{{ section.settings.heading }}</h2>
+  <div class="fit11-tabs-header-wrap pc-reveal">
+    <div class="fit11-tabs-title-row">
+      <div class="fit11-tabs-icon"><i class="ti ti-star"></i></div>
+      <h2 class="fit11-tabs-main-heading">{{ section.settings.heading }}</h2>
     </div>
     
-    <div class="11fit-tabs-nav" id="11fitTabsNav-{{ section.id }}">
+    <div class="fit11-tabs-nav" id="11fitTabsNav-{{ section.id }}">
       {% for block in section.blocks %}
-        <button class="11fit-tab-btn {% if forloop.first %}active{% endif %}" 
+        <button class="fit11-tab-btn {% if forloop.first %}active{% endif %}" 
                 data-target="panel-{{ section.id }}-{{ forloop.index }}" 
                 {{ block.shopify_attributes }}>
           {{ block.settings.tab_name }}
@@ -297,33 +297,33 @@
     </div>
   </div>
 
-  <div class="11fit-tabs-content-wrap">
+  <div class="fit11-tabs-content-wrap">
     {% for block in section.blocks %}
       {% assign collection = collections[block.settings.collection] %}
       
-      <div class="11fit-tab-panel {% if forloop.first %}active{% endif %}" id="panel-{{ section.id }}-{{ forloop.index }}">
-        <div class="11fit-tab-slider pc-reveal-stagger">
+      <div class="fit11-tab-panel {% if forloop.first %}active{% endif %}" id="panel-{{ section.id }}-{{ forloop.index }}">
+        <div class="fit11-tab-slider pc-reveal-stagger">
           
           {% if collection != blank and collection.products_count > 0 %}
             {% for product in collection.products limit: block.settings.product_limit %}
-              <a href="{{ product.url }}" class="11fit-tab-card">
+              <a href="{{ product.url }}" class="fit11-tab-card">
                 
                 {% if product.compare_at_price > product.price %}
                   {% assign saving = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round %}
-                  <div class="11fit-tab-badge">{{ saving }}% OFF</div>
+                  <div class="fit11-tab-badge">{{ saving }}% OFF</div>
                 {% endif %}
 
-                <div class="11fit-tab-img-wrap">
+                <div class="fit11-tab-img-wrap">
                   <img src="{{ product.featured_image | img_url: '400x400', crop: 'center' }}" alt="{{ product.title | escape }}" loading="lazy">
                 </div>
 
-                <div class="11fit-tab-vendor">{{ product.vendor | default: 'Espon Sports' }}</div>
-                <div class="11fit-tab-prod-title">{{ product.title }}</div>
+                <div class="fit11-tab-vendor">{{ product.vendor | default: 'Espon Sports' }}</div>
+                <div class="fit11-tab-prod-title">{{ product.title }}</div>
                 
-                <div class="11fit-tab-price-row">
-                  <span class="11fit-tab-price">{{ product.price | money_without_trailing_zeros }}</span>
+                <div class="fit11-tab-price-row">
+                  <span class="fit11-tab-price">{{ product.price | money_without_trailing_zeros }}</span>
                   {% if product.compare_at_price > product.price %}
-                    <span class="11fit-tab-compare">{{ product.compare_at_price | money_without_trailing_zeros }}</span>
+                    <span class="fit11-tab-compare">{{ product.compare_at_price | money_without_trailing_zeros }}</span>
                   {% endif %}
                 </div>
               </a>
@@ -331,16 +331,16 @@
           {% else %}
             {% comment %} Fallback UI if no collection is selected {% endcomment %}
             {% for i in (1..4) %}
-              <div class="11fit-tab-card">
-                <div class="11fit-tab-badge">Special</div>
-                <div class="11fit-tab-img-wrap">
+              <div class="fit11-tab-card">
+                <div class="fit11-tab-badge">Special</div>
+                <div class="fit11-tab-img-wrap">
                   <span style="font-size:12px; color:#94a3b8; font-weight:500;">Select Collection</span>
                 </div>
-                <div class="11fit-tab-vendor">Espon Sports</div>
-                <div class="11fit-tab-prod-title">Premium {{ block.settings.tab_name }} Example {{ i }}</div>
-                <div class="11fit-tab-price-row">
-                  <span class="11fit-tab-price">₹1,999</span>
-                  <span class="11fit-tab-compare">₹2,499</span>
+                <div class="fit11-tab-vendor">Espon Sports</div>
+                <div class="fit11-tab-prod-title">Premium {{ block.settings.tab_name }} Example {{ i }}</div>
+                <div class="fit11-tab-price-row">
+                  <span class="fit11-tab-price">₹1,999</span>
+                  <span class="fit11-tab-compare">₹2,499</span>
                 </div>
               </div>
             {% endfor %}
@@ -359,8 +359,8 @@
     if (!wrapper) return;
 
     const navTrack = wrapper.querySelector('#11fitTabsNav-{{ section.id }}');
-    const tabButtons = wrapper.querySelectorAll('.11fit-tab-btn');
-    const tabPanels = wrapper.querySelectorAll('.11fit-tab-panel');
+    const tabButtons = wrapper.querySelectorAll('.fit11-tab-btn');
+    const tabPanels = wrapper.querySelectorAll('.fit11-tab-panel');
     
     // Auto-swipe settings
     const speed = parseInt(wrapper.getAttribute('data-speed')) || 3000;
@@ -401,14 +401,14 @@
       }
 
       // 2. Auto-swipe the active Product Slider
-      const activeSlider = wrapper.querySelector('.11fit-tab-panel.active .11fit-tab-slider');
+      const activeSlider = wrapper.querySelector('.fit11-tab-panel.active .fit11-tab-slider');
       if (activeSlider && activeSlider.scrollWidth > activeSlider.clientWidth) {
-        const panelId = activeSlider.closest('.11fit-tab-panel').id;
+        const panelId = activeSlider.closest('.fit11-tab-panel').id;
         
         if (!prodDirections[panelId]) prodDirections[panelId] = 1;
 
         const maxProdScroll = activeSlider.scrollWidth - activeSlider.clientWidth;
-        const card = activeSlider.querySelector('.11fit-tab-card');
+        const card = activeSlider.querySelector('.fit11-tab-card');
         const scrollAmount = card ? card.offsetWidth + 16 : 256;
 
         // Ping-pong reversal

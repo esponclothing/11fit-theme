@@ -323,7 +323,7 @@
             {%- endif -%}
           {%- endfor -%}
           
-          <input type="hidden" name="id" id="11fit-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
+          <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
           <input type="hidden" name="quantity" value="1" class="qty-input">
           <button type="submit" name="add" class="fit11-btn-cart product-form__submit">
             <span>Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
@@ -461,8 +461,8 @@
       <div class="fit11-sticky-text"><h3>{{ product.title }}</h3><p>{{ product.price | money }}</p></div>
     </div>
     <div class="fit11-sticky-btns">
-      <div class="11fit-form-inline">
-        <button type="button" class="fit11-btn-cart product-form__submit" onclick="document.querySelector('#11fit-form-cart-main .fit11-btn-cart').click();">
+      <div class="fit11-form-inline">
+        <button type="button" class="fit11-btn-cart product-form__submit" onclick="document.querySelector('#fit11-form-cart-main .fit11-btn-cart').click();">
           <span>Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
         </button>
       </div>
@@ -576,7 +576,7 @@
 
   /* ── COLOR VARIANT SELECTION LOGIC ── */
   var variantRadios = document.querySelectorAll('.fit11-variant-radio');
-  var variantIdInput = document.getElementById('11fit-variant-id');
+  var variantIdInput = document.getElementById('fit11-variant-id');
   var variantsJsonEl = document.getElementById('ProductVariantsData');
   
   if (variantsJsonEl && variantIdInput) {
