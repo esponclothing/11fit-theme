@@ -836,7 +836,11 @@
 
     function scrollToSlide(index) {
       if (slides[index]) {
-        track.scrollTo({ left: index * track.clientWidth, behavior: 'smooth' });
+        try {
+            track.scrollLeft = index * track.clientWidth;
+        } catch (e) {
+            console.error('Scroll error', e);
+        }
       }
     }
 
@@ -902,7 +906,9 @@
     let startX;
     let scrollLeft;
 
-    track.addEventListener('mousedown', (e) => {
+    // VERY IMPORTANT FIX: Only use drag logic on non-touch pointer events!
+    track.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse') return;
       isDown = true;
       track.classList.add('dragging');
       startX = e.pageX - track.offsetLeft;
@@ -911,22 +917,22 @@
       stopAutoPlay();
     });
     
-    track.addEventListener('mouseleave', () => {
-      if (!isDown) return;
+    track.addEventListener('pointerleave', (e) => {
+      if (e.pointerType !== 'mouse' || !isDown) return;
       isDown = false;
       track.classList.remove('dragging');
       snapToClosest();
     });
     
-    track.addEventListener('mouseup', () => {
-      if (!isDown) return;
+    track.addEventListener('pointerup', (e) => {
+      if (e.pointerType !== 'mouse' || !isDown) return;
       isDown = false;
       track.classList.remove('dragging');
       snapToClosest();
     });
     
-    track.addEventListener('mousemove', (e) => {
-      if (!isDown) return;
+    track.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse' || !isDown) return;
       e.preventDefault();
       const x = e.pageX - track.offsetLeft;
       const walk = (x - startX) * 1.5; 
