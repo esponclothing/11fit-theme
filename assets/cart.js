@@ -93,13 +93,20 @@ class CartItems extends HTMLElement {
         .then((response) => response.text())
         .then((responseText) => {
           const html = new DOMParser().parseFromString(responseText, 'text/html');
-          const selectors = ['cart-drawer-items', '.cart-drawer__footer'];
-          for (const selector of selectors) {
-            const targetElement = document.querySelector(selector);
-            const sourceElement = html.querySelector(selector);
-            if (targetElement && sourceElement) {
-              targetElement.replaceWith(sourceElement);
-            }
+          
+          // Replace the entire inner contents of the cart drawer to update totals, checkout buttons, shipping bar, and items
+          const selector = '.drawer__inner';
+          const targetElement = document.querySelector(selector);
+          const sourceElement = html.querySelector(selector);
+          if (targetElement && sourceElement) {
+            targetElement.replaceWith(sourceElement);
+          }
+          
+          // Keep the is-empty class on the cart-drawer outer element in sync
+          const targetCartDrawer = document.querySelector('cart-drawer');
+          const sourceCartDrawer = html.querySelector('cart-drawer');
+          if (targetCartDrawer && sourceCartDrawer) {
+            targetCartDrawer.classList.toggle('is-empty', sourceCartDrawer.classList.contains('is-empty'));
           }
         })
         .catch((e) => {
