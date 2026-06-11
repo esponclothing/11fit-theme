@@ -23,11 +23,11 @@
 
   /* ── GLOBAL STRICT CONSTRAINTS ── */
   .ullu-page, .ullu-page * { box-sizing: border-box !important; }
-  .ullu-page { max-width: 1300px; margin: 0 auto; padding-top: 40px; padding-bottom: 140px; color: var(--lux-text); background: var(--lux-bg); font-family: var(--font-body); width: 100%; overflow-x: hidden; }
-  .ullu-grid { display: grid; grid-template-columns: 55% 45%; gap: 40px; align-items: start; padding: 0 20px; width: 100%; }
+  .ullu-page { padding-top: 0px; padding-bottom: 140px; color: var(--lux-text); background: var(--lux-bg); font-family: var(--font-body); width: 100%; }
+  .ullu-grid { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 50% 50%; gap: 40px; align-items: start; padding: 0 20px; width: 100%; }
 
   /* ── GALLERY ── */
-  .ullu-gallery-wrap { position: sticky; top: 40px; display: flex; flex-direction: column; gap: 12px; width: 100%; }
+  .ullu-gallery-wrap { position: sticky; top: 10px; display: flex; flex-direction: column; gap: 8px; width: 100%; }
   .ullu-gallery-box { width: 100%; aspect-ratio: 4/5; background: var(--lux-surface); overflow: hidden; position: relative; border-radius: 8px; border: 1px solid var(--lux-border); }
   .ullu-slides { display: flex; height: 100%; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; }
   .ullu-slides::-webkit-scrollbar { display: none; }
@@ -255,8 +255,83 @@
           </div>
         </div>
       </div>
-      
-      {% comment %} ── NEW OFFERS & DISCOUNTS SECTION ── {% endcomment %}
+
+      {% comment %} ── VARIANT SELECTOR (Moved below MRP/header group) ── {% endcomment %}
+      {% unless product.has_only_default_variant %}
+        <div class="ullu-variant-selectors" style="margin-bottom: 20px;">
+          {% for option in product.options_with_values %}
+            {% assign option_name_lower = option.name | downcase %}
+            {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
+              <fieldset class="ullu-option-fieldset">
+                <legend class="ullu-option-name" style="display: flex; align-items: center;">
+                  {{ option.name }}
+                  <span class="ullu-selected-color-label" style="margin-left: 8px; color: var(--lux-text); font-weight: 600; text-transform: capitalize;">{{ option.selected_value }}</span>
+                </legend>
+                <div class="ullu-variant-pills">
+                  {% for value in option.values %}
+                    <input type="radio" 
+                           id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                           name="{{ option.name }}" 
+                           value="{{ value | escape }}"
+                           {% if option.selected_value == value %}checked{% endif %}
+                           class="ullu-variant-radio"
+                           data-is-color="true">
+                    
+                    <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="ullu-variant-pill is-color" title="{{ value }}">
+                      {% assign color_handle = value | handle %}
+                      {% assign css_color = color_handle %}
+                      {% case color_handle %}
+                        {% when 'navy-blue' %}{% assign css_color = '#000080' %}
+                        {% when 'bottle-green' %}{% assign css_color = '#006A4E' %}
+                        {% when 'light-baby-pink' %}{% assign css_color = '#F4C2C2' %}
+                        {% when 'lavender' %}{% assign css_color = '#E6E6FA' %}
+                        {% when 'baby-blue' %}{% assign css_color = '#89CFF0' %}
+                        {% when 'flamingo' %}{% assign css_color = '#FC8EAC' %}
+                        {% when 'jade' %}{% assign css_color = '#00A86B' %}
+                        {% when 'off-white' %}{% assign css_color = '#FAF9F6' %}
+                        {% when 'maroon' %}{% assign css_color = '#800000' %}
+                        {% when 'white' %}{% assign css_color = '#FFFFFF' %}
+                        {% when 'black' %}{% assign css_color = '#000000' %}
+                        {% when 'red' %}{% assign css_color = '#FF0000' %}
+                        {% else %}{% assign css_color = value | split: ' ' | last | downcase %}
+                      {% endcase %}
+                      {% assign swatch_image = color_handle | append: '.png' %}
+                      <span class="ullu-color-swatch" style="background-color: {{ css_color }}; background-image: url('{{ swatch_image | file_url }}'); background-size: cover; background-position: center;"></span>
+                    </label>
+                  {% endfor %}
+                </div>
+              </fieldset>
+            {% endif %}
+          {% endfor %}
+          
+          <script type="application/json" id="ProductVariantsData">
+            {{ product.variants | json }}
+          </script>
+        </div>
+      {% endunless %}
+
+      {% comment %} ── HIGHLIGHTED COMBO SELECTION AREA ── {% endcomment %}
+      <div class="ullu-main-action-btns" id="ulluMainBtnContainer">
+        <div class="ullu-combo-title">Curate Your Combo</div>
+        {% form 'product', product, id: 'ullu-form-cart-main', class: 'ullu-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
+          
+          {%- for block in section.blocks -%}
+            {%- if block.type == '@app' -%}
+              <div class="ullu-app-wrapper">
+                {% render block %}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+          
+          <input type="hidden" name="id" id="ullu-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
+          <input type="hidden" name="quantity" value="1" class="qty-input">
+          <button type="submit" name="add" class="ullu-btn-cart product-form__submit">
+            <span>Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
+          </button>
+        {% endform %}
+      </div>
+
+      {% comment %} ── NEW OFFERS & DISCOUNTS SECTION (Moved below Add to Cart) ── {% endcomment %}
       {% assign offer_blocks = section.blocks | where: "type", "offer" %}
       
       {% if offer_blocks.size > 0 %}
@@ -289,80 +364,6 @@
           </div>
         </div>
       {% endif %}
-
-      {% comment %} ── HIGHLIGHTED COMBO SELECTION AREA ── {% endcomment %}
-      <div class="ullu-main-action-btns" id="ulluMainBtnContainer">
-        <div class="ullu-combo-title">Curate Your Combo</div>
-        {% form 'product', product, id: 'ullu-form-cart-main', class: 'ullu-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
-          
-          {%- for block in section.blocks -%}
-            {%- if block.type == '@app' -%}
-              <div class="ullu-app-wrapper">
-                {% render block %}
-              </div>
-            {%- endif -%}
-          {%- endfor -%}
-
-          {% unless product.has_only_default_variant %}
-            <div class="ullu-variant-selectors" style="margin-bottom: 20px;">
-              {% for option in product.options_with_values %}
-                {% assign option_name_lower = option.name | downcase %}
-                {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
-                  <fieldset class="ullu-option-fieldset">
-                    <legend class="ullu-option-name" style="display: flex; align-items: center;">
-                      {{ option.name }}
-                      <span class="ullu-selected-color-label" style="margin-left: 8px; color: var(--lux-text); font-weight: 600; text-transform: capitalize;">{{ option.selected_value }}</span>
-                    </legend>
-                    <div class="ullu-variant-pills">
-                      {% for value in option.values %}
-                        <input type="radio" 
-                               id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
-                               name="{{ option.name }}" 
-                               value="{{ value | escape }}"
-                               {% if option.selected_value == value %}checked{% endif %}
-                               class="ullu-variant-radio"
-                               data-is-color="true">
-                        
-                        <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="ullu-variant-pill is-color" title="{{ value }}">
-                          {% assign color_handle = value | handle %}
-                          {% assign css_color = color_handle %}
-                          {% case color_handle %}
-                            {% when 'navy-blue' %}{% assign css_color = '#000080' %}
-                            {% when 'bottle-green' %}{% assign css_color = '#006A4E' %}
-                            {% when 'light-baby-pink' %}{% assign css_color = '#F4C2C2' %}
-                            {% when 'lavender' %}{% assign css_color = '#E6E6FA' %}
-                            {% when 'baby-blue' %}{% assign css_color = '#89CFF0' %}
-                            {% when 'flamingo' %}{% assign css_color = '#FC8EAC' %}
-                            {% when 'jade' %}{% assign css_color = '#00A86B' %}
-                            {% when 'off-white' %}{% assign css_color = '#FAF9F6' %}
-                            {% when 'maroon' %}{% assign css_color = '#800000' %}
-                            {% when 'white' %}{% assign css_color = '#FFFFFF' %}
-                            {% when 'black' %}{% assign css_color = '#000000' %}
-                            {% when 'red' %}{% assign css_color = '#FF0000' %}
-                            {% else %}{% assign css_color = value | split: ' ' | last | downcase %}
-                          {% endcase %}
-                          {% assign swatch_image = color_handle | append: '.png' %}
-                          <span class="ullu-color-swatch" style="background-color: {{ css_color }}; background-image: url('{{ swatch_image | file_url }}'); background-size: cover; background-position: center;"></span>
-                        </label>
-                      {% endfor %}
-                    </div>
-                  </fieldset>
-                {% endif %}
-              {% endfor %}
-              
-              <script type="application/json" id="ProductVariantsData">
-                {{ product.variants | json }}
-              </script>
-            </div>
-          {% endunless %}
-          
-          <input type="hidden" name="id" id="ullu-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
-          <input type="hidden" name="quantity" value="1" class="qty-input">
-          <button type="submit" name="add" class="ullu-btn-cart product-form__submit">
-            <span>Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
-          </button>
-        {% endform %}
-      </div>
 
       {% comment %} ── ACCORDIONS ── {% endcomment %}
       <div class="ullu-accord-group">
