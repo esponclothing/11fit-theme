@@ -262,6 +262,15 @@
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: grab;
+  }
+
+  .luxe-track.dragging {
+    scroll-behavior: auto !important;
+    scroll-snap-type: none !important;
+    cursor: grabbing;
   }
 
   .luxe-track::-webkit-scrollbar { display: none; }
@@ -277,6 +286,8 @@
     padding: 20px;
     box-sizing: border-box;
     transition: opacity 0.5s ease;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .luxe-slide img {
@@ -285,6 +296,10 @@
     object-fit: contain;
     filter: drop-shadow(0px 20px 30px rgba(0,0,0,0.08));
     transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
   }
   
   .luxe-slide:hover img {
@@ -843,9 +858,12 @@
     function scrollToSlide(index) {
       if (slides[index]) {
         try {
-            track.scrollLeft = index * track.clientWidth;
+          track.scrollTo({
+            left: index * track.clientWidth,
+            behavior: 'smooth'
+          });
         } catch (e) {
-            console.error('Scroll error', e);
+          track.scrollLeft = index * track.clientWidth;
         }
       }
     }
@@ -922,36 +940,43 @@
       if (e.pointerType !== 'mouse') return;
       isDown = true;
       track.classList.add('dragging');
-      startX = e.pageX - track.offsetLeft;
+      startX = e.clientX;
       scrollLeft = track.scrollLeft;
-      track.style.scrollSnapType = 'none';
       stopAutoPlay();
-    });
-    
-    track.addEventListener('pointerleave', (e) => {
-      if (e.pointerType !== 'mouse' || !isDown) return;
-      isDown = false;
-      track.classList.remove('dragging');
-      snapToClosest();
+      try {
+        track.setPointerCapture(e.pointerId);
+      } catch (err) {}
     });
     
     track.addEventListener('pointerup', (e) => {
       if (e.pointerType !== 'mouse' || !isDown) return;
       isDown = false;
       track.classList.remove('dragging');
+      try {
+        track.releasePointerCapture(e.pointerId);
+      } catch (err) {}
+      snapToClosest();
+    });
+
+    track.addEventListener('pointercancel', (e) => {
+      if (e.pointerType !== 'mouse' || !isDown) return;
+      isDown = false;
+      track.classList.remove('dragging');
+      try {
+        track.releasePointerCapture(e.pointerId);
+      } catch (err) {}
       snapToClosest();
     });
     
     track.addEventListener('pointermove', (e) => {
       if (e.pointerType !== 'mouse' || !isDown) return;
       e.preventDefault();
-      const x = e.pageX - track.offsetLeft;
+      const x = e.clientX;
       const walk = (x - startX) * 1.5; 
       track.scrollLeft = scrollLeft - walk;
     });
 
     function snapToClosest() {
-      track.style.scrollSnapType = 'x mandatory';
       const index = Math.round(track.scrollLeft / track.clientWidth);
       scrollToSlide(Math.max(0, Math.min(index, slides.length - 1)));
       if(!isPriceUnlocked) startAutoPlay();
