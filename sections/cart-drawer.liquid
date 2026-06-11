@@ -1,1 +1,19 @@
-{%- render 'cart-drawer' -%}
+{%- render 'cart-drawer', section: section -%}
+
+{% schema %}
+{
+  "name": "Cart Drawer",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "coupon",
+      "name": "Coupon Offer",
+      "settings": [
+        { "type": "text", "id": "code", "label": "Coupon Code", "default": "FREESHIP" },
+        { "type": "number", "id": "min_spend", "label": "Min Spend required to unlock (in Rupees)", "default": 1999 },
+        { "type": "text", "id": "desc", "label": "Offer Description", "default": "Extra Rs.400 off on orders above 1999" }
+      ]
+    }
+  ]
+}
+{% endschema %}
