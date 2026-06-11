@@ -590,7 +590,7 @@
 
         <!-- Available Offers dynamically updated -->
         <div id="fit11-drawer-offers">
-          {%- if section.blocks.size > 0 and cart != empty -%}
+          {%- if section and section.blocks.size > 0 and cart != empty -%}
             <div class="fit11-offers-wrapper" style="margin-top: 15px; margin-bottom: 15px; padding: 15px 20px; border-radius: 8px;">
               <div class="fit11-offers-header" style="margin-bottom: 12px;">
                 <div class="fit11-offers-title-wrap">
@@ -601,43 +601,44 @@
               
               <div class="fit11-offers-scroll">
                 {% assign cart_total = cart.total_price | default: 0 %}
-                
-                {% for block in section.blocks %}
-                  {% if block.type == 'coupon' %}
-                    {% assign min_spend = block.settings.min_spend | times: 100 %}
-                    {% assign is_applied = false %}
-                    {% for discount in cart.cart_level_discount_applications %}
-                      {% if discount.title == block.settings.code %}
-                        {% assign is_applied = true %}
-                      {% endif %}
-                    {% endfor %}
-                    
-                    <div class="fit11-offer-card {% if is_applied %}fit11-applied-state{% endif %}" data-code="{{ block.settings.code }}" {{ block.shopify_attributes }} style="width: 240px;">
+                {% if section %}
+                  {% for block in section.blocks %}
+                    {% if block.type == 'coupon' %}
+                      {% assign min_spend = block.settings.min_spend | times: 100 %}
+                      {% assign is_applied = false %}
+                      {% for discount in cart.cart_level_discount_applications %}
+                        {% if discount.title == block.settings.code %}
+                          {% assign is_applied = true %}
+                        {% endif %}
+                      {% endfor %}
                       
-                      <div class="fit11-offer-content-wrap" style="padding: 12px;">
-                        <div class="fit11-offer-code" style="font-size: 14px;">{{ block.settings.code }}</div>
-                        <div class="fit11-offer-desc" style="font-size: 11px; margin-bottom: 12px;">{{ block.settings.desc }}</div>
-                        <div class="fit11-coupon-action">
-                          {% if is_applied %}
-                            <span class="fit11-applied-text" style="font-size: 12px;"><i class="ti ti-check"></i> Applied</span>
-                          {% elsif cart_total >= min_spend %}
-                            <button type="button" class="fit11-apply-btn" onclick="applyPremiumCouponInDrawer('{{ block.settings.code }}', this)" style="padding: 8px 12px; font-size: 11px;">Apply Discount</button>
-                          {% else %}
-                            {% assign difference = min_spend | minus: cart_total | divided_by: 100.0 | round %}
-                            {% assign percent = cart_total | times: 100 | divided_by: min_spend %}
-                            <div class="fit11-lock-container">
-                              <span class="fit11-lock-msg" style="font-size: 11px; margin-bottom: 6px;"><i class="ti ti-lock"></i> Add ₹{{ difference }} to unlock</span>
-                              <div class="fit11-progress-bg">
-                                <div class="fit11-progress-fill" style="width: {{ percent }}%;"></div>
+                      <div class="fit11-offer-card {% if is_applied %}fit11-applied-state{% endif %}" data-code="{{ block.settings.code }}" {{ block.shopify_attributes }} style="width: 240px;">
+                        
+                        <div class="fit11-offer-content-wrap" style="padding: 12px;">
+                          <div class="fit11-offer-code" style="font-size: 14px;">{{ block.settings.code }}</div>
+                          <div class="fit11-offer-desc" style="font-size: 11px; margin-bottom: 12px;">{{ block.settings.desc }}</div>
+                          <div class="fit11-coupon-action">
+                            {% if is_applied %}
+                              <span class="fit11-applied-text" style="font-size: 12px;"><i class="ti ti-check"></i> Applied</span>
+                            {% elsif cart_total >= min_spend %}
+                              <button type="button" class="fit11-apply-btn" onclick="applyPremiumCouponInDrawer('{{ block.settings.code }}', this)" style="padding: 8px 12px; font-size: 11px;">Apply Discount</button>
+                            {% else %}
+                              {% assign difference = min_spend | minus: cart_total | divided_by: 100.0 | round %}
+                              {% assign percent = cart_total | times: 100 | divided_by: min_spend %}
+                              <div class="fit11-lock-container">
+                                <span class="fit11-lock-msg" style="font-size: 11px; margin-bottom: 6px;"><i class="ti ti-lock"></i> Add ₹{{ difference }} to unlock</span>
+                                <div class="fit11-progress-bg">
+                                  <div class="fit11-progress-fill" style="width: {{ percent }}%;"></div>
+                                </div>
                               </div>
-                            </div>
-                          {% endif %}
+                            {% endif %}
+                          </div>
                         </div>
+                        
                       </div>
-                      
-                    </div>
-                  {% endif %}
-                {% endfor %}
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
               </div>
               
               <div id="fit11-drawer-coupon-message" class="fit11-message-box" style="display: none; font-size: 12px; padding: 8px 12px;"></div>
