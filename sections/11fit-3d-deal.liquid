@@ -258,7 +258,6 @@
     height: 100%;
     overflow-x: auto;
     overflow-y: hidden;
-    scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
@@ -835,10 +834,18 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTextForSlide(0);
 
     function scrollToSlide(index) {
-      if (slides[index]) {
-        // Direct assignment avoids scroll-snap cancelling smooth scroll on PC Chromium
-        track.scrollLeft = track.clientWidth * index;
-      }
+      if (!slides[index]) return;
+      
+      // Temporarily disable scroll-snap so Chromium doesn't cancel the programmatic scroll
+      track.style.scrollSnapType = 'none';
+      
+      const targetLeft = track.clientWidth * index;
+      track.scrollLeft = targetLeft;
+      
+      // Re-enable scroll-snap after a short delay
+      setTimeout(function() {
+        track.style.scrollSnapType = '';
+      }, 50);
     }
 
     function autoScroll() {
