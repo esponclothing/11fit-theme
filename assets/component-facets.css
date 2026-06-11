@@ -1317,3 +1317,20 @@ input.mobile-facets__checkbox {
   font-weight: bold;
 }
 
+
+/* Fix Sort/Filter bar taking full width and pushing product count down */
+@media screen and (max-width: 749px) {
+  .facets-container {
+    display: flex !important;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .mobile-facets__wrapper {
+    width: 100%;
+  }
+  .product-count {
+    align-self: flex-end;
+    margin-bottom: 8px;
+  }
+}
+
