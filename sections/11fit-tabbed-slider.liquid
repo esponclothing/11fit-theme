@@ -358,7 +358,7 @@
     const wrapper = document.getElementById('11fitTabsWrapper-{{ section.id }}');
     if (!wrapper) return;
 
-    const navTrack = wrapper.querySelector('#11fitTabsNav-{{ section.id }}');
+    const navTrack = document.getElementById('11fitTabsNav-{{ section.id }}');
     const tabButtons = wrapper.querySelectorAll('.fit11-tab-btn');
     const tabPanels = wrapper.querySelectorAll('.fit11-tab-panel');
     
