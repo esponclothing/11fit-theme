@@ -1,1 +1,171 @@
-{"sections":{"main_combo_rTJBJB":{"type":"main-combo","blocks":{"offer_Mq89a9":{"type":"offer","settings":{"offer_code":"FREESHIP","offer_desc":"Free Shipping On Order Above Rs.499","offer_timer":"Ends in 07h 06m 05s"}},"offer_3RpxwH":{"type":"offer","settings":{"offer_code":"Save5","offer_desc":"Additional 5% off on orders above 1999","offer_timer":"Ends in 07h 06m 05s"}},"qikify_volume_discount_volume_offer_XQUR6G":{"type":"shopify:\/\/apps\/qikify-volume-discount\/blocks\/volume_offer\/f0592105-7af5-4bc5-afd2-d674b4b2de92","settings":{"product":"{{product}}"}}},"block_order":["offer_Mq89a9","offer_3RpxwH","qikify_volume_discount_volume_offer_XQUR6G"],"name":"Ullukartcombo","settings":{"font_heading":"'Playfair Display', serif","font_body":"'Outfit', sans-serif","color_bg":"#fafafa","color_surface":"#ffffff","color_text":"#9a7b4f","color_muted":"#666666","color_border":"#e8e8e8","color_accent":"#9a7b4f","offers_heading":"Special Privileges","show_view_all":true,"size_chart_image":"shopify:\/\/shop_images\/WhatsApp_Image_2026-05-28_at_10.00.05_PM.jpg","size_chart_page":"","delivery_text":"<p>Ships within 1–2 business days. Free standard delivery on orders above ₹499. 10-day hassle-free returns on unused, undamaged items in original packaging.<\/p>"}},"related-products":{"type":"related-products","settings":{"heading":"You may also like","heading_size":"h2","products_to_show":4,"columns_desktop":4,"columns_mobile":"2","color_scheme":"scheme-1","image_ratio":"square","image_shape":"default","show_secondary_image":true,"show_vendor":false,"show_rating":false,"padding_top":0,"padding_bottom":0}},"177953350468f29684":{"type":"apps","blocks":{"ag_product_reviews_app_block_review_list_a6ndaT":{"type":"shopify:\/\/apps\/ag-product-reviews\/blocks\/app-block-review-list\/c4e1e9ca-4d46-4e76-bc39-7e42417cb327","settings":{"air_blockreviews_summaryHeading":"Reviews","air_blockreviews_layout":"list","air_blockreviews_singleStarColor":"#16a086","air_blockreviews_primaryColor":"#121212"}}},"block_order":["ag_product_reviews_app_block_review_list_a6ndaT"],"settings":{"include_margins":true}},"11fit_support_faq_mHK3q8":{"type":"11fit-support-faq","blocks":{"faq_item_m8W7Up":{"type":"faq_item","settings":{"question":"What fabric is used in 11FIT products?","answer":"We use premium quality sportswear fabrics. Our activewear features Imported Four-Way Lycra, which is highly stretchable, breathable, and has a heavy 250+ GSM for a rich feel. For casual wear we offer lightweight NS fabrics, NS Terry Lycra, and Air-Lite NS."}},"faq_item_3nrqFx":{"type":"faq_item","settings":{"question":"How do I find my correct size?","answer":"We offer sizes from M to XXL. For track pants: Medium fits a 28–30 inch waist, Large fits 30–32 inches, XL fits 32–34 inches, and XXL fits 34–36 inches. Detailed size charts are available on every product page."}},"faq_item_3WLew3":{"type":"faq_item","settings":{"question":"Which courier services do you use?","answer":"We provide doorstep delivery across India using trusted courier partners including Blue Dart, DTDC, Delhivery, and Xpressbees — ensuring your gear arrives quickly and safely."}},"faq_item_MxLzyM":{"type":"faq_item","settings":{"question":"What is your return and refund policy?","answer":"We want you to train in gear you love! If there is a sizing issue or you are not completely satisfied, we offer a hassle-free return and refund within 7 days of receiving your order."}},"faq_item_CY4heY":{"type":"faq_item","settings":{"question":"What payment methods do you accept?","answer":"We offer a variety of secure payment options. You can pay via Cash on Delivery (COD), or use prepaid options including UPI, GPay, Paytm, PhonePe, and Credit\/Debit Cards."}},"faq_item_qEAPnx":{"type":"faq_item","settings":{"question":"Is free shipping available?","answer":"Yes! We offer free shipping on all orders above ₹499. Orders below this amount will have a nominal delivery charge applied at checkout."}}},"block_order":["faq_item_m8W7Up","faq_item_3nrqFx","faq_item_3WLew3","faq_item_MxLzyM","faq_item_CY4heY","faq_item_qEAPnx"],"name":"11FIT Support & FAQ","settings":{"section_title":"Support & FAQ","section_subtitle":"Everything You Need To Know","bg_color":"#F4F4F4","title_color":"#080808","question_font":"Poppins","question_font_size":13,"answer_font":"Poppins","answer_font_size":12,"faq_image":"shopify:\/\/shop_images\/ChatGPT_Image_Jun_1_2026_05_12_52_PM.png","image_brightness":65,"overlay_heading":"Premium","overlay_subtext":"Engineered For Athletes"}}},"order":["main_combo_rTJBJB","related-products","177953350468f29684","11fit_support_faq_mHK3q8"]}
+{
+  "sections": {
+    "main_combo_rTJBJB": {
+      "type": "main-combo",
+      "blocks": {
+        "offer_Mq89a9": {
+          "type": "offer",
+          "settings": {
+            "offer_code": "FREESHIP",
+            "offer_desc": "Free Shipping On Order Above Rs.499",
+            "offer_timer": "Ends in 07h 06m 05s"
+          }
+        },
+        "offer_3RpxwH": {
+          "type": "offer",
+          "settings": {
+            "offer_code": "Save5",
+            "offer_desc": "Additional 5% off on orders above 1999",
+            "offer_timer": "Ends in 07h 06m 05s"
+          }
+        },
+        "qikify_volume_discount_volume_offer_XQUR6G": {
+          "type": "shopify://apps/qikify-volume-discount/blocks/volume_offer/f0592105-7af5-4bc5-afd2-d674b4b2de92",
+          "settings": {
+            "product": "{{product}}"
+          }
+        }
+      },
+      "block_order": [
+        "offer_Mq89a9",
+        "offer_3RpxwH",
+        "qikify_volume_discount_volume_offer_XQUR6G"
+      ],
+      "name": "Ullukartcombo",
+      "settings": {
+        "font_heading": "'Playfair Display', serif",
+        "font_body": "'Outfit', sans-serif",
+        "color_bg": "#fafafa",
+        "color_surface": "#ffffff",
+        "color_text": "#9a7b4f",
+        "color_muted": "#666666",
+        "color_border": "#e8e8e8",
+        "color_accent": "#9a7b4f",
+        "offers_heading": "Special Privileges",
+        "show_view_all": true,
+        "size_chart_image": "shopify://shop_images/WhatsApp_Image_2026-05-28_at_10.00.05_PM.jpg",
+        "size_chart_page": "",
+        "delivery_text": "<p>Ships within 1–2 business days. Free standard delivery on orders above ₹499. 10-day hassle-free returns on unused, undamaged items in original packaging.</p>"
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "177953350468f29684": {
+      "type": "apps",
+      "blocks": {
+        "ag_product_reviews_app_block_review_list_a6ndaT": {
+          "type": "shopify://apps/ag-product-reviews/blocks/app-block-review-list/c4e1e9ca-4d46-4e76-bc39-7e42417cb327",
+          "settings": {
+            "air_blockreviews_summaryHeading": "Reviews",
+            "air_blockreviews_layout": "list",
+            "air_blockreviews_singleStarColor": "#16a086",
+            "air_blockreviews_primaryColor": "#121212"
+          }
+        }
+      },
+      "block_order": [
+        "ag_product_reviews_app_block_review_list_a6ndaT"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "11fit_support_faq_mHK3q8": {
+      "type": "11fit-support-faq",
+      "blocks": {
+        "faq_item_m8W7Up": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What fabric is used in 11FIT products?",
+            "answer": "We use premium quality sportswear fabrics. Our activewear features Imported Four-Way Lycra, which is highly stretchable, breathable, and has a heavy 250+ GSM for a rich feel. For casual wear we offer lightweight NS fabrics, NS Terry Lycra, and Air-Lite NS."
+          }
+        },
+        "faq_item_3nrqFx": {
+          "type": "faq_item",
+          "settings": {
+            "question": "How do I find my correct size?",
+            "answer": "We offer sizes from M to XXL. For track pants: Medium fits a 28–30 inch waist, Large fits 30–32 inches, XL fits 32–34 inches, and XXL fits 34–36 inches. Detailed size charts are available on every product page."
+          }
+        },
+        "faq_item_3WLew3": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Which courier services do you use?",
+            "answer": "We provide doorstep delivery across India using trusted courier partners including Blue Dart, DTDC, Delhivery, and Xpressbees — ensuring your gear arrives quickly and safely."
+          }
+        },
+        "faq_item_MxLzyM": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is your return and refund policy?",
+            "answer": "We want you to train in gear you love! If there is a sizing issue or you are not completely satisfied, we offer a hassle-free return and refund within 7 days of receiving your order."
+          }
+        },
+        "faq_item_CY4heY": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What payment methods do you accept?",
+            "answer": "We offer a variety of secure payment options. You can pay via Cash on Delivery (COD), or use prepaid options including UPI, GPay, Paytm, PhonePe, and Credit/Debit Cards."
+          }
+        },
+        "faq_item_qEAPnx": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Is free shipping available?",
+            "answer": "Yes! We offer free shipping on all orders above ₹499. Orders below this amount will have a nominal delivery charge applied at checkout."
+          }
+        }
+      },
+      "block_order": [
+        "faq_item_m8W7Up",
+        "faq_item_3nrqFx",
+        "faq_item_3WLew3",
+        "faq_item_MxLzyM",
+        "faq_item_CY4heY",
+        "faq_item_qEAPnx"
+      ],
+      "name": "11FIT Support & FAQ",
+      "settings": {
+        "section_title": "Support & FAQ",
+        "section_subtitle": "Everything You Need To Know",
+        "bg_color": "#F4F4F4",
+        "title_color": "#080808",
+        "question_font": "Poppins",
+        "question_font_size": 13,
+        "answer_font": "Poppins",
+        "answer_font_size": 12,
+        "faq_image": "shopify://shop_images/ChatGPT_Image_Jun_1_2026_05_12_52_PM.png",
+        "image_brightness": 65,
+        "overlay_heading": "Premium",
+        "overlay_subtext": "Engineered For Athletes"
+      }
+    },
+    "floating-video-pip": {
+      "type": "floating-video-pip",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main_combo_rTJBJB",
+    "related-products",
+    "177953350468f29684",
+    "11fit_support_faq_mHK3q8",
+    "floating-video-pip"
+  ]
+}

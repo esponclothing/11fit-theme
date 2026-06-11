@@ -18,9 +18,9 @@
     position: fixed;
     bottom: 96px;
     right: 24px;
-    width: 80px;
-    height: 142px; /* 9:16 aspect ratio */
-    border-radius: 12px;
+    width: 130px;
+    height: 230px; /* 9:16 aspect ratio scaled up */
+    border-radius: 16px;
     overflow: hidden;
     z-index: 999;
     cursor: pointer;
@@ -45,17 +45,22 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 28px;
-    height: 28px;
+    width: 44px;
+    height: 44px;
     background: rgba(197, 160, 89, 0.9);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #ffffff;
-    font-size: 12px;
+    font-size: 18px;
     pointer-events: none;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+
+  .fit-floating-video__play-icon svg {
+    width: 16px;
+    height: 16px;
   }
 
   /* Video Popup overlay */
@@ -88,9 +93,9 @@
   /* Modal layout */
   .fit-video-popup {
     width: 90%;
-    max-width: 340px;
-    height: 80vh;
-    max-height: 600px;
+    max-width: 450px;
+    height: 85vh;
+    max-height: 800px;
     background: #000000;
     border-radius: 20px;
     overflow: hidden;
@@ -245,8 +250,19 @@
       right: 16px;
       width: 75px;
       height: 133px;
+      border-radius: 12px;
+    }
+    .fit-floating-video__play-icon {
+      width: 28px;
+      height: 28px;
+    }
+    .fit-floating-video__play-icon svg {
+      width: 10px;
+      height: 10px;
     }
     .fit-video-popup {
+      width: 90%;
+      max-width: 340px;
       height: 75vh;
       max-height: 520px;
     }
@@ -259,7 +275,7 @@
     <source src="{{ video_url }}" type="video/mp4">
   </video>
   <div class="fit-floating-video__play-icon">
-    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+    <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
   </div>
 </div>
 
