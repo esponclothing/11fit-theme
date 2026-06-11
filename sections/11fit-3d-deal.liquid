@@ -852,7 +852,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (slides[index]) {
         setActiveSlide(index);
         const offset = slides[index].offsetLeft - (slides[0] ? slides[0].offsetLeft : 0);
-        track.scrollTo({ left: offset, behavior: 'smooth' });
+        track.scrollLeft = offset;
       }
     }
 
