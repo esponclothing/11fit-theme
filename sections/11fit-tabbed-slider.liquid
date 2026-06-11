@@ -388,37 +388,43 @@
 
     // --- AUTO-SWIPE LOGIC ---
     function performAutoSwipes() {
-      // 1. Auto-swipe the Category Tabs Navigation (If it overflows on mobile)
-      if (navTrack.scrollWidth > navTrack.clientWidth) {
-        const maxNavScroll = navTrack.scrollWidth - navTrack.clientWidth;
-        
-        if (navTrack.scrollLeft >= maxNavScroll - 5 && navDirection === 1) {
-          navDirection = -1; // Reverse to left
-        } else if (navTrack.scrollLeft <= 5 && navDirection === -1) {
-          navDirection = 1; // Reverse to right
-        }
-        navTrack.scrollBy({ left: 120 * navDirection, behavior: 'smooth' }); 
-      }
-
-      // 2. Auto-swipe the active Product Slider
       const activeSlider = wrapper.querySelector('.fit11-tab-panel.active .fit11-tab-slider');
-      if (activeSlider && activeSlider.scrollWidth > activeSlider.clientWidth) {
-        const panelId = activeSlider.closest('.fit11-tab-panel').id;
-        
-        if (!prodDirections[panelId]) prodDirections[panelId] = 1;
+      let switchedTab = false;
 
+      if (activeSlider && activeSlider.scrollWidth > activeSlider.clientWidth) {
         const maxProdScroll = activeSlider.scrollWidth - activeSlider.clientWidth;
         const card = activeSlider.querySelector('.fit11-tab-card');
         const scrollAmount = card ? card.offsetWidth + 16 : 256;
 
-        // Ping-pong reversal
-        if (activeSlider.scrollLeft >= maxProdScroll - 10 && prodDirections[panelId] === 1) {
-          prodDirections[panelId] = -1;
-        } else if (activeSlider.scrollLeft <= 10 && prodDirections[panelId] === -1) {
-          prodDirections[panelId] = 1;
+        if (activeSlider.scrollLeft >= maxProdScroll - 10) {
+          // Reached the end of products, switch to next tab
+          switchedTab = true;
+        } else {
+          // Keep scrolling products
+          activeSlider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         }
+      } else {
+        // No products to scroll (or they all fit on screen), just switch tab
+        switchedTab = true;
+      }
 
-        activeSlider.scrollBy({ left: scrollAmount * prodDirections[panelId], behavior: 'smooth' });
+      if (switchedTab) {
+        const activeBtn = wrapper.querySelector('.fit11-tab-btn.active');
+        if (activeBtn) {
+          let nextBtn = activeBtn.nextElementSibling;
+          if (!nextBtn || !nextBtn.classList.contains('fit11-tab-btn')) {
+            nextBtn = tabButtons[0]; // Loop back to start
+          }
+          nextBtn.click(); // Triggers the existing manual click logic
+
+          // Ensure the new active slider starts at the very left
+          setTimeout(() => {
+            const newActiveSlider = wrapper.querySelector('.fit11-tab-panel.active .fit11-tab-slider');
+            if (newActiveSlider) {
+              newActiveSlider.scrollTo({left: 0, behavior: 'instant'});
+            }
+          }, 50);
+        }
       }
     }
 

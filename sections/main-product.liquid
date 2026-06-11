@@ -32,7 +32,7 @@
   .fit11-slides { display: flex; height: 100%; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; }
   .fit11-slides::-webkit-scrollbar { display: none; }
   .fit11-slide { flex: 0 0 100%; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; width: 100%; height: 100%; }
-  .fit11-slide img { width: 100%; height: 100%; object-fit: contain; } 
+  .fit11-slide img { width: 100%; height: 100%; object-fit: cover; } 
   
   .fit11-dots { position: absolute; bottom: 16px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; pointer-events: none; z-index: 2; }
   .fit11-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.2); transition: all .4s ease; pointer-events: auto; cursor: pointer; }
@@ -240,7 +240,7 @@
     .fit11-gallery-wrap { width: 100%; margin: 0; padding: 0; }
     .fit11-gallery-box { width: 100%; aspect-ratio: 4/5; height: auto; border-radius: 0; border: none; border-bottom: 1px solid var(--lux-border); max-height: none; }
     .fit11-slide { width: 100%; padding: 0; }
-    .fit11-slide img { width: 100%; height: 100%; object-fit: contain; padding: 0; } 
+    .fit11-slide img { width: 100%; height: 100%; object-fit: cover; padding: 0; } 
     .fit11-thumbs { padding: 8px 16px; }
     
     .fit11-info { width: 100%; padding: 12px 16px; gap: 16px; text-align: left; margin: 0; }

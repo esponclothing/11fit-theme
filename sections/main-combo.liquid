@@ -32,7 +32,7 @@
   .fit11-slides { display: flex; height: 100%; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; }
   .fit11-slides::-webkit-scrollbar { display: none; }
   .fit11-slide { flex: 0 0 100%; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; width: 100%; height: 100%; }
-  .fit11-slide img { width: 100%; height: 100%; object-fit: contain; } 
+  .fit11-slide img { width: 100%; height: 100%; object-fit: cover; } 
   
   .fit11-dots { position: absolute; bottom: 16px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; pointer-events: none; z-index: 2; }
   .fit11-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.2); transition: all .4s ease; pointer-events: auto; cursor: pointer; }
@@ -42,7 +42,7 @@
   .fit11-thumbs::-webkit-scrollbar { display: none; }
   .fit11-thumb { width: 72px; height: 90px; flex-shrink: 0; overflow: hidden; cursor: pointer; opacity: 0.6; transition: all .3s ease; background: var(--lux-surface); border-radius: 6px; border: 1px solid transparent; }
   .fit11-thumb.on { opacity: 1; border-color: var(--lux-text); }
-  .fit11-thumb img { width: 100%; height: 100%; object-fit: contain; }
+  .fit11-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
   /* ── DETAILS PANEL ── */
   .fit11-info { display: flex; flex-direction: column; gap: 24px; width: 100%; padding-top: 10px; }
@@ -180,7 +180,7 @@
     .fit11-gallery-wrap { width: 100%; margin: 0; padding: 0; }
     .fit11-gallery-box { width: 100%; aspect-ratio: 4/5; height: auto; border-radius: 0; border: none; border-bottom: 1px solid var(--lux-border); }
     .fit11-slide { width: 100%; padding: 0; }
-    .fit11-slide img { width: 100%; height: 100%; object-fit: contain; padding: 0; } 
+    .fit11-slide img { width: 100%; height: 100%; object-fit: cover; padding: 0; } 
     .fit11-thumbs { padding: 8px 16px; }
     
     .fit11-info { width: 100%; padding: 24px 16px; gap: 20px; text-align: left; margin: 0; }
@@ -629,6 +629,59 @@
   }
 
 })();
+
+  /* ── VARIANT SELECTION LOGIC (IMAGE ONLY) ── */
+  var variantRadios = document.querySelectorAll('.fit11-variant-radio');
+  var variantsJsonEl = document.getElementById('ProductVariantsData');
+  
+  if (variantsJsonEl) {
+    var variantsData = JSON.parse(variantsJsonEl.textContent);
+
+    function updateSelectedVariant() {
+      var colorRadio = document.querySelector('.fit11-variant-radio[data-is-color="true"]:checked');
+      if (!colorRadio) return;
+      
+      var selectedColor = colorRadio.value;
+      var colorLabel = document.querySelector('.fit11-selected-color-label');
+      if (colorLabel) colorLabel.innerText = selectedColor;
+
+      // Find a variant that includes the selected color in its options
+      var matchedVariant = variantsData.find(function(v) {
+        return v.options.includes(selectedColor);
+      });
+
+      if (matchedVariant) {
+        // We do NOT update the variant ID input since the combo app handles that
+        if (matchedVariant.featured_image && matchedVariant.featured_image.id) {
+          var imageId = matchedVariant.featured_image.id;
+          var targetSlide = document.querySelector('.fit11-slide[data-image-id="' + imageId + '"]');
+          if (targetSlide) {
+            var slideElements = Array.from(document.querySelectorAll('.fit11-slide'));
+            var targetIndex = slideElements.indexOf(targetSlide);
+            
+            // Scroll to the slide
+            var slidesContainer = document.getElementById('fit11Slides');
+            var targetScrollLeft = targetSlide.offsetLeft;
+            slidesContainer.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
+            
+            // Update dots
+            var dots = document.querySelectorAll('.fit11-dot');
+            dots.forEach(d => d.classList.remove('on'));
+            if(dots[targetIndex]) dots[targetIndex].classList.add('on');
+            
+            // Update thumbs
+            var thumbs = document.querySelectorAll('.fit11-thumb');
+            thumbs.forEach(t => t.classList.remove('on'));
+            if(thumbs[targetIndex]) thumbs[targetIndex].classList.add('on');
+          }
+        }
+      }
+    }
+
+    variantRadios.forEach(function(radio) {
+      radio.addEventListener('change', updateSelectedVariant);
+    });
+  }
 
 /* CLICK TO COPY COUPON LOGIC */
 window.fit11CopyCoupon = function(cardElement, code) {
