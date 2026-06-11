@@ -826,7 +826,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }, {
       root: track,
-      threshold: 0.6
+      threshold: 0.5
     });
 
     slides.forEach(slide => observer.observe(slide));
@@ -836,7 +836,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function scrollToSlide(index) {
       if (slides[index]) {
-        track.scrollTo({ left: slides[index].offsetLeft, behavior: 'smooth' });
+        // Direct assignment avoids scroll-snap cancelling smooth scroll on PC Chromium
+        track.scrollLeft = track.clientWidth * index;
       }
     }
 
