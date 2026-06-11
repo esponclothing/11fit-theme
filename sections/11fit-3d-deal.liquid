@@ -688,6 +688,10 @@
       margin-top: 10px; 
       justify-content: center; 
     }
+
+    .luxe-track {
+      scroll-snap-type: none;
+    }
   }
 
   /* Carousel Arrows */
@@ -1015,17 +1019,20 @@ document.addEventListener('DOMContentLoaded', function() {
       }, 400);
     }
 
+    function setActiveSlide(index) {
+      if (index === currentIndex || index < 0 || index >= slides.length) return;
+      currentIndex = index;
+      dots.forEach(d => d.classList.remove('is-active'));
+      if(dots[index]) dots[index].classList.add('is-active');
+      updateTextForSlide(index);
+    }
+
     // Initialize Intersection Observer to reliably track the active slide
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const index = parseInt(entry.target.getAttribute('data-index'));
-          if (index !== currentIndex) {
-            currentIndex = index;
-            dots.forEach(d => d.classList.remove('is-active'));
-            if(dots[index]) dots[index].classList.add('is-active');
-            updateTextForSlide(index);
-          }
+          setActiveSlide(index);
         }
       });
     }, {
@@ -1040,6 +1047,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function scrollToSlide(index) {
       if (slides[index]) {
+        setActiveSlide(index);
         const offset = slides[index].offsetLeft - (slides[0] ? slides[0].offsetLeft : 0);
         track.scrollTo({ left: offset, behavior: 'smooth' });
       }
