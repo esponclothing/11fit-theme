@@ -40,28 +40,7 @@
     object-fit: cover;
   }
 
-  .fit-floating-video__play-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 44px;
-    height: 44px;
-    background: rgba(197, 160, 89, 0.9);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    font-size: 18px;
-    pointer-events: none;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  }
 
-  .fit-floating-video__play-icon svg {
-    width: 16px;
-    height: 16px;
-  }
 
   /* Video Popup overlay */
   .fit-video-popup-overlay {
@@ -252,14 +231,7 @@
       height: 133px;
       border-radius: 12px;
     }
-    .fit-floating-video__play-icon {
-      width: 28px;
-      height: 28px;
-    }
-    .fit-floating-video__play-icon svg {
-      width: 10px;
-      height: 10px;
-    }
+
     .fit-video-popup {
       width: 90%;
       max-width: 340px;
@@ -274,9 +246,7 @@
   <video autoplay muted loop playsinline>
     <source src="{{ video_url }}" type="video/mp4">
   </video>
-  <div class="fit-floating-video__play-icon">
-    <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-  </div>
+
 </div>
 
 <!-- Modal Popup -->
