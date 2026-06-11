@@ -257,7 +257,7 @@
     width: 100%;
     height: 100%;
     overflow-x: auto;
-    overflow-y: hidden;
+    scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
@@ -391,34 +391,10 @@
     text-decoration: none;
     padding: 18px 24px;
     letter-spacing: 2px;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: all 0.4s ease;
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    user-select: none;
-    -webkit-user-select: none;
-  }
-  .luxe-btn-progress {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 0%;
-    background: var(--color-accent);
-    opacity: 0.25;
-    transition: none;
-    pointer-events: none;
-  }
-  .luxe-btn.is-holding {
-    transform: scale(0.97);
-  }
-  @keyframes unlock-shake {
-    0%, 100% { transform: scale(1); }
-    20%, 60% { transform: scale(1.05) rotate(-2deg); }
-    40%, 80% { transform: scale(1.05) rotate(2deg); }
-  }
-  .unlocked-shake {
-    animation: unlock-shake 0.4s ease;
   }
 
   /* Locked State = Elegant Outline */
@@ -444,78 +420,11 @@
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
   }
-
-  /* Timer Pulse for PC */
-  @keyframes luxe-pulse {
-    0% { box-shadow: inset 0 0 20px rgba(255,255,255,0.5); }
-    50% { box-shadow: inset 0 0 30px rgba(197,160,89,0.4), 0 0 15px rgba(197,160,89,0.3); border-color: rgba(197,160,89,0.5); }
-    100% { box-shadow: inset 0 0 20px rgba(255,255,255,0.5); }
-  }
-
-  /* PC Refinements */
-  @media (min-width: 769px) {
-    #luxe-wrapper-{{ section.id }} {
-      max-width: 1000px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      grid-template-areas: 
-        "header slider"
-        "timer slider"
-        ". dots"
-        ". textarea";
-      align-items: center;
-      gap: 20px 40px;
-      padding: 80px 50px;
-      background: radial-gradient(circle at left, #ffffff 0%, var(--color-bg) 80%);
-      border-radius: 20px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.03);
-    }
-    
-    .luxe-timer-box { animation: luxe-pulse 2.5s infinite ease-in-out; }
-    
-    .luxe-header { grid-area: header; text-align: left; margin-bottom: 0; align-self: end; }
-    .luxe-timer-wrap { grid-area: timer; justify-content: flex-start; margin-bottom: 0; align-self: start; }
-    
-    /* Move text area to the right column below slider */
-    .luxe-text-area { grid-area: textarea; text-align: center; margin: 0 auto; max-width: 400px; }
-    .luxe-price-row { justify-content: center; }
-    
-    .luxe-slider-wrap { grid-area: slider; margin: 0 auto; max-width: 500px; width: 100%; align-self: center; position: relative; }
-    .luxe-dots { grid-area: dots; margin-top: 10px; justify-content: center; }
-  }
-
-  /* Carousel Arrows */
-  .luxe-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: var(--color-text);
-    color: var(--color-bg);
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    transition: all 0.3s ease;
-    opacity: 0.8;
-  }
-  .luxe-arrow:hover { opacity: 1; transform: translateY(-50%) scale(1.1); }
-  .luxe-arrow.prev { left: -20px; }
-  .luxe-arrow.next { right: -20px; }
-  @media (max-width: 768px) {
-    .luxe-arrow { display: none; } /* Hide arrows on mobile where touch swipe is natural */
-  }
 </style>
 
-<div class="luxe-wrapper pc-reveal" id="luxe-wrapper-{{ section.id }}" data-speed="{{ section.settings.autoplay_speed | times: 1000 }}" data-timer="{{ section.settings.timer_hours }}">
+<div class="luxe-wrapper" id="luxe-wrapper-{{ section.id }}" data-speed="{{ section.settings.autoplay_speed | times: 1000 }}" data-timer="{{ section.settings.timer_hours }}">
   
-  <div class="luxe-header pc-reveal-stagger">
+  <div class="luxe-header">
     <h2 class="luxe-heading">{{ section.settings.heading }}</h2>
     <p class="luxe-subheading">{{ section.settings.subheading }}</p>
   </div>
@@ -538,8 +447,6 @@
   </div>
 
   <div class="luxe-slider-wrap">
-    <button class="luxe-arrow prev" id="luxePrev-{{ section.id }}" aria-label="Previous Deal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
-    <button class="luxe-arrow next" id="luxeNext-{{ section.id }}" aria-label="Next Deal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
     <div class="luxe-track" id="luxeTrack-{{ section.id }}">
       {% for block in section.blocks %}
         {% assign product = block.settings.product %}
@@ -575,8 +482,7 @@
     </div>
 
     <a href="#" class="luxe-btn is-locked" id="luxeBtn-{{ section.id }}">
-      <span class="luxe-btn-progress"></span>
-      <span class="luxe-btn-text">Hold to Unlock</span>
+      Unlock Privilege
     </a>
   </div>
 
@@ -619,7 +525,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTimer(); 
     setInterval(updateTimer, 1000);
 
-    // --- 2. ROBUST SLIDER LOGIC ---
+    // --- 2. SWIPE & REVEAL LOGIC ---
     const track = document.getElementById('luxeTrack-' + sectionId);
     if (!track) return;
     
@@ -634,151 +540,36 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const speed = parseInt(wrapper.getAttribute('data-speed')) || 4000;
     let currentIndex = 0;
-    let autoPlayInterval = null;
+    let autoPlayInterval;
     let swipeDirection = 1;
     let isPriceUnlocked = false; 
 
     if (slides.length < 1) return;
 
-    // UNLOCK BUTTON LOGIC - PRESS AND HOLD TO UNLOCK
-    let holdTimeout = null;
-    let holdInterval = null;
-    let holdPercent = 0;
-    let isHolding = false;
-
-    const btnProgress = btnEl.querySelector('.luxe-btn-progress');
-    const btnText = btnEl.querySelector('.luxe-btn-text');
-
-    function startHold(e) {
-      if (isPriceUnlocked || isHolding) return;
-      e.preventDefault();
-      isHolding = true;
-      holdPercent = 0;
-      btnEl.classList.add('is-holding');
-
-      holdInterval = setInterval(() => {
-        if (holdPercent < 100) {
-          holdPercent += 5; // increment progress (takes ~1s)
-          if (btnProgress) btnProgress.style.width = holdPercent + '%';
-        } else {
-          clearInterval(holdInterval);
-        }
-      }, 50);
-
-      holdTimeout = setTimeout(() => {
-        triggerUnlock();
-      }, 1000);
-    }
-
-    function cancelHold() {
-      if (isPriceUnlocked || !isHolding) return;
-      isHolding = false;
-      btnEl.classList.remove('is-holding');
-      clearTimeout(holdTimeout);
-      clearInterval(holdInterval);
-
-      // Smooth reset
-      if (btnProgress) {
-        btnProgress.style.transition = 'width 0.3s ease-out';
-        btnProgress.style.width = '0%';
-        setTimeout(() => {
-          btnProgress.style.transition = 'none';
-        }, 300);
-      }
-    }
-
-    function triggerUnlock() {
-      isHolding = false;
-      clearTimeout(holdTimeout);
-      clearInterval(holdInterval);
-      isPriceUnlocked = true;
-      stopAutoPlay();
-
-      if (btnProgress) btnProgress.style.width = '100%';
-
-      // Reveal Price
-      const activeSlide = slides[currentIndex];
-      priceEl.innerHTML = '<span class="luxe-unlocked-text">' + activeSlide.getAttribute('data-price') + '</span>';
-      
-      if (activeSlide.getAttribute('data-compare')) {
-        compareEl.innerText = activeSlide.getAttribute('data-compare');
-        compareEl.classList.add('is-visible');
-      }
-
-      btnEl.classList.add('unlocked-shake');
-      
-      setTimeout(() => {
-        btnEl.classList.remove('is-locked');
-        btnEl.classList.add('is-unlocked');
-        if (btnText) btnText.innerText = 'Add To Bag';
-        btnEl.href = activeSlide.getAttribute('data-url');
-        if (btnProgress) btnProgress.style.display = 'none';
-        btnEl.classList.remove('unlocked-shake');
-      }, 400);
-
-      createGoldParticles(btnEl);
-    }
-
-    function createGoldParticles(parent) {
-      const rect = parent.getBoundingClientRect();
-      const count = 30;
-      for (let i = 0; i < count; i++) {
-        const p = document.createElement('div');
-        p.style.position = 'fixed';
-        p.style.width = Math.random() * 6 + 4 + 'px';
-        p.style.height = p.style.width;
-        p.style.background = 'radial-gradient(circle, #fff, #c5a059)';
-        p.style.borderRadius = '50%';
-        p.style.pointerEvents = 'none';
-        p.style.zIndex = '99999';
-        
-        const startX = rect.left + rect.width / 2;
-        const startY = rect.top + rect.height / 2;
-        p.style.left = startX + 'px';
-        p.style.top = startY + 'px';
-        
-        document.body.appendChild(p);
-
-        const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 8 + 4;
-        let vx = Math.cos(angle) * speed;
-        let vy = Math.sin(angle) * speed - 2;
-        let opacity = 1;
-        let scale = 1;
-        let currentX = startX;
-        let currentY = startY;
-
-        const anim = setInterval(() => {
-          currentX += vx;
-          currentY += vy;
-          vy += 0.35;
-          vx *= 0.96;
-          opacity -= 0.03;
-          scale -= 0.02;
-          
-          p.style.left = currentX + 'px';
-          p.style.top = currentY + 'px';
-          p.style.opacity = opacity;
-          p.style.transform = `scale(${scale})`;
-
-          if (opacity <= 0 || scale <= 0) {
-            clearInterval(anim);
-            p.remove();
-          }
-        }, 16);
-      }
-    }
-
-    btnEl.addEventListener('mousedown', startHold);
-    btnEl.addEventListener('touchstart', startHold, {passive: false});
-
-    window.addEventListener('mouseup', cancelHold);
-    window.addEventListener('touchend', cancelHold);
-    btnEl.addEventListener('mouseleave', cancelHold);
-
+    // UNLOCK BUTTON LOGIC
     btnEl.addEventListener('click', function(e) {
       if (!isPriceUnlocked) {
-        e.preventDefault();
+        e.preventDefault(); 
+        
+        // Reveal Price
+        const activeSlide = slides[currentIndex];
+        priceEl.innerHTML = '<span class="luxe-unlocked-text">' + activeSlide.getAttribute('data-price') + '</span>';
+        
+        if (activeSlide.getAttribute('data-compare')) {
+          compareEl.innerText = activeSlide.getAttribute('data-compare');
+          compareEl.classList.add('is-visible');
+        }
+
+        // Transform Button to Add to Cart
+        btnEl.classList.remove('is-locked');
+        btnEl.classList.add('is-unlocked');
+        btnEl.innerText = 'Add To Bag';
+        btnEl.href = activeSlide.getAttribute('data-url');
+        
+        isPriceUnlocked = true;
+        
+        // Stop autoplay so user can click
+        stopAutoPlay();
       }
     });
 
@@ -797,56 +588,24 @@ document.addEventListener('DOMContentLoaded', function() {
         
         btnEl.classList.add('is-locked');
         btnEl.classList.remove('is-unlocked');
-        const slideBtnText = btnEl.querySelector('.luxe-btn-text');
-        const slideBtnProgress = btnEl.querySelector('.luxe-btn-progress');
-        if (slideBtnText) slideBtnText.innerText = 'Hold to Unlock';
-        if (slideBtnProgress) {
-          slideBtnProgress.style.display = 'block';
-          slideBtnProgress.style.width = '0%';
-        }
+        btnEl.innerText = 'Unlock Privilege';
         btnEl.href = '#'; 
         
         textArea.classList.remove('is-fading');
       }, 400);
     }
 
-    // Initialize Intersection Observer to reliably track the active slide
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const index = parseInt(entry.target.getAttribute('data-index'));
-          if (index !== currentIndex) {
-            currentIndex = index;
-            dots.forEach(d => d.classList.remove('is-active'));
-            if(dots[index]) dots[index].classList.add('is-active');
-            updateTextForSlide(index);
-          }
-        }
-      });
-    }, {
-      root: track,
-      threshold: 0.5
-    });
-
-    slides.forEach(slide => observer.observe(slide));
-
-    // Force initialization of the first slide text
     updateTextForSlide(0);
 
-    function scrollToSlide(index) {
-      if (!slides[index]) return;
-      
-      // Temporarily disable scroll-snap so Chromium doesn't cancel the programmatic scroll
-      track.style.scrollSnapType = 'none';
-      
-      const targetLeft = track.clientWidth * index;
-      track.scrollLeft = targetLeft;
-      
-      // Re-enable scroll-snap after a short delay
-      setTimeout(function() {
-        track.style.scrollSnapType = '';
-      }, 50);
-    }
+    track.addEventListener('scroll', function() {
+      const index = Math.round(track.scrollLeft / track.clientWidth);
+      if (index !== currentIndex && slides[index]) {
+        currentIndex = index;
+        dots.forEach(d => d.classList.remove('is-active'));
+        if(dots[index]) dots[index].classList.add('is-active');
+        updateTextForSlide(index);
+      }
+    });
 
     function autoScroll() {
       if (currentIndex >= slides.length - 1 && swipeDirection === 1) {
@@ -855,55 +614,26 @@ document.addEventListener('DOMContentLoaded', function() {
         swipeDirection = 1;
       }
       const nextIndex = currentIndex + swipeDirection;
-      scrollToSlide(nextIndex);
+      track.scrollTo({ left: nextIndex * track.clientWidth, behavior: 'smooth' });
     }
 
     function startAutoPlay() { 
-        if (autoPlayInterval) clearInterval(autoPlayInterval);
+        clearInterval(autoPlayInterval);
         autoPlayInterval = setInterval(autoScroll, speed); 
     }
-    
-    function stopAutoPlay() { 
-        if (autoPlayInterval) clearInterval(autoPlayInterval);
-    }
+    function stopAutoPlay() { clearInterval(autoPlayInterval); }
 
     dots.forEach((dot) => {
       dot.addEventListener('click', (e) => {
-        stopAutoPlay();
         const clickedIndex = parseInt(e.target.getAttribute('data-index'));
-        scrollToSlide(clickedIndex);
-        if(!isPriceUnlocked) startAutoPlay();
+        track.scrollTo({ left: clickedIndex * track.clientWidth, behavior: 'smooth' });
       });
     });
 
-    const prevBtn = document.getElementById('luxePrev-' + sectionId);
-    const nextBtn = document.getElementById('luxeNext-' + sectionId);
-
-    if (prevBtn) {
-      prevBtn.addEventListener('click', () => {
-        stopAutoPlay();
-        let nextIdx = currentIndex - 1;
-        if (nextIdx < 0) nextIdx = slides.length - 1;
-        scrollToSlide(nextIdx);
-        if(!isPriceUnlocked) startAutoPlay();
-      });
-    }
-
-    if (nextBtn) {
-      nextBtn.addEventListener('click', () => {
-        stopAutoPlay();
-        let nextIdx = currentIndex + 1;
-        if (nextIdx >= slides.length) nextIdx = 0;
-        scrollToSlide(nextIdx);
-        if(!isPriceUnlocked) startAutoPlay();
-      });
-    }
-
-    // Pause on Interaction (touch only to keep desktop auto-play reliable)
+    // Pause on Interaction
     track.addEventListener('touchstart', stopAutoPlay, {passive: true});
     track.addEventListener('touchend', () => { if(!isPriceUnlocked) startAutoPlay(); }, {passive: true});
 
-    // Start auto-play initially
     startAutoPlay();
 });
 </script>
