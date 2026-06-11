@@ -33,15 +33,17 @@
           "settings": {
             "image_mobile": "shopify://shop_images/WhatsApp_Image_2026-05-28_at_5.33.02_PM_1.jpg",
             "image_desktop": "shopify://shop_images/ChatGPT_Image_May_22_2026_11_33_53_AM.png",
-            "link": ""
+            "link": "",
+            "asset_mobile": "",
+            "asset_desktop": ""
           }
         },
         "slide_AI_1": {
           "type": "slide",
           "settings": {
+            "link": "shopify://collections/all",
             "asset_mobile": "hero_concept1_mob.png",
-            "asset_desktop": "hero_concept1_pc.png",
-            "link": "shopify://collections/all"
+            "asset_desktop": "hero_concept1_pc.png"
           }
         },
         "slide_GqHUEb": {
@@ -49,15 +51,17 @@
           "settings": {
             "image_mobile": "shopify://shop_images/WhatsApp_Image_2026-05-28_at_5.27.14_PM.jpg",
             "image_desktop": "shopify://shop_images/WhatsApp_Image_2026-05-28_at_5.33.02_PM_1.jpg",
-            "link": ""
+            "link": "",
+            "asset_mobile": "",
+            "asset_desktop": ""
           }
         },
         "slide_AI_2": {
           "type": "slide",
           "settings": {
+            "link": "shopify://collections/all",
             "asset_mobile": "hero_concept2_mob.png",
-            "asset_desktop": "hero_concept2_pc.png",
-            "link": "shopify://collections/all"
+            "asset_desktop": "hero_concept2_pc.png"
           }
         }
       },
@@ -387,6 +391,7 @@
         },
         "tab_collection_FxFPaQ": {
           "type": "tab_collection",
+          "disabled": true,
           "settings": {
             "tab_name": "Joggers",
             "collection": "joggers",
