@@ -67,13 +67,12 @@
             <!-- Badges overlay end -->
 
             <!-- Nobero Style Mobile Swipe Slider & PC Static -->
-            <a href="{{ card_product.url }}" class="media media--transparent" style="display:block; width:100%; height:100%;">
-              
-              <!-- Mobile Slider -->
-              <div class="fit11-nobero-slider-container mobile-only">
-                <div class="fit11-nobero-slider">
-                  {% for media in card_product.media limit: 5 %}
-                    <div class="fit11-nobero-slide">
+            <!-- Mobile Slider -->
+            <div class="fit11-nobero-slider-container mobile-only">
+              <div class="fit11-nobero-slider">
+                {% for media in card_product.media limit: 5 %}
+                  <div class="fit11-nobero-slide">
+                    <a href="{{ card_product.url }}" class="media media--transparent" style="display:block; width:100%; height:100%;">
                       <img
                         src="{{ media | image_url: width: 533 }}"
                         alt="{{ media.alt | escape }}"
@@ -81,14 +80,15 @@
                         width="{{ media.width }}"
                         height="{{ media.height }}"
                       >
-                    </div>
-                  {% endfor %}
-                </div>
-                <!-- Snap dots indicator can be added via JS or CSS, omitting for brevity or using simple CSS scrollbar -->
+                    </a>
+                  </div>
+                {% endfor %}
               </div>
+            </div>
 
-              <!-- PC Static Image -->
-              <div class="fit11-nobero-static pc-only">
+            <!-- PC Static Image -->
+            <div class="fit11-nobero-static pc-only">
+              <a href="{{ card_product.url }}" class="media media--transparent" style="display:block; width:100%; height:100%;">
                 {%- if card_product.featured_media -%}
                   <img
                     srcset="
@@ -109,8 +109,8 @@
                     height="{{ card_product.featured_media.height }}"
                   >
                 {%- endif -%}
-              </div>
-            </a>
+              </a>
+            </div>
             <div class="fit-card-colors-overlay">
               {%- assign color_option_index = -1 -%}
               {%- for option in card_product.options -%}
@@ -224,8 +224,6 @@
               <span class="visually-hidden">{{ 'accessibility.vendor' | t }}</span>
               <div class="caption-with-letter-spacing light">{{ card_product.vendor }}</div>
             {%- endif -%}
-
-            <div class="AirReviews-Widget AirReviews-Widget--Stars" style="margin-top: 2px; margin-bottom: 2px;" data-review-avg="{{ card_product.metafields.air_reviews_product.review_avg }}" data-review-count="{{ card_product.metafields.air_reviews_product.review_count }}"></div>
 
             <!-- Price block -->
             {% if card_product.compare_at_price > card_product.price %}

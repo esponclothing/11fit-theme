@@ -993,3 +993,18 @@
  } 
   
  
+ @ m e d i a   s c r e e n   a n d   ( m a x - w i d t h :   7 4 9 p x )   { 
+     . f i t - c a r d - s i z e s - o v e r l a y   { 
+         d i s p l a y :   n o n e   ! i m p o r t a n t ; 
+     } 
+     . f i t 1 1 - n o b e r o - s l i d e r - c o n t a i n e r   { 
+         a s p e c t - r a t i o :   2   /   3   ! i m p o r t a n t ; 
+         h e i g h t :   a u t o   ! i m p o r t a n t ; 
+     } 
+     . f i t 1 1 - n o b e r o - s l i d e   i m g   { 
+         a s p e c t - r a t i o :   2   /   3   ! i m p o r t a n t ; 
+         o b j e c t - f i t :   c o v e r   ! i m p o r t a n t ; 
+     } 
+ } 
+  
+ 

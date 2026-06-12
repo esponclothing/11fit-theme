@@ -871,7 +871,7 @@
 
     function scrollToSlide(index) {
       if (slides[index]) {
-        track.scrollLeft = slides[index].offsetLeft;
+        track.scrollLeft = index * track.clientWidth;
       }
     }
 
