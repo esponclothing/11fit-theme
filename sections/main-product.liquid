@@ -316,40 +316,6 @@
         </div>
       </div>
       
-      {% comment %} ── NEW OFFERS & DISCOUNTS SECTION (Moved above Add to Cart) ── {% endcomment %}
-      {% assign offer_blocks = section.blocks | where: "type", "offer" %}
-      
-      {% if offer_blocks.size > 0 %}
-        <div class="fit11-offers-wrapper" style="margin-bottom: 20px;">
-          <div class="fit11-offers-header">
-            <div class="fit11-offers-title-wrap">
-              <div class="fit11-offers-icon"><i class="ti ti-percentage"></i></div>
-              <span class="fit11-offers-title">{{ section.settings.offers_heading | default: "Offers & Discounts" }}</span>
-            </div>
-            {% if section.settings.show_view_all %}
-              <div class="fit11-offers-view-all" onclick="fit11ToggleOffersModal(true)">View all Offers</div>
-            {% endif %}
-          </div>
-          
-          <div class="fit11-offers-scroll">
-            {% for block in offer_blocks %}
-              <div class="fit11-offer-card" onclick="fit11CopyCoupon(this, '{{ block.settings.offer_code }}')" {{ block.shopify_attributes }}>
-                <div class="fit11-offer-content-wrap">
-                  <div class="fit11-offer-code">{{ block.settings.offer_code }}</div>
-                  <div class="fit11-offer-desc">{{ block.settings.offer_desc }}</div>
-                  {% if block.settings.offer_code != blank %}
-                    <div class="fit11-copy-hint"><i class="ti ti-copy"></i> Click to Copy</div>
-                  {% endif %}
-                </div>
-                {% if block.settings.offer_timer != blank %}
-                  <div class="fit11-offer-timer">{{ block.settings.offer_timer }}</div>
-                {% endif %}
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      {% endif %}
-
       {% comment %} ── HIGHLIGHTED COMBO SELECTION AREA (APP + VARIANTS) ── {% endcomment %}
       <div class="fit11-main-action-btns" id="fit11MainBtnContainer">
         
@@ -455,8 +421,92 @@
         </product-form>
         <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
       </div>
+      {% comment %} ── NEW OFFERS & DISCOUNTS SECTION ── {% endcomment %}
+      {% assign offer_blocks = section.blocks | where: "type", "offer" %}
+      
+      {% if offer_blocks.size > 0 %}
+        <div class="fit11-offers-wrapper" id="fit11-offers-wrapper-id">
+          <div class="fit11-offers-header">
+            <div class="fit11-offers-title-wrap">
+              <div class="fit11-offers-icon"><i class="ti ti-percentage"></i></div>
+              <span class="fit11-offers-title">{{ section.settings.offers_heading | default: "Offers & Discounts" }}</span>
+            </div>
+            {% if section.settings.show_view_all %}
+              <div class="fit11-offers-view-all" onclick="fit11ToggleOffersModal(true)">View all Offers</div>
+            {% endif %}
+          </div>
+          
+          <div class="fit11-offers-scroll">
+            {% for block in offer_blocks %}
+              <div class="fit11-offer-card" onclick="fit11CopyCoupon(this, '{{ block.settings.offer_code }}')" {{ block.shopify_attributes }}>
+                <div class="fit11-offer-content-wrap">
+                  <div class="fit11-offer-code">{{ block.settings.offer_code }}</div>
+                  <div class="fit11-offer-desc">{{ block.settings.offer_desc }}</div>
+                  {% if block.settings.offer_code != blank %}
+                    <div class="fit11-copy-hint"><i class="ti ti-copy"></i> Click to Copy</div>
+                  {% endif %}
+                </div>
+                {% if block.settings.offer_timer != blank %}
+                  <div class="fit11-offer-timer">{{ block.settings.offer_timer }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
 
+      {% comment %} ── Move Shipmozo Estimated Delivery Below Offers ── {% endcomment %}
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          var observer = new MutationObserver(function(mutations, me) {
+            var inputs = document.querySelectorAll('input[placeholder*="pincode"], input[placeholder*="Pincode"]');
+            for(var i = 0; i < inputs.length; i++) {
+              var widgetBox = inputs[i].closest('.shimozo-widget') || inputs[i].closest('div[style*="border"], div[class*="delivery"], div[class*="pincode"]');
+              if (!widgetBox) {
+                 var curr = inputs[i];
+                 while(curr && curr !== document.body) {
+                   if (curr.textContent && curr.textContent.includes('Estimated Delivery')) {
+                     widgetBox = curr;
+                   }
+                   curr = curr.parentNode;
+                 }
+              }
+              if (!widgetBox) {
+                  widgetBox = inputs[i].parentNode.parentNode; 
+              }
 
+              if (widgetBox && document.getElementById('fit11-offers-wrapper-id')) {
+                 var offersWrapper = document.getElementById('fit11-offers-wrapper-id');
+                 if (widgetBox.parentNode !== offersWrapper.parentNode || widgetBox.previousSibling !== offersWrapper) {
+                    offersWrapper.parentNode.insertBefore(widgetBox, offersWrapper.nextSibling);
+                    widgetBox.style.marginTop = "20px";
+                    me.disconnect();
+                    return;
+                 }
+              }
+            }
+            
+            var allDivs = document.querySelectorAll('div');
+            for(var i = 0; i < allDivs.length; i++) {
+              if (allDivs[i].innerHTML.includes('Estimated Delivery') && allDivs[i].innerHTML.includes('Check')) {
+                 var widgetBox = allDivs[i];
+                 if(widgetBox.parentNode && (widgetBox.parentNode.classList.contains('fit11-main-action-btns') || widgetBox.parentNode.tagName === 'PRODUCT-FORM' || widgetBox.parentNode.tagName === 'FORM' || widgetBox.parentNode.classList.contains('fit11-info'))) {
+                    var offersWrapper = document.getElementById('fit11-offers-wrapper-id');
+                    if (offersWrapper) {
+                      offersWrapper.parentNode.insertBefore(widgetBox, offersWrapper.nextSibling);
+                      widgetBox.style.marginTop = "20px";
+                      me.disconnect();
+                      return;
+                    }
+                 }
+              }
+            }
+          });
+          
+          observer.observe(document.body, { childList: true, subtree: true });
+          setTimeout(function() { observer.disconnect(); }, 15000);
+        });
+      </script>
       {% comment %} ── ACCORDIONS ── {% endcomment %}
       <div class="fit11-accord-group">
         {% if product.description != blank %}

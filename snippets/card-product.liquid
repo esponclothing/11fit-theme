@@ -224,7 +224,7 @@
               <div class="caption-with-letter-spacing light">{{ card_product.vendor }}</div>
             {%- endif -%}
 
-    <div class="AirReviews-Widget AirReviews-Widget--Stars" style="margin-top:0.7rem" data-review-avg="{{ card_product.metafields.air_reviews_product.review_avg }}" data-review-count="{{ card_product.metafields.air_reviews_product.review_count }}"></div>
+            <div class="AirReviews-Widget AirReviews-Widget--Stars" style="margin-top: 2px; margin-bottom: 2px;" data-review-avg="{{ card_product.metafields.air_reviews_product.review_avg }}" data-review-count="{{ card_product.metafields.air_reviews_product.review_count }}"></div>
 
             <!-- Price block -->
             {% if card_product.compare_at_price > card_product.price %}
@@ -233,8 +233,8 @@
               <div class="fit11-card-price-row">
                 <span class="fit11-price-final">{{ card_product.price | money_without_trailing_zeros }}</span>
                 <s class="fit11-price-compare">{{ card_product.compare_at_price | money_without_trailing_zeros }}</s>
+                <span class="fit11-price-discount">{{ discount_percentage }}% off</span>
               </div>
-              <span class="fit11-price-discount">{{ discount_percentage }}% off</span>
             {% else %}
               <div class="fit11-card-price-row">
                 <span class="fit11-price-final">{{ card_product.price | money_without_trailing_zeros }}</span>
