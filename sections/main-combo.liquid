@@ -377,58 +377,7 @@
         </div>
       {% endif %}
 
-      {% comment %} ── Move Shipmozo Estimated Delivery Below Offers ── {% endcomment %}
-      <script>
-        document.addEventListener("DOMContentLoaded", function() {
-          var observer = new MutationObserver(function(mutations, me) {
-            var inputs = document.querySelectorAll('input[placeholder*="pincode"], input[placeholder*="Pincode"]');
-            for(var i = 0; i < inputs.length; i++) {
-              var widgetBox = inputs[i].closest('.shimozo-widget') || inputs[i].closest('div[style*="border"], div[class*="delivery"], div[class*="pincode"]');
-              if (!widgetBox) {
-                 var curr = inputs[i];
-                 while(curr && curr !== document.body) {
-                   if (curr.textContent && curr.textContent.includes('Estimated Delivery')) {
-                     widgetBox = curr;
-                   }
-                   curr = curr.parentNode;
-                 }
-              }
-              if (!widgetBox) {
-                  widgetBox = inputs[i].parentNode.parentNode; 
-              }
 
-              if (widgetBox && document.getElementById('fit11-offers-wrapper-id')) {
-                 var offersWrapper = document.getElementById('fit11-offers-wrapper-id');
-                 if (widgetBox.parentNode !== offersWrapper.parentNode || widgetBox.previousSibling !== offersWrapper) {
-                    offersWrapper.parentNode.insertBefore(widgetBox, offersWrapper.nextSibling);
-                    widgetBox.style.marginTop = "20px";
-                    me.disconnect();
-                    return;
-                 }
-              }
-            }
-            
-            var allDivs = document.querySelectorAll('div');
-            for(var i = 0; i < allDivs.length; i++) {
-              if (allDivs[i].innerHTML.includes('Estimated Delivery') && allDivs[i].innerHTML.includes('Check')) {
-                 var widgetBox = allDivs[i];
-                 if(widgetBox.parentNode && (widgetBox.parentNode.classList.contains('fit11-main-action-btns') || widgetBox.parentNode.tagName === 'PRODUCT-FORM' || widgetBox.parentNode.tagName === 'FORM' || widgetBox.parentNode.classList.contains('fit11-info'))) {
-                    var offersWrapper = document.getElementById('fit11-offers-wrapper-id');
-                    if (offersWrapper) {
-                      offersWrapper.parentNode.insertBefore(widgetBox, offersWrapper.nextSibling);
-                      widgetBox.style.marginTop = "20px";
-                      me.disconnect();
-                      return;
-                    }
-                 }
-              }
-            }
-          });
-          
-          observer.observe(document.body, { childList: true, subtree: true });
-          setTimeout(function() { observer.disconnect(); }, 15000);
-        });
-      </script>
 
 
       {% comment %} ── ACCORDIONS ── {% endcomment %}
