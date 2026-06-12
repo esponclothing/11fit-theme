@@ -258,7 +258,6 @@
     height: 100%;
     overflow-x: auto;
     overflow-y: hidden;
-    scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
@@ -877,9 +876,14 @@
     updateActiveDot(0);
 
     function scrollToSlide(index) {
-      if (slides[index]) {
-        track.scrollLeft = slides[index].offsetLeft;
-      }
+      if (!slides[index]) return;
+      var target = slides[index].offsetLeft;
+      // Temporarily disable snap so smooth animation isn't fought
+      track.style.scrollSnapType = 'none';
+      track.scrollTo({ left: target, behavior: 'smooth' });
+      setTimeout(function() {
+        track.style.scrollSnapType = 'x mandatory';
+      }, 600);
     }
 
     function autoScroll() {
