@@ -1,10 +1,10 @@
-{% schema %}
+﻿{% schema %}
 {
   "name": "Luxe Swipe Deal",
   "settings": [
     {
       "type": "header",
-      "content": "✨ Typography Settings"
+      "content": "Γ£¿ Typography Settings"
     },
     {
       "type": "font_picker",
@@ -20,7 +20,7 @@
     },
     {
       "type": "header",
-      "content": "🎨 Aesthetics"
+      "content": "≡ƒÄ¿ Aesthetics"
     },
     {
       "type": "text",
@@ -76,7 +76,7 @@
     },
     {
       "type": "header",
-      "content": "⏳ Urgency Settings"
+      "content": "ΓÅ│ Urgency Settings"
     },
     {
       "type": "number",
@@ -86,7 +86,7 @@
     },
     {
       "type": "header",
-      "content": "📐 Layout & Borders"
+      "content": "≡ƒôÉ Layout & Borders"
     },
     {
       "type": "checkbox",
@@ -262,15 +262,6 @@
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    user-select: none;
-    -webkit-user-select: none;
-    cursor: grab;
-  }
-
-  .luxe-track.dragging {
-    scroll-behavior: auto !important;
-    scroll-snap-type: none !important;
-    cursor: grabbing;
   }
 
   .luxe-track::-webkit-scrollbar { display: none; }
@@ -286,8 +277,6 @@
     padding: 20px;
     box-sizing: border-box;
     transition: opacity 0.5s ease;
-    user-select: none;
-    -webkit-user-select: none;
   }
 
   .luxe-slide img {
@@ -296,10 +285,6 @@
     object-fit: contain;
     filter: drop-shadow(0px 20px 30px rgba(0,0,0,0.08));
     transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-user-drag: none;
-    pointer-events: none;
   }
   
   .luxe-slide:hover img {
@@ -586,7 +571,7 @@
     <h3 class="luxe-title" id="luxeTitle-{{ section.id }}">Loading...</h3>
     
     <div class="luxe-price-row">
-      <span id="luxePrice-{{ section.id }}"><span class="luxe-locked-text">••••••</span></span>
+      <span id="luxePrice-{{ section.id }}"><span class="luxe-locked-text">ΓÇóΓÇóΓÇóΓÇóΓÇóΓÇó</span></span>
       <span class="luxe-compare" id="luxeCompare-{{ section.id }}"></span>
     </div>
 
@@ -599,29 +584,21 @@
 </div>
 
 <script>
-(function() {
-  function initLuxeDeal(wrapper) {
-    if (wrapper.dataset.initialized === 'true') return;
-    wrapper.dataset.initialized = 'true';
+document.addEventListener('DOMContentLoaded', function() {
+    const sectionId = '{{ section.id }}';
+    const wrapper = document.getElementById('luxe-wrapper-' + sectionId);
+    if (!wrapper) return;
 
-    const sectionId = wrapper.id.replace('luxe-wrapper-', '');
-    
     // --- 1. ELEGANT COUNTDOWN TIMER ---
     const timerHours = parseInt(wrapper.getAttribute('data-timer')) || 12;
     const hrEl = document.getElementById('luxeHr-' + sectionId);
     const minEl = document.getElementById('luxeMin-' + sectionId);
     const secEl = document.getElementById('luxeSec-' + sectionId);
     
-    let endTime;
-    try {
-      endTime = localStorage.getItem('luxe_timer_' + sectionId);
-      if (!endTime || new Date().getTime() > endTime) {
-        endTime = new Date().getTime() + (timerHours * 60 * 60 * 1000);
-        localStorage.setItem('luxe_timer_' + sectionId, endTime);
-      }
-    } catch (e) {
-      // Fallback if localStorage is blocked (e.g. incognito or Shopify Theme Editor iframe)
+    let endTime = localStorage.getItem('luxe_timer_' + sectionId);
+    if (!endTime || new Date().getTime() > endTime) {
       endTime = new Date().getTime() + (timerHours * 60 * 60 * 1000);
+      localStorage.setItem('luxe_timer_' + sectionId, endTime);
     }
 
     function updateTimer() {
@@ -629,25 +606,25 @@
       let distance = endTime - now;
       if (distance < 0) {
         endTime = new Date().getTime() + (timerHours * 60 * 60 * 1000);
-        try { localStorage.setItem('luxe_timer_' + sectionId, endTime); } catch (e) {}
+        localStorage.setItem('luxe_timer_' + sectionId, endTime);
         distance = endTime - now;
       }
       let h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       let m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       let s = Math.floor((distance % (1000 * 60)) / 1000);
       
-      if(hrEl) hrEl.innerText = (h < 10 ? '0' : '') + h;
-      if(minEl) minEl.innerText = (m < 10 ? '0' : '') + m;
-      if(secEl) secEl.innerText = (s < 10 ? '0' : '') + s;
+      if(hrEl) hrEl.innerText = (h < 10 ? "0" : "") + h;
+      if(minEl) minEl.innerText = (m < 10 ? "0" : "") + m;
+      if(secEl) secEl.innerText = (s < 10 ? "0" : "") + s;
     }
     updateTimer(); 
-    const timerInterval = setInterval(updateTimer, 1000);
+    setInterval(updateTimer, 1000);
 
     // --- 2. ROBUST SLIDER LOGIC ---
     const track = document.getElementById('luxeTrack-' + sectionId);
     if (!track) return;
     
-    const slides = Array.from(track.querySelectorAll('.luxe-slide'));
+    const slides = track.querySelectorAll('.luxe-slide');
     const dots = document.querySelectorAll('#luxeDots-' + sectionId + ' .luxe-dot');
     
     const textArea = document.getElementById('luxeTextArea-' + sectionId);
@@ -675,13 +652,14 @@
 
     function startHold(e) {
       if (isPriceUnlocked || isHolding) return;
+      e.preventDefault();
       isHolding = true;
       holdPercent = 0;
       btnEl.classList.add('is-holding');
 
       holdInterval = setInterval(() => {
         if (holdPercent < 100) {
-          holdPercent += 5;
+          holdPercent += 5; // increment progress (takes ~1s)
           if (btnProgress) btnProgress.style.width = holdPercent + '%';
         } else {
           clearInterval(holdInterval);
@@ -700,6 +678,7 @@
       clearTimeout(holdTimeout);
       clearInterval(holdInterval);
 
+      // Smooth reset
       if (btnProgress) {
         btnProgress.style.transition = 'width 0.3s ease-out';
         btnProgress.style.width = '0%';
@@ -718,8 +697,8 @@
 
       if (btnProgress) btnProgress.style.width = '100%';
 
+      // Reveal Price
       const activeSlide = slides[currentIndex];
-      if (!activeSlide) return;
       priceEl.innerHTML = '<span class="luxe-unlocked-text">' + activeSlide.getAttribute('data-price') + '</span>';
       
       if (activeSlide.getAttribute('data-compare')) {
@@ -744,7 +723,6 @@
     function createGoldParticles(parent) {
       const rect = parent.getBoundingClientRect();
       const count = 30;
-      const particles = [];
       for (let i = 0; i < count; i++) {
         const p = document.createElement('div');
         p.style.position = 'fixed';
@@ -764,48 +742,36 @@
 
         const angle = Math.random() * Math.PI * 2;
         const speed = Math.random() * 8 + 4;
-        particles.push({
-          el: p,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed - 2,
-          opacity: 1,
-          scale: 1,
-          x: startX,
-          y: startY
-        });
-      }
+        let vx = Math.cos(angle) * speed;
+        let vy = Math.sin(angle) * speed - 2;
+        let opacity = 1;
+        let scale = 1;
+        let currentX = startX;
+        let currentY = startY;
 
-      function animateParticles() {
-        let active = false;
-        for (let i = 0; i < particles.length; i++) {
-          let pt = particles[i];
-          if (pt.opacity <= 0 || pt.scale <= 0) continue;
-          active = true;
-          pt.x += pt.vx;
-          pt.y += pt.vy;
-          pt.vy += 0.35;
-          pt.vx *= 0.96;
-          pt.opacity -= 0.03;
-          pt.scale -= 0.02;
+        const anim = setInterval(() => {
+          currentX += vx;
+          currentY += vy;
+          vy += 0.35;
+          vx *= 0.96;
+          opacity -= 0.03;
+          scale -= 0.02;
           
-          pt.el.style.left = pt.x + 'px';
-          pt.el.style.top = pt.y + 'px';
-          pt.el.style.opacity = pt.opacity;
-          pt.el.style.transform = `scale(${pt.scale})`;
+          p.style.left = currentX + 'px';
+          p.style.top = currentY + 'px';
+          p.style.opacity = opacity;
+          p.style.transform = `scale(${scale})`;
 
-          if (pt.opacity <= 0 || pt.scale <= 0) {
-            pt.el.remove();
+          if (opacity <= 0 || scale <= 0) {
+            clearInterval(anim);
+            p.remove();
           }
-        }
-        if (active) {
-          requestAnimationFrame(animateParticles);
-        }
+        }, 16);
       }
-      requestAnimationFrame(animateParticles);
     }
 
     btnEl.addEventListener('mousedown', startHold);
-    btnEl.addEventListener('touchstart', startHold, {passive: true});
+    btnEl.addEventListener('touchstart', startHold, {passive: false});
 
     window.addEventListener('mouseup', cancelHold);
     window.addEventListener('touchend', cancelHold);
@@ -818,15 +784,15 @@
     });
 
     function updateTextForSlide(index) {
-      if (!slides[index]) return;
       textArea.classList.add('is-fading');
       
       setTimeout(() => {
         const activeSlide = slides[index];
-        titleEl.innerText = activeSlide.getAttribute('data-title') || '';
+        titleEl.innerText = activeSlide.getAttribute('data-title');
         
+        // Reset State
         isPriceUnlocked = false;
-        priceEl.innerHTML = '<span class="luxe-locked-text">••••••</span>';
+        priceEl.innerHTML = '<span class="luxe-locked-text">ΓÇóΓÇóΓÇóΓÇóΓÇóΓÇó</span>';
         compareEl.innerText = '';
         compareEl.classList.remove('is-visible');
         
@@ -845,42 +811,36 @@
       }, 400);
     }
 
-    function updateActiveDot(index) {
-      dots.forEach(d => d.classList.remove('is-active'));
-      if(dots[index]) dots[index].classList.add('is-active');
-    }
-
-    // Robust slide detection using IntersectionObserver
-    const slideObserver = new IntersectionObserver((entries) => {
+    // Initialize Intersection Observer to reliably track the active slide
+    const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const index = slides.indexOf(entry.target);
-          if (index !== -1 && index !== currentIndex) {
+          const index = parseInt(entry.target.getAttribute('data-index'));
+          if (index !== currentIndex) {
             currentIndex = index;
-            updateActiveDot(currentIndex);
-            updateTextForSlide(currentIndex);
+            dots.forEach(d => d.classList.remove('is-active'));
+            if(dots[index]) dots[index].classList.add('is-active');
+            updateTextForSlide(index);
           }
         }
       });
-    }, { root: track, threshold: 0.5 });
-    
-    slides.forEach(slide => slideObserver.observe(slide));
+    }, {
+      root: track,
+      threshold: 0.6
+    });
 
+    slides.forEach(slide => observer.observe(slide));
+
+    // Force initialization of the first slide text
     updateTextForSlide(0);
-    updateActiveDot(0);
 
     function scrollToSlide(index) {
       if (slides[index]) {
-        try {
-          slides[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-        } catch (e) {
-          track.scrollLeft = index * track.clientWidth;
-        }
+        track.scrollTo({ left: slides[index].offsetLeft, behavior: 'smooth' });
       }
     }
 
     function autoScroll() {
-      if (slides.length <= 1) return;
       if (currentIndex >= slides.length - 1 && swipeDirection === 1) {
         swipeDirection = -1;
       } else if (currentIndex <= 0 && swipeDirection === -1) {
@@ -891,19 +851,18 @@
     }
 
     function startAutoPlay() { 
-      if (slides.length <= 1) return;
-      if (autoPlayInterval) clearInterval(autoPlayInterval);
-      autoPlayInterval = setInterval(autoScroll, speed); 
+        if (autoPlayInterval) clearInterval(autoPlayInterval);
+        autoPlayInterval = setInterval(autoScroll, speed); 
     }
     
     function stopAutoPlay() { 
-      if (autoPlayInterval) clearInterval(autoPlayInterval);
+        if (autoPlayInterval) clearInterval(autoPlayInterval);
     }
 
     dots.forEach((dot) => {
       dot.addEventListener('click', (e) => {
         stopAutoPlay();
-        const clickedIndex = parseInt(e.currentTarget.getAttribute('data-index'));
+        const clickedIndex = parseInt(e.target.getAttribute('data-index'));
         scrollToSlide(clickedIndex);
         if(!isPriceUnlocked) startAutoPlay();
       });
@@ -932,91 +891,11 @@
       });
     }
 
+    // Pause on Interaction (touch only to keep desktop auto-play reliable)
     track.addEventListener('touchstart', stopAutoPlay, {passive: true});
     track.addEventListener('touchend', () => { if(!isPriceUnlocked) startAutoPlay(); }, {passive: true});
-    track.addEventListener('mouseenter', stopAutoPlay);
-    track.addEventListener('mouseleave', () => { if(!isPriceUnlocked) startAutoPlay(); });
 
-    let isDown = false;
-    let startX;
-    let scrollLeft;
-
-    
-    // Prevent native image drag on PC so manual swiping works
-    track.querySelectorAll('img').forEach(img => {
-      img.addEventListener('dragstart', (e) => e.preventDefault());
-    });
-
-    track.addEventListener('pointerdown', (e) => {
-      if (e.pointerType !== 'mouse') return;
-      isDown = true;
-      track.classList.add('dragging');
-      startX = e.clientX;
-      scrollLeft = track.scrollLeft;
-      stopAutoPlay();
-      try {
-        track.setPointerCapture(e.pointerId);
-      } catch (err) {}
-    });
-    
-    track.addEventListener('pointerup', (e) => {
-      if (e.pointerType !== 'mouse' || !isDown) return;
-      isDown = false;
-      track.classList.remove('dragging');
-      try {
-        track.releasePointerCapture(e.pointerId);
-      } catch (err) {}
-      snapToClosest();
-    });
-
-    track.addEventListener('pointercancel', (e) => {
-      if (e.pointerType !== 'mouse' || !isDown) return;
-      isDown = false;
-      track.classList.remove('dragging');
-      try {
-        track.releasePointerCapture(e.pointerId);
-      } catch (err) {}
-      snapToClosest();
-    });
-    
-    track.addEventListener('pointermove', (e) => {
-      if (e.pointerType !== 'mouse' || !isDown) return;
-      e.preventDefault();
-      const x = e.clientX;
-      const walk = (x - startX) * 1.5; 
-      track.scrollLeft = scrollLeft - walk;
-    });
-
-    function snapToClosest() {
-      const slideWidth = track.clientWidth || slides[0]?.clientWidth || 1;
-      const index = Math.round(track.scrollLeft / slideWidth);
-      scrollToSlide(Math.max(0, Math.min(index, slides.length - 1)));
-      if(!isPriceUnlocked) startAutoPlay();
-    }
-
+    // Start auto-play initially
     startAutoPlay();
-  }
-
-  function initAll() {
-    document.querySelectorAll('.luxe-wrapper').forEach(initLuxeDeal);
-  }
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAll);
-  } else {
-    initAll();
-  }
-
-  if (window.Shopify && window.Shopify.designMode) {
-    document.addEventListener('shopify:section:load', function(event) {
-      if (event.target.classList && event.target.classList.contains('shopify-section')) {
-        const wrapper = event.target.querySelector('.luxe-wrapper');
-        if (wrapper) initLuxeDeal(wrapper);
-      } else if (event.target.querySelector) {
-        const wrapper = event.target.querySelector('.luxe-wrapper');
-        if (wrapper) initLuxeDeal(wrapper);
-      }
-    });
-  }
-})();
+});
 </script>

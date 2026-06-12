@@ -673,15 +673,26 @@
 
     document.querySelectorAll('.pc-reveal, .pc-reveal-stagger, .scroll-trigger').forEach(el => observer.observe(el));
 
-    // Autoplay Product Card Sliders
+    // Autoplay Product Card Sliders (Optimized to prevent layout thrashing)
     setInterval(() => {
-      document.querySelectorAll('.fit-card-slider').forEach(slider => {
+      const sliders = Array.from(document.querySelectorAll('.fit-card-slider'));
+      const scrollOps = [];
+      // Phase 1: Read all DOM properties to avoid layout thrashing
+      sliders.forEach(slider => {
         if (!slider.isHovered && slider.scrollWidth > slider.clientWidth) {
-          if (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 10) {
-            slider.scrollTo({ left: 0, behavior: 'smooth' });
-          } else {
-            slider.scrollBy({ left: slider.clientWidth, behavior: 'smooth' });
-          }
+          scrollOps.push({
+            el: slider,
+            width: slider.clientWidth,
+            reset: slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 10
+          });
+        }
+      });
+      // Phase 2: Perform all DOM writes
+      scrollOps.forEach(op => {
+        if (op.reset) {
+          op.el.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          op.el.scrollBy({ left: op.width, behavior: 'smooth' });
         }
       });
     }, 3000);

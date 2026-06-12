@@ -112,11 +112,10 @@
                     {%- assign colors_rendered = colors_rendered | append: color_value | append: ',' -%}
                     {%- assign image_index = 0 -%}
                     {%- if variant.featured_media -%}
-                      {%- for media in card_product.media limit: 4 -%}
-                        {%- if media.id == variant.featured_media.id -%}
-                          {%- assign image_index = forloop.index0 -%}
-                        {%- endif -%}
-                      {%- endfor -%}
+                      {%- assign image_index = variant.featured_media.position | minus: 1 -%}
+                      {%- if image_index >= 4 -%}
+                        {%- assign image_index = 0 -%}
+                      {%- endif -%}
                     {%- endif -%}
                     <span class="fit-color-dot" style="background-color: {{ color_value | split: ' ' | last | downcase | replace: ' ', '' }};" data-slide-index="{{ image_index }}" title="{{ color_value | escape }}"></span>
                   {%- endunless -%}
