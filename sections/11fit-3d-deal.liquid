@@ -265,6 +265,7 @@
     user-select: none;
     -webkit-user-select: none;
     cursor: grab;
+    position: relative;
   }
 
   .luxe-track.dragging {
@@ -590,9 +591,9 @@
       <span class="luxe-compare" id="luxeCompare-{{ section.id }}"></span>
     </div>
 
-    <a href="#" class="luxe-btn is-locked" id="luxeBtn-{{ section.id }}">
-      <span class="luxe-btn-progress"></span>
-      <span class="luxe-btn-text">Hold to Unlock</span>
+    <a href="#" class="luxe-btn is-unlocked" id="luxeBtn-{{ section.id }}">
+      <span class="luxe-btn-progress" style="display:none;"></span>
+      <span class="luxe-btn-text">View Deal</span>
     </a>
   </div>
 
@@ -825,21 +826,27 @@
         const activeSlide = slides[index];
         titleEl.innerText = activeSlide.getAttribute('data-title') || '';
         
-        isPriceUnlocked = false;
-        priceEl.innerHTML = '<span class="luxe-locked-text">••••••</span>';
-        compareEl.innerText = '';
-        compareEl.classList.remove('is-visible');
+        isPriceUnlocked = true;
+        const priceVal = activeSlide.getAttribute('data-price');
+        const compVal = activeSlide.getAttribute('data-compare');
         
-        btnEl.classList.add('is-locked');
-        btnEl.classList.remove('is-unlocked');
+        // Format price
+        priceEl.innerText = 'Rs. ' + priceVal;
+        if (compVal && compVal !== '0') {
+          compareEl.innerText = 'Rs. ' + compVal;
+          compareEl.classList.add('is-visible');
+        } else {
+          compareEl.innerText = '';
+          compareEl.classList.remove('is-visible');
+        }
+        
+        btnEl.classList.remove('is-locked');
+        btnEl.classList.add('is-unlocked');
         const slideBtnText = btnEl.querySelector('.luxe-btn-text');
         const slideBtnProgress = btnEl.querySelector('.luxe-btn-progress');
-        if (slideBtnText) slideBtnText.innerText = 'Hold to Unlock';
-        if (slideBtnProgress) {
-          slideBtnProgress.style.display = 'block';
-          slideBtnProgress.style.width = '0%';
-        }
-        btnEl.href = '#'; 
+        if (slideBtnText) slideBtnText.innerText = 'View Deal';
+        if (slideBtnProgress) slideBtnProgress.style.display = 'none';
+        btnEl.href = activeSlide.getAttribute('data-url');
         
         textArea.classList.remove('is-fading');
       }, 400);
@@ -871,11 +878,7 @@
 
     function scrollToSlide(index) {
       if (slides[index]) {
-        try {
-          slides[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-        } catch (e) {
-          track.scrollLeft = index * track.clientWidth;
-        }
+        track.scrollLeft = slides[index].offsetLeft;
       }
     }
 

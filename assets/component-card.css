@@ -1,4 +1,4 @@
-.card-wrapper {
+﻿.card-wrapper {
   color: inherit;
   height: 100%;
   position: relative;
@@ -623,7 +623,7 @@
   }
 }
 
-/* â”€â”€ LUXURY PC HOVER EFFECTS (Added for Premium Redesign) â”€â”€ */
+/* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ LUXURY PC HOVER EFFECTS (Added for Premium Redesign) ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
 @media screen and (min-width: 990px) {
   .card-wrapper .card {
     transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -637,7 +637,7 @@
   }
 }
 
-/* â”€â”€ LUXURY MOBILE ENHANCEMENTS â”€â”€ */
+/* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ LUXURY MOBILE ENHANCEMENTS ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
 @media screen and (max-width: 767px) {
   .card-wrapper {
     margin-bottom: 12px;
@@ -654,7 +654,7 @@
   }
 }
 
-/* â”€â”€ PRODUCT CARD LUXURY OVERHAUL â”€â”€ */
+/* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ PRODUCT CARD LUXURY OVERHAUL ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
 .media--hover-effect .hoverimg {
   position: absolute;
   top: 0;
@@ -998,5 +998,10 @@
   .fit11-nobero-slide img {
     aspect-ratio: 2 / 3 !important;
     object-fit: cover !important;
+  }
+  .fit11-nobero-slider, .fit11-nobero-slide, .fit11-nobero-slide a, .fit11-nobero-slide img {
+    -webkit-user-drag: none;
+    user-drag: none;
+    touch-action: pan-x pan-y;
   }
 }
