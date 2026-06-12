@@ -299,20 +299,15 @@
       
       <div class="fit11-header-group">
         <h1 class="fit11-title">{{ product.title }}</h1>
-        <div class="fit11-price-row">
-          <span class="fit11-price-main">{{ product.price | money }}</span>
-          {% if product.compare_at_price > product.price %}
-            <span class="fit11-price-old">{{ product.compare_at_price | money }}</span>
-            <span class="fit11-price-off">{{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price | round }}% off</span>
-          {% endif %}
-        </div>
-
-        {% comment %} Ratings & Size Guide now below MRP {% endcomment %}
-        <div class="fit11-rating-row">
-          <div class="AirReviews-Widget AirReviews-Widget--Stars"></div>
-          <div class="fit11-size-chart-link" onclick="fit11ToggleModal(true)">
-            <i class="ti ti-ruler-2"></i><span>Size Guide</span>
+        <div class="fit11-price-row" style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 0;">
+          <div style="display: flex; align-items: baseline; gap: 10px;">
+            <span class="fit11-price-main">{{ product.price | money }}</span>
+            {% if product.compare_at_price > product.price %}
+              <span class="fit11-price-old">{{ product.compare_at_price | money }}</span>
+              <span class="fit11-price-off">{{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price | round }}% off</span>
+            {% endif %}
           </div>
+          <div class="AirReviews-Widget AirReviews-Widget--Stars" style="margin-top: 0; transform: scale(0.9); transform-origin: left center;"></div>
         </div>
       </div>
       
@@ -355,10 +350,17 @@
                   {% endif %}
 
                   <fieldset class="fit11-option-fieldset">
-                    <legend class="fit11-option-name" style="display: flex; align-items: center;">
-                      {{ option.name }}
-                      {% if is_color_option %}
-                        <span class="fit11-selected-color-label" style="margin-left: 8px; color: var(--lux-text); font-weight: 600; text-transform: capitalize;">{{ option.selected_value }}</span>
+                    <legend class="fit11-option-name" style="display: flex; align-items: center; width: 100%; justify-content: space-between; margin-bottom: 8px;">
+                      <div style="display: flex; align-items: center;">
+                        {{ option.name }}
+                        {% if is_color_option %}
+                          <span class="fit11-selected-color-label" style="margin-left: 8px; color: var(--lux-text); font-weight: 600; text-transform: capitalize;">{{ option.selected_value }}</span>
+                        {% endif %}
+                      </div>
+                      {% if option_name_lower == 'size' %}
+                        <div class="fit11-size-chart-link" onclick="fit11ToggleModal(true)" style="display: flex; align-items: center; gap: 4px; font-size: 11px; text-decoration: underline; color: var(--lux-accent); font-weight: 500; cursor: pointer;">
+                          <i class="ti ti-ruler-2"></i><span>Size Guide</span>
+                        </div>
                       {% endif %}
                     </legend>
                     <div class="fit11-variant-pills">
