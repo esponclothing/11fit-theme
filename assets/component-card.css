@@ -963,11 +963,38 @@
     border-radius: 0 !important;
     overflow: hidden;
   }
-  .card__inner {
+
+  /* !! CRITICAL: Break Dawn's absolute positioning so slider can scroll !! */
+  .card--media .card__inner,
+  .card__inner.ratio {
     border-radius: 0 !important;
     position: relative !important;
-    z-index: 3 !important;
+    z-index: 1 !important;
   }
+  /* Override Dawn's ratio padding hack - force 4:5 */
+  .card__inner.ratio::before,
+  .card--media .card__inner::before {
+    padding-bottom: 125% !important; /* 4:5 = 5/4 = 125% */
+  }
+  /* Override Dawn's absolute positioning on card__media */
+  .card .card__media {
+    position: relative !important;
+    top: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    margin: 0 !important;
+    aspect-ratio: 4 / 5;
+    overflow: hidden !important;
+  }
+  /* Override Dawn's absolute positioning on .media inside cards */
+  .card .card__media .media {
+    position: relative !important;
+    top: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
   .card__information {
     padding: 8px 8px 8px !important;
   }
@@ -1002,41 +1029,52 @@
   .fit-card-sizes-overlay {
     display: none !important;
   }
+
+  /* Slider container breaks out of ratio hack */
   .fit11-nobero-slider-container {
-    aspect-ratio: 4 / 5 !important;
-    height: auto !important;
-    position: relative;
-    z-index: 4 !important;
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 2 !important;
     pointer-events: auto !important;
   }
-  .fit11-nobero-slide img {
-    aspect-ratio: 4 / 5 !important;
-    object-fit: cover !important;
-  }
+  /* The actual swipeable track */
   .fit11-nobero-slider {
-    display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    width: 100%;
-    height: 100%;
-    -webkit-user-drag: none;
-    user-drag: none;
-    touch-action: pan-x pan-y;
+    display: flex !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    width: 100% !important;
+    height: 100% !important;
+    touch-action: pan-x !important;
   }
   .fit11-nobero-slider::-webkit-scrollbar {
-    display: none;
+    display: none !important;
   }
+  /* Each slide fills full width */
   .fit11-nobero-slide {
-    flex: 0 0 100%;
-    scroll-snap-align: center;
-    width: 100%;
-    height: 100%;
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    scroll-snap-align: start !important;
   }
-  .fit11-nobero-slide, .fit11-nobero-slide a, .fit11-nobero-slide img {
+  .fit11-nobero-slide a {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    position: relative !important;
+    top: auto !important;
+    bottom: auto !important;
+  }
+  .fit11-nobero-slide img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
     -webkit-user-drag: none;
-    user-drag: none;
-    touch-action: pan-x pan-y;
   }
 }
