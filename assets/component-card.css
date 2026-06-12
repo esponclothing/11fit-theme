@@ -965,6 +965,8 @@
   }
   .card__inner {
     border-radius: 0 !important;
+    position: relative !important;
+    z-index: 3 !important;
   }
   .card__information {
     padding: 8px 8px 8px !important;
@@ -1004,7 +1006,8 @@
     aspect-ratio: 4 / 5 !important;
     height: auto !important;
     position: relative;
-    z-index: 2; /* Sit above global anchor tag to allow swiping */
+    z-index: 4 !important;
+    pointer-events: auto !important;
   }
   .fit11-nobero-slide img {
     aspect-ratio: 4 / 5 !important;
