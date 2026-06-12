@@ -155,12 +155,65 @@
                 }
               }
               @media screen and (max-width: 749px) {
-                .fit-beyoung-grid .grid__item {
-                  width: calc(50% - 5px) !important;
-                  max-width: calc(50% - 5px) !important;
+                .collection.page-width,
+                .facets-vertical.page-width {
+                  padding-left: 0 !important;
+                  padding-right: 0 !important;
                 }
                 .fit-beyoung-grid {
-                  row-gap: 10px !important;
+                  margin-left: 0 !important;
+                  margin-right: 0 !important;
+                  width: 100% !important;
+                  column-gap: 2px !important;
+                  row-gap: 2px !important;
+                }
+                .fit-beyoung-grid .grid__item {
+                  width: calc(50% - 1px) !important;
+                  max-width: calc(50% - 1px) !important;
+                  padding: 0 !important;
+                  margin: 0 !important;
+                }
+                .fit-beyoung-grid .card-wrapper {
+                  margin-bottom: 0 !important;
+                }
+                .fit-beyoung-grid .card,
+                .fit-beyoung-grid .card__inner {
+                  --ratio-percent: 125% !important;
+                }
+                .fit-beyoung-grid .card__inner::before {
+                  padding-bottom: 125% !important;
+                }
+                .fit-beyoung-grid .card {
+                  --image-padding: 0 !important;
+                  border-radius: 0 !important;
+                  border: none !important;
+                  box-shadow: none !important;
+                }
+                .fit-beyoung-grid .card__inner {
+                  border-radius: 0 !important;
+                  border: none !important;
+                }
+                .fit-beyoung-grid .card__media {
+                  margin: 0 !important;
+                  width: 100% !important;
+                  border-radius: 0 !important;
+                }
+                .fit-beyoung-grid .media img {
+                  object-fit: cover !important;
+                  object-position: center top !important;
+                }
+                .fit-beyoung-grid .card__information {
+                  padding: 6px 8px 8px 8px !important;
+                }
+                .fit-beyoung-grid .card__heading {
+                  margin-bottom: 2px !important;
+                }
+                .fit-beyoung-grid .card-information > * + * {
+                  margin-top: 2px !important;
+                }
+                .fit-beyoung-grid .fit11-card-price-row {
+                  margin-top: 0 !important;
+                  margin-bottom: 0 !important;
                 }
               }
             </style>
