@@ -265,7 +265,6 @@
     user-select: none;
     -webkit-user-select: none;
     cursor: grab;
-    position: relative;
   }
 
   .luxe-track.dragging {
@@ -878,7 +877,13 @@
 
     function scrollToSlide(index) {
       if (slides[index]) {
-        track.scrollLeft = slides[index].offsetLeft;
+        try {
+          // Robust native smooth scrolling isolated to this element
+          track.scrollTo({ left: index * track.clientWidth, behavior: 'smooth' });
+        } catch (e) {
+          // Fallback for older browsers
+          track.scrollLeft = index * track.clientWidth;
+        }
       }
     }
 
