@@ -912,45 +912,7 @@
   margin-left: 2px;
 }
 
-/* ---- NOBERO STYLE PRODUCT CARD (MOBILE SLIDER) ---- */
-.fit11-nobero-slider-container {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-.fit11-nobero-slider {
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  width: 100%;
-  height: 100%;
-}
-.fit11-nobero-slider::-webkit-scrollbar {
-  display: none;
-}
-.fit11-nobero-slide {
-  flex: 0 0 100%;
-  scroll-snap-align: start;
-  position: relative;
-}
-.fit11-nobero-slide img, .fit11-nobero-static img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
 
-@media screen and (min-width: 750px) {
-  .mobile-only { display: none !important; }
-  .pc-only { display: block !important; }
-}
-
-@media screen and (max-width: 749px) {
-  .pc-only { display: none !important; }
-  .mobile-only { display: block !important; }
 
   /* Match Nobero Grid and Spacing */
   ul#product-grid, .grid--2-col-tablet-down {
@@ -1001,51 +963,5 @@
   
   .fit-card-sizes-overlay {
     display: none !important;
-  }
-  .fit11-nobero-slider-container {
-    aspect-ratio: 4 / 5 !important;
-    height: auto !important;
-    position: relative;
-    z-index: 4 !important;
-    pointer-events: auto !important;
-  }
-  .fit11-nobero-slide img {
-    aspect-ratio: 4 / 5 !important;
-    object-fit: cover !important;
-  }
-  .fit11-nobero-slider {
-    display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    width: 100%;
-    height: 100%;
-    -webkit-user-drag: none;
-    user-drag: none;
-    touch-action: pan-x pan-y;
-  }
-  .fit11-nobero-slider::-webkit-scrollbar {
-    display: none;
-  }
-  .fit11-nobero-slide {
-    flex: 0 0 100%;
-    scroll-snap-align: center;
-    width: 100%;
-    height: 100%;
-  }
-  .fit11-nobero-slide, .fit11-nobero-slide a, .fit11-nobero-slide img {
-    -webkit-user-drag: none;
-    user-drag: none;
-    touch-action: pan-x;
-  }
-  /* Override Dawn's ".card .media { position: absolute }" so slides have real width for flex scroll */
-  .fit11-nobero-slide .media,
-  .fit11-nobero-slide a.media {
-    position: relative !important;
-    top: auto !important;
-    bottom: auto !important;
-    width: 100% !important;
-    height: 100% !important;
   }
 }
