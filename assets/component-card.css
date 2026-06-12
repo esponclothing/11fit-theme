@@ -1,4 +1,4 @@
-﻿.card-wrapper {
+.card-wrapper {
   color: inherit;
   height: 100%;
   position: relative;
@@ -967,14 +967,23 @@
     border-radius: 0 !important;
   }
   .card__information {
-    padding: 8px 10px 12px !important;
+    padding: 8px 8px 8px !important;
   }
   
+  .card__heading {
+    margin-bottom: 2px !important;
+  }
   .card__heading a {
     font-size: 14px !important;
     line-height: 20px !important;
     color: #505985 !important;
   }
+  
+  .fit11-card-price-row {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+  
   .fit11-price-final {
     font-size: 14px !important;
     color: #121212 !important;
@@ -992,11 +1001,13 @@
     display: none !important;
   }
   .fit11-nobero-slider-container {
-    aspect-ratio: 2 / 3 !important;
+    aspect-ratio: 4 / 5 !important;
     height: auto !important;
+    position: relative;
+    z-index: 2; /* Sit above global anchor tag to allow swiping */
   }
   .fit11-nobero-slide img {
-    aspect-ratio: 2 / 3 !important;
+    aspect-ratio: 4 / 5 !important;
     object-fit: cover !important;
   }
   .fit11-nobero-slider, .fit11-nobero-slide, .fit11-nobero-slide a, .fit11-nobero-slide img {

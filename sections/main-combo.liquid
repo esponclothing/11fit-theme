@@ -183,10 +183,10 @@
     .fit11-slide img { width: 100%; height: 100%; object-fit: cover; padding: 0; } 
     .fit11-thumbs { padding: 8px 16px; }
     
-    .fit11-info { width: 100%; padding: 24px 16px; gap: 20px; text-align: left; margin: 0; }
-    .fit11-header-group { padding-bottom: 4px; border-bottom: none; }
+    .fit11-info { width: 100%; padding: 24px 16px; gap: 4px; text-align: left; margin: 0; }
+    .fit11-header-group { padding-bottom: 4px; border-bottom: none; align-items: flex-start; }
     .fit11-title { font-size: 26px; text-align: left; } 
-    .fit11-price-row { justify-content: flex-start; }
+    .fit11-price-row { width: 100%; justify-content: space-between; }
     
     .fit11-main-action-btns { width: 100%; padding: 4px 0 24px 0; border: none; border-radius: 0; margin: 0; background: transparent; }
     .fit11-app-wrapper { width: 100%; padding: 4px; padding-top: 15px; margin-left: -4px; overflow: visible; }
@@ -239,7 +239,7 @@
       
       <div class="fit11-header-group">
         <h1 class="fit11-title">{{ product.title }}</h1>
-        <div class="fit11-price-row" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 0;">
+        <div class="fit11-price-row" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; width: 100%; gap: 10px; margin-bottom: 0;">
           <div style="display: flex; align-items: baseline; gap: 10px;">
             <span class="fit11-price-main">{{ product.price | money }}</span>
             {% if product.compare_at_price > product.price %}
