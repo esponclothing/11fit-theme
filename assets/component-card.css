@@ -1010,7 +1010,28 @@
     aspect-ratio: 4 / 5 !important;
     object-fit: cover !important;
   }
-  .fit11-nobero-slider, .fit11-nobero-slide, .fit11-nobero-slide a, .fit11-nobero-slide img {
+  .fit11-nobero-slider {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    width: 100%;
+    height: 100%;
+    -webkit-user-drag: none;
+    user-drag: none;
+    touch-action: pan-x pan-y;
+  }
+  .fit11-nobero-slider::-webkit-scrollbar {
+    display: none;
+  }
+  .fit11-nobero-slide {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+    width: 100%;
+    height: 100%;
+  }
+  .fit11-nobero-slide, .fit11-nobero-slide a, .fit11-nobero-slide img {
     -webkit-user-drag: none;
     user-drag: none;
     touch-action: pan-x pan-y;
