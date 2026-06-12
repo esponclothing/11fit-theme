@@ -143,12 +143,33 @@
             class="collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %} pc-reveal"
           >
             <div class="loading-overlay gradient"></div>
+            <style>
+              .fit-beyoung-grid {
+                column-gap: 10px !important;
+                row-gap: 20px !important;
+              }
+              @media screen and (min-width: 750px) {
+                .fit-beyoung-grid .grid__item {
+                  width: calc(33.333% - 10px * 2 / 3) !important;
+                  max-width: calc(33.333% - 10px * 2 / 3) !important;
+                }
+              }
+              @media screen and (max-width: 749px) {
+                .fit-beyoung-grid .grid__item {
+                  width: calc(50% - 5px) !important;
+                  max-width: calc(50% - 5px) !important;
+                }
+                .fit-beyoung-grid {
+                  row-gap: 10px !important;
+                }
+              }
+            </style>
             <ul
               id="product-grid"
               data-id="{{ section.id }}"
               class="
                 grid product-grid grid--{{ section.settings.columns_mobile }}-col-tablet-down
-                grid--{{ section.settings.columns_desktop }}-col-desktop pc-reveal-stagger
+                grid--{{ section.settings.columns_desktop }}-col-desktop pc-reveal-stagger fit-beyoung-grid
                 {% if section.settings.quick_add == 'bulk' %} collection-quick-add-bulk{% endif %}
               "
             >
