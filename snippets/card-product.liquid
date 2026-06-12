@@ -89,74 +89,7 @@
                 >
               {%- endif -%}
             </div>
-            <div class="fit-card-colors-overlay">
-              {%- assign color_option_index = -1 -%}
-              {%- for option in card_product.options -%}
-                {%- assign downcased_option = option | downcase -%}
-                {%- if downcased_option == 'color' or downcased_option == 'colour' -%}
-                  {%- assign color_option_index = forloop.index0 -%}
-                {%- endif -%}
-              {%- endfor -%}
-              {%- if color_option_index != -1 -%}
-                {%- assign colors_rendered = '' -%}
-                {%- for variant in card_product.variants -%}
-                  {%- assign color_value = variant.options[color_option_index] -%}
-                  {%- unless colors_rendered contains color_value -%}
-                    {%- assign colors_rendered = colors_rendered | append: color_value | append: ',' -%}
-                    {%- assign image_index = 0 -%}
-                    {%- if variant.featured_media -%}
-                      {%- assign image_index = variant.featured_media.position | minus: 1 -%}
-                      {%- if image_index >= 4 -%}
-                        {%- assign image_index = 0 -%}
-                      {%- endif -%}
-                    {%- endif -%}
-                    <span class="fit-color-dot" style="background-color: {{ color_value | split: ' ' | last | downcase | replace: ' ', '' }};" data-slide-index="{{ image_index }}" title="{{ color_value | escape }}"></span>
-                  {%- endunless -%}
-                {%- endfor -%}
-              {%- endif -%}
-            </div>
-            
-            <!-- Quick size swatches overlay -->
-            {%- liquid
-              assign color_option_index = -1
-              for option in card_product.options
-                assign downcased_option = option | downcase
-                if downcased_option == 'color' or downcased_option == 'colour'
-                  assign color_option_index = forloop.index0
-                  break
-                endif
-              endfor
-              
-              assign active_color = ''
-              if color_option_index != -1
-                assign active_color = card_product.selected_or_first_available_variant.options[color_option_index]
-              endif
-            -%}
-            {%- if card_product.variants.size > 1 -%}
-              <div class="fit-card-sizes-overlay">
-                {%- for variant in card_product.variants -%}
-                  {%- liquid
-                    assign show_size = true
-                    if color_option_index != -1
-                      if variant.options[color_option_index] != active_color
-                        assign show_size = false
-                      endif
-                    endif
-                  -%}
-                  {%- if show_size -%}
-                    <button 
-                      class="fit-size-pill{% unless variant.available %} out-of-stock{% endunless %}" 
-                      data-variant-id="{{ variant.id }}"
-                      {% unless variant.available %}disabled{% endunless %}
-                      onclick="event.preventDefault(); event.stopPropagation(); addVariantToCart({{ variant.id }}, this);"
-                    >
-                      {{ variant.title | split: '/' | last | strip }}
-                      <span class="loading-spinner-inline hidden"></span>
-                    </button>
-                  {%- endif -%}
-                {%- endfor -%}
-              </div>
-            {%- endif -%}
+
           </div>
         {%- endif -%}
         <div class="card__content">
