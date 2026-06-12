@@ -47,7 +47,7 @@
   /* ── DETAILS PANEL ── */
   .fit11-info { display: flex; flex-direction: column; gap: 24px; width: 100%; padding-top: 10px; }
   
-  .fit11-header-group { display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid var(--lux-border); padding-bottom: 24px; width: 100%; }
+  .fit11-header-group { display: flex; flex-direction: column; gap: 6px; border-bottom: none; padding-bottom: 4px; width: 100%; }
   .fit11-title { font-size: 32px; font-weight: 400; line-height: 1.2; color: var(--lux-text); font-family: var(--font-heading); word-wrap: break-word; }
   
   /* ── RATINGS ROW & SIZE CHART LINK (MOVED BELOW PRICE) ── */
@@ -56,13 +56,13 @@
   .fit11-size-chart-link:hover { color: var(--lux-text); }
   
   /* ── PRICE ── */
-  .fit11-price-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+  .fit11-price-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 4px; justify-content: space-between; }
   .fit11-price-main { font-size: 24px; font-weight: 400; color: var(--lux-text); }
   .fit11-price-old { font-size: 16px; color: var(--lux-text-muted); text-decoration: line-through; font-weight: 300; }
   .fit11-price-off { font-size: 12px; font-weight: 500; color: var(--lux-accent); text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid var(--lux-accent); padding: 2px 8px; }
 
   /* ── MAIN DESKTOP BUTTON & APP BLOCKS ── */
-  .fit11-main-action-btns { background: var(--lux-surface); padding: 24px; border: 1px solid var(--lux-border); width: 100%; border-radius: 8px; }
+  .fit11-main-action-btns { background: var(--lux-surface); padding: 8px 20px 16px 20px; border: 1px solid var(--lux-border); width: 100%; border-radius: 8px; }
   .fit11-combo-title { font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
   .fit11-combo-title::before { content: ''; width: 4px; height: 14px; background: var(--lux-accent); display: block; }
 
@@ -184,11 +184,11 @@
     .fit11-thumbs { padding: 8px 16px; }
     
     .fit11-info { width: 100%; padding: 24px 16px; gap: 20px; text-align: left; margin: 0; }
-    .fit11-header-group { padding-bottom: 16px; border-bottom: 1px solid var(--lux-border); align-items: flex-start; }
+    .fit11-header-group { padding-bottom: 4px; border-bottom: none; }
     .fit11-title { font-size: 26px; text-align: left; } 
     .fit11-price-row { justify-content: flex-start; }
     
-    .fit11-main-action-btns { width: 100%; padding: 20px 0; border-left: none; border-right: none; border-radius: 0; margin: 0; background: transparent; }
+    .fit11-main-action-btns { width: 100%; padding: 4px 0 24px 0; border: none; border-radius: 0; margin: 0; background: transparent; }
     .fit11-app-wrapper { width: 100%; padding: 4px; padding-top: 15px; margin-left: -4px; overflow: visible; }
     
     #11fit-form-cart-main { width: 100%; margin: 0; padding: 0; }
@@ -239,20 +239,15 @@
       
       <div class="fit11-header-group">
         <h1 class="fit11-title">{{ product.title }}</h1>
-        <div class="fit11-price-row">
-          <span class="fit11-price-main">{{ product.price | money }}</span>
-          {% if product.compare_at_price > product.price %}
-            <span class="fit11-price-old">{{ product.compare_at_price | money }}</span>
-            <span class="fit11-price-off">{{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price | round }}% off</span>
-          {% endif %}
-        </div>
-
-        {% comment %} Ratings & Size Guide now below MRP {% endcomment %}
-        <div class="fit11-rating-row">
-          <div class="AirReviews-Widget AirReviews-Widget--Stars"></div>
-          <div class="fit11-size-chart-link" onclick="fit11ToggleModal(true)">
-            <i class="ti ti-ruler-2"></i><span>Size Guide</span>
+        <div class="fit11-price-row" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 0;">
+          <div style="display: flex; align-items: baseline; gap: 10px;">
+            <span class="fit11-price-main">{{ product.price | money }}</span>
+            {% if product.compare_at_price > product.price %}
+              <span class="fit11-price-old">{{ product.compare_at_price | money }}</span>
+              <span class="fit11-price-off">{{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price | round }}% off</span>
+            {% endif %}
           </div>
+          <div class="AirReviews-Widget AirReviews-Widget--Stars" style="margin-top: 0; transform: scale(0.9); transform-origin: left center;"></div>
         </div>
       </div>
 
