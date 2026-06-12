@@ -872,7 +872,10 @@
     function scrollToSlide(index) {
       if (slides[index]) {
         try {
-          slides[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+          track.scrollTo({
+            left: index * track.clientWidth,
+            behavior: 'smooth'
+          });
         } catch (e) {
           track.scrollLeft = index * track.clientWidth;
         }
