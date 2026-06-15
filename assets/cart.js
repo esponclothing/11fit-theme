@@ -101,7 +101,7 @@ class CartItems extends HTMLElement {
         .then((responseText) => {
           const html = new DOMParser().parseFromString(responseText, 'text/html');
           
-          // Replace the entire inner contents of the cart drawer to update totals, checkout buttons, shipping bar, and items
+          // Replace the entire inner contents of the cart drawer
           const selector = '.drawer__inner';
           const targetElement = document.querySelector(selector);
           const sourceElement = html.querySelector(selector);
