@@ -71,6 +71,10 @@
   
   .fit11-btn-cart { width: 100% !important; height: 54px !important; margin: 24px 0 0 0 !important; background: var(--lux-text); color: var(--lux-surface); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; border: none; display: flex; align-items: center; justify-content: center; gap: 12px; transition: opacity 0.3s ease, background 0.4s ease; cursor: pointer; font-family: var(--font-body); border-radius: 4px; }
   .fit11-btn-cart:hover { opacity: 0.9; }
+  .fit11-btn-cart.loading { color: transparent !important; position: relative !important; }
+  .fit11-btn-cart.loading > .loading__spinner { top: 50%; left: 50%; transform: translate(-50%, -50%); position: absolute; height: 100%; display: flex !important; align-items: center; }
+  .fit11-btn-cart.loading > .loading__spinner .spinner { width: 20px; height: 20px; display: block; }
+  .fit11-btn-cart.loading > .loading__spinner .path { stroke: var(--lux-surface) !important; }
 
   /* ── VARIANT SELECTORS (LUXURY ADAPTATION) ── */
   .fit11-variant-selectors { display: flex; flex-direction: column; gap: 20px; margin-bottom: 8px; width: 100%; }
@@ -731,94 +735,8 @@
 
 })();
 
-/* ── INSTANT ADD TO CART LOADING STATE ── */
+/* ── STICKY BAR CLICK FORWARD ── */
 (function() {
-  function attachComboLoader() {
-    var btn = document.querySelector('#fit11-form-cart-main .fit11-btn-cart, #fit11-form-cart-main [type="submit"]');
-    if (!btn) return;
-
-    // Already patched?
-    if (btn.dataset.loaderAttached) return;
-    btn.dataset.loaderAttached = 'true';
-
-    // Build spinner markup inside button if not already there
-    var spinnerHTML = '<span class="fit11-loader-overlay" style="display:none;position:absolute;inset:0;background:inherit;border-radius:inherit;display:flex;align-items:center;justify-content:center;gap:8px;" id="fit11-btn-loader"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation:fit11spin 0.7s linear infinite;flex-shrink:0;"><circle cx="9" cy="9" r="7" stroke="rgba(255,255,255,0.35)" stroke-width="2.5"/><path d="M9 2a7 7 0 0 1 7 7" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg><span style="font-size:13px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#fff;">Adding…</span></span>';
-
-    if (!document.getElementById('fit11-btn-loader')) {
-      btn.style.position = 'relative';
-      btn.style.overflow = 'hidden';
-      btn.insertAdjacentHTML('beforeend', spinnerHTML);
-    }
-
-    // Inject keyframe once
-    if (!document.getElementById('fit11-spin-style')) {
-      var style = document.createElement('style');
-      style.id = 'fit11-spin-style';
-      style.textContent = '@keyframes fit11spin{to{transform:rotate(360deg)}}';
-      document.head.appendChild(style);
-    }
-
-    var loader = document.getElementById('fit11-btn-loader');
-    var originalChildren = [];
-
-    function showLoader() {
-      loader.style.display = 'flex';
-      var hasDrawer = !!document.querySelector('cart-drawer');
-      if (hasDrawer) {
-        btn.disabled = true;
-      } else {
-        btn.setAttribute('aria-disabled', 'true');
-      }
-      // Hide other button children
-      Array.from(btn.childNodes).forEach(function(node) {
-        if (node !== loader) {
-          originalChildren.push({ node: node, display: node.style ? node.style.display : null });
-          if (node.style) node.style.opacity = '0';
-        }
-      });
-    }
-
-    function hideLoader() {
-      loader.style.display = 'none';
-      btn.disabled = false;
-      btn.removeAttribute('aria-disabled');
-      originalChildren.forEach(function(item) {
-        if (item.node.style) item.node.style.opacity = '';
-      });
-      originalChildren = [];
-    }
-
-    btn.addEventListener('mousedown', function() {
-      showLoader();
-    }, true);
-
-    // Watch for cart-drawer opening or cart update events to hide loader
-    var drawerObserver = new MutationObserver(function(mutations) {
-      var drawer = document.querySelector('cart-drawer');
-      if (drawer && (drawer.hasAttribute('open') || drawer.classList.contains('active'))) {
-        setTimeout(hideLoader, 100);
-      }
-    });
-
-    var drawer = document.querySelector('cart-drawer');
-    if (drawer) {
-      drawerObserver.observe(drawer, { attributes: true, attributeFilter: ['open', 'class'] });
-    }
-
-    // Fallback: hide after 8s no matter what
-    btn.addEventListener('mousedown', function() {
-      setTimeout(hideLoader, 8000);
-    }, true);
-
-    // Also hide on cart update pubsub event if available
-    if (typeof subscribe !== 'undefined' && typeof PUB_SUB_EVENTS !== 'undefined') {
-      subscribe(PUB_SUB_EVENTS.cartUpdate, function() {
-        setTimeout(hideLoader, 300);
-      });
-    }
-  }
-
-  // Sticky bar button — forward click to main button
   var stickyBtn = document.querySelector('.fit11-sticky-btns .fit11-btn-cart');
   if (stickyBtn) {
     stickyBtn.addEventListener('click', function(e) {
@@ -827,11 +745,6 @@
       if (mainBtn) mainBtn.click();
     });
   }
-
-  // Run now + wait for DOM to fully populate
-  attachComboLoader();
-  document.addEventListener('DOMContentLoaded', attachComboLoader);
-  setTimeout(attachComboLoader, 500);
 })();
 
 /* CLICK TO COPY COUPON LOGIC */

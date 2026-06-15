@@ -18,17 +18,6 @@ if (!customElements.get('product-form')) {
       }
 
       onSubmitHandler(evt) {
-        if (!this.cart) {
-          // Dynamic safety fallback: make sure the form submission redirects to /cart page directly
-          if (!this.form.querySelector('input[name="return_to"]')) {
-            const returnToInput = document.createElement('input');
-            returnToInput.type = 'hidden';
-            returnToInput.name = 'return_to';
-            returnToInput.value = '/cart';
-            this.form.appendChild(returnToInput);
-          }
-          return;
-        }
         evt.preventDefault();
         if (this.submitButton.getAttribute('aria-disabled') === 'true') return;
 
