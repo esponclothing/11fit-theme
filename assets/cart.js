@@ -157,13 +157,7 @@ class CartItems extends HTMLElement {
       },
     ];
 
-    if (document.getElementById('main-cart-offers')) {
-      sections.push({
-        id: 'main-cart-offers',
-        section: document.getElementById('main-cart-items').dataset.id,
-        selector: '.js-offers-contents',
-      });
-    }
+
 
     return sections;
   }

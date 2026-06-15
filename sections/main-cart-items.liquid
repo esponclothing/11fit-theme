@@ -50,66 +50,7 @@
     display: none !important; /* Remove Dawn theme default box-shadow borders */
   }
 
-  /* ── CART OFFERS & DISCOUNTS SECTION THEME ── */
-  .fit11-offers-wrapper { 
-    background: rgba(255, 255, 255, 0.6); 
-    backdrop-filter: blur(16px); 
-    -webkit-backdrop-filter: blur(16px); 
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    border-radius: 12px; 
-    padding: 24px; 
-    width: 100%; 
-    margin-top: 24px; 
-    margin-bottom: 32px; 
-    font-family: 'Outfit', sans-serif; 
-    overflow: hidden; 
-    box-sizing: border-box; 
-  }
-  .fit11-offers-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-  .fit11-offers-title-wrap { display: flex; align-items: center; gap: 10px; }
-  .fit11-offers-icon { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: #cba86a; border-radius: 50%; color: #fff; font-size: 16px; box-shadow: 0 4px 10px rgba(203,168,106,0.3); }
-  .fit11-offers-title { font-size: 18px; font-weight: 600; color: #1a202c; letter-spacing: 0; margin: 0; }
-  
-  .fit11-offers-scroll { display: flex; flex-wrap: nowrap; gap: 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 16px; scroll-snap-type: x mandatory; }
-  .fit11-offers-scroll::-webkit-scrollbar { display: none; }
-  
-  .fit11-offer-card { background: rgba(255,255,255,0.9); border: 1px solid #e2e8f0; border-radius: 10px; width: 280px; flex: 0 0 auto; display: flex; flex-direction: column; position: relative; scroll-snap-align: start; transition: all 0.3s cubic-bezier(0.165,0.84,0.44,1); box-sizing: border-box; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-  .fit11-offer-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.06); border-color: #cbd5e0; }
-  .fit11-offer-card.fit11-applied-state { border-style: solid; border-color: #cba86a; background: #fafafa; box-shadow: 0 0 10px rgba(203,168,106,0.1); }
-  
-  .fit11-offer-content-wrap { padding: 16px; flex: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
-  
-  .fit11-offer-code { font-size: 15px; font-weight: 700; color: #1a202c; letter-spacing: 0.02em; margin: 0; line-height: 1.2; word-wrap: break-word; }
-  .fit11-offer-desc { font-size: 12px; color: #718096; line-height: 1.4; margin-top: 4px; margin-bottom: 16px; white-space: normal; }
-  
-  .fit11-coupon-action { margin-top: auto; display: flex; align-items: center; width: 100%; }
-  .fit11-apply-btn { background: #1a202c; color: #ffffff; border: none; padding: 10px 16px; font-size: 12px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Outfit', sans-serif; width: 100%; }
-  .fit11-apply-btn:hover { background: #cba86a; box-shadow: 0 4px 12px rgba(203,168,106,0.4); }
-  
-  .fit11-lock-container { width: 100%; margin-top: 4px; }
-  .fit11-lock-msg { font-size: 12px; font-weight: 600; color: #9A7B4F; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-  .fit11-progress-bg { width: 100%; height: 6px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
-  .fit11-progress-fill { height: 100%; background: linear-gradient(90deg, #cba86a, #9A7B4F); border-radius: 4px; animation: pulseProgress 2s infinite alternate; }
-  
-  @keyframes pulseProgress {
-    0% { opacity: 0.8; }
-    100% { opacity: 1; box-shadow: 0 0 8px rgba(154,123,79,0.5); }
-  }
 
-  .fit11-applied-text { font-size: 13px; font-weight: 700; color: #cba86a; display: flex; align-items: center; gap: 4px; }
-  
-  .fit11-message-box { margin-top: 12px; padding: 12px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
-  .fit11-message-success { background: #1a202c; color: #cba86a; border: 1px solid #cba86a; box-shadow: 0 4px 12px rgba(203,168,106,0.15); }
-  .fit11-message-error { background: #1a202c; color: #e53e3e; border: 1px solid #e53e3e; }
-
-  @media (max-width: 767px) {
-    .fit11-offers-wrapper { padding: 16px; margin-top: 16px; border-radius: 0; border-top: 1px solid rgba(255,255,255,0.8); border-bottom: 1px solid rgba(255,255,255,0.8); }
-    .fit11-offer-card { width: 85%; min-width: 250px; }
-    .fit11-offer-content-wrap { padding: 16px; }
-    .fit11-offer-code { font-size: 15px; }
-    .fit11-offer-desc { font-size: 12px; margin-bottom: 16px; }
-  }
 {%- endstyle -%}
 
 {%- unless settings.cart_type == 'drawer' -%}
@@ -548,134 +489,11 @@
       </p>
     </form>
 
-    {% comment %} ── SYNCED OFFERS & DISCOUNTS SECTION (SHOWS EVEN IF EMPTY) ── {% endcomment %}
-    <div id="main-cart-offers" data-id="{{ section.id }}">
-      <div class="js-offers-contents">
-        {% if section.blocks.size > 0 %}
-          <div class="fit11-offers-wrapper">
-            <div class="fit11-offers-header">
-              <div class="fit11-offers-title-wrap">
-                <div class="fit11-offers-icon"><i class="ti ti-percentage"></i></div>
-                <span class="fit11-offers-title">Available Offers</span>
-              </div>
-            </div>
-            
-            <div class="fit11-offers-scroll">
-              {% assign cart_total = cart.total_price | default: 0 %}
-              
-              {% for block in section.blocks %}
-                {% assign min_spend = block.settings.min_spend | times: 100 %}
-                {% assign is_applied = false %}
-                {% for discount in cart.cart_level_discount_applications %}
-                  {% if discount.title == block.settings.code %}
-                    {% assign is_applied = true %}
-                  {% endif %}
-                {% endfor %}
-                
-                <div class="fit11-offer-card {% if is_applied %}fit11-applied-state{% endif %}" data-code="{{ block.settings.code }}" {{ block.shopify_attributes }}>
-                  
-                  <div class="fit11-offer-content-wrap">
-                    <div class="fit11-offer-code">{{ block.settings.code }}</div>
-                    <div class="fit11-offer-desc">{{ block.settings.desc }}</div>
-                    <div class="fit11-coupon-action">
-                      {% if is_applied %}
-                        <span class="fit11-applied-text"><i class="ti ti-check"></i> Applied</span>
-                      {% elsif cart_total >= min_spend %}
-                        <button type="button" class="fit11-apply-btn" onclick="applyPremiumCoupon('{{ block.settings.code }}', this)">Apply Discount</button>
-                      {% else %}
-                        {% assign difference = min_spend | minus: cart_total | divided_by: 100.0 | round %}
-                        {% assign percent = cart_total | times: 100 | divided_by: min_spend %}
-                        <div class="fit11-lock-container">
-                          <span class="fit11-lock-msg"><i class="ti ti-lock"></i> Add ₹{{ difference }} to unlock</span>
-                          <div class="fit11-progress-bg">
-                            <div class="fit11-progress-fill" style="width: {{ percent }}%;"></div>
-                          </div>
-                        </div>
-                      {% endif %}
-                    </div>
-                  </div>
-                  
-                </div>
-              {% endfor %}
-            </div>
-            
-            <div id="fit11-coupon-message" class="fit11-message-box" style="display: none;"></div>
-          </div>
-        {% endif %}
-      </div>
-    </div>
+
 
   </div>
 </cart-items>
 
-<script>
-  async function applyPremiumCoupon(code, btnElement) {
-    const messageBox = document.getElementById('fit11-coupon-message');
-    
-    if (messageBox) {
-      messageBox.style.display = "flex";
-      messageBox.className = "fit11-message-box fit11-message-success"; 
-      messageBox.innerHTML = `⏳ Applying <b>${code}</b>...`;
-    }
-    btnElement.innerText = "Applying...";
-    btnElement.style.opacity = "0.7";
-    btnElement.disabled = true;
-    
-    try {
-      // Apply discount
-      const response = await fetch('/cart/update.js', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ discount: code })
-      });
-      
-      if (!response.ok) throw new Error('Failed to apply');
-
-      // Update cart sections dynamically
-      const cartItemsEl = document.querySelector('cart-items');
-      if (cartItemsEl && typeof cartItemsEl.getSectionsToRender === 'function') {
-        const sectionsToRender = cartItemsEl.getSectionsToRender();
-        // Remove duplicates if any
-        const uniqueSections = [...new Set(sectionsToRender.map(s => s.section))];
-        const sectionIds = uniqueSections.join(',');
-        
-        const sectionsResponse = await fetch(`${window.location.pathname}?sections=${sectionIds}`);
-        const parsedState = await sectionsResponse.json();
-        
-        sectionsToRender.forEach((section) => {
-          const elementToReplace = document.getElementById(section.id).querySelector(section.selector) || document.getElementById(section.id);
-          if (elementToReplace && parsedState[section.section]) {
-            elementToReplace.innerHTML = new DOMParser().parseFromString(parsedState[section.section], 'text/html').querySelector(section.selector).innerHTML;
-          }
-        });
-        
-        if (typeof window.publish !== 'undefined' && typeof PUB_SUB_EVENTS !== 'undefined') {
-          window.publish(PUB_SUB_EVENTS.cartUpdate, { source: 'cart-items', cartData: parsedState });
-        }
-        
-        const updatedMessageBox = document.getElementById('fit11-coupon-message');
-        if (updatedMessageBox) {
-          updatedMessageBox.style.display = "flex";
-          updatedMessageBox.className = "fit11-message-box fit11-message-success";
-          updatedMessageBox.innerHTML = `<i class="ti ti-check" style="font-size: 16px;"></i> <b>${code}</b> applied successfully!`;
-        }
-      } else {
-        location.reload();
-      }
-      
-    } catch(err) {
-      btnElement.innerText = "Apply Discount";
-      btnElement.style.opacity = "1";
-      btnElement.disabled = false;
-      const updatedMessageBox = document.getElementById('fit11-coupon-message');
-      if (updatedMessageBox) {
-        updatedMessageBox.style.display = "flex";
-        updatedMessageBox.innerHTML = `⚠️ Couldn't apply the coupon. It might be invalid.`;
-        updatedMessageBox.className = "fit11-message-box fit11-message-error";
-      }
-    }
-  }
-</script>
 
 {% schema %}
 {
@@ -686,16 +504,6 @@
     { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "t:sections.all.padding.padding_top", "default": 36 },
     { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "t:sections.all.padding.padding_bottom", "default": 36 }
   ],
-  "blocks": [
-    {
-      "type": "coupon",
-      "name": "Coupon Offer",
-      "settings": [
-        { "type": "text", "id": "code", "label": "Coupon Code", "default": "FREESHIP" },
-        { "type": "number", "id": "min_spend", "label": "Min Spend required to unlock (in Rupees)", "default": 1999 },
-        { "type": "text", "id": "desc", "label": "Offer Description", "default": "Extra Rs.400 off on orders above 1999" }
-      ]
-    }
-  ]
+  "blocks": []
 }
 {% endschema %}
