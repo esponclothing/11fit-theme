@@ -222,13 +222,10 @@
         </div>
       </div>
       
-      {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
-        
-
-
-        {% comment %} ── HIGHLIGHTED COMBO SELECTION AREA ── {% endcomment %}
-        <div class="fit11-main-action-btns" id="fit11MainBtnContainer">
-          <div class="fit11-combo-title">Curate Your Combo</div>
+      {% comment %} ── HIGHLIGHTED COMBO SELECTION AREA ── {% endcomment %}
+      <div class="fit11-main-action-btns" id="fit11MainBtnContainer">
+        <div class="fit11-combo-title">Curate Your Combo</div>
+        {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
           
           {%- for block in section.blocks -%}
             {%- if block.type == '@app' -%}
@@ -243,42 +240,42 @@
           <button type="submit" name="add" class="fit11-btn-cart product-form__submit">
             <span>Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
           </button>
-        </div>
+        {% endform %}
+      </div>
 
-        {% comment %} ── NEW OFFERS & DISCOUNTS SECTION (AFTER ADD TO CART) ── {% endcomment %}
-        {% assign offer_blocks = section.blocks | where: "type", "offer" %}
-        
-        {% if offer_blocks.size > 0 %}
-          <div class="fit11-offers-wrapper" style="margin-top: 20px;">
-            <div class="fit11-offers-header">
-              <div class="fit11-offers-title-wrap">
-                <div class="fit11-offers-icon"><i class="ti ti-percentage"></i></div>
-                <span class="fit11-offers-title">{{ section.settings.offers_heading | default: "Offers & Discounts" }}</span>
-              </div>
-              {% if section.settings.show_view_all %}
-                <div class="fit11-offers-view-all" onclick="fit11ToggleOffersModal(true)">View all Offers</div>
-              {% endif %}
+      {% comment %} ── NEW OFFERS & DISCOUNTS SECTION ── {% endcomment %}
+      {% assign offer_blocks = section.blocks | where: "type", "offer" %}
+      
+      {% if offer_blocks.size > 0 %}
+        <div class="fit11-offers-wrapper" style="margin-top: 20px;">
+          <div class="fit11-offers-header">
+            <div class="fit11-offers-title-wrap">
+              <div class="fit11-offers-icon"><i class="ti ti-percentage"></i></div>
+              <span class="fit11-offers-title">{{ section.settings.offers_heading | default: "Offers & Discounts" }}</span>
             </div>
-            
-            <div class="fit11-offers-scroll">
-              {% for block in offer_blocks %}
-                <div class="fit11-offer-card" onclick="fit11CopyCoupon(this, '{{ block.settings.offer_code }}')" {{ block.shopify_attributes }}>
-                  <div class="fit11-offer-content-wrap">
-                    <div class="fit11-offer-code">{{ block.settings.offer_code }}</div>
-                    <div class="fit11-offer-desc">{{ block.settings.offer_desc }}</div>
-                    {% if block.settings.offer_code != blank %}
-                      <div class="fit11-copy-hint"><i class="ti ti-copy"></i> Click to Copy</div>
-                    {% endif %}
-                  </div>
-                  {% if block.settings.offer_timer != blank %}
-                    <div class="fit11-offer-timer">{{ block.settings.offer_timer }}</div>
+            {% if section.settings.show_view_all %}
+              <div class="fit11-offers-view-all" onclick="fit11ToggleOffersModal(true)">View all Offers</div>
+            {% endif %}
+          </div>
+          
+          <div class="fit11-offers-scroll">
+            {% for block in offer_blocks %}
+              <div class="fit11-offer-card" onclick="fit11CopyCoupon(this, '{{ block.settings.offer_code }}')" {{ block.shopify_attributes }}>
+                <div class="fit11-offer-content-wrap">
+                  <div class="fit11-offer-code">{{ block.settings.offer_code }}</div>
+                  <div class="fit11-offer-desc">{{ block.settings.offer_desc }}</div>
+                  {% if block.settings.offer_code != blank %}
+                    <div class="fit11-copy-hint"><i class="ti ti-copy"></i> Click to Copy</div>
                   {% endif %}
                 </div>
-              {% endfor %}
-            </div>
+                {% if block.settings.offer_timer != blank %}
+                  <div class="fit11-offer-timer">{{ block.settings.offer_timer }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
           </div>
-        {% endif %}
-      {% endform %}
+        </div>
+      {% endif %}
 
       {% comment %} ── ACCORDIONS ── {% endcomment %}
       <div class="fit11-accord-group">
@@ -377,7 +374,7 @@
     </div>
     <div class="fit11-sticky-btns">
       <div class="fit11-form-inline">
-        <button type="button" class="fit11-btn-cart product-form__submit" onclick="document.querySelector('#fit11-form-cart-main .fit11-btn-cart').click();">
+        <button type="button" class="fit11-btn-cart" onclick="document.querySelector('#fit11-form-cart-main .fit11-btn-cart').click();">
           <span>Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
         </button>
       </div>
@@ -489,7 +486,25 @@
     }
   });
 
-
+  /* PREVENT DUPLICATE SUBMISSIONS */
+  var comboForm = document.getElementById('fit11-form-cart-main');
+  if (comboForm) {
+    comboForm.addEventListener('submit', function() {
+      var submitBtn = comboForm.querySelector('.product-form__submit');
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+        submitBtn.style.opacity = '0.5';
+        submitBtn.style.pointerEvents = 'none';
+        
+        // Re-enable after 5 seconds to prevent getting stuck if app fails
+        setTimeout(function() {
+          submitBtn.removeAttribute('disabled');
+          submitBtn.style.opacity = '';
+          submitBtn.style.pointerEvents = '';
+        }, 5000);
+      }
+    });
+  }
 
 })();
 
