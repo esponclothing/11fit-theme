@@ -345,6 +345,10 @@
                 {% for option in product.options_with_values %}
                   
                   {% assign option_name_lower = option.name | downcase %}
+                  {% if option_name_lower == 'size' %}
+                    {% continue %}
+                  {% endif %}
+                  
                   {% assign is_color_option = false %}
                   {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
                     {% assign is_color_option = true %}
@@ -703,8 +707,8 @@
       });
 
       var matchedVariant = variantsData.find(function(variant) {
-        return variant.options.every(function(option, index) {
-          return option === selectedOptions[index];
+        return selectedOptions.every(function(val) {
+          return variant.options.indexOf(val) !== -1;
         });
       });
 

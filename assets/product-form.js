@@ -19,6 +19,13 @@ if (!customElements.get('product-form')) {
 
       onSubmitHandler(evt) {
         if (!this.cart) {
+          // Show loading state on the button immediately for UX feedback
+          if (this.submitButton) {
+            this.submitButton.setAttribute('aria-disabled', true);
+            this.submitButton.classList.add('loading');
+            const spinner = this.querySelector('.loading__spinner');
+            if (spinner) spinner.classList.remove('hidden');
+          }
           // Dynamic safety fallback: make sure the form submission redirects to /cart page directly
           if (!this.form.querySelector('input[name="return_to"]')) {
             const returnToInput = document.createElement('input');
