@@ -604,18 +604,6 @@
       if (matchedVariant && variantIdInput) {
         variantIdInput.value = matchedVariant.id;
         window.history.replaceState({}, '', '?variant=' + matchedVariant.id);
-        
-        if (matchedVariant.featured_image && matchedVariant.featured_image.id) {
-          var imageId = matchedVariant.featured_image.id;
-          var targetSlide = document.querySelector('.fit11-slide[data-image-id="' + imageId + '"]');
-          if (targetSlide) {
-            var slideElements = Array.from(document.querySelectorAll('.fit11-slide'));
-            var targetIndex = slideElements.indexOf(targetSlide);
-            if (targetIndex !== -1 && typeof goTo === 'function') {
-              goTo(targetIndex);
-            }
-          }
-        }
       }
     }
 
