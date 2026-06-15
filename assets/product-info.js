@@ -33,7 +33,7 @@ if (!customElements.get('product-info')) {
         this.preProcessHtmlCallbacks.push(callback);
       }
 
-      initQuantityHandlers() {
+            initQuantityHandlers() {
         if (!this.quantityInput) return;
 
         this.quantityForm = this.querySelector('.product-form__quantity');
@@ -42,11 +42,12 @@ if (!customElements.get('product-info')) {
         this.setQuantityBoundries();
         if (!this.dataset.originalSection) {
           this.cartUpdateUnsubscriber = subscribe(PUB_SUB_EVENTS.cartUpdate, (event) => {
-            if (event.source === 'product-form') return;
+            if (event && event.source === 'product-form') return;
             this.fetchQuantityRules();
           });
         }
       }
+
 
       disconnectedCallback() {
         this.onVariantChangeUnsubscriber();
