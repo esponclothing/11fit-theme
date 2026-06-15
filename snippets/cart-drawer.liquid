@@ -165,29 +165,6 @@
         </button>
       </div>
 
-      <!-- Progressive free shipping progress bar -->
-      {%- liquid
-        assign threshold = 49900
-        assign total_price = cart.total_price
-        assign remaining = threshold | minus: total_price
-        assign pct = total_price | times: 100 | divided_by: threshold
-        if pct > 100
-          assign pct = 100
-        endif
-      -%}
-      <div class="cart-shipping-bar-container" data-threshold="{{ threshold }}">
-        <div class="cart-shipping-bar-text">
-          {%- if remaining > 0 -%}
-            Add <span class="shipping-bar-highlight">{{ remaining | money }}</span> more for <strong style="color: #c5a059;">FREE SHIPPING!</strong>
-          {%- else -%}
-            🎉 You've unlocked <strong style="color: #c5a059;">FREE SHIPPING!</strong>
-          {%- endif -%}
-        </div>
-        <div class="cart-shipping-bar-track">
-          <div class="cart-shipping-bar-fill" style="width: {{ pct }}%;"></div>
-        </div>
-      </div>
-
       <cart-drawer-items
         {% if cart == empty %}
           class=" is-empty"
