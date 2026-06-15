@@ -29,7 +29,7 @@ class CartItems extends HTMLElement {
 
   connectedCallback() {
     this.cartUpdateUnsubscriber = subscribe(PUB_SUB_EVENTS.cartUpdate, (event) => {
-      if (event.source === 'cart-items' || event.source === 'product-form') {
+      if (event.source === 'cart-items') {
         return;
       }
       return this.onCartUpdate();
@@ -89,13 +89,6 @@ class CartItems extends HTMLElement {
 
   onCartUpdate() {
     if (this.tagName === 'CART-DRAWER-ITEMS') {
-      // Open the drawer immediately so user sees it right away (don't wait for fetch)
-      const cartDrawer = document.querySelector('cart-drawer');
-      if (cartDrawer) {
-        cartDrawer.classList.remove('is-empty');
-        cartDrawer.open();
-      }
-
       return fetch(`${routes.cart_url}?section_id=cart-drawer`)
         .then((response) => response.text())
         .then((responseText) => {
@@ -110,9 +103,10 @@ class CartItems extends HTMLElement {
           }
           
           // Keep the is-empty class on the cart-drawer outer element in sync
+          const targetCartDrawer = document.querySelector('cart-drawer');
           const sourceCartDrawer = html.querySelector('cart-drawer');
-          if (cartDrawer && sourceCartDrawer) {
-            cartDrawer.classList.toggle('is-empty', sourceCartDrawer.classList.contains('is-empty'));
+          if (targetCartDrawer && sourceCartDrawer) {
+            targetCartDrawer.classList.toggle('is-empty', sourceCartDrawer.classList.contains('is-empty'));
           }
         })
         .catch((e) => {
