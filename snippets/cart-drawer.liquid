@@ -15,40 +15,7 @@
   .drawer {
     visibility: hidden;
   }
-  .cart-shipping-bar-container {
-    padding: 15px 20px;
-    background: #fdfbf7;
-    border-bottom: 1px solid rgba(197, 160, 89, 0.15);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .cart-shipping-bar-text {
-    font-family: var(--font-body-family);
-    font-size: 13px;
-    color: #333333;
-    text-align: center;
-    letter-spacing: 0.5px;
-  }
-  .shipping-bar-highlight {
-    font-weight: 700;
-    color: #111111;
-  }
-  .cart-shipping-bar-track {
-    width: 100%;
-    height: 6px;
-    background: #eaeaea;
-    border-radius: 3px;
-    overflow: hidden;
-    position: relative;
-  }
-  .cart-shipping-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #c5a059 0%, #e6ca94 100%);
-    border-radius: 3px;
-    transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    box-shadow: 0 0 8px rgba(197, 160, 89, 0.4);
-  }
+
 
   @import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css');
   @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
@@ -114,28 +81,7 @@
         </button>
       </div>
 
-      <!-- Progressive free shipping progress bar -->
-      {%- liquid
-        assign threshold = 49900
-        assign total_price = cart.total_price
-        assign remaining = threshold | minus: total_price
-        assign pct = total_price | times: 100 | divided_by: threshold
-        if pct > 100
-          assign pct = 100
-        endif
-      -%}
-      <div class="cart-shipping-bar-container" data-threshold="{{ threshold }}">
-        <div class="cart-shipping-bar-text">
-          {%- if remaining > 0 -%}
-            Add <span class="shipping-bar-highlight">{{ remaining | money }}</span> more for <strong style="color: #c5a059;">FREE SHIPPING!</strong>
-          {%- else -%}
-            🎉 You've unlocked <strong style="color: #c5a059;">FREE SHIPPING!</strong>
-          {%- endif -%}
-        </div>
-        <div class="cart-shipping-bar-track">
-          <div class="cart-shipping-bar-fill" style="width: {{ pct }}%;"></div>
-        </div>
-      </div>
+
 
       <cart-drawer-items
         {% if cart == empty %}
