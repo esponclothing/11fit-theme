@@ -734,6 +734,9 @@
 /* ── INSTANT ADD TO CART LOADING STATE ── */
 (function() {
   function attachComboLoader() {
+    // If the drawer is disabled, do not attach custom loading intercepts
+    if (!document.querySelector('cart-drawer')) return;
+
     var btn = document.querySelector('#fit11-form-cart-main .fit11-btn-cart, #fit11-form-cart-main [type="submit"]');
     if (!btn) return;
 
