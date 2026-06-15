@@ -29,7 +29,8 @@ class CartItems extends HTMLElement {
 
   connectedCallback() {
     this.cartUpdateUnsubscriber = subscribe(PUB_SUB_EVENTS.cartUpdate, (event) => {
-      if (event.source === 'cart-items') {
+      // product-form.js already calls renderContents() with section data — skip to avoid duplicate slow fetch
+      if (event.source === 'cart-items' || event.source === 'product-form') {
         return;
       }
       return this.onCartUpdate();
@@ -89,24 +90,29 @@ class CartItems extends HTMLElement {
 
   onCartUpdate() {
     if (this.tagName === 'CART-DRAWER-ITEMS') {
+      // Open drawer immediately (for Qikify/combo apps) — don't wait for the fetch
+      const cartDrawer = document.querySelector('cart-drawer');
+      if (cartDrawer) {
+        cartDrawer.classList.remove('is-empty');
+        cartDrawer.open();
+      }
+
+      // Fetch updated drawer content in the background
       return fetch(`${routes.cart_url}?section_id=cart-drawer`)
         .then((response) => response.text())
         .then((responseText) => {
           const html = new DOMParser().parseFromString(responseText, 'text/html');
-          
-          // Replace the entire inner contents of the cart drawer to update totals, checkout buttons, shipping bar, and items
+
           const selector = '.drawer__inner';
           const targetElement = document.querySelector(selector);
           const sourceElement = html.querySelector(selector);
           if (targetElement && sourceElement) {
             targetElement.replaceWith(sourceElement);
           }
-          
-          // Keep the is-empty class on the cart-drawer outer element in sync
-          const targetCartDrawer = document.querySelector('cart-drawer');
+
           const sourceCartDrawer = html.querySelector('cart-drawer');
-          if (targetCartDrawer && sourceCartDrawer) {
-            targetCartDrawer.classList.toggle('is-empty', sourceCartDrawer.classList.contains('is-empty'));
+          if (cartDrawer && sourceCartDrawer) {
+            cartDrawer.classList.toggle('is-empty', sourceCartDrawer.classList.contains('is-empty'));
           }
         })
         .catch((e) => {
