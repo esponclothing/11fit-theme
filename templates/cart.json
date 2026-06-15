@@ -11,12 +11,25 @@
   "sections": {
     "cart-items": {
       "type": "main-cart-items",
-      "blocks": {},
-      "block_order": [],
+      "blocks": {
+        "offer_9XVa7M": {
+          "type": "offer",
+          "settings": {
+            "offer_code": "NEW100",
+            "offer_desc": "Extra Rs.100 off on orders above 999",
+            "offer_timer": "Ends in 07h 06m 05s"
+          }
+        }
+      },
+      "block_order": [
+        "offer_9XVa7M"
+      ],
       "settings": {
         "color_scheme": "scheme-1",
         "padding_top": 36,
-        "padding_bottom": 36
+        "padding_bottom": 36,
+        "offers_heading": "Offers & Discounts",
+        "show_view_all": true
       }
     },
     "cart-footer": {

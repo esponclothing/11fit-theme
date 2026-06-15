@@ -12,19 +12,11 @@
     "main_combo_rTJBJB": {
       "type": "main-combo",
       "blocks": {
-        "offer_Mq89a9": {
-          "type": "offer",
-          "settings": {
-            "offer_code": "FREESHIP",
-            "offer_desc": "Free Shipping On Order Above Rs.499",
-            "offer_timer": "Ends in 07h 06m 05s"
-          }
-        },
         "offer_3RpxwH": {
           "type": "offer",
           "settings": {
-            "offer_code": "Save5",
-            "offer_desc": "Additional 5% off on orders above 1999",
+            "offer_code": "NEW100",
+            "offer_desc": "Extra Rs 100 off on orders above 999",
             "offer_timer": "Ends in 07h 06m 05s"
           }
         },
@@ -36,7 +28,6 @@
         }
       },
       "block_order": [
-        "offer_Mq89a9",
         "offer_3RpxwH",
         "qikify_volume_discount_volume_offer_XQUR6G"
       ],
