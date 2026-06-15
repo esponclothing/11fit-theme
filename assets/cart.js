@@ -29,7 +29,7 @@ class CartItems extends HTMLElement {
 
   connectedCallback() {
     this.cartUpdateUnsubscriber = subscribe(PUB_SUB_EVENTS.cartUpdate, (event) => {
-      if (event.source === 'cart-items') {
+      if (event.source === 'cart-items' || event.source === 'product-form') {
         return;
       }
       return this.onCartUpdate();
