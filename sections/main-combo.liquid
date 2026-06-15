@@ -71,6 +71,11 @@
   
   .fit11-btn-cart { width: 100% !important; height: 54px !important; margin: 20px 0 0 0 !important; background: var(--lux-text); color: var(--lux-surface); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; border: none; display: flex; align-items: center; justify-content: center; gap: 12px; transition: opacity 0.3s ease, background 0.4s ease; cursor: pointer; font-family: var(--font-body); border-radius: 4px; }
   .fit11-btn-cart:hover { opacity: 0.9; }
+  .fit11-btn-cart.loading { position: relative !important; color: transparent !important; pointer-events: none !important; cursor: not-allowed !important; }
+  .fit11-btn-cart.loading > *:not(.loading__spinner) { opacity: 0 !important; }
+  .fit11-btn-cart.loading > .loading__spinner { display: flex !important; position: absolute !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; height: 100% !important; align-items: center !important; justify-content: center !important; width: 20px !important; opacity: 1 !important; z-index: 2 !important; }
+  .fit11-btn-cart.loading > .loading__spinner .path { stroke: var(--lux-surface) !important; }
+
 
   /* ── OFFERS & DISCOUNTS SECTION (SIMPLIFIED) ── */
   .fit11-offers-wrapper { background: #eef6f0; border-radius: 4px; padding: 16px; width: 100%; margin-top: 8px; }
@@ -239,6 +244,7 @@
           <input type="hidden" name="quantity" value="1" class="qty-input">
           <button type="submit" name="add" class="fit11-btn-cart product-form__submit">
             <span>Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
+            {%- render 'loading-spinner' -%}
           </button>
         {% endform %}
       </div>
@@ -376,6 +382,7 @@
       <div class="fit11-form-inline">
         <button type="button" class="fit11-btn-cart" onclick="document.querySelector('#fit11-form-cart-main .fit11-btn-cart').click();">
           <span>Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
+          {%- render 'loading-spinner' -%}
         </button>
       </div>
     </div>
@@ -490,19 +497,27 @@
   var comboForm = document.getElementById('fit11-form-cart-main');
   if (comboForm) {
     comboForm.addEventListener('submit', function() {
-      var submitBtn = comboForm.querySelector('.product-form__submit');
-      if (submitBtn) {
-        submitBtn.setAttribute('disabled', 'disabled');
-        submitBtn.style.opacity = '0.5';
-        submitBtn.style.pointerEvents = 'none';
-        
-        // Re-enable after 5 seconds to prevent getting stuck if app fails
-        setTimeout(function() {
-          submitBtn.removeAttribute('disabled');
-          submitBtn.style.opacity = '';
-          submitBtn.style.pointerEvents = '';
-        }, 5000);
-      }
+      var submitBtns = document.querySelectorAll('.fit11-btn-cart');
+      submitBtns.forEach(function(btn) {
+        btn.setAttribute('disabled', 'disabled');
+        btn.classList.add('loading');
+        var spinner = btn.querySelector('.loading__spinner');
+        if (spinner) {
+          spinner.classList.remove('hidden');
+        }
+      });
+      
+      // Re-enable after 5 seconds to prevent getting stuck if app fails
+      setTimeout(function() {
+        submitBtns.forEach(function(btn) {
+          btn.removeAttribute('disabled');
+          btn.classList.remove('loading');
+          var spinner = btn.querySelector('.loading__spinner');
+          if (spinner) {
+            spinner.classList.add('hidden');
+          }
+        });
+      }, 5000);
     });
   }
 
