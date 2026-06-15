@@ -91,13 +91,18 @@
   .fit11-variant-radio.is-disabled + .fit11-variant-pill { 
     opacity: 0.5; text-decoration: line-through; cursor: not-allowed; 
   }
-  .fit11-color-swatch {
-    display: inline-block; width: 14px; height: 14px; border-radius: 50%;
-    margin-right: 8px; border: 1px solid var(--lux-border);
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); background-color: var(--lux-surface);
+  /* COLOR DOT OVERRIDES */
+  .fit11-variant-pill.is-color {
+    padding: 2px; border-radius: 50%; width: 34px; height: 34px; background: transparent; border: 2px solid transparent;
   }
-  .fit11-variant-radio:checked + .fit11-variant-pill .fit11-color-swatch {
-    border-color: var(--lux-surface);
+  .fit11-variant-pill.is-color:hover { border-color: var(--lux-border); }
+  .fit11-variant-radio:checked + .fit11-variant-pill.is-color {
+    border-color: var(--lux-text); background: transparent;
+  }
+  .fit11-color-swatch {
+    display: inline-block; width: 100%; height: 100%; border-radius: 50%;
+    margin: 0; border: 1px solid var(--lux-border);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); background-color: var(--lux-surface);
   }
 
   /* ── OFFERS & DISCOUNTS SECTION (SIMPLIFIED) ── */
@@ -209,7 +214,7 @@
       <div class="fit11-gallery-box">
         <div class="fit11-slides" id="fit11Slides">
           {% for image in product.images %}
-            <div class="fit11-slide"><img src="{{ image | img_url: '1000x1250' }}" alt="{{ image.alt | escape }}"></div>
+            <div class="fit11-slide" data-image-id="{{ image.id }}"><img src="{{ image | img_url: '1000x1250' }}" alt="{{ image.alt | escape }}"></div>
           {% endfor %}
         </div>
         <div class="fit11-dots" id="fit11Dots">
@@ -250,54 +255,60 @@
         </div>
       </div>
       
-      {% comment %} ── NEW OFFERS & DISCOUNTS SECTION ── {% endcomment %}
-      {% assign offer_blocks = section.blocks | where: "type", "offer" %}
-      
-      {% if offer_blocks.size > 0 %}
-        <div class="fit11-offers-wrapper">
-          <div class="fit11-offers-header">
-            <div class="fit11-offers-title-wrap">
-              <div class="fit11-offers-icon"><i class="ti ti-percentage"></i></div>
-              <span class="fit11-offers-title">{{ section.settings.offers_heading | default: "Offers & Discounts" }}</span>
-            </div>
-            {% if section.settings.show_view_all %}
-              <div class="fit11-offers-view-all" onclick="fit11ToggleOffersModal(true)">View all Offers</div>
-            {% endif %}
-          </div>
-          
-          <div class="fit11-offers-scroll">
-            {% for block in offer_blocks %}
-              <div class="fit11-offer-card" onclick="fit11CopyCoupon(this, '{{ block.settings.offer_code }}')" {{ block.shopify_attributes }}>
-                <div class="fit11-offer-content-wrap">
-                  <div class="fit11-offer-code">{{ block.settings.offer_code }}</div>
-                  <div class="fit11-offer-desc">{{ block.settings.offer_desc }}</div>
-                  {% if block.settings.offer_code != blank %}
-                    <div class="fit11-copy-hint"><i class="ti ti-copy"></i> Click to Copy</div>
-                  {% endif %}
-                </div>
-                {% if block.settings.offer_timer != blank %}
-                  <div class="fit11-offer-timer">{{ block.settings.offer_timer }}</div>
-                {% endif %}
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      {% endif %}
-
-      {% comment %} ── HIGHLIGHTED COMBO SELECTION AREA (APP + VARIANTS) ── {% endcomment %}
-      <div class="fit11-main-action-btns" id="fit11MainBtnContainer">
+      {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
         
-        {% comment %} Check if an App block is added in the theme editor {% endcomment %}
-        {%- assign has_app_block = false -%}
-        {%- for block in section.blocks -%}
-          {%- if block.type == '@app' -%}
-            {%- assign has_app_block = true -%}
-            {%- break -%}
-          {%- endif -%}
-        {%- endfor -%}
+        {% comment %} ── TOP COLOR SELECTOR (ONLY SWATCH VARIANTS IMAGES SWITCH) ── {% endcomment %}
+        {% unless product.has_only_default_variant %}
+          {% for option in product.options_with_values %}
+            {% assign option_name_lower = option.name | downcase %}
+            {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
+              <div class="fit11-variant-selectors top-color-selector" style="margin-bottom: 20px;">
+                <fieldset class="fit11-option-fieldset">
+                  <legend class="fit11-option-name" style="display: flex; align-items: center; gap: 8px;">
+                    {{ option.name }}:
+                    <span class="fit11-selected-color-label" style="color: var(--lux-text); font-weight: 600; text-transform: capitalize;">{{ option.selected_value }}</span>
+                  </legend>
+                  <div class="fit11-variant-pills">
+                    {% for value in option.values %}
+                      <input type="radio" 
+                             id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                             name="{{ option.name }}" 
+                             value="{{ value | escape }}"
+                             {% if option.selected_value == value %}checked{% endif %}
+                             class="fit11-variant-radio"
+                             data-is-color="true">
+                      
+                      <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="fit11-variant-pill is-color" title="{{ value }}">
+                        {% assign color_handle = value | handle %}
+                        {% assign css_color = color_handle %}
+                        {% case color_handle %}
+                          {% when 'navy-blue' %}{% assign css_color = '#000080' %}
+                          {% when 'bottle-green' %}{% assign css_color = '#006A4E' %}
+                          {% when 'light-baby-pink' %}{% assign css_color = '#F4C2C2' %}
+                          {% when 'lavender' %}{% assign css_color = '#E6E6FA' %}
+                          {% when 'baby-blue' %}{% assign css_color = '#89CFF0' %}
+                          {% when 'flamingo' %}{% assign css_color = '#FC8EAC' %}
+                          {% when 'jade' %}{% assign css_color = '#00A86B' %}
+                          {% when 'off-white' %}{% assign css_color = '#FAF9F6' %}
+                          {% when 'maroon' %}{% assign css_color = '#800000' %}
+                          {% when 'white' %}{% assign css_color = '#FFFFFF' %}
+                          {% when 'black' %}{% assign css_color = '#000000' %}
+                          {% when 'red' %}{% assign css_color = '#FF0000' %}
+                          {% else %}{% assign css_color = value | split: ' ' | last | downcase %}
+                        {% endcase %}
+                        {% assign swatch_image = color_handle | append: '.png' %}
+                        <span class="fit11-color-swatch" style="background-color: {{ css_color }}; background-image: url('{{ swatch_image | file_url }}'); background-size: cover; background-position: center;"></span>
+                      </label>
+                    {% endfor %}
+                  </div>
+                </fieldset>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endunless %}
 
-
-        {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
+        {% comment %} ── HIGHLIGHTED COMBO SELECTION AREA (APP + VARIANTS) ── {% endcomment %}
+        <div class="fit11-main-action-btns" id="fit11MainBtnContainer">
           
           {%- for block in section.blocks -%}
             {%- if block.type == '@app' -%}
@@ -307,19 +318,24 @@
             {%- endif -%}
           {%- endfor -%}
           
-          {% comment %} ── VARIANT SELECTOR (LUXURY PILLS) ── {% endcomment %}
+          {% comment %} ── VARIANT SELECTOR (OTHER THAN COLOR) ── {% endcomment %}
           {% unless product.has_only_default_variant %}
             <div class="fit11-variant-selectors">
               {% for option in product.options_with_values %}
-                
                 {% assign option_name_lower = option.name | downcase %}
-                {% assign is_color_option = false %}
                 {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
-                  {% assign is_color_option = true %}
+                  {% continue %}
                 {% endif %}
 
                 <fieldset class="fit11-option-fieldset">
-                  <legend class="fit11-option-name">{{ option.name }}</legend>
+                  <legend class="fit11-option-name" style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 8px;">
+                    <span>{{ option.name }}</span>
+                    {% if option_name_lower == 'size' %}
+                      <div class="fit11-size-chart-link" onclick="fit11ToggleModal(true)" style="display: flex; align-items: center; gap: 4px; font-size: 11px; text-decoration: underline; color: var(--lux-accent); font-weight: 500; cursor: pointer;">
+                        <i class="ti ti-ruler-2"></i><span>Size Guide</span>
+                      </div>
+                    {% endif %}
+                  </legend>
                   <div class="fit11-variant-pills">
                     {% for value in option.values %}
                       <input type="radio" 
@@ -330,10 +346,6 @@
                              class="fit11-variant-radio">
                       
                       <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="fit11-variant-pill">
-                        {% if is_color_option %}
-                          {% assign css_color = value | downcase | remove: ' ' %}
-                          <span class="fit11-color-swatch" style="background-color: {{ css_color }};"></span>
-                        {% endif %}
                         {{ value }}
                       </label>
                     {% endfor %}
@@ -352,8 +364,43 @@
           <button type="submit" name="add" class="fit11-btn-cart product-form__submit">
             <span>Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
           </button>
-        {% endform %}
-      </div>
+        </div>
+
+        {% comment %} ── NEW OFFERS & DISCOUNTS SECTION (AFTER ADD TO CART) ── {% endcomment %}
+        {% assign offer_blocks = section.blocks | where: "type", "offer" %}
+        
+        {% if offer_blocks.size > 0 %}
+          <div class="fit11-offers-wrapper" style="margin-top: 20px;">
+            <div class="fit11-offers-header">
+              <div class="fit11-offers-title-wrap">
+                <div class="fit11-offers-icon"><i class="ti ti-percentage"></i></div>
+                <span class="fit11-offers-title">{{ section.settings.offers_heading | default: "Offers & Discounts" }}</span>
+              </div>
+              {% if section.settings.show_view_all %}
+                <div class="fit11-offers-view-all" onclick="fit11ToggleOffersModal(true)">View all Offers</div>
+              {% endif %}
+            </div>
+            
+            <div class="fit11-offers-scroll">
+              {% for block in offer_blocks %}
+                <div class="fit11-offer-card" onclick="fit11CopyCoupon(this, '{{ block.settings.offer_code }}')" {{ block.shopify_attributes }}>
+                  <div class="fit11-offer-content-wrap">
+                    <div class="fit11-offer-code">{{ block.settings.offer_code }}</div>
+                    <div class="fit11-offer-desc">{{ block.settings.offer_desc }}</div>
+                    {% if block.settings.offer_code != blank %}
+                      <div class="fit11-copy-hint"><i class="ti ti-copy"></i> Click to Copy</div>
+                    {% endif %}
+                  </div>
+                  {% if block.settings.offer_timer != blank %}
+                    <div class="fit11-offer-timer">{{ block.settings.offer_timer }}</div>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+      {% endform %}
 
       {% comment %} ── ACCORDIONS ── {% endcomment %}
       <div class="fit11-accord-group">
@@ -578,18 +625,34 @@
         var checkedRadio = fieldset.querySelector('.fit11-variant-radio:checked');
         if (checkedRadio) {
           selectedOptions.push(checkedRadio.value);
+          if (checkedRadio.getAttribute('data-is-color') === 'true') {
+            var colorLabel = fieldset.querySelector('.fit11-selected-color-label');
+            if (colorLabel) colorLabel.innerText = checkedRadio.value;
+          }
         }
       });
 
       var matchedVariant = variantsData.find(function(variant) {
-        return variant.options.every(function(option, index) {
-          return option === selectedOptions[index];
+        return selectedOptions.every(function(val) {
+          return variant.options.indexOf(val) !== -1;
         });
       });
 
       if (matchedVariant && variantIdInput) {
         variantIdInput.value = matchedVariant.id;
         window.history.replaceState({}, '', '?variant=' + matchedVariant.id);
+        
+        if (matchedVariant.featured_image && matchedVariant.featured_image.id) {
+          var imageId = matchedVariant.featured_image.id;
+          var targetSlide = document.querySelector('.fit11-slide[data-image-id="' + imageId + '"]');
+          if (targetSlide) {
+            var slideElements = Array.from(document.querySelectorAll('.fit11-slide'));
+            var targetIndex = slideElements.indexOf(targetSlide);
+            if (targetIndex !== -1 && typeof goTo === 'function') {
+              goTo(targetIndex);
+            }
+          }
+        }
       }
     }
 
