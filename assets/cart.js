@@ -27,7 +27,7 @@ class CartItems extends HTMLElement {
 
   cartUpdateUnsubscriber = undefined;
 
-  connectedCallback() {
+    connectedCallback() {
     this.cartUpdateUnsubscriber = subscribe(PUB_SUB_EVENTS.cartUpdate, (event) => {
       // product-form.js already calls renderContents() with section data — skip to avoid duplicate slow fetch
       if (event.source === 'cart-items' || event.source === 'product-form') {
@@ -36,6 +36,7 @@ class CartItems extends HTMLElement {
       return this.onCartUpdate();
     });
   }
+
 
   disconnectedCallback() {
     if (this.cartUpdateUnsubscriber) {
@@ -102,7 +103,6 @@ class CartItems extends HTMLElement {
         .then((response) => response.text())
         .then((responseText) => {
           const html = new DOMParser().parseFromString(responseText, 'text/html');
-
           const selector = '.drawer__inner';
           const targetElement = document.querySelector(selector);
           const sourceElement = html.querySelector(selector);
