@@ -789,7 +789,7 @@
     // Watch for cart-drawer opening or cart update events to hide loader
     var drawerObserver = new MutationObserver(function(mutations) {
       var drawer = document.querySelector('cart-drawer');
-      if (drawer && drawer.hasAttribute('open')) {
+      if (drawer && (drawer.hasAttribute('open') || drawer.classList.contains('active'))) {
         setTimeout(hideLoader, 100);
       }
     });
