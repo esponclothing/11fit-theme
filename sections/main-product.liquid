@@ -106,6 +106,32 @@
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); background-color: var(--lux-surface);
   }
 
+  /* ── OFFERS & DISCOUNTS SECTION (SIMPLIFIED) ── */
+  .fit11-offers-wrapper { background: #eef6f0; border-radius: 4px; padding: 16px; width: 100%; margin-top: 8px; }
+  .fit11-offers-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .fit11-offers-title-wrap { display: flex; align-items: center; gap: 8px; }
+  .fit11-offers-icon { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: #cba86a; border-radius: 50%; color: #fff; font-size: 14px; }
+  .fit11-offers-title { font-size: 16px; font-weight: 600; color: #1a202c; }
+  .fit11-offers-view-all { font-size: 13px; font-weight: 600; color: #b89356; cursor: pointer; }
+  
+  .fit11-offers-scroll { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding-bottom: 12px; scroll-snap-type: x mandatory; }
+  .fit11-offers-scroll::-webkit-scrollbar { display: none; }
+  
+  .fit11-offer-card { background: #ffffff; border: 1px dashed #cbd5e0; border-radius: 6px; min-width: 250px; display: flex; position: relative; flex-shrink: 0; cursor: pointer; transition: transform 0.1s ease, opacity 0.3s ease; scroll-snap-align: start; }
+  .fit11-offer-card:active { transform: scale(0.98); }
+  .fit11-offer-card.expired { opacity: 0.6; pointer-events: none; filter: grayscale(100%); }
+  
+  .fit11-offer-content-wrap { padding: 16px 16px 24px 16px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  
+  .fit11-offer-code { font-size: 14px; font-weight: 600; color: #1a202c; letter-spacing: 0.02em; }
+  .fit11-offer-desc { font-size: 11px; color: #718096; line-height: 1.4; margin-top: 4px; }
+  
+  .fit11-copy-hint { font-size: 10px; color: #3182ce; margin-top: 6px; font-weight: 600; text-transform: uppercase; transition: color 0.3s; display: flex; align-items: center; gap: 4px; }
+  .fit11-copy-hint i { font-size: 12px; }
+  .fit11-copy-hint.success { color: #38a169; }
+
+  .fit11-offer-timer { position: absolute; bottom: -10px; right: 16px; background: #ed8936; color: #ffffff; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; z-index: 2; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: background 0.3s; }
+  .fit11-offer-card.expired .fit11-offer-timer { background: #a0aec0; }
 
   /* ── ACCORDIONS ── */
   .fit11-accord-group { border-top: 1px solid var(--lux-border); margin-top: 10px; width: 100%; }
@@ -228,7 +254,9 @@
     #11fit-form-cart-main { width: 100%; margin: 0; padding: 0; }
     .fit11-main-action-btns .fit11-btn-cart { display: flex !important; width: 100% !important; height: 52px !important; margin: 16px 0 0 0 !important; }
     
-
+    /* Responsive snappy coupon layout */
+    .fit11-offers-wrapper { width: 100%; padding: 0px 12px 8px 12px; margin-top: 4px; margin-bottom: 0px; border: none; }
+    .fit11-offer-card { min-width: 85%; max-width: none; scroll-snap-align: center; }
     
     .fit11-accord-group { width: 100%; margin-top: 0px; }
     
@@ -395,7 +423,39 @@
         </product-form>
         <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
       </div>
-
+      {% comment %} ── NEW OFFERS & DISCOUNTS SECTION ── {% endcomment %}
+      {% assign offer_blocks = section.blocks | where: "type", "offer" %}
+      
+      {% if offer_blocks.size > 0 %}
+        <div class="fit11-offers-wrapper" id="fit11-offers-wrapper-id">
+          <div class="fit11-offers-header">
+            <div class="fit11-offers-title-wrap">
+              <div class="fit11-offers-icon"><i class="ti ti-percentage"></i></div>
+              <span class="fit11-offers-title">{{ section.settings.offers_heading | default: "Offers & Discounts" }}</span>
+            </div>
+            {% if section.settings.show_view_all %}
+              <div class="fit11-offers-view-all" onclick="fit11ToggleOffersModal(true)">View all Offers</div>
+            {% endif %}
+          </div>
+          
+          <div class="fit11-offers-scroll">
+            {% for block in offer_blocks %}
+              <div class="fit11-offer-card" onclick="fit11CopyCoupon(this, '{{ block.settings.offer_code }}')" {{ block.shopify_attributes }}>
+                <div class="fit11-offer-content-wrap">
+                  <div class="fit11-offer-code">{{ block.settings.offer_code }}</div>
+                  <div class="fit11-offer-desc">{{ block.settings.offer_desc }}</div>
+                  {% if block.settings.offer_code != blank %}
+                    <div class="fit11-copy-hint"><i class="ti ti-copy"></i> Click to Copy</div>
+                  {% endif %}
+                </div>
+                {% if block.settings.offer_timer != blank %}
+                  <div class="fit11-offer-timer">{{ block.settings.offer_timer }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
 
 
       {% comment %} ── ACCORDIONS ── {% endcomment %}
@@ -433,7 +493,31 @@
   </div>
 </div>
 
-
+{% comment %} ── OFFERS MODAL ── {% endcomment %}
+{% if offer_blocks.size > 0 %}
+<div class="fit11-modal-overlay" id="fit11OffersModal" onclick="if(event.target === this) fit11ToggleOffersModal(false);">
+  <div class="fit11-modal-content">
+    <button type="button" class="fit11-modal-close" onclick="fit11ToggleOffersModal(false);"><i class="ti ti-x"></i></button>
+    <h3 style="font-family: var(--font-heading); font-size: 24px; font-weight: 400; margin: 0 0 20px 0; border-bottom: 1px solid var(--lux-border); padding-bottom: 12px;">All Offers & Discounts</h3>
+    <div class="fit11-modal-body" style="display: flex; flex-direction: column; gap: 16px;">
+      {% for block in offer_blocks %}
+        <div class="fit11-offer-card" onclick="fit11CopyCoupon(this, '{{ block.settings.offer_code }}')" style="width: 100%; min-width: 100%; scroll-snap-align: none;">
+          <div class="fit11-offer-content-wrap">
+            <div class="fit11-offer-code">{{ block.settings.offer_code }}</div>
+            <div class="fit11-offer-desc">{{ block.settings.offer_desc }}</div>
+            {% if block.settings.offer_code != blank %}
+              <div class="fit11-copy-hint"><i class="ti ti-copy"></i> Click to Copy</div>
+            {% endif %}
+          </div>
+          {% if block.settings.offer_timer != blank %}
+            <div class="fit11-offer-timer">{{ block.settings.offer_timer }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
 
 {% comment %} ── SIZE GUIDE MODAL (DRAWER/BOTTOM-SHEET) ── {% endcomment %}
 <div class="fit11-size-modal-overlay" id="fit11SizeModal" onclick="if(event.target === this) fit11ToggleModal(false);">
@@ -545,9 +629,55 @@
     }
   };
 
+  /* OFFERS MODAL */
+  window.fit11ToggleOffersModal = function(show) {
+    var modal = document.getElementById('fit11OffersModal');
+    if(!modal) return;
+    if(show) {
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    } else {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  };
 
+  /* REAL-TIME COUNTDOWN LOGIC */
+  document.querySelectorAll('.fit11-offer-timer').forEach(function(el) {
+    var text = el.innerText;
+    // Look for format like "Ends in 07h 06m 05s"
+    var match = text.match(/(\d+)h\s*(\d+)m\s*(\d+)s/i);
+    
+    if(match) {
+      var h = parseInt(match[1], 10);
+      var m = parseInt(match[2], 10);
+      var s = parseInt(match[3], 10);
+      var totalSeconds = (h * 3600) + (m * 60) + s;
+      var prefix = text.split(match[0])[0]; 
 
-
+      var interval = setInterval(function() {
+        totalSeconds--;
+        if(totalSeconds <= 0) {
+          clearInterval(interval);
+          el.innerText = "Expired";
+          var card = el.closest('.fit11-offer-card');
+          if(card) {
+            card.classList.add('expired');
+            var hint = card.querySelector('.fit11-copy-hint');
+            if(hint) hint.innerHTML = "Code Expired";
+          }
+        } else {
+          var outH = Math.floor(totalSeconds / 3600);
+          var outM = Math.floor((totalSeconds % 3600) / 60);
+          var outS = totalSeconds % 60;
+          el.innerText = prefix + 
+            (outH < 10 ? "0"+outH : outH) + "h " + 
+            (outM < 10 ? "0"+outM : outM) + "m " + 
+            (outS < 10 ? "0"+outS : outS) + "s";
+        }
+      }, 1000);
+    }
+  });
 
   /* ── VARIANT SELECTION LOGIC ── */
   var variantRadios = document.querySelectorAll('.fit11-variant-radio');
@@ -704,7 +834,32 @@
   setTimeout(attachComboLoader, 500);
 })();
 
+/* CLICK TO COPY COUPON LOGIC */
+window.fit11CopyCoupon = function(cardElement, code) {
+  if(cardElement.classList.contains('expired')) return;
+  if(!code) return;
 
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(code).catch(function(){});
+  } else {
+    var el = document.createElement('textarea');
+    el.value = code; document.body.appendChild(el); el.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    document.body.removeChild(el);
+  }
+  
+  var hint = cardElement.querySelector('.fit11-copy-hint');
+  if(hint) {
+    var origHTML = hint.innerHTML;
+    hint.innerHTML = '<i class="ti ti-check"></i> Code Copied!';
+    hint.classList.add('success');
+    
+    setTimeout(function() { 
+      hint.innerHTML = origHTML; 
+      hint.classList.remove('success'); 
+    }, 2000);
+  }
+};
 </script>
 
 {% schema %}
@@ -767,7 +922,22 @@
       "label": "Luxury Accent Color",
       "default": "#9A7B4F"
     },
-
+    {
+      "type": "header",
+      "content": "Offers Section Settings"
+    },
+    {
+      "type": "text",
+      "id": "offers_heading",
+      "label": "Section Heading",
+      "default": "Offers & Discounts"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View all Offers' button",
+      "default": true
+    },
     {
       "type": "header",
       "content": "Size Chart Settings"
@@ -796,11 +966,54 @@
   "blocks": [
     {
       "type": "@app"
+    },
+    {
+      "type": "offer",
+      "name": "Discount Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "offer_code",
+          "label": "Coupon Code",
+          "default": "FREESHIP"
+        },
+        {
+          "type": "text",
+          "id": "offer_desc",
+          "label": "Offer Description",
+          "default": "Extra Rs.400 off on orders above 1999"
+        },
+        {
+          "type": "text",
+          "id": "offer_timer",
+          "label": "Countdown/Timer Text",
+          "info": "Leave blank if no timer. Format MUST be exactly 'Ends in XXh XXm XXs' for timer to work.",
+          "default": "Ends in 07h 06m 05s"
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "Product"
+      "name": "Product",
+      "blocks": [
+        {
+          "type": "offer",
+          "settings": {
+            "offer_code": "FREESHIP",
+            "offer_desc": "Extra Rs.400 off on orders above 1999",
+            "offer_timer": "Ends in 07h 06m 05s"
+          }
+        },
+        {
+          "type": "offer",
+          "settings": {
+            "offer_code": "NEW100",
+            "offer_desc": "Extra Rs.100 off on orders above 999. Valid on first purchase",
+            "offer_timer": ""
+          }
+        }
+      ]
     }
   ]
 } 
