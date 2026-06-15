@@ -41,7 +41,10 @@ if (!customElements.get('product-info')) {
 
         this.setQuantityBoundries();
         if (!this.dataset.originalSection) {
-          this.cartUpdateUnsubscriber = subscribe(PUB_SUB_EVENTS.cartUpdate, this.fetchQuantityRules.bind(this));
+          this.cartUpdateUnsubscriber = subscribe(PUB_SUB_EVENTS.cartUpdate, (event) => {
+            if (event.source === 'product-form') return;
+            this.fetchQuantityRules();
+          });
         }
       }
 
