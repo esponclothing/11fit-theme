@@ -143,6 +143,28 @@
       },
       "cart-drawer": {
         "type": "cart-drawer",
+        "blocks": {
+          "coupon_MhfdnU": {
+            "type": "coupon",
+            "settings": {
+              "code": "FREESHIP",
+              "min_spend": 499,
+              "desc": "Free Shipping On Orders Above Rs.499"
+            }
+          },
+          "coupon_tB8Dx9": {
+            "type": "coupon",
+            "settings": {
+              "code": "Save5",
+              "min_spend": 1999,
+              "desc": "Get Extra 5% Off On Order Above Rs.1999"
+            }
+          }
+        },
+        "block_order": [
+          "coupon_MhfdnU",
+          "coupon_tB8Dx9"
+        ],
         "settings": {}
       }
     },
