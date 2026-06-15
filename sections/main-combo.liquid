@@ -390,6 +390,69 @@
 </div>
 
 <script>
+// ADD TO CART & LOADER SPIN CONTROLLER (RUNS INDEPENDENTLY)
+(function() {
+  function initLoader() {
+    var comboForm = document.getElementById('fit11-form-cart-main');
+    var addBtns = document.querySelectorAll('.fit11-btn-cart');
+    
+    function showLoaders() {
+      addBtns.forEach(function(b) {
+        b.classList.add('loading');
+        var spinner = b.querySelector('.loading__spinner');
+        if (spinner) {
+          spinner.classList.remove('hidden');
+        }
+      });
+    }
+
+    if (comboForm) {
+      comboForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        showLoaders();
+        
+        var rootUrl = window.Shopify && window.Shopify.routes && window.Shopify.routes.root ? window.Shopify.routes.root : '/';
+        var formData = new FormData(comboForm);
+        
+        fetch(rootUrl + 'cart/add.js', {
+          method: 'POST',
+          body: formData
+        })
+        .then(function(res) {
+          window.location.href = rootUrl + 'cart';
+        })
+        .catch(function(err) {
+          console.error('Error adding to cart:', err);
+          window.location.href = rootUrl + 'cart';
+        });
+      });
+    }
+
+    // Click fallback: trigger loading state on click strictly in case of form interception
+    addBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        showLoaders();
+        // Fallback safety timeout
+        setTimeout(function() {
+          addBtns.forEach(function(b) {
+            b.classList.remove('loading');
+            var spinner = b.querySelector('.loading__spinner');
+            if (spinner) {
+              spinner.classList.add('hidden');
+            }
+          });
+        }, 8000);
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLoader);
+  } else {
+    initLoader();
+  }
+})();
+
 (function() {
   /* GALLERY SYNC */
   var slides = document.getElementById('fit11Slides'), dotsWrap = document.getElementById('fit11Dots'), thumbsWrap = document.getElementById('fit11Thumbs');
@@ -492,40 +555,6 @@
       }, 1000);
     }
   });
-
-  /* PREVENT DUPLICATE SUBMISSIONS AND AJAX SUBMIT */
-  var comboForm = document.getElementById('fit11-form-cart-main');
-  if (comboForm) {
-    comboForm.addEventListener('submit', function(e) {
-      e.preventDefault(); // Intercept native submission to display loading spinner
-
-      var submitBtns = document.querySelectorAll('.fit11-btn-cart');
-      submitBtns.forEach(function(btn) {
-        btn.setAttribute('disabled', 'disabled');
-        btn.classList.add('loading');
-        var spinner = btn.querySelector('.loading__spinner');
-        if (spinner) {
-          spinner.classList.remove('hidden');
-        }
-      });
-      
-      // Determine root route to support localized locales (e.g. /fr, /de, etc.)
-      var rootUrl = window.Shopify && window.Shopify.routes && window.Shopify.routes.root ? window.Shopify.routes.root : '/';
-      var formData = new FormData(comboForm);
-      
-      fetch(rootUrl + 'cart/add.js', {
-        method: 'POST',
-        body: formData
-      })
-      .then(function(res) {
-        window.location.href = rootUrl + 'cart';
-      })
-      .catch(function(err) {
-        console.error('Error adding to cart:', err);
-        window.location.href = rootUrl + 'cart'; // Redirect anyway as fallback
-      });
-    });
-  }
 
 })();
 
