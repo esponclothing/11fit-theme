@@ -7,6 +7,9 @@
 
 {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 
 <script src="{{ 'cart.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'quantity-popover.js' | asset_url }}" defer="defer"></script>
@@ -190,6 +193,7 @@
                                     </dd>
                                   </div>
                                 {%- endfor -%}
+                                <button type="button" class="lx-change-variant-btn" onclick="lxOpenChangeVariant('{{ item.product.id }}', {{ item.index | plus: 1 }}, {{ item.quantity }})" style="background:none;border:none;cursor:pointer;font-size:11.5px;color:#B89356;font-weight:600;text-decoration:underline;padding:0;margin-top:6px;display:block;font-family:inherit;text-align:left;">Change Variant</button>
                               {%- endif -%}
 
                               {%- for property in item.properties -%}
@@ -475,6 +479,50 @@
         </form>
       </cart-drawer-items>
       <div class="drawer__footer">
+        <!-- Shipping & VIP Progress Bars -->
+        {%- assign cart_total = cart.total_price -%}
+        {%- assign free_ship_threshold = section.settings.free_shipping_threshold | default: 1500 | times: 100 -%}
+        {%- assign vip_threshold = section.settings.vip_threshold | default: 2500 | times: 100 -%}
+
+        <div style="padding: 12px 16px 6px; border-bottom: 1px solid #E5E7EB; background: #F8F7F4;">
+          <div class="lx-progress-block" style="margin-bottom: 12px;">
+            {%- if cart_total >= free_ship_threshold -%}
+              <div class="lx-progress-unlocked" style="font-size: 12.5px; font-weight: 700; color: #16A34A; display: flex; align-items: center; gap: 6px; font-family: 'Outfit', sans-serif;">
+                <i class="ti ti-truck" style="color:#16A34A;font-size:16px;"></i>
+                🎉 Free Shipping Unlocked!
+              </div>
+            {%- else -%}
+              {%- assign ship_diff   = free_ship_threshold | minus: cart_total | divided_by: 100.0 -%}
+              {%- assign ship_pct    = cart_total | times: 100 | divided_by: free_ship_threshold -%}
+              <div class="lx-progress-label" style="font-size: 12px; font-weight: 600; color: #1A202C; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; font-family: 'Outfit', sans-serif;">
+                <span>🚚 Add <strong>₹{{ ship_diff | round }}</strong> more for Free Shipping</span>
+                <span class="lx-progress-pct" style="font-size: 10.5px; color: #6B7280;">{{ ship_pct }}%</span>
+              </div>
+              <div class="lx-progress-track" style="width: 100%; height: 6px; background: #E5E7EB; border-radius: 4px; overflow: hidden;">
+                <div class="lx-progress-fill lx-progress-fill--ship" style="width: {{ ship_pct }}%; height: 100%; border-radius: 4px; background: linear-gradient(90deg, #16A34A, #4ADE80); transition: width 0.6s cubic-bezier(0.4,0,0.2,1);"></div>
+              </div>
+            {%- endif -%}
+          </div>
+
+          <div class="lx-progress-block" style="margin-bottom: 8px;">
+            {%- if cart_total >= vip_threshold -%}
+              <div class="lx-progress-unlocked" style="font-size: 12.5px; font-weight: 700; color: #16A34A; display: flex; align-items: center; gap: 6px; font-family: 'Outfit', sans-serif;">
+                <i class="ti ti-crown" style="color:#B89356;font-size:16px;"></i>
+                👑 VIP Discount Unlocked!
+              </div>
+            {%- else -%}
+              {%- assign vip_diff = vip_threshold | minus: cart_total | divided_by: 100.0 -%}
+              {%- assign vip_pct  = cart_total | times: 100 | divided_by: vip_threshold -%}
+              <div class="lx-progress-label" style="font-size: 12px; font-weight: 600; color: #1A202C; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; font-family: 'Outfit', sans-serif;">
+                <span>👑 Add <strong>₹{{ vip_diff | round }}</strong> more for VIP Discount</span>
+                <span class="lx-progress-pct" style="font-size: 10.5px; color: #6B7280;">{{ vip_pct }}%</span>
+              </div>
+              <div class="lx-progress-track" style="width: 100%; height: 6px; background: #E5E7EB; border-radius: 4px; overflow: hidden;">
+                <div class="lx-progress-fill lx-progress-fill--vip" style="width: {{ vip_pct }}%; height: 100%; border-radius: 4px; background: linear-gradient(90deg, #B89356, #F5D078); transition: width 0.6s cubic-bezier(0.4,0,0.2,1);"></div>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
         {%- if settings.show_cart_note -%}
           <details id="Details-CartDrawer">
             <summary>
@@ -499,24 +547,68 @@
         <!-- Subtotals -->
 
         <div class="cart-drawer__footer" {{ block.shopify_attributes }}>
-          <div>
-            {%- if cart.cart_level_discount_applications.size > 0 -%}
-              <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
-                {%- for discount in cart.cart_level_discount_applications -%}
-                  <li class="discounts__discount discounts__discount--end">
-                    {{- 'icon-discount.svg' | inline_asset_content -}}
-                    {{ discount.title | escape }}
-                    (-{{ discount.total_allocated_amount | money }})
-                  </li>
-                {%- endfor -%}
-              </ul>
-            {%- endif -%}
+          {%- assign all_item_savings = 0 -%}
+          {%- for item in cart.items -%}
+            {%- assign s = item.original_line_price | minus: item.final_line_price -%}
+            {%- assign all_item_savings = all_item_savings | plus: s -%}
+          {%- endfor -%}
+
+          <div class="lx-totals-section" style="margin-bottom: 16px; font-family: 'Outfit', sans-serif;">
+            <div class="lx-totals-row" style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:13px; color:#1A202C;">
+              <span class="lx-totals-row-label" style="color:#6B7280;">Total MRP</span>
+              <span class="lx-totals-row-value" style="font-weight:500;">{{ cart.original_total_price | money }}</span>
+            </div>
+
+            {% if all_item_savings > 0 %}
+            <div class="lx-totals-row lx-totals-row--discount" style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:13px; color:#16A34A;">
+              <span class="lx-totals-row-label">Discount on MRP <span style="font-size:10px;font-weight:400;opacity:0.7;">(product offer)</span></span>
+              <span class="lx-totals-row-value">-{{ all_item_savings | money }}</span>
+            </div>
+            {% endif %}
+
+            {%- assign vip_code = section.settings.vip_discount_code | default: 'PURCHASE1999' | upcase -%}
+            {%- for discount in cart.cart_level_discount_applications -%}
+              {%- assign disc_title_upper = discount.title | upcase -%}
+              {%- if disc_title_upper == vip_code -%}
+            <div class="lx-totals-row lx-vip-discount-row" style="display:flex; justify-content:space-between; align-items:center; background:linear-gradient(90deg, #fffbeb, #fef3c7); border:1px solid #fcd34d; border-radius:8px; padding:6px 12px; margin:4px 0; font-size:13px; color:#92400e; width: 100%;">
+              <span class="lx-totals-row-label" style="font-weight:600; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <span class="lx-vip-badge" style="background:linear-gradient(135deg, #b45309, #d97706); color:#fff; font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; letter-spacing:0.5px; white-space:nowrap;">👑 VIP</span> Discount ({{ discount.title }})
+              </span>
+              <span class="lx-totals-row-value lx-vip-amount" style="font-weight:700; font-size:15px; color:#b45309;">-{{ discount.total_allocated_amount | money }}</span>
+            </div>
+              {%- else -%}
+            <div class="lx-totals-row lx-totals-row--discount" style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:13px; color:#16A34A;">
+              <span class="lx-totals-row-label" style="color:#16A34A;">Coupon ({{ discount.title }})</span>
+              <span class="lx-totals-row-value">-{{ discount.total_allocated_amount | money }}</span>
+            </div>
+              {%- endif -%}
+            {%- endfor -%}
+
+            <div class="lx-totals-row" style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:13px;">
+              <span class="lx-totals-row-label" style="color:#6B7280;">Shipping</span>
+              <span class="lx-totals-row-value" {% if cart_total >= free_ship_threshold %}style="color:#16A34A;font-weight:600;"{% endif %}>
+                {% if cart_total >= free_ship_threshold %}FREE{% else %}Calculated at checkout{% endif %}
+              </span>
+            </div>
+
+            <hr class="lx-totals-divider" style="border:none; border-top:1px dashed #E5E7EB; margin:8px 0;">
+
+            <div class="lx-totals-row lx-totals-row--grand totals" style="display:flex; justify-content:space-between; align-items:center; padding:12px 0 4px; font-size:15px; font-weight:700; color:#1A202C;">
+              <span class="lx-totals-row-label" style="font-size:15px; font-weight:700;">Total Amount</span>
+              <span class="lx-totals-row-value totals__total-value" style="font-size:18px; font-weight:700;">{{ cart.total_price | money }}</span>
+            </div>
           </div>
 
-          <div class="totals" role="status">
-            <h2 class="totals__total">{{ 'sections.cart.estimated_total' | t }}</h2>
-            <p class="totals__total-value">{{ cart.total_price | money_with_currency }}</p>
+          {%- assign total_cart_savings = all_item_savings -%}
+          {%- for discount in cart.cart_level_discount_applications -%}
+            {%- assign total_cart_savings = total_cart_savings | plus: discount.total_allocated_amount -%}
+          {%- endfor -%}
+          {% if total_cart_savings > 0 %}
+          <div class="lx-total-savings-banner" style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:10px 14px; display:flex; align-items:center; gap:8px; margin-bottom:16px; font-family: 'Outfit', sans-serif;">
+            <i class="ti ti-pig-money" style="color:#16A34A; font-size:18px;"></i>
+            <span class="lx-savings-text" style="font-size:12.5px; font-weight:600; color:#16A34A;">You're saving {{ total_cart_savings | money }} on this order!</span>
           </div>
+          {% endif %}
 
           <small class="tax-note caption-large rte">
             {%- if cart.duties_included and cart.taxes_included -%}
@@ -579,3 +671,180 @@
     </div>
   </div>
 </cart-drawer>
+
+<!-- GLOBAL VARIANT PICKER MODAL (Quick Add + Change) -->
+<div id="lx-variant-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:99999; align-items:flex-end; justify-content:center;" onclick="if(event.target===this)lxCloseVariantModal()">
+  <div style="background:#fff; border-radius:16px 16px 0 0; padding:24px 20px; width:100%; max-width:480px; max-height:80vh; overflow-y:auto; position:relative; font-family:'Outfit', sans-serif; box-sizing:border-box;">
+    <button type="button" onclick="lxCloseVariantModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:#6B7280;">✕</button>
+    <div id="lx-vm-img-wrap" style="display:flex;gap:14px;align-items:center;margin-bottom:18px;">
+      <img id="lx-vm-img" src="" style="width:70px;height:88px;object-fit:cover;border-radius:8px;border:1px solid #eee;" alt="">
+      <div>
+        <p id="lx-vm-title" style="font-weight:700;font-size:14px;margin:0 0 4px;color:#1A202C;line-height:1.35;"></p>
+        <p id="lx-vm-price" style="font-weight:600;font-size:13px;color:#B89356;margin:0;"></p>
+      </div>
+    </div>
+    <div id="lx-vm-options"></div>
+    <button type="button" id="lx-vm-add-btn" onclick="lxAddSelectedVariant()" style="width:100%;background:#1A202C;color:#fff;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-top:16px;font-family:inherit;">Add to Cart</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  var _vmProduct = null;
+  var _vmSelectedOptions = {};
+  var _vmLineIndex = null;
+  var _vmQty = null;
+
+  window.lxOpenVariantModal = function(productId) {
+    var p = window._lxProducts && window._lxProducts[productId];
+    if (!p) return;
+    _vmProduct = p;
+    _vmSelectedOptions = {};
+    _vmLineIndex = null;
+    _vmQty = null;
+
+    document.getElementById('lx-vm-img').src = p.featured_image || '';
+    document.getElementById('lx-vm-title').textContent = p.title;
+    document.getElementById('lx-vm-price').textContent = (p.price / 100).toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 });
+
+    var addBtn = document.getElementById('lx-vm-add-btn');
+    addBtn.textContent = 'Add to Cart';
+    addBtn.style.background = '#1A202C';
+    addBtn.disabled = false;
+
+    lxRenderOptions(p);
+    document.getElementById('lx-variant-modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.lxOpenChangeVariant = function(productId, lineIndex, qty) {
+    fetch(window.Shopify.routes.root + 'products/' + productId + '.js')
+      .then(function(r){ return r.json(); })
+      .then(function(p) {
+        _vmProduct = p;
+        _vmSelectedOptions = {};
+        _vmLineIndex = lineIndex;
+        _vmQty = qty;
+
+        document.getElementById('lx-vm-img').src = p.featured_image ? p.featured_image : '';
+        document.getElementById('lx-vm-title').textContent = p.title;
+        document.getElementById('lx-vm-price').textContent = (p.price / 100).toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 });
+
+        var addBtn = document.getElementById('lx-vm-add-btn');
+        addBtn.textContent = 'Update Variant';
+        addBtn.style.background = '#B89356';
+        addBtn.disabled = false;
+
+        lxRenderOptions(p);
+        document.getElementById('lx-variant-modal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      });
+  };
+
+  function lxRenderOptions(p) {
+    var optHtml = '';
+    p.options.forEach(function(opt, oi) {
+      var vals = p.variants.map(function(v) { return v.options[oi]; }).filter(function(v,i,a){ return a.indexOf(v)===i; });
+      optHtml += '<div style="margin-bottom:14px;">';
+      optHtml += '<p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#6B7280;margin:0 0 8px;">' + opt + '</p>';
+      optHtml += '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
+      vals.forEach(function(val) {
+        optHtml += '<button type="button" class="lx-vm-opt-btn" data-option-index="' + oi + '" data-value="' + val + '" onclick="lxSelectOpt(this,' + oi + ',\'' + val.replace(/'/g,"\\'") + '\')" style="border:1.5px solid #E5E7EB;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:500;background:#fff;cursor:pointer;transition:all 0.2s;">' + val + '</button>';
+      });
+      optHtml += '</div></div>';
+    });
+    document.getElementById('lx-vm-options').innerHTML = optHtml;
+  }
+
+  window.lxCloseVariantModal = function() {
+    document.getElementById('lx-variant-modal').style.display = 'none';
+    document.body.style.overflow = '';
+    _vmProduct = null;
+    _vmSelectedOptions = {};
+    _vmLineIndex = null;
+    _vmQty = null;
+  };
+
+  window.lxSelectOpt = function(btn, optIndex, val) {
+    var btns = document.querySelectorAll('.lx-vm-opt-btn[data-option-index="' + optIndex + '"]');
+    btns.forEach(function(b) { b.style.borderColor='#E5E7EB'; b.style.background='#fff'; b.style.color='#1A202C'; b.style.fontWeight='500'; });
+    btn.style.borderColor = '#1A202C';
+    btn.style.background = '#1A202C';
+    btn.style.color = '#fff';
+    btn.style.fontWeight = '700';
+    _vmSelectedOptions[optIndex] = val;
+  };
+
+  window.lxAddSelectedVariant = function() {
+    if (!_vmProduct) return;
+    var numOpts = _vmProduct.options ? _vmProduct.options.length : 0;
+    if (Object.keys(_vmSelectedOptions).length < numOpts) {
+      var addBtn = document.getElementById('lx-vm-add-btn');
+      var orig = addBtn.textContent;
+      addBtn.textContent = 'Please select all options';
+      addBtn.style.background = '#DC2626';
+      setTimeout(function() { addBtn.textContent = orig; addBtn.style.background = _vmLineIndex ? '#B89356' : '#1A202C'; }, 1500);
+      return;
+    }
+    var matched = _vmProduct.variants.find(function(v) {
+      return v.options.every(function(o, i) { return _vmSelectedOptions[i] === o; });
+    });
+    if (!matched) return;
+    var addBtn = document.getElementById('lx-vm-add-btn');
+    addBtn.disabled = true;
+
+    if (_vmLineIndex) {
+      addBtn.textContent = 'Updating...';
+      fetch(window.Shopify.routes.root + 'cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ line: _vmLineIndex, quantity: 0 })
+      }).then(function() {
+        return fetch(window.Shopify.routes.root + 'cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: matched.id, quantity: _vmQty || 1 })
+        });
+      }).then(function() {
+        addBtn.textContent = '✓ Updated!';
+        addBtn.style.background = '#16A34A';
+        setTimeout(function() { lxCloseVariantModal(); location.reload(); }, 700);
+      }).catch(function() {
+        addBtn.textContent = 'Update Variant';
+        addBtn.disabled = false;
+      });
+    } else {
+      addBtn.textContent = 'Adding...';
+      fetch(window.Shopify.routes.root + 'cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: matched.id, quantity: 1 })
+      }).then(function() {
+        addBtn.textContent = '✓ Added!';
+        addBtn.style.background = '#16A34A';
+        setTimeout(function() { lxCloseVariantModal(); location.reload(); }, 700);
+      }).catch(function() {
+        addBtn.textContent = 'Add to Cart';
+        addBtn.disabled = false;
+      });
+    }
+  };
+
+  window.lxDirectAdd = function(btn, variantId) {
+    btn.textContent = 'Adding...';
+    btn.disabled = true;
+    fetch(window.Shopify.routes.root + 'cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: variantId, quantity: 1 })
+    }).then(function() {
+      btn.textContent = '✓ Added!';
+      btn.style.background = '#16A34A';
+      setTimeout(function() { location.reload(); }, 800);
+    }).catch(function() {
+      btn.textContent = '+ Quick Add';
+      btn.disabled = false;
+    });
+  };
+})();
+</script>

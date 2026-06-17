@@ -1,1 +1,27 @@
 {%- render 'cart-drawer' -%}
+
+{% schema %}
+{
+  "name": "Cart Drawer",
+  "settings": [
+    {
+      "type": "number",
+      "id": "free_shipping_threshold",
+      "label": "Free Shipping Threshold (in ₹)",
+      "default": 1500
+    },
+    {
+      "type": "number",
+      "id": "vip_threshold",
+      "label": "VIP Discount Threshold (in ₹)",
+      "default": 2500
+    },
+    {
+      "type": "text",
+      "id": "vip_discount_code",
+      "label": "VIP Auto-Discount Code",
+      "info": "This code auto-applies when the VIP threshold is reached."
+    }
+  ]
+}
+{% endschema %}

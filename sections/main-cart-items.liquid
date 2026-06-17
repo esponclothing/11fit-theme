@@ -450,29 +450,11 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                 </div>
               </div>
 
-              <!-- VARIANT PICKER MODAL (Quick Add + Change) -->
-              <div id="lx-variant-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:99999; align-items:flex-end; justify-content:center;" onclick="if(event.target===this)lxCloseVariantModal()">
-                <div style="background:#fff; border-radius:16px 16px 0 0; padding:24px 20px; width:100%; max-width:480px; max-height:80vh; overflow-y:auto; position:relative;">
-                  <button type="button" onclick="lxCloseVariantModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:#6B7280;">✕</button>
-                  <div id="lx-vm-img-wrap" style="display:flex;gap:14px;align-items:center;margin-bottom:18px;">
-                    <img id="lx-vm-img" src="" style="width:70px;height:88px;object-fit:cover;border-radius:8px;border:1px solid #eee;" alt="">
-                    <div>
-                      <p id="lx-vm-title" style="font-weight:700;font-size:14px;margin:0 0 4px;"></p>
-                      <p id="lx-vm-price" style="font-weight:600;font-size:13px;color:#B89356;margin:0;"></p>
-                    </div>
-                  </div>
-                  <div id="lx-vm-options"></div>
-                  <button type="button" id="lx-vm-add-btn" onclick="lxAddSelectedVariant()" style="width:100%;background:#1A202C;color:#fff;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-top:16px;font-family:inherit;">Add to Cart</button>
-                </div>
-              </div>
-
               <script>
               (function() {
                 var productId = {{ cart.items.first.product_id | json }};
                 var limit = 6;
                 var url = window.Shopify.routes.root + 'recommendations/products.json?product_id=' + productId + '&limit=' + limit + '&intent=related';
-                var _vmProduct = null;
-                var _vmSelectedOptions = {};
 
                 fetch(url)
                   .then(function(res) { return res.json(); })
@@ -522,156 +504,6 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                     var wrapper = document.getElementById('lx-cross-sell-wrapper');
                     if (wrapper) wrapper.style.display = 'none';
                   });
-
-                window.lxOpenVariantModal = function(productId) {
-                  var p = window._lxProducts && window._lxProducts[productId];
-                  if (!p) return;
-                  _vmProduct = p;
-                  _vmSelectedOptions = {};
-                  _vmLineIndex = null;
-
-                  document.getElementById('lx-vm-img').src = p.featured_image || '';
-                  document.getElementById('lx-vm-title').textContent = p.title;
-                  document.getElementById('lx-vm-price').textContent = (p.price / 100).toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 });
-
-                  var addBtn = document.getElementById('lx-vm-add-btn');
-                  addBtn.textContent = 'Add to Cart';
-                  addBtn.style.background = '#1A202C';
-                  addBtn.disabled = false;
-
-                  lxRenderOptions(p);
-                  document.getElementById('lx-variant-modal').style.display = 'flex';
-                  document.body.style.overflow = 'hidden';
-                };
-
-                window.lxOpenChangeVariant = function(productId, lineIndex, qty) {
-                  fetch(window.Shopify.routes.root + 'products/' + productId + '.js')
-                    .then(function(r){ return r.json(); })
-                    .then(function(p) {
-                      _vmProduct = p;
-                      _vmSelectedOptions = {};
-                      _vmLineIndex = lineIndex;
-                      _vmQty = qty;
-
-                      document.getElementById('lx-vm-img').src = p.featured_image ? p.featured_image : '';
-                      document.getElementById('lx-vm-title').textContent = p.title;
-                      document.getElementById('lx-vm-price').textContent = (p.price / 100).toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 });
-
-                      var addBtn = document.getElementById('lx-vm-add-btn');
-                      addBtn.textContent = 'Update Variant';
-                      addBtn.style.background = '#B89356';
-                      addBtn.disabled = false;
-
-                      lxRenderOptions(p);
-                      document.getElementById('lx-variant-modal').style.display = 'flex';
-                      document.body.style.overflow = 'hidden';
-                    });
-                };
-
-                function lxRenderOptions(p) {
-                  var optHtml = '';
-                  p.options.forEach(function(opt, oi) {
-                    var vals = p.variants.map(function(v) { return v.options[oi]; }).filter(function(v,i,a){ return a.indexOf(v)===i; });
-                    optHtml += '<div style="margin-bottom:14px;">';
-                    optHtml += '<p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#6B7280;margin:0 0 8px;">' + opt + '</p>';
-                    optHtml += '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
-                    vals.forEach(function(val) {
-                      optHtml += '<button type="button" class="lx-vm-opt-btn" data-option-index="' + oi + '" data-value="' + val + '" onclick="lxSelectOpt(this,' + oi + ',\'' + val.replace(/'/g,"\\'") + '\')" style="border:1.5px solid #E5E7EB;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:500;background:#fff;cursor:pointer;transition:all 0.2s;">' + val + '</button>';
-                    });
-                    optHtml += '</div></div>';
-                  });
-                  document.getElementById('lx-vm-options').innerHTML = optHtml;
-                }
-
-                window.lxCloseVariantModal = function() {
-                  document.getElementById('lx-variant-modal').style.display = 'none';
-                  document.body.style.overflow = '';
-                  _vmProduct = null;
-                  _vmSelectedOptions = {};
-                  _vmLineIndex = null;
-                };
-
-                window.lxSelectOpt = function(btn, optIndex, val) {
-                  var btns = document.querySelectorAll('.lx-vm-opt-btn[data-option-index="' + optIndex + '"]');
-                  btns.forEach(function(b) { b.style.borderColor='#E5E7EB'; b.style.background='#fff'; b.style.color='#1A202C'; b.style.fontWeight='500'; });
-                  btn.style.borderColor = '#1A202C';
-                  btn.style.background = '#1A202C';
-                  btn.style.color = '#fff';
-                  btn.style.fontWeight = '700';
-                  _vmSelectedOptions[optIndex] = val;
-                };
-
-                window.lxAddSelectedVariant = function() {
-                  if (!_vmProduct) return;
-                  var numOpts = _vmProduct.options ? _vmProduct.options.length : 0;
-                  if (Object.keys(_vmSelectedOptions).length < numOpts) {
-                    var addBtn = document.getElementById('lx-vm-add-btn');
-                    var orig = addBtn.textContent;
-                    addBtn.textContent = 'Please select all options';
-                    addBtn.style.background = '#DC2626';
-                    setTimeout(function() { addBtn.textContent = orig; addBtn.style.background = _vmLineIndex ? '#B89356' : '#1A202C'; }, 1500);
-                    return;
-                  }
-                  var matched = _vmProduct.variants.find(function(v) {
-                    return v.options.every(function(o, i) { return _vmSelectedOptions[i] === o; });
-                  });
-                  if (!matched) return;
-                  var addBtn = document.getElementById('lx-vm-add-btn');
-                  addBtn.disabled = true;
-
-                  if (_vmLineIndex) {
-                    addBtn.textContent = 'Updating...';
-                    fetch(window.Shopify.routes.root + 'cart/change.js', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ line: _vmLineIndex, quantity: 0 })
-                    }).then(function() {
-                      return fetch(window.Shopify.routes.root + 'cart/add.js', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ id: matched.id, quantity: _vmQty || 1 })
-                      });
-                    }).then(function() {
-                      addBtn.textContent = '✓ Updated!';
-                      addBtn.style.background = '#16A34A';
-                      setTimeout(function() { lxCloseVariantModal(); location.reload(); }, 700);
-                    }).catch(function() {
-                      addBtn.textContent = 'Update Variant';
-                      addBtn.disabled = false;
-                    });
-                  } else {
-                    addBtn.textContent = 'Adding...';
-                    fetch(window.Shopify.routes.root + 'cart/add.js', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ id: matched.id, quantity: 1 })
-                    }).then(function() {
-                      addBtn.textContent = '✓ Added!';
-                      addBtn.style.background = '#16A34A';
-                      setTimeout(function() { lxCloseVariantModal(); location.reload(); }, 700);
-                    }).catch(function() {
-                      addBtn.textContent = 'Add to Cart';
-                      addBtn.disabled = false;
-                    });
-                  }
-                };
-
-                window.lxDirectAdd = function(btn, variantId) {
-                  btn.textContent = 'Adding...';
-                  btn.disabled = true;
-                  fetch(window.Shopify.routes.root + 'cart/add.js', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: variantId, quantity: 1 })
-                  }).then(function() {
-                    btn.textContent = '✓ Added!';
-                    btn.style.background = 'var(--lx-success)';
-                    setTimeout(function() { location.reload(); }, 800);
-                  }).catch(function() {
-                    btn.textContent = '+ Quick Add';
-                    btn.disabled = false;
-                  });
-                };
               })();
               </script>
               {%- endif -%}
