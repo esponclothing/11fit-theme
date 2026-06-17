@@ -94,17 +94,19 @@
     opacity: 0.5; text-decoration: line-through; cursor: not-allowed; 
   }
   /* COLOR DOT OVERRIDES */
+  .fit11-variant-pills { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; }
+  .fit11-variant-pills::-webkit-scrollbar { display: none; }
   .fit11-variant-pill.is-color {
-    padding: 2px; border-radius: 50%; width: 34px; height: 34px; background: transparent; border: 2px solid transparent;
+    padding: 0; width: 72px; height: 96px; background: transparent; border: 1px solid transparent; border-radius: 6px; overflow: hidden; opacity: 0.6; transition: all .3s ease; flex-shrink: 0; cursor: pointer;
   }
-  .fit11-variant-pill.is-color:hover { border-color: var(--lux-border); }
+  .fit11-variant-pill.is-color:hover { opacity: 1; }
   .fit11-variant-radio:checked + .fit11-variant-pill.is-color {
-    border-color: var(--lux-text); background: transparent;
+    border-color: var(--lux-text); background: transparent; opacity: 1;
   }
   .fit11-color-swatch {
-    display: inline-block; width: 100%; height: 100%; border-radius: 50%;
-    margin: 0; border: 1px solid var(--lux-border);
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); background-color: var(--lux-surface);
+    display: inline-block; width: 100%; height: 100%; border-radius: 0;
+    margin: 0; border: none;
+    background-color: var(--lux-surface);
   }
 
   /* ── OFFERS & DISCOUNTS SECTION (SIMPLIFIED) ── */
@@ -261,15 +263,63 @@
         </div>
       </div>
       
-      {% if product.images.size > 1 %}
-        <div class="fit11-thumbs" id="fit11Thumbs">
-          {% for image in product.images %}
-            <div class="fit11-thumb{% if forloop.first %} on{% endif %}" data-index="{{ forloop.index0 }}">
-              <img src="{{ image | img_url: '200x250' }}" alt="{{ image.alt | escape }}" loading="lazy">
+      {% comment %} ── COLOR VARIANTS AS THUMBNAILS ── {% endcomment %}
+      {% unless product.has_only_default_variant %}
+        {% for option in product.options_with_values %}
+          {% assign option_name_lower = option.name | downcase %}
+          {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
+            <div class="fit11-variant-selectors top-color-selector">
+              <fieldset class="fit11-option-fieldset" style="border:none; padding:0; margin:0;">
+                <legend class="fit11-option-name" style="display: none;">{{ option.name }}</legend>
+                <div class="fit11-variant-pills">
+                  {% for value in option.values %}
+                    <input type="radio" 
+                           id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                           name="{{ option.name }}" 
+                           value="{{ value | escape }}"
+                           {% if option.selected_value == value %}checked{% endif %}
+                           class="fit11-variant-radio"
+                           data-is-color="true">
+                    
+                    <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="fit11-variant-pill is-color" title="{{ value }}">
+                      {% assign variant_image = null %}
+                      {% for variant in product.variants %}
+                        {% if variant.options contains value and variant.featured_image %}
+                          {% assign variant_image = variant.featured_image %}
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+                      
+                      {% if variant_image != null %}
+                        <span class="fit11-color-swatch" style="background-image: url('{{ variant_image | img_url: '200x250' }}'); background-size: cover; background-position: center;"></span>
+                      {% else %}
+                        {% assign color_handle = value | handle %}
+                        {% assign css_color = color_handle %}
+                        {% case color_handle %}
+                          {% when 'navy-blue' %}{% assign css_color = '#000080' %}
+                          {% when 'bottle-green' %}{% assign css_color = '#006A4E' %}
+                          {% when 'light-baby-pink' %}{% assign css_color = '#F4C2C2' %}
+                          {% when 'lavender' %}{% assign css_color = '#E6E6FA' %}
+                          {% when 'baby-blue' %}{% assign css_color = '#89CFF0' %}
+                          {% when 'flamingo' %}{% assign css_color = '#FC8EAC' %}
+                          {% when 'jade' %}{% assign css_color = '#00A86B' %}
+                          {% when 'off-white' %}{% assign css_color = '#FAF9F6' %}
+                          {% when 'maroon' %}{% assign css_color = '#800000' %}
+                          {% when 'white' %}{% assign css_color = '#FFFFFF' %}
+                          {% when 'black' %}{% assign css_color = '#000000' %}
+                          {% when 'red' %}{% assign css_color = '#FF0000' %}
+                          {% else %}{% assign css_color = value | split: ' ' | last | downcase %}
+                        {% endcase %}
+                        <span class="fit11-color-swatch" style="background-color: {{ css_color }};"></span>
+                      {% endif %}
+                    </label>
+                  {% endfor %}
+                </div>
+              </fieldset>
             </div>
-          {% endfor %}
-        </div>
-      {% endif %}
+          {% endif %}
+        {% endfor %}
+      {% endunless %}
 
       <div class="fit11-return-banner">
         7 Days Free Return/Exchange, Guaranteed
@@ -300,66 +350,7 @@
       
       {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
         
-        {% comment %} ── TOP COLOR SELECTOR (ONLY SWATCH VARIANTS IMAGES SWITCH) ── {% endcomment %}
-        {% unless product.has_only_default_variant %}
-          {% for option in product.options_with_values %}
-            {% assign option_name_lower = option.name | downcase %}
-            {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
-              <div class="fit11-variant-selectors top-color-selector" style="margin-bottom: 20px;">
-                <fieldset class="fit11-option-fieldset">
-                  <legend class="fit11-option-name" style="display: flex; align-items: center; gap: 8px;">
-                    {{ option.name }}:
-                    <span class="fit11-selected-color-label" style="color: var(--lux-text); font-weight: 600; text-transform: capitalize;">{{ option.selected_value }}</span>
-                  </legend>
-                  <div class="fit11-variant-pills">
-                    {% for value in option.values %}
-                      <input type="radio" 
-                             id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
-                             name="{{ option.name }}" 
-                             value="{{ value | escape }}"
-                             {% if option.selected_value == value %}checked{% endif %}
-                             class="fit11-variant-radio"
-                             data-is-color="true">
-                      
-                      <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="fit11-variant-pill is-color" title="{{ value }}">
-                        {% assign variant_image = null %}
-                        {% for variant in product.variants %}
-                          {% if variant.options contains value and variant.featured_image %}
-                            {% assign variant_image = variant.featured_image %}
-                            {% break %}
-                          {% endif %}
-                        {% endfor %}
-                        
-                        {% if variant_image != null %}
-                          <span class="fit11-color-swatch" style="background-image: url('{{ variant_image | img_url: '100x' }}'); background-size: cover; background-position: center;"></span>
-                        {% else %}
-                          {% assign color_handle = value | handle %}
-                          {% assign css_color = color_handle %}
-                          {% case color_handle %}
-                            {% when 'navy-blue' %}{% assign css_color = '#000080' %}
-                            {% when 'bottle-green' %}{% assign css_color = '#006A4E' %}
-                            {% when 'light-baby-pink' %}{% assign css_color = '#F4C2C2' %}
-                            {% when 'lavender' %}{% assign css_color = '#E6E6FA' %}
-                            {% when 'baby-blue' %}{% assign css_color = '#89CFF0' %}
-                            {% when 'flamingo' %}{% assign css_color = '#FC8EAC' %}
-                            {% when 'jade' %}{% assign css_color = '#00A86B' %}
-                            {% when 'off-white' %}{% assign css_color = '#FAF9F6' %}
-                            {% when 'maroon' %}{% assign css_color = '#800000' %}
-                            {% when 'white' %}{% assign css_color = '#FFFFFF' %}
-                            {% when 'black' %}{% assign css_color = '#000000' %}
-                            {% when 'red' %}{% assign css_color = '#FF0000' %}
-                            {% else %}{% assign css_color = value | split: ' ' | last | downcase %}
-                          {% endcase %}
-                          <span class="fit11-color-swatch" style="background-color: {{ css_color }};"></span>
-                        {% endif %}
-                      </label>
-                    {% endfor %}
-                  </div>
-                </fieldset>
-              </div>
-            {% endif %}
-          {% endfor %}
-        {% endunless %}
+
 
         {% comment %} ── HIGHLIGHTED COMBO SELECTION AREA (APP + VARIANTS) ── {% endcomment %}
         <div class="fit11-main-action-btns" id="fit11MainBtnContainer">
