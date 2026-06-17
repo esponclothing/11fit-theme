@@ -20,7 +20,8 @@
         "show_available_offers": true,
         "offers_label": "Available Offers",
         "free_shipping_threshold": 500,
-        "vip_threshold": 1999
+        "vip_threshold": 1999,
+        "vip_discount_code": "PURCHASE1999"
       }
     },
     "cart-footer": {
