@@ -438,7 +438,7 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
 
 
               {%- if cart.item_count > 0 -%}
-              <div class="lx-cross-sell lx-desktop" style="margin-top: 20px;" id="lx-cross-sell-wrapper">
+              <div class="lx-cross-sell" style="margin-top: 20px;" id="lx-cross-sell-wrapper">
                 <h4 class="lx-cross-sell-title">You May Also Like</h4>
                 <div class="lx-cs-scroll" id="lx-cs-products">
                   <div class="lx-cs-loading">
@@ -449,11 +449,29 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                 </div>
               </div>
 
+              <!-- VARIANT PICKER MODAL -->
+              <div id="lx-variant-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:99999; align-items:flex-end; justify-content:center;" onclick="if(event.target===this)lxCloseVariantModal()">
+                <div style="background:#fff; border-radius:16px 16px 0 0; padding:24px 20px; width:100%; max-width:480px; max-height:80vh; overflow-y:auto; position:relative;">
+                  <button onclick="lxCloseVariantModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:#6B7280;">✕</button>
+                  <div id="lx-vm-img-wrap" style="display:flex;gap:14px;align-items:center;margin-bottom:18px;">
+                    <img id="lx-vm-img" src="" style="width:70px;height:88px;object-fit:cover;border-radius:8px;border:1px solid #eee;" alt="">
+                    <div>
+                      <p id="lx-vm-title" style="font-weight:700;font-size:14px;margin:0 0 4px;"></p>
+                      <p id="lx-vm-price" style="font-weight:600;font-size:13px;color:#B89356;margin:0;"></p>
+                    </div>
+                  </div>
+                  <div id="lx-vm-options"></div>
+                  <button id="lx-vm-add-btn" onclick="lxAddSelectedVariant()" style="width:100%;background:#1A202C;color:#fff;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-top:16px;font-family:inherit;">Add to Cart</button>
+                </div>
+              </div>
+
               <script>
               (function() {
                 var productId = {{ cart.items.first.product_id | json }};
                 var limit = 6;
                 var url = window.Shopify.routes.root + 'recommendations/products.json?product_id=' + productId + '&limit=' + limit + '&intent=related';
+                var _vmProduct = null;
+                var _vmSelectedOptions = {};
 
                 fetch(url)
                   .then(function(res) { return res.json(); })
@@ -467,14 +485,17 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                       return;
                     }
 
+                    window._lxProducts = {};
                     var html = '';
                     products.forEach(function(p) {
+                      window._lxProducts[p.id] = p;
                       var img = p.featured_image ? p.featured_image : '';
                       var price = (p.price / 100).toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 });
                       var comparePrice = '';
                       if (p.compare_at_price && p.compare_at_price > p.price) {
                         comparePrice = '<span class="lx-cs-compare">' + (p.compare_at_price / 100).toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }) + '</span>';
                       }
+                      var hasOnlyDefault = p.variants && p.variants.length === 1 && p.variants[0].title === 'Default Title';
                       var variantId = p.variants && p.variants[0] ? p.variants[0].id : '';
                       html += '<div class="lx-cs-item">';
                       html += '<a href="' + p.url + '" class="lx-cs-img-link">';
@@ -486,7 +507,11 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                       html += '</a>';
                       html += '<a href="' + p.url + '" class="lx-cs-name">' + p.title + '</a>';
                       html += '<p class="lx-cs-price">' + price + ' ' + comparePrice + '</p>';
-                      html += '<button class="lx-cs-add-btn" type="button" data-variant-id="' + variantId + '" onclick="lxQuickAdd(this, \'' + variantId + '\')">+ Quick Add</button>';
+                      if (hasOnlyDefault) {
+                        html += '<button class="lx-cs-add-btn" type="button" onclick="lxDirectAdd(this,\'' + variantId + '\')">+ Quick Add</button>';
+                      } else {
+                        html += '<button class="lx-cs-add-btn" type="button" onclick="lxOpenVariantModal(\'' + p.id + '\')">+ Quick Add</button>';
+                      }
                       html += '</div>';
                     });
 
@@ -497,22 +522,94 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                     if (wrapper) wrapper.style.display = 'none';
                   });
 
-                window.lxQuickAdd = function(btn, variantId) {
-                  if (!variantId) return;
+                window.lxOpenVariantModal = function(productId) {
+                  var p = window._lxProducts && window._lxProducts[productId];
+                  if (!p) return;
+                  _vmProduct = p;
+                  _vmSelectedOptions = {};
+
+                  var modal = document.getElementById('lx-variant-modal');
+                  document.getElementById('lx-vm-img').src = p.featured_image || '';
+                  document.getElementById('lx-vm-title').textContent = p.title;
+                  document.getElementById('lx-vm-price').textContent = (p.price / 100).toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 });
+
+                  var optHtml = '';
+                  p.options.forEach(function(opt, oi) {
+                    var vals = p.variants.map(function(v) { return v.options[oi]; }).filter(function(v,i,a){ return a.indexOf(v)===i; });
+                    optHtml += '<div style="margin-bottom:14px;">';
+                    optHtml += '<p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#6B7280;margin:0 0 8px;">' + opt + '</p>';
+                    optHtml += '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
+                    vals.forEach(function(val) {
+                      optHtml += '<button class="lx-vm-opt-btn" data-option-index="' + oi + '" data-value="' + val + '" onclick="lxSelectOpt(this,' + oi + ',\'' + val.replace(/'/g,"\\'") + '\')" style="border:1.5px solid #E5E7EB;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:500;background:#fff;cursor:pointer;transition:all 0.2s;">' + val + '</button>';
+                    });
+                    optHtml += '</div></div>';
+                  });
+                  document.getElementById('lx-vm-options').innerHTML = optHtml;
+
+                  modal.style.display = 'flex';
+                  document.body.style.overflow = 'hidden';
+                };
+
+                window.lxCloseVariantModal = function() {
+                  document.getElementById('lx-variant-modal').style.display = 'none';
+                  document.body.style.overflow = '';
+                  _vmProduct = null;
+                  _vmSelectedOptions = {};
+                };
+
+                window.lxSelectOpt = function(btn, optIndex, val) {
+                  var btns = document.querySelectorAll('.lx-vm-opt-btn[data-option-index="' + optIndex + '"]');
+                  btns.forEach(function(b) { b.style.borderColor='#E5E7EB'; b.style.background='#fff'; b.style.color='#1A202C'; b.style.fontWeight='500'; });
+                  btn.style.borderColor = '#1A202C';
+                  btn.style.background = '#1A202C';
+                  btn.style.color = '#fff';
+                  btn.style.fontWeight = '700';
+                  _vmSelectedOptions[optIndex] = val;
+                };
+
+                window.lxAddSelectedVariant = function() {
+                  if (!_vmProduct) return;
+                  var numOpts = _vmProduct.options.length;
+                  if (Object.keys(_vmSelectedOptions).length < numOpts) {
+                    var addBtn = document.getElementById('lx-vm-add-btn');
+                    addBtn.textContent = 'Please select all options';
+                    addBtn.style.background = '#DC2626';
+                    setTimeout(function() { addBtn.textContent = 'Add to Cart'; addBtn.style.background = '#1A202C'; }, 1500);
+                    return;
+                  }
+                  var matched = _vmProduct.variants.find(function(v) {
+                    return v.options.every(function(o, i) { return _vmSelectedOptions[i] === o; });
+                  });
+                  if (!matched) return;
+                  var addBtn = document.getElementById('lx-vm-add-btn');
+                  addBtn.textContent = 'Adding...';
+                  addBtn.disabled = true;
+                  fetch(window.Shopify.routes.root + 'cart/add.js', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: matched.id, quantity: 1 })
+                  }).then(function() {
+                    addBtn.textContent = '✓ Added!';
+                    addBtn.style.background = '#16A34A';
+                    setTimeout(function() { lxCloseVariantModal(); location.reload(); }, 800);
+                  }).catch(function() {
+                    addBtn.textContent = 'Add to Cart';
+                    addBtn.disabled = false;
+                  });
+                };
+
+                window.lxDirectAdd = function(btn, variantId) {
                   btn.textContent = 'Adding...';
                   btn.disabled = true;
                   fetch(window.Shopify.routes.root + 'cart/add.js', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: variantId, quantity: 1 })
-                  })
-                  .then(function(res) { return res.json(); })
-                  .then(function() {
+                  }).then(function() {
                     btn.textContent = '✓ Added!';
                     btn.style.background = 'var(--lx-success)';
                     setTimeout(function() { location.reload(); }, 800);
-                  })
-                  .catch(function() {
+                  }).catch(function() {
                     btn.textContent = '+ Quick Add';
                     btn.disabled = false;
                   });
@@ -661,7 +758,7 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
 
                   {% if all_item_savings > 0 %}
                   <div class="lx-totals-row lx-totals-row--discount">
-                    <span class="lx-totals-row-label">Discount on MRP</span>
+                    <span class="lx-totals-row-label">Discount on MRP <span style="font-size:10px;font-weight:400;opacity:0.7;">(product offer)</span></span>
                     <span class="lx-totals-row-value">-{{ all_item_savings | money }}</span>
                   </div>
                   {% endif %}
