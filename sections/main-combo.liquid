@@ -34,7 +34,7 @@
   .fit11-slide { flex: 0 0 100%; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; width: 100%; height: 100%; }
   .fit11-slide img { width: 100%; height: 100%; object-fit: contain; } 
   
-  .fit11-dots { position: absolute; bottom: 16px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; pointer-events: none; z-index: 2; }
+  .fit11-dots { position: absolute; bottom: 16px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; pointer-events: none; z-index: 10; }
   .fit11-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.5); transition: all .4s ease; pointer-events: auto; cursor: pointer; }
   .fit11-dot.on { background: var(--lux-text); transform: scale(1.2); border-color: transparent; }
   
@@ -46,17 +46,18 @@
   
   /* ── ANIMATED TICKER ── */
   .fit11-info-ticker {
-    position: relative; width: 100%; height: 34px; overflow: hidden; margin-top: 12px; border-radius: 4px;
+    position: relative; width: 100%; height: 34px; overflow: hidden; margin-top: 12px; margin-bottom: 12px; border-radius: 4px;
     background: linear-gradient(89.98deg, #FFFFFF 0.02%, #F8F8FF 64.12%, #EEEEFE 86.04%, #FFFFFF 98.04%);
   }
   .fit11-shimmer-effect {
-    position: absolute; top: 0; left: 0; width: 200%; height: 100%; pointer-events: none; z-index: 1;
-    background: linear-gradient(-45deg, transparent, transparent 45%, rgba(65, 68, 232, 0.3) 45%, rgba(65, 68, 232, 0.3) 48%, transparent 48%, transparent 49%, rgba(65, 68, 232, 0.3) 49%, rgba(65, 68, 232, 0.3) 56%, transparent 56%, transparent 100%);
-    animation: shimmer-black 2.5s ease-in-out infinite forwards;
+    position: absolute; top: 0; left: -150%; width: 50%; height: 100%; pointer-events: none; z-index: 10;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8), transparent);
+    transform: skewX(-25deg);
+    animation: fit11-sheen 2.5s infinite forwards;
   }
-  @keyframes shimmer-black {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+  @keyframes fit11-sheen {
+    0% { left: -150%; }
+    100% { left: 200%; }
   }
   .fit11-ticker-inner {
     display: flex; flex-direction: column; width: 100%; transition: transform 0.6s ease-in-out; position: relative; z-index: 2;
