@@ -35,7 +35,7 @@
   .fit11-slide img { width: 100%; height: 100%; object-fit: contain; } 
   
   .fit11-dots { position: absolute; bottom: 16px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; pointer-events: none; z-index: 2; }
-  .fit11-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.2); transition: all .4s ease; pointer-events: auto; cursor: pointer; }
+  .fit11-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.5); transition: all .4s ease; pointer-events: auto; cursor: pointer; }
   .fit11-dot.on { background: var(--lux-text); transform: scale(1.2); border-color: transparent; }
   
   .fit11-thumbs { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; }
@@ -44,7 +44,28 @@
   .fit11-thumb.on { opacity: 1; border-color: var(--lux-text); }
   .fit11-thumb img { width: 100%; height: 100%; object-fit: contain; }
   
-  .fit11-return-banner { background: #EEF2FF; color: #2B428A; font-size: 13px; font-weight: 500; text-align: center; padding: 10px; width: 100%; margin-top: 12px; border-radius: 4px; }
+  /* ── ANIMATED TICKER ── */
+  .fit11-info-ticker {
+    position: relative; width: 100%; height: 34px; overflow: hidden; margin-top: 12px; border-radius: 4px;
+    background: linear-gradient(89.98deg, #FFFFFF 0.02%, #F8F8FF 64.12%, #EEEEFE 86.04%, #FFFFFF 98.04%);
+  }
+  .fit11-shimmer-effect {
+    position: absolute; top: 0; left: 0; width: 200%; height: 100%; pointer-events: none; z-index: 1;
+    background: linear-gradient(-45deg, transparent, transparent 45%, rgba(65, 68, 232, 0.3) 45%, rgba(65, 68, 232, 0.3) 48%, transparent 48%, transparent 49%, rgba(65, 68, 232, 0.3) 49%, rgba(65, 68, 232, 0.3) 56%, transparent 56%, transparent 100%);
+    animation: shimmer-black 2.5s ease-in-out infinite forwards;
+  }
+  @keyframes shimmer-black {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  .fit11-ticker-inner {
+    display: flex; flex-direction: column; width: 100%; transition: transform 0.6s ease-in-out; position: relative; z-index: 2;
+  }
+  .fit11-ticker-item {
+    width: 100%; height: 34px; flex-shrink: 0; text-align: center; line-height: 34px; font-size: 13px; color: #1A2148; margin: 0; padding: 0; font-family: var(--font-body);
+  }
+  .fit11-ticker-item span { font-weight: 700; color: #0C10E9; }
+
 
   /* ── DETAILS PANEL ── */
   .fit11-info { display: flex; flex-direction: column; gap: 24px; width: 100%; padding-top: 10px; }
@@ -78,7 +99,7 @@
   .fit11-variant-selectors { display: flex; flex-direction: column; gap: 20px; margin-bottom: 8px; width: 100%; }
   .fit11-option-fieldset { border: none; padding: 0; margin: 0; }
   .fit11-option-name { font-size: 12px; font-weight: 500; color: var(--lux-text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-family: var(--font-body); }
-  .fit11-variant-pills { display: flex; flex-wrap: wrap; gap: 10px; }
+  .fit11-variant-pills { display: flex; flex-wrap: nowrap; gap: 10px; }
   .fit11-variant-radio { display: none; }
   .fit11-variant-pill { 
     display: inline-flex; align-items: center; justify-content: center; 
@@ -270,7 +291,9 @@
           {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
             <div class="fit11-variant-selectors top-color-selector">
               <fieldset class="fit11-option-fieldset" style="border:none; padding:0; margin:0;">
-                <legend class="fit11-option-name" style="display: none;">{{ option.name }}</legend>
+                <legend class="fit11-option-name" style="display: block; margin-bottom: 12px; font-weight: 500; font-size: 13px; text-transform: none; letter-spacing: normal;">
+                  Available Colors: <span class="fit11-selected-color-label" style="font-weight: 700; color: var(--lux-text); text-transform: capitalize;">{{ option.selected_value }}</span>
+                </legend>
                 <div class="fit11-variant-pills">
                   {% for value in option.values %}
                     <input type="radio" 
@@ -321,8 +344,13 @@
         {% endfor %}
       {% endunless %}
 
-      <div class="fit11-return-banner">
-        7 Days Free Return/Exchange, Guaranteed
+      <div class="fit11-info-ticker">
+        <div class="fit11-shimmer-effect"></div>
+        <div class="fit11-ticker-inner fit11TickerWrapper">
+          <p class="fit11-ticker-item"><span>Lowest price</span> in last 30 days</p>
+          <p class="fit11-ticker-item"><span>7 Days Free Return/Exchange,</span> 11fit guaranteed</p>
+          <p class="fit11-ticker-item"><span>Lowest price</span> in last 30 days</p>
+        </div>
       </div>
     </div>
 
@@ -585,6 +613,27 @@
   dots.forEach(function(d, i) { d.addEventListener('click', function() { goTo(i); }); });
   thumbs.forEach(function(t, i) { t.addEventListener('click', function() { goTo(i); }); });
 
+  /* AUTO-SWIPE LOGIC */
+  if (total > 1) {
+    var autoSlideInterval = setInterval(function() {
+      goTo((cur + 1) % total);
+    }, 4000);
+    slides.addEventListener('touchstart', function() { clearInterval(autoSlideInterval); }, {passive:true});
+    slides.addEventListener('mousedown', function() { clearInterval(autoSlideInterval); }, {passive:true});
+  }
+
+  /* LIGHTBOX LOGIC */
+  document.querySelectorAll('.fit11-slide img').forEach(function(img) {
+    img.style.cursor = 'zoom-in';
+    img.addEventListener('click', function() {
+      var lightbox = document.getElementById('fit11Lightbox');
+      if(lightbox) {
+        document.getElementById('fit11LightboxImg').src = this.src;
+        lightbox.style.display = 'flex';
+      }
+    });
+  });
+
   /* SMART STICKY BAR LOGIC */
   var stickyBar = document.getElementById('fit11StickyBar');
   var mainBtnBox = document.getElementById('fit11MainBtnContainer');
@@ -748,13 +797,28 @@
       document.body.appendChild(bag);
       
       setTimeout(function() {
-        if(bag && bag.parentNode) {
-          bag.parentNode.removeChild(bag);
-        }
-      }, 800);
+        if(bag.parentNode) bag.parentNode.removeChild(bag);
+      }, 850);
     });
   });
 
+  /* TICKER LOGIC */
+  document.querySelectorAll('.fit11TickerWrapper').forEach(function(ticker) {
+    var items = ticker.querySelectorAll('.fit11-ticker-item');
+    if(items.length <= 1) return;
+    var curTick = 0;
+    setInterval(function() {
+      curTick++;
+      if (curTick >= items.length) {
+        ticker.style.transition = 'none';
+        ticker.style.transform = 'translateY(0)';
+        curTick = 1;
+        ticker.offsetHeight; 
+        ticker.style.transition = 'transform 0.6s ease-in-out';
+      }
+      ticker.style.transform = 'translateY(-' + (curTick * 34) + 'px)';
+    }, 3000);
+  });
 })();
 
 /* CLICK TO COPY COUPON LOGIC */
@@ -784,6 +848,11 @@ window.fit11CopyCoupon = function(cardElement, code) {
   }
 };
 </script>
+
+<div id="fit11Lightbox" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:999999; justify-content:center; align-items:center;">
+  <span style="position:absolute; top:20px; right:20px; color:white; font-size:40px; cursor:pointer;" onclick="document.getElementById('fit11Lightbox').style.display='none'">&times;</span>
+  <img id="fit11LightboxImg" style="max-width:90%; max-height:90%; object-fit:contain;">
+</div>
 
 {% schema %}
 {
