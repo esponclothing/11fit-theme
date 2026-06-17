@@ -676,17 +676,86 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
 
 <script>
 /* ═══════════════════════════════════════════════════
-   LUXURY CART — COUPON SYSTEM
+   LUXURY CART — COUPON & VIP SYSTEM
    ═══════════════════════════════════════════════════ */
 (function () {
   const STORAGE_KEY = 'lx_coupon_code';
   const STORAGE_TIME = 'lx_coupon_time';
+  let isVerifyingVip = false;
 
+  // --- DYNAMIC VIP AUTO-APPLY & AUTO-REMOVE ---
+  async function verifyVipState() {
+    if (isVerifyingVip) return;
+    
+    const vipCode = {{ section.settings.vip_discount_code | json }};
+    const vipThreshold = {{ section.settings.vip_threshold | times: 100 | json }} || 999999999;
+    
+    if (!vipCode || vipCode.trim() === '') return;
+
+    isVerifyingVip = true;
+
+    try {
+      // Fetch the true underlying state of the cart directly from Shopify API
+      const cartRes = await fetch(window.Shopify.routes.root + 'cart.js');
+      const cart = await cartRes.json();
+      
+      const cartTotal = cart.total_price;
+      const appliedDiscounts = cart.cart_level_discount_applications.map(d => d.title.toUpperCase());
+      const hasVipCode = appliedDiscounts.includes(vipCode.toUpperCase());
+      const manualCode = localStorage.getItem(STORAGE_KEY);
+      
+      // LOGIC: If cart is above threshold and code IS NOT applied -> Apply it.
+      if (cartTotal >= vipThreshold && !hasVipCode) {
+        let combinedCodes = vipCode;
+        if (manualCode && manualCode.toUpperCase() !== vipCode.toUpperCase()) {
+          combinedCodes += ',' + manualCode;
+        }
+        await fetch(window.Shopify.routes.root + 'cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ discount: combinedCodes })
+        });
+        location.reload(); // Refresh the DOM to show new grand total
+      } 
+      // LOGIC: If cart drops below threshold and code IS applied -> Remove it.
+      else if (cartTotal < vipThreshold && hasVipCode) {
+        await fetch(window.Shopify.routes.root + 'cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ discount: manualCode || '' }) 
+        });
+        location.reload(); // Refresh the DOM to revert the grand total
+      }
+    } catch (err) {
+      console.error('VIP Verification Error:', err);
+    } finally {
+      isVerifyingVip = false;
+    }
+  }
+
+  // Check state on initial page load
   document.addEventListener('DOMContentLoaded', function () {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) showAppliedState(saved);
+    verifyVipState();
   });
 
+  // Intercept AJAX cart updates (when user changes quantity + / -)
+  const originalFetch = window.fetch;
+  window.fetch = async function() {
+    const response = await originalFetch.apply(this, arguments);
+    const url = arguments[0];
+    
+    // If the theme makes an update to the cart via AJAX, wait a beat, then run the VIP check
+    if (typeof url === 'string' && (url.includes('/cart/change') || url.includes('/cart/add') || url.includes('/cart/update'))) {
+      setTimeout(() => {
+        verifyVipState();
+      }, 400); 
+    }
+    return response;
+  };
+
+  // --- MANUAL COUPON SYSTEM ---
   function showAppliedState(code) {
     const banner  = document.getElementById('lx-applied-coupon');
     const picker  = document.getElementById('lx-coupon-picker');
@@ -723,22 +792,24 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
     if (!code || !code.trim()) { setMsg('Please enter a coupon code.', 'error'); return; }
     code = code.trim().toUpperCase();
 
-    const existing = localStorage.getItem(STORAGE_KEY);
-    if (existing && existing !== code) {
-      await fetch('/cart/update.js', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ discount: '' })
-      });
+    const vipCode = {{ section.settings.vip_discount_code | json }};
+    const cartTotal = {{ cart.total_price | default: 0 }};
+    const vipThreshold = {{ section.settings.vip_threshold | times: 100 | json }} || 999999999;
+    
+    let finalCode = code;
+    
+    // Stack with VIP if VIP threshold is met
+    if (cartTotal >= vipThreshold && vipCode && vipCode.toUpperCase() !== code) {
+       finalCode = vipCode + ',' + code;
     }
 
     setMsg('Applying ' + code + '…', null);
 
     try {
-      const res = await fetch('/cart/update.js', {
+      const res = await fetch(window.Shopify.routes.root + 'cart/update.js', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ discount: code })
+        body: JSON.stringify({ discount: finalCode })
       });
 
       if (res.ok) {
@@ -762,11 +833,22 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
   };
 
   window.lxRemoveCoupon = async function () {
+    const vipCode = {{ section.settings.vip_discount_code | json }};
+    const cartTotal = {{ cart.total_price | default: 0 }};
+    const vipThreshold = {{ section.settings.vip_threshold | times: 100 | json }} || 999999999;
+    
+    let finalCode = '';
+    
+    // Ensure VIP remains applied when user removes their manual coupon
+    if (cartTotal >= vipThreshold && vipCode) {
+       finalCode = vipCode; 
+    }
+
     try {
-      const res = await fetch('/cart/update.js', {
+      const res = await fetch(window.Shopify.routes.root + 'cart/update.js', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ discount: '' })
+        body: JSON.stringify({ discount: finalCode })
       });
       if (res.ok) {
         localStorage.removeItem(STORAGE_KEY);
@@ -866,6 +948,12 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
       "id": "vip_threshold",
       "label": "VIP Discount Threshold (in ₹)",
       "default": 2500
+    },
+    {
+      "type": "text",
+      "id": "vip_discount_code",
+      "label": "VIP Auto-Discount Code",
+      "info": "This code auto-applies when the VIP threshold is reached. MUST be set to 'Combines with other discounts' in Shopify Admin to stack."
     }
   ],
   "blocks": [
