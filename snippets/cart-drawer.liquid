@@ -189,7 +189,7 @@
                                     {%- assign option_index = forloop.index0 -%}
                                     {%- assign selected_value = item.variant.options[option_index] -%}
                                     <div class="lx-direct-option-row" style="margin-top: 4px; display: flex; align-items: center; gap: 6px;">
-                                      <span style="font-size: 11px; color: #6B7280; text-transform: uppercase; font-weight: 600; font-family: inherit;">{{ option.name }}:</span>
+                                      <span style="font-size: 11px; color: #6B7280; text-transform: uppercase; font-weight: 600; font-family: inherit; width: 55px; display: inline-block;">{{ option.name }}:</span>
                                       <select class="lx-direct-option-select" data-option-index="{{ option_index }}" onchange="lxDirectChangeVariant(this)" style="font-size: 12px; padding: 3px 6px; border-radius: 4px; border: 1px solid #E5E7EB; background: #fff; font-family: inherit; cursor: pointer; color: #1A202C;">
                                         {%- for value in option.values -%}
                                           <option value="{{ value | escape }}" {% if value == selected_value %}selected{% endif %}>{{ value }}</option>
@@ -563,18 +563,9 @@
             {%- assign item_compare = item.variant.compare_at_price | default: item.variant.price -%}
             {%- assign item_mrp_discount = item_compare | minus: item.variant.price | times: item.quantity -%}
             {%- assign total_mrp_discount = total_mrp_discount | plus: item_mrp_discount -%}
-
-            {%- for allocation in item.line_level_discount_allocations -%}
-              {%- assign alloc_title_upper = allocation.discount_application.title | upcase -%}
-              {%- if alloc_title_upper == vip_code -%}
-                {%- assign total_vip_discount = total_vip_discount | plus: allocation.amount -%}
-              {%- else -%}
-                {%- assign total_other_discount = total_other_discount | plus: allocation.amount -%}
-              {%- endif -%}
-            {%- endfor -%}
           {%- endfor -%}
 
-          {%- for discount in cart.cart_level_discount_applications -%}
+          {%- for discount in cart.discount_applications -%}
             {%- assign disc_title_upper = discount.title | upcase -%}
             {%- if disc_title_upper == vip_code -%}
               {%- assign total_vip_discount = total_vip_discount | plus: discount.total_allocated_amount -%}
@@ -598,21 +589,22 @@
             </div>
             {% endif %}
 
-            {% if total_vip_discount > 0 %}
-            <div class="lx-totals-row lx-vip-discount-row" style="display:flex; justify-content:space-between; align-items:center; background:linear-gradient(90deg, #fffbeb, #fef3c7); border:1px solid #fcd34d; border-radius:8px; padding:6px 12px; margin:4px 0; font-size:13px; color:#92400e; width: 100%;">
-              <span class="lx-totals-row-label" style="font-weight:600; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                <span class="lx-vip-badge" style="background:linear-gradient(135deg, #b45309, #d97706); color:#fff; font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; letter-spacing:0.5px; white-space:nowrap;">👑 VIP</span> Discount
-              </span>
-              <span class="lx-totals-row-value lx-vip-amount" style="font-weight:700; font-size:15px; color:#b45309;">-{{ total_vip_discount | money }}</span>
-            </div>
-            {% endif %}
-
-            {% if total_other_discount > 0 %}
-            <div class="lx-totals-row lx-totals-row--discount" style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:13px; color:#16A34A;">
-              <span class="lx-totals-row-label" style="color:#16A34A;">Coupon / Automatic Discount</span>
-              <span class="lx-totals-row-value">-{{ total_other_discount | money }}</span>
-            </div>
-            {% endif %}
+            {%- for discount in cart.discount_applications -%}
+              {%- assign disc_title_upper = discount.title | upcase -%}
+              {%- if disc_title_upper == vip_code -%}
+                <div class="lx-totals-row lx-vip-discount-row" style="display:flex; justify-content:space-between; align-items:center; background:linear-gradient(90deg, #fffbeb, #fef3c7); border:1px solid #fcd34d; border-radius:8px; padding:6px 12px; margin:4px 0; font-size:13px; color:#92400e; width: 100%;">
+                  <span class="lx-totals-row-label" style="font-weight:600; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                    <span class="lx-vip-badge" style="background:linear-gradient(135deg, #b45309, #d97706); color:#fff; font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; letter-spacing:0.5px; white-space:nowrap;">👑 VIP</span> Discount ({{ discount.title }})
+                  </span>
+                  <span class="lx-totals-row-value lx-vip-amount" style="font-weight:700; font-size:15px; color:#b45309;">-{{ discount.total_allocated_amount | money }}</span>
+                </div>
+              {%- else -%}
+                <div class="lx-totals-row lx-totals-row--discount" style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:13px; color:#16A34A;">
+                  <span class="lx-totals-row-label" style="color:#16A34A;">Discount ({{ discount.title }})</span>
+                  <span class="lx-totals-row-value">-{{ discount.total_allocated_amount | money }}</span>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
 
             <div class="lx-totals-row" style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:13px;">
               <span class="lx-totals-row-label" style="color:#6B7280;">Shipping</span>
