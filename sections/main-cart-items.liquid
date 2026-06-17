@@ -199,6 +199,13 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
 .lx-totals-row--grand .lx-totals-row-label { font-size: 15px; font-weight: 700; color: var(--lx-text); }
 .lx-totals-row--grand .lx-totals-row-value { font-size: 18px; font-weight: 700; color: var(--lx-text); }
 
+/* VIP Discount Row */
+.lx-vip-discount-row { background: linear-gradient(90deg, #fffbeb, #fef3c7); border: 1px solid #fcd34d; border-radius: 8px; padding: 8px 12px; margin: 4px 0; }
+.lx-vip-discount-row .lx-totals-row-label { color: #92400e; font-weight: 600; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.lx-vip-badge { background: linear-gradient(135deg, #b45309, #d97706); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; letter-spacing: 0.5px; white-space: nowrap; }
+.lx-vip-amount { font-weight: 700 !important; font-size: 15px !important; color: #b45309 !important; }
+
+
 /* Total savings pill */
 .lx-total-savings-banner { background: var(--lx-success-bg); border: 1px solid var(--lx-success-bdr); border-radius: var(--lx-radius-sm); padding: 10px 14px; display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
 .lx-total-savings-banner i { color: var(--lx-success); font-size: 18px; }
@@ -588,11 +595,22 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                   </div>
                   {% endif %}
 
+                  {%- assign vip_code = section.settings.vip_discount_code | upcase -%}
                   {%- for discount in cart.cart_level_discount_applications -%}
+                    {%- assign disc_title_upper = discount.title | upcase -%}
+                    {%- if disc_title_upper == vip_code -%}
+                  <div class="lx-totals-row lx-vip-discount-row">
+                    <span class="lx-totals-row-label">
+                      <span class="lx-vip-badge">👑 VIP</span> Discount ({{ discount.title }})
+                    </span>
+                    <span class="lx-totals-row-value lx-vip-amount">-{{ discount.total_allocated_amount | money }}</span>
+                  </div>
+                    {%- else -%}
                   <div class="lx-totals-row lx-totals-row--discount">
                     <span class="lx-totals-row-label">Coupon ({{ discount.title }})</span>
                     <span class="lx-totals-row-value">-{{ discount.total_allocated_amount | money }}</span>
                   </div>
+                    {%- endif -%}
                   {%- endfor -%}
 
                   <div class="lx-totals-row">
