@@ -95,7 +95,7 @@
   .fit11-combo-title { font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
   .fit11-combo-title::before { content: ''; width: 4px; height: 14px; background: var(--lux-accent); display: block; }
 
-  .fit11-app-wrapper { width: 100%; margin-bottom: 20px; }
+  .fit11-app-wrapper { width: 100%; }
   .fit11-app-wrapper > div, .fit11-app-wrapper > iframe { box-sizing: border-box !important; max-width: 100% !important; }
   
   .fit11-btn-cart { width: 100% !important; height: 54px !important; margin: 24px 0 0 0 !important; background: var(--lux-text); color: var(--lux-surface); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; border: none; display: flex; align-items: center; justify-content: center; gap: 12px; transition: opacity 0.3s ease, background 0.4s ease; cursor: pointer; font-family: var(--font-body); border-radius: 4px; }
@@ -112,7 +112,7 @@
     display: inline-flex; align-items: center; justify-content: center; 
     padding: 10px 18px; border: 1px solid var(--lux-border); border-radius: 4px; 
     font-size: 13px; color: var(--lux-text); cursor: pointer; transition: all 0.3s ease; 
-    background: var(--lux-surface); user-select: none; font-weight: 400;
+    background: var(--lux-surface); user-select: none; font-weight: 400; scroll-snap-align: start;
   }
   .fit11-variant-pill:hover { border-color: var(--lux-text-muted); }
   .fit11-variant-radio:checked + .fit11-variant-pill { 
@@ -125,7 +125,7 @@
   .fit11-variant-pills { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
   .fit11-variant-pills::-webkit-scrollbar { display: none; }
   .fit11-variant-pill.is-color {
-    padding: 0; width: auto; height: auto; background: transparent; border: none; overflow: visible; opacity: 0.6; transition: all .3s ease; flex-shrink: 0; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; scroll-snap-align: start;
+    padding: 0; width: auto; height: auto; background: transparent; border: none; overflow: visible; opacity: 0.6; transition: all .3s ease; flex-shrink: 0; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px;
   }
   .fit11-variant-pill.is-color:hover { opacity: 1; }
   .fit11-color-swatch-wrap {
@@ -183,10 +183,10 @@
   .fit11-fly-bag svg { width: 20px; height: 20px; stroke: currentColor; fill: none; }
   
   @keyframes flyToCart {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.2) translateY(-20px); opacity: 0.9; }
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    50% { transform: translate(0, -20px) scale(1.2); opacity: 0.9; }
     100% { 
-      transform: scale(0.3) translate(var(--fly-x, 0), var(--fly-y, -100vh)); 
+      transform: translate(var(--fly-x, 0), var(--fly-y, -100vh)) scale(0.3); 
       opacity: 0; 
     }
   }
@@ -683,23 +683,7 @@
     });
   });
 
-  /* AUTO SCROLL COLOR VARIANTS */
-  var colorPillsWrap = document.querySelector('.fit11-variant-pills');
-  if (colorPillsWrap && colorPillsWrap.scrollWidth > colorPillsWrap.clientWidth) {
-    var autoScrollInterval = setInterval(function() {
-      var maxScroll = colorPillsWrap.scrollWidth - colorPillsWrap.clientWidth;
-      var scrollAmount = 82; // thumbnail width + gap
-      var nextScroll = colorPillsWrap.scrollLeft + scrollAmount;
-      
-      if (nextScroll > maxScroll + scrollAmount / 2) {
-        colorPillsWrap.scrollTo({left: 0, behavior: 'smooth'});
-      } else {
-        colorPillsWrap.scrollTo({left: nextScroll, behavior: 'smooth'});
-      }
-    }, 3000);
-    colorPillsWrap.addEventListener('touchstart', function() { clearInterval(autoScrollInterval); }, {passive:true});
-    colorPillsWrap.addEventListener('mousedown', function() { clearInterval(autoScrollInterval); }, {passive:true});
-  }
+  /* AUTO SCROLL COLOR VARIANTS REMOVED FOR MANUAL SNAP SWIPING */
 
   /* SMART STICKY BAR LOGIC REMOVED - ALWAYS SHOWN */
 
