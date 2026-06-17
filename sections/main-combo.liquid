@@ -24,7 +24,7 @@
   /* ── GLOBAL STRICT CONSTRAINTS ── */
   .fit11-page, .fit11-page * { box-sizing: border-box !important; }
   .fit11-page { max-width: 1300px; margin: 0 auto; padding-top: 40px; padding-bottom: 140px; color: var(--lux-text); background: var(--lux-bg); font-family: var(--font-body); width: 100%; overflow-x: hidden; }
-  .fit11-grid { display: grid; grid-template-columns: 55% 45%; gap: 40px; align-items: start; padding: 0 20px; width: 100%; }
+  .fit11-grid { display: grid; grid-template-columns: 11fr 9fr; gap: 40px; align-items: start; padding: 0 20px; width: 100%; }
 
   /* ── GALLERY ── */
   .fit11-gallery-wrap { position: sticky; top: 40px; display: flex; flex-direction: column; gap: 12px; width: 100%; }
@@ -114,7 +114,7 @@
   .fit11-offers-title { font-size: 16px; font-weight: 600; color: #1a202c; }
   .fit11-offers-view-all { font-size: 13px; font-weight: 600; color: #b89356; cursor: pointer; }
   
-  .fit11-variant-pills { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
+  .fit11-variant-pills { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; -webkit-overflow-scrolling: touch; touch-action: pan-x; scroll-snap-type: x mandatory; }
   .fit11-variant-pills::-webkit-scrollbar { display: none; }
   
   .fit11-offers-scroll { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding-bottom: 12px; scroll-snap-type: x mandatory; }
@@ -556,7 +556,7 @@
 
       requestAnimationFrame(function() {
         requestAnimationFrame(function() {
-          bag.style.transition = 'transform 0.9s cubic-bezier(0.3, 0, 0.2, 1), opacity 0.8s ease-in-out';
+          bag.style.transition = 'transform 1.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 1.2s ease-in-out';
           bag.style.transform = 'translate(' + endX + 'px, ' + endY + 'px) scale(0.2)';
           bag.style.opacity = '0.3';
         });
@@ -564,7 +564,7 @@
 
       setTimeout(function() {
         if(bag.parentNode) bag.parentNode.removeChild(bag);
-      }, 950);
+      }, 1450);
     }
 
     document.addEventListener('click', function(e) {
