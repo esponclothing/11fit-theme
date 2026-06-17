@@ -90,12 +90,13 @@
   .fit11-price-lowest { font-size: 12px; font-weight: 500; color: #8A2BE2; font-family: var(--font-body); margin-bottom: 8px; }
 
   /* ── MAIN DESKTOP BUTTON & APP BLOCKS ── */
-  .fit11-main-action-btns { background: transparent; padding: 8px 0 0 0; width: 100%; border-radius: 0; }
+  .fit11-main-action-btns { background: transparent; padding: 0; margin: 0; width: 100%; border-radius: 0; }
   .fit11-combo-title { font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
   .fit11-combo-title::before { content: ''; width: 4px; height: 14px; background: var(--lux-accent); display: block; }
 
-  .fit11-app-wrapper { width: 100%; }
-  .fit11-app-wrapper > div, .fit11-app-wrapper > iframe { box-sizing: border-box !important; max-width: 100% !important; }
+  .fit11-app-wrapper { width: 100%; margin: 0 !important; padding: 0 !important; }
+  .fit11-app-wrapper:empty { display: none !important; }
+  .fit11-app-wrapper > div, .fit11-app-wrapper > iframe { box-sizing: border-box !important; max-width: 100% !important; margin: 0 !important; }
   
   .fit11-btn-cart { width: 100% !important; height: 54px !important; margin: 20px 0 0 0 !important; background: var(--lux-text); color: var(--lux-surface); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; border: none; display: flex; align-items: center; justify-content: center; gap: 12px; transition: opacity 0.3s ease, background 0.4s ease; cursor: pointer; font-family: var(--font-body); border-radius: 4px; }
   .fit11-btn-cart:hover { opacity: 0.9; }
@@ -113,7 +114,7 @@
   .fit11-offers-title { font-size: 16px; font-weight: 600; color: #1a202c; }
   .fit11-offers-view-all { font-size: 13px; font-weight: 600; color: #b89356; cursor: pointer; }
   
-  .fit11-variant-pills { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; -webkit-overflow-scrolling: touch; }
+  .fit11-variant-pills { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; -webkit-overflow-scrolling: touch; touch-action: pan-x; }
   .fit11-variant-pills::-webkit-scrollbar { display: none; }
   
   .fit11-offers-scroll { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding-bottom: 12px; scroll-snap-type: x mandatory; }
@@ -137,25 +138,16 @@
 
   /* ── FASHION BAG FLY ANIMATION ── */
   .fit11-fly-bag { 
-    position: fixed; z-index: 999999;
-    width: 40px; height: 40px;
-    background: var(--lux-text, #111);
-    color: var(--lux-surface, #fff); border-radius: 50%;
+    position: fixed !important; 
+    z-index: 9999999 !important; 
+    pointer-events: none !important; 
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    animation: flyToCart 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-    pointer-events: none;
+    background: var(--lux-text);
+    color: var(--lux-surface);
+    border-radius: 50%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important;
   }
-  .fit11-fly-bag svg { width: 20px; height: 20px; stroke: currentColor; fill: none; }
-  
-  @keyframes flyToCart {
-    0% { transform: translate(0, 0) scale(1); opacity: 1; }
-    50% { transform: translate(0, -20px) scale(1.2); opacity: 0.9; }
-    100% { 
-      transform: translate(var(--fly-x, 0), var(--fly-y, -100vh)) scale(0.3); 
-      opacity: 0; 
-    }
-  }
+  .fit11-fly-bag svg { width: 55%; height: 55%; stroke: currentColor; fill: none; }
 
   /* ── TRUST BADGES ── */
   .fit11-trust-badges { display: flex; justify-content: space-between; text-align: center; border-top: 1px solid var(--lux-border); border-bottom: 1px solid var(--lux-border); padding: 16px 0; margin-top: 16px; background: transparent; }
@@ -215,8 +207,8 @@
     .fit11-slide img { width: 100%; height: 100%; object-fit: contain; padding: 0; } 
     .fit11-thumbs { padding: 8px 16px; }
     
-    .fit11-info { width: 100%; padding: 4px 16px 24px 16px; gap: 8px; text-align: left; margin: 0; }
-    .fit11-header-group { padding-bottom: 0px; border-bottom: none; align-items: flex-start; }
+    .fit11-info { width: 100%; padding: 4px 16px 24px 16px; gap: 0px; text-align: left; margin: 0; }
+    .fit11-header-group { padding-bottom: 0px; margin-bottom: 0px; border-bottom: none; align-items: flex-start; }
     .fit11-title { font-size: 26px; text-align: left; } 
     .fit11-price-row { justify-content: flex-start; }
     
@@ -536,41 +528,50 @@
       });
     }
 
-    // Capture phase event listener to bypass third-party click interception or dynamic DOM replacement
+    // FASHION BAG FLY ANIMATION FUNCTION
+    function playBagAnimation(sourceButton) {
+      if(!sourceButton) return;
+      var btnRect = sourceButton.getBoundingClientRect();
+      var cartIcon = document.querySelector('.header__icon--cart, #cart-icon-bubble, .cart-icon-wrapper, a[href="/cart"], .cart-count');
+      var cartRect = cartIcon ? cartIcon.getBoundingClientRect() : { top: 20, left: window.innerWidth - 60, width: 40, height: 40 };
+
+      var bagSize = 44;
+      var bag = document.createElement('div');
+      bag.className = 'fit11-fly-bag';
+      bag.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z"/><path d="M9 11v-5a3 3 0 0 1 6 0v5"/></svg>';
+
+      var startX = btnRect.left + (btnRect.width / 2) - (bagSize / 2);
+      var startY = btnRect.top + (btnRect.height / 2) - (bagSize / 2);
+
+      bag.style.top = '0px'; bag.style.left = '0px';
+      bag.style.width = bagSize + 'px'; bag.style.height = bagSize + 'px';
+      bag.style.transform = 'translate(' + startX + 'px, ' + startY + 'px) scale(0.5)';
+      bag.style.opacity = '1';
+
+      document.documentElement.appendChild(bag);
+      void bag.offsetWidth;
+
+      var endX = cartRect.left + (cartRect.width / 2) - (bagSize / 2);
+      var endY = cartRect.top + (cartRect.height / 2) - (bagSize / 2);
+
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          bag.style.transition = 'transform 0.9s cubic-bezier(0.3, 0, 0.2, 1), opacity 0.8s ease-in-out';
+          bag.style.transform = 'translate(' + endX + 'px, ' + endY + 'px) scale(0.2)';
+          bag.style.opacity = '0.3';
+        });
+      });
+
+      setTimeout(function() {
+        if(bag.parentNode) bag.parentNode.removeChild(bag);
+      }, 950);
+    }
+
     document.addEventListener('click', function(e) {
       var btn = e.target.closest('.fit11-btn-cart');
       if (btn) {
         showLoaders();
-        
-        // FASHION BAG FLY ANIMATION
-        var rect = btn.getBoundingClientRect();
-        var startX = rect.left + rect.width / 2;
-        var startY = rect.top + rect.height / 2;
-        
-        var cartIcon = document.querySelector('.header__icon--cart, #cart-icon-bubble');
-        var endX = window.innerWidth - 40, endY = 20; 
-        
-        if(cartIcon) {
-          var cartRect = cartIcon.getBoundingClientRect();
-          endX = cartRect.left + cartRect.width / 2;
-          endY = cartRect.top + cartRect.height / 2;
-        }
-        
-        var bag = document.createElement('div');
-        bag.className = 'fit11-fly-bag';
-        bag.style.left = startX - 20 + 'px';
-        bag.style.top = startY - 20 + 'px';
-        bag.style.setProperty('--fly-x', (endX - startX) + 'px');
-        bag.style.setProperty('--fly-y', (endY - startY) + 'px');
-        
-        bag.innerHTML = '<svg viewBox="0 0 24 24" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>';
-        document.body.appendChild(bag);
-        
-        setTimeout(function() {
-          if(bag && bag.parentNode) {
-            bag.parentNode.removeChild(bag);
-          }
-        }, 800);
+        playBagAnimation(btn);
 
         // Fallback safety timeout to reset loading state if submission fails
         setTimeout(function() {
