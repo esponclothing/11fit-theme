@@ -43,6 +43,8 @@
   .fit11-thumb { width: 72px; height: 96px; flex-shrink: 0; overflow: hidden; cursor: pointer; opacity: 0.6; transition: all .3s ease; background: var(--lux-surface); border-radius: 6px; border: 1px solid transparent; }
   .fit11-thumb.on { opacity: 1; border-color: var(--lux-text); }
   .fit11-thumb img { width: 100%; height: 100%; object-fit: contain; }
+  
+  .fit11-return-banner { background: #EEF2FF; color: #2B428A; font-size: 13px; font-weight: 500; text-align: center; padding: 10px; width: 100%; margin-top: 12px; border-radius: 4px; }
 
   /* ── DETAILS PANEL ── */
   .fit11-info { display: flex; flex-direction: column; gap: 24px; width: 100%; padding-top: 10px; }
@@ -132,6 +134,34 @@
   .fit11-offer-timer { position: absolute; bottom: -10px; right: 16px; background: #ed8936; color: #ffffff; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; z-index: 2; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: background 0.3s; }
   .fit11-offer-card.expired .fit11-offer-timer { background: #a0aec0; }
 
+  /* ── FASHION BAG FLY ANIMATION ── */
+  .fit11-fly-bag { 
+    position: fixed; z-index: 999999;
+    width: 40px; height: 40px;
+    background: var(--lux-text, #111);
+    color: var(--lux-surface, #fff); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    animation: flyToCart 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    pointer-events: none;
+  }
+  .fit11-fly-bag svg { width: 20px; height: 20px; stroke: currentColor; fill: none; }
+  
+  @keyframes flyToCart {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2) translateY(-20px); opacity: 0.9; }
+    100% { 
+      transform: scale(0.3) translate(var(--fly-x, 0), var(--fly-y, -100vh)); 
+      opacity: 0; 
+    }
+  }
+
+  /* ── TRUST BADGES ── */
+  .fit11-trust-badges { display: flex; justify-content: space-between; text-align: center; border-top: 1px solid var(--lux-border); border-bottom: 1px solid var(--lux-border); padding: 16px 0; margin-top: 16px; background: transparent; }
+  .fit11-trust-item { flex: 1; font-size: 11px; font-weight: 600; color: var(--lux-text-muted); line-height: 1.4; display: flex; flex-direction: column; align-items: center; gap: 8px; border-right: 1px solid var(--lux-border); }
+  .fit11-trust-item:last-child { border-right: none; }
+  .fit11-trust-item i { font-size: 24px; color: var(--lux-text); }
+
   /* ── ACCORDIONS ── */
   .fit11-accord-group { border-top: 1px solid var(--lux-border); margin-top: 10px; width: 100%; }
   .fit11-accord { border-bottom: 1px solid var(--lux-border); width: 100%; }
@@ -203,6 +233,8 @@
     .fit11-sticky-meta { display: none !important; } 
     .fit11-sticky-btns { width: 100% !important; margin: 0 auto; display: block; } 
     .fit11-sticky-btns .fit11-btn-cart { height: 48px !important; width: 100% !important; }
+
+    .fit11-trust-badges { margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; }
   }
 </style>
 
@@ -231,6 +263,10 @@
           {% endfor %}
         </div>
       {% endif %}
+
+      <div class="fit11-return-banner">
+        7 Days Free Return/Exchange, Guaranteed
+      </div>
     </div>
 
     {% comment %} ── RIGHT: DETAILS ── {% endcomment %}
@@ -252,6 +288,13 @@
           <div class="fit11-size-chart-link" onclick="fit11ToggleModal(true)">
             <i class="ti ti-ruler-2"></i><span>Size Guide</span>
           </div>
+        </div>
+
+        {% comment %} ── TRUST BADGES ── {% endcomment %}
+        <div class="fit11-trust-badges">
+          <div class="fit11-trust-item"><i class="ti ti-cash"></i>CASH ON<br>DELIVERY</div>
+          <div class="fit11-trust-item"><i class="ti ti-truck-delivery"></i>FREE<br>SHIPPING</div>
+          <div class="fit11-trust-item"><i class="ti ti-rotate-clockwise"></i>EASY<br>RETURNS</div>
         </div>
       </div>
       
@@ -279,25 +322,36 @@
                              data-is-color="true">
                       
                       <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="fit11-variant-pill is-color" title="{{ value }}">
-                        {% assign color_handle = value | handle %}
-                        {% assign css_color = color_handle %}
-                        {% case color_handle %}
-                          {% when 'navy-blue' %}{% assign css_color = '#000080' %}
-                          {% when 'bottle-green' %}{% assign css_color = '#006A4E' %}
-                          {% when 'light-baby-pink' %}{% assign css_color = '#F4C2C2' %}
-                          {% when 'lavender' %}{% assign css_color = '#E6E6FA' %}
-                          {% when 'baby-blue' %}{% assign css_color = '#89CFF0' %}
-                          {% when 'flamingo' %}{% assign css_color = '#FC8EAC' %}
-                          {% when 'jade' %}{% assign css_color = '#00A86B' %}
-                          {% when 'off-white' %}{% assign css_color = '#FAF9F6' %}
-                          {% when 'maroon' %}{% assign css_color = '#800000' %}
-                          {% when 'white' %}{% assign css_color = '#FFFFFF' %}
-                          {% when 'black' %}{% assign css_color = '#000000' %}
-                          {% when 'red' %}{% assign css_color = '#FF0000' %}
-                          {% else %}{% assign css_color = value | split: ' ' | last | downcase %}
-                        {% endcase %}
-                        {% assign swatch_image = color_handle | append: '.png' %}
-                        <span class="fit11-color-swatch" style="background-color: {{ css_color }}; background-image: url('{{ swatch_image | file_url }}'); background-size: cover; background-position: center;"></span>
+                        {% assign variant_image = null %}
+                        {% for variant in product.variants %}
+                          {% if variant.options contains value and variant.featured_image %}
+                            {% assign variant_image = variant.featured_image %}
+                            {% break %}
+                          {% endif %}
+                        {% endfor %}
+                        
+                        {% if variant_image != null %}
+                          <span class="fit11-color-swatch" style="background-image: url('{{ variant_image | img_url: '100x' }}'); background-size: cover; background-position: center;"></span>
+                        {% else %}
+                          {% assign color_handle = value | handle %}
+                          {% assign css_color = color_handle %}
+                          {% case color_handle %}
+                            {% when 'navy-blue' %}{% assign css_color = '#000080' %}
+                            {% when 'bottle-green' %}{% assign css_color = '#006A4E' %}
+                            {% when 'light-baby-pink' %}{% assign css_color = '#F4C2C2' %}
+                            {% when 'lavender' %}{% assign css_color = '#E6E6FA' %}
+                            {% when 'baby-blue' %}{% assign css_color = '#89CFF0' %}
+                            {% when 'flamingo' %}{% assign css_color = '#FC8EAC' %}
+                            {% when 'jade' %}{% assign css_color = '#00A86B' %}
+                            {% when 'off-white' %}{% assign css_color = '#FAF9F6' %}
+                            {% when 'maroon' %}{% assign css_color = '#800000' %}
+                            {% when 'white' %}{% assign css_color = '#FFFFFF' %}
+                            {% when 'black' %}{% assign css_color = '#000000' %}
+                            {% when 'red' %}{% assign css_color = '#FF0000' %}
+                            {% else %}{% assign css_color = value | split: ' ' | last | downcase %}
+                          {% endcase %}
+                          <span class="fit11-color-swatch" style="background-color: {{ css_color }};"></span>
+                        {% endif %}
                       </label>
                     {% endfor %}
                   </div>
@@ -660,6 +714,46 @@
       radio.addEventListener('change', updateSelectedVariant);
     });
   }
+
+  /* FASHION BAG FLY ANIMATION */
+  var addBtns = document.querySelectorAll('.fit11-btn-cart:not(.product-form__submit)'); // excluding form submit if handled natively or manually
+  // Actually, we should bind it to all add to cart buttons
+  document.querySelectorAll('.fit11-btn-cart').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      if(btn.disabled || btn.classList.contains('loading')) return;
+      
+      var rect = btn.getBoundingClientRect();
+      var startX = rect.left + rect.width / 2;
+      var startY = rect.top + rect.height / 2;
+      
+      // Look for the cart icon in the header (Dawn default or fit11 specific)
+      var cartIcon = document.querySelector('.header__icon--cart, #cart-icon-bubble');
+      var endX = window.innerWidth - 40, endY = 20; // fallback
+      
+      if(cartIcon) {
+        var cartRect = cartIcon.getBoundingClientRect();
+        endX = cartRect.left + cartRect.width / 2;
+        endY = cartRect.top + cartRect.height / 2;
+      }
+      
+      var bag = document.createElement('div');
+      bag.className = 'fit11-fly-bag';
+      bag.style.left = startX - 20 + 'px';
+      bag.style.top = startY - 20 + 'px';
+      bag.style.setProperty('--fly-x', (endX - startX) + 'px');
+      bag.style.setProperty('--fly-y', (endY - startY) + 'px');
+      
+      bag.innerHTML = '<svg viewBox="0 0 24 24" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>';
+      
+      document.body.appendChild(bag);
+      
+      setTimeout(function() {
+        if(bag && bag.parentNode) {
+          bag.parentNode.removeChild(bag);
+        }
+      }, 800);
+    });
+  });
 
 })();
 
