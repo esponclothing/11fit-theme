@@ -70,22 +70,23 @@
 
 
   /* ── DETAILS PANEL ── */
-  .fit11-info { display: flex; flex-direction: column; gap: 24px; width: 100%; padding-top: 10px; }
+  .fit11-info { display: flex; flex-direction: column; gap: 8px; width: 100%; padding-top: 0px; }
   
-  .fit11-header-group { display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid var(--lux-border); padding-bottom: 24px; width: 100%; }
-  .fit11-title { font-size: 32px; font-weight: 400; line-height: 1.2; color: var(--lux-text); font-family: var(--font-heading); word-wrap: break-word; }
+  .fit11-header-group { display: flex; flex-direction: column; gap: 4px; border-bottom: 1px solid var(--lux-border); padding-bottom: 16px; width: 100%; }
+  .fit11-title { font-size: 20px; font-weight: 500; line-height: 1.3; color: var(--lux-text); font-family: var(--font-body); word-wrap: break-word; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .fit11-title i { font-size: 20px; color: var(--lux-text); cursor: pointer; padding-top: 2px; }
   
   /* ── RATINGS ROW & SIZE CHART LINK (MOVED BELOW PRICE) ── */
-  .fit11-rating-row { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 8px; gap: 12px; }
+  .fit11-rating-row { display: flex; justify-content: flex-start; align-items: center; width: 100%; margin-top: 8px; gap: 12px; }
   .fit11-size-chart-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--lux-accent); cursor: pointer; text-decoration: underline; text-underline-offset: 4px; transition: color 0.3s ease; }
   .fit11-size-chart-link:hover { color: var(--lux-text); }
   
   /* ── PRICE ── */
   .fit11-price-wrapper { display: flex; flex-direction: column; width: 100%; margin-top: 4px; }
   .fit11-price-top { display: flex; align-items: baseline; gap: 8px; margin-bottom: 2px; }
-  .fit11-price-main { font-size: 24px; font-weight: 700; color: #111111; font-family: var(--font-body); }
+  .fit11-price-main { font-size: 22px; font-weight: 700; color: #111111; font-family: var(--font-body); }
   .fit11-price-off { font-size: 14px; font-weight: 700; color: #008C2D; font-family: var(--font-body); }
-  .fit11-price-mrp { font-size: 12px; color: #666666; font-family: var(--font-body); margin-bottom: 2px; }
+  .fit11-price-mrp { font-size: 13px; color: #666666; font-family: var(--font-body); margin-bottom: 2px; }
   .fit11-price-old { text-decoration: line-through; }
   .fit11-price-taxes { font-size: 11px; }
   .fit11-price-lowest { font-size: 12px; font-weight: 500; color: #8A2BE2; font-family: var(--font-body); margin-bottom: 8px; }
@@ -197,20 +198,22 @@
   .fit11-trust-item:last-child { border-right: none; }
   .fit11-trust-item i { font-size: 24px; color: var(--lux-text); }
 
-  /* ── ACCORDIONS ── */
-  .fit11-accord-group { border-top: 1px solid var(--lux-border); margin-top: 10px; width: 100%; }
+  /* ── ACCORDIONS & HIGHLIGHTS ── */
+  .fit11-accord-group { border-top: none; margin-top: 0; width: 100%; }
   .fit11-accord { border-bottom: 1px solid var(--lux-border); width: 100%; }
-  .fit11-accord summary { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; cursor: pointer; list-style: none; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--lux-text); user-select: none; }
+  .fit11-accord summary { display: flex; align-items: center; padding: 16px 0; cursor: pointer; list-style: none; font-size: 14px; font-weight: 600; color: var(--lux-text); user-select: none; }
   .fit11-accord summary::-webkit-details-marker { display: none; }
-  .fit11-accord summary i { font-size: 18px; color: var(--lux-text-muted); transition: transform .4s cubic-bezier(0.4, 0, 0.2, 1); font-weight: 300; flex-shrink: 0; }
-  .fit11-accord[open] summary i { transform: rotate(135deg); color: var(--lux-text); }
+  .fit11-accord summary i.ti-chevron-down { font-size: 18px; color: var(--lux-text); transition: transform .4s cubic-bezier(0.4, 0, 0.2, 1); font-weight: 300; flex-shrink: 0; }
+  .fit11-accord[open] summary i.ti-chevron-down { transform: rotate(180deg); }
   
   .fit11-acc-body { padding-bottom: 24px; font-size: 14px; color: var(--lux-text-muted); line-height: 1.8; font-weight: 300; word-break: break-word; }
-  .fit11-spec-table { width: 100%; border-collapse: collapse; }
-  .fit11-spec-table tr { border-bottom: 1px solid var(--lux-border); }
-  .fit11-spec-table td { padding: 12px 0; font-size: 14px; vertical-align: top; }
-  .fit11-spec-table td:first-child { color: var(--lux-text-muted); width: 40%; }
-  .fit11-spec-table td:last-child { color: var(--lux-text); font-weight: 400; word-break: break-word; }
+  
+  .fit11-highlights-wrapper { margin-top: 24px; margin-bottom: 8px; width: 100%; }
+  .fit11-highlights-title { font-family: var(--font-heading); font-size: 18px; font-weight: 600; margin-bottom: 16px; color: var(--lux-text); }
+  .fit11-highlights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; }
+  .fit11-highlight-item { display: flex; flex-direction: column; gap: 4px; border-bottom: 1px solid #E5E5E5; padding-bottom: 8px; }
+  .fit11-highlight-label { font-size: 12px; color: var(--lux-text-muted); font-family: var(--font-body); }
+  .fit11-highlight-val { font-size: 14px; font-weight: 500; color: var(--lux-text); font-family: var(--font-body); text-transform: capitalize; }
 
   .fit11-size-table { width: 100%; border-collapse: collapse; }
   .fit11-size-table tr { border-bottom: 1px solid var(--lux-border); }
@@ -376,7 +379,7 @@
     <div class="fit11-info">
       
       <div class="fit11-header-group">
-        <h1 class="fit11-title">{{ product.title }}</h1>
+        <h1 class="fit11-title">{{ product.title }} <i class="ti ti-share" onclick="if(navigator.share){navigator.share({url: window.location.href, title: document.title});}"></i></h1>
         <div class="fit11-price-wrapper">
           <div class="fit11-price-top">
             <span class="fit11-price-main">{{ product.price | money_without_trailing_zeros }}</span>
@@ -392,12 +395,9 @@
           {% endif %}
         </div>
 
-        {% comment %} Ratings & Size Guide now below MRP {% endcomment %}
-        <div class="fit11-rating-row">
+        {% comment %} Ratings now below MRP {% endcomment %}
+        <div class="fit11-rating-row" style="justify-content: flex-start;">
           <div class="AirReviews-Widget AirReviews-Widget--Stars"></div>
-          <div class="fit11-size-chart-link" onclick="fit11ToggleModal(true)">
-            <i class="ti ti-ruler-2"></i><span>Size Guide</span>
-          </div>
         </div>
       </div>
       
@@ -504,32 +504,56 @@
         <div class="fit11-trust-item"><i class="ti ti-rotate-clockwise"></i>EASY<br>RETURNS</div>
       </div>
 
+      {% comment %} ── KEY HIGHLIGHTS ── {% endcomment %}
+      <div class="fit11-highlights-wrapper">
+        <h3 class="fit11-highlights-title">Key Highlights</h3>
+        <div class="fit11-highlights-grid">
+          <div class="fit11-highlight-item">
+            <span class="fit11-highlight-label">Brand</span>
+            <span class="fit11-highlight-val">{{ product.vendor }}</span>
+          </div>
+          {% if product.type != blank %}
+          <div class="fit11-highlight-item">
+            <span class="fit11-highlight-label">Category</span>
+            <span class="fit11-highlight-val">{{ product.type }}</span>
+          </div>
+          {% endif %}
+          {% for tag in product.tags %}
+            {% if tag contains ':' %}
+              {% assign parts = tag | split: ':' %}
+              <div class="fit11-highlight-item">
+                <span class="fit11-highlight-label">{{ parts[0] | replace: '_', ' ' | capitalize }}</span>
+                <span class="fit11-highlight-val">{{ parts[1] | strip }}</span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
       {% comment %} ── ACCORDIONS ── {% endcomment %}
       <div class="fit11-accord-group">
         {% if product.description != blank %}
           <details class="fit11-accord">
-            <summary>Description <i class="ti ti-plus" aria-hidden="true"></i></summary>
+            <summary style="display: flex; align-items: center; gap: 10px;">
+              <i class="ti ti-file-description" style="font-size:20px; color:var(--lux-text);"></i>
+              <div style="display:flex; flex-direction:column; gap:2px; margin-right:auto;">
+                <span style="font-weight:600; text-transform:none; letter-spacing:normal;">Product Description</span>
+                <span style="font-size:12px; font-weight:400; color:var(--lux-text-muted); text-transform:none; letter-spacing:normal;">Manufacture, Care and Fit</span>
+              </div>
+              <i class="ti ti-chevron-down" aria-hidden="true" style="margin-left:auto;"></i>
+            </summary>
             <div class="fit11-acc-body">{{ product.description }}</div>
           </details>
         {% endif %}
-        <details class="fit11-accord" open>
-          <summary>Specifications <i class="ti ti-plus" aria-hidden="true"></i></summary>
-          <div class="fit11-acc-body">
-            <table class="fit11-spec-table">
-              <tr><td>Brand</td><td>{{ product.vendor }}</td></tr>
-              {% if product.type != blank %}<tr><td>Category</td><td>{{ product.type }}</td></tr>{% endif %}
-              {% for tag in product.tags %}
-                {% if tag contains ':' %}
-                  {% assign parts = tag | split: ':' %}
-                  <tr><td>{{ parts[0] | replace: '_', ' ' | capitalize }}</td><td>{{ parts[1] | strip }}</td></tr>
-                {% endif %}
-              {% endfor %}
-            </table>
-          </div>
-        </details>
         {% if section.settings.delivery_text != blank %}
           <details class="fit11-accord">
-            <summary>Shipping &amp; Returns <i class="ti ti-plus" aria-hidden="true"></i></summary>
+            <summary style="display: flex; align-items: center; gap: 10px;">
+              <i class="ti ti-truck" style="font-size:20px; color:var(--lux-text);"></i>
+              <div style="display:flex; flex-direction:column; gap:2px; margin-right:auto;">
+                <span style="font-weight:600; text-transform:none; letter-spacing:normal;">Free Shipping</span>
+              </div>
+              <i class="ti ti-chevron-down" aria-hidden="true" style="margin-left:auto;"></i>
+            </summary>
             <div class="fit11-acc-body">{{ section.settings.delivery_text }}</div>
           </details>
         {% endif %}
