@@ -943,6 +943,122 @@
       selects.forEach(function(sel) { sel.disabled = false; });
     });
   };
+  // --- GLOBAL VIP AUTO-APPLY & AUTO-REMOVE SYSTEM ---
+  let isVerifyingVip = false;
+
+  async function verifyVipState(isInitialLoad) {
+    if (isVerifyingVip) return;
+    
+    const config = window.lxVipConfig || { vipCode: 'PURCHASE1999', vipThreshold: 250000 };
+    const vipCode = config.vipCode;
+    const vipThreshold = config.vipThreshold;
+    
+    if (!vipCode || vipCode.trim() === '') return;
+
+    isVerifyingVip = true;
+    const attemptKey = 'lx_vip_attempt_' + vipCode.toUpperCase();
+
+    try {
+      const cartRes = await fetch(window.Shopify.routes.root + 'cart.js');
+      const cart = await cartRes.json();
+      
+      const cartTotal = cart.total_price;
+      const appliedDiscounts = cart.cart_level_discount_applications.map(d => d.title.toUpperCase());
+      const hasVipCode = appliedDiscounts.includes(vipCode.toUpperCase());
+      const manualCode = localStorage.getItem('lx_coupon_code');
+      
+      // LOGIC 1: Cart is above threshold, but code is NOT applied -> Try to apply it.
+      if (cartTotal >= vipThreshold && !hasVipCode) {
+        const attemptStatus = sessionStorage.getItem(attemptKey);
+        if (attemptStatus === 'trying') {
+          sessionStorage.setItem(attemptKey, 'failed');
+          return;
+        } else if (attemptStatus === 'failed') {
+          return;
+        }
+
+        sessionStorage.setItem(attemptKey, 'trying');
+
+        let combinedCodes = vipCode;
+        if (manualCode && manualCode.toUpperCase() !== vipCode.toUpperCase()) {
+          combinedCodes += ',' + manualCode;
+        }
+
+        await fetch(window.Shopify.routes.root + 'cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ discount: combinedCodes })
+        });
+        
+        if (isInitialLoad) {
+          location.reload();
+        } else {
+          refreshCartUI();
+        }
+      } 
+      // LOGIC 2: Successfully applied -> Clear flags
+      else if (cartTotal >= vipThreshold && hasVipCode) {
+        sessionStorage.removeItem(attemptKey);
+        const errorNotice = document.getElementById('lx-vip-error-notice');
+        if (errorNotice) errorNotice.style.display = 'none';
+      }
+      // LOGIC 3: Cart dropped below threshold, but VIP is still applied -> Remove it.
+      else if (cartTotal < vipThreshold && hasVipCode) {
+        await fetch(window.Shopify.routes.root + 'cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ discount: manualCode || '' }) 
+        });
+        sessionStorage.removeItem(attemptKey);
+        
+        if (isInitialLoad) {
+          location.reload();
+        } else {
+          refreshCartUI();
+        }
+      }
+      // LOGIC 4: Cart is below threshold and it is correctly not applied -> Clear flags.
+      else if (cartTotal < vipThreshold && !hasVipCode) {
+         sessionStorage.removeItem(attemptKey);
+      }
+    } catch (err) {
+      console.error('VIP Verification Error:', err);
+    } finally {
+      isVerifyingVip = false;
+    }
+  }
+
+  function refreshCartUI() {
+    const drawerItems = document.querySelector('cart-drawer-items');
+    const cartItems = document.querySelector('cart-items');
+    if (drawerItems) {
+      drawerItems.onCartUpdate();
+    }
+    if (cartItems) {
+      cartItems.onCartUpdate();
+    }
+  }
+
+  // Check state on initial page load
+  document.addEventListener('DOMContentLoaded', function () {
+    verifyVipState(true);
+  });
+
+  // Intercept AJAX cart updates (when user changes quantity + / - or changes variants)
+  const originalFetch = window.fetch;
+  window.fetch = async function() {
+    const response = await originalFetch.apply(this, arguments);
+    const url = arguments[0];
+    
+    if (typeof url === 'string' && (url.includes('/cart/change') || url.includes('/cart/add') || url.includes('/cart/update'))) {
+      setTimeout(() => {
+        verifyVipState(false);
+      }, 400); 
+    }
+    return response;
+  };
+  
+  window.lxRefreshCartUI = refreshCartUI;
 })();
 </script>
 </body>

@@ -752,16 +752,17 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                   {%- for discount in cart.discount_applications -%}
                     {%- assign disc_title_upper = discount.title | upcase -%}
                     {%- if disc_title_upper == vip_code -%}
-                      <div class="lx-totals-row lx-vip-discount-row">
-                        <span class="lx-totals-row-label">
-                          <span class="lx-vip-badge">👑 VIP</span> Discount ({{ discount.title }})
+                      <div class="lx-totals-row lx-vip-discount-row" style="display:flex; justify-content:space-between; align-items:center; background:linear-gradient(90deg, #fffbeb, #fef3c7); border:1px solid #fcd34d; border-radius:8px; padding:6px 12px; margin:4px 0; font-size:13px; color:#92400e; width: 100%; box-sizing: border-box;">
+                        <span class="lx-totals-row-label" style="font-weight:600; display:flex; align-items:center; gap:6px; font-family: inherit;">
+                          <span class="lx-vip-badge" style="background:linear-gradient(135deg, #b45309, #d97706); color:#fff; font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; letter-spacing:0.5px; white-space:nowrap; display: inline-block;">👑 VIP</span>
+                          <span style="font-size:12px; white-space: nowrap;">Discount ({{ discount.title }})</span>
                         </span>
-                        <span class="lx-totals-row-value lx-vip-amount">-{{ discount.total_allocated_amount | money }}</span>
+                        <span class="lx-totals-row-value lx-vip-amount" style="font-weight:700; font-size:14px; color:#b45309; white-space: nowrap; flex-shrink: 0; margin-left: auto;">-{{ discount.total_allocated_amount | money }}</span>
                       </div>
                     {%- else -%}
-                      <div class="lx-totals-row lx-totals-row--discount">
-                        <span class="lx-totals-row-label">Discount ({{ discount.title }})</span>
-                        <span class="lx-totals-row-value">-{{ discount.total_allocated_amount | money }}</span>
+                      <div class="lx-totals-row lx-totals-row--discount" style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:13px; color:#16A34A;">
+                        <span class="lx-totals-row-label" style="color:#16A34A;">Discount ({{ discount.title }})</span>
+                        <span class="lx-totals-row-value" style="white-space: nowrap; flex-shrink: 0;">-{{ discount.total_allocated_amount | money }}</span>
                       </div>
                     {%- endif -%}
                   {%- endfor -%}
@@ -911,111 +912,24 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
 </cart-items>
 
 <script>
+  window.lxVipConfig = {
+    vipCode: {{ section.settings.vip_discount_code | default: 'PURCHASE1999' | json }},
+    vipThreshold: {{ section.settings.vip_threshold | default: 2500 | times: 100 | json }}
+  };
+</script>
+<script>
 /* ═══════════════════════════════════════════════════
-   LUXURY CART — COUPON & VIP SYSTEM
+   LUXURY CART — COUPON SYSTEM
    ═══════════════════════════════════════════════════ */
 (function () {
   const STORAGE_KEY = 'lx_coupon_code';
   const STORAGE_TIME = 'lx_coupon_time';
-  let isVerifyingVip = false;
-
-  // --- DYNAMIC VIP AUTO-APPLY & AUTO-REMOVE WITH LOOP PROTECTION ---
-  async function verifyVipState() {
-    if (isVerifyingVip) return;
-    
-    const vipCode = {{ section.settings.vip_discount_code | json }};
-    const vipThreshold = {{ section.settings.vip_threshold | times: 100 | json }} || 999999999;
-    
-    if (!vipCode || vipCode.trim() === '') return;
-
-    isVerifyingVip = true;
-    const attemptKey = 'lx_vip_attempt_' + vipCode.toUpperCase();
-
-    try {
-      // Fetch the true underlying state of the cart directly from Shopify API
-      const cartRes = await fetch(window.Shopify.routes.root + 'cart.js');
-      const cart = await cartRes.json();
-      
-      const cartTotal = cart.total_price;
-      const appliedDiscounts = cart.cart_level_discount_applications.map(d => d.title.toUpperCase());
-      const hasVipCode = appliedDiscounts.includes(vipCode.toUpperCase());
-      const manualCode = localStorage.getItem(STORAGE_KEY);
-      
-      // LOGIC 1: Cart is above threshold, but code is NOT applied -> Try to apply it.
-      if (cartTotal >= vipThreshold && !hasVipCode) {
-        const attemptStatus = sessionStorage.getItem(attemptKey);
-        
-        // LOOP PROTECTION: If it just tried to apply and it didn't stick, Shopify rejected it.
-        if (attemptStatus === 'trying') {
-          sessionStorage.setItem(attemptKey, 'failed');
-          // Silently fail — do not show error to customer
-          return;
-        } else if (attemptStatus === 'failed') {
-          return; // Give up until cart value drops below threshold and goes back up.
-        }
-
-        // We haven't tried yet, so try now.
-        sessionStorage.setItem(attemptKey, 'trying');
-
-        let combinedCodes = vipCode;
-        if (manualCode && manualCode.toUpperCase() !== vipCode.toUpperCase()) {
-          combinedCodes += ',' + manualCode;
-        }
-
-        await fetch(window.Shopify.routes.root + 'cart/update.js', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ discount: combinedCodes })
-        });
-        location.reload(); 
-      } 
-      // LOGIC 2: Successfully applied -> Clear flags
-      else if (cartTotal >= vipThreshold && hasVipCode) {
-        sessionStorage.removeItem(attemptKey);
-        const errorNotice = document.getElementById('lx-vip-error-notice');
-        if (errorNotice) errorNotice.style.display = 'none';
-      }
-      // LOGIC 3: Cart dropped below threshold, but VIP is still applied -> Remove it.
-      else if (cartTotal < vipThreshold && hasVipCode) {
-        await fetch(window.Shopify.routes.root + 'cart/update.js', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ discount: manualCode || '' }) 
-        });
-        sessionStorage.removeItem(attemptKey);
-        location.reload(); 
-      }
-      // LOGIC 4: Cart is below threshold and it is correctly not applied -> Clear flags.
-      else if (cartTotal < vipThreshold && !hasVipCode) {
-         sessionStorage.removeItem(attemptKey);
-      }
-    } catch (err) {
-      console.error('VIP Verification Error:', err);
-    } finally {
-      isVerifyingVip = false;
-    }
-  }
 
   // Check state on initial page load
   document.addEventListener('DOMContentLoaded', function () {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) showAppliedState(saved);
-    verifyVipState();
   });
-
-  // Intercept AJAX cart updates (when user changes quantity + / -)
-  const originalFetch = window.fetch;
-  window.fetch = async function() {
-    const response = await originalFetch.apply(this, arguments);
-    const url = arguments[0];
-    
-    if (typeof url === 'string' && (url.includes('/cart/change') || url.includes('/cart/add') || url.includes('/cart/update'))) {
-      setTimeout(() => {
-        verifyVipState();
-      }, 400); 
-    }
-    return response;
-  };
 
   // --- MANUAL COUPON SYSTEM ---
   function showAppliedState(code) {
@@ -1085,7 +999,13 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
         const card = document.querySelector('.lx-summary-card');
         if (card) card.classList.add('lx-coupon-success-anim');
 
-        setTimeout(() => location.reload(), 500);
+        setTimeout(() => {
+          if (window.lxRefreshCartUI) {
+            window.lxRefreshCartUI();
+          } else {
+            location.reload();
+          }
+        }, 500);
       } else {
         setMsg('Unable to apply coupon. Check the code and try again.', 'error');
       }
@@ -1116,7 +1036,13 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
         localStorage.removeItem(STORAGE_KEY);
         localStorage.removeItem(STORAGE_TIME);
         hideAppliedState();
-        setTimeout(() => location.reload(), 200);
+        setTimeout(() => {
+          if (window.lxRefreshCartUI) {
+            window.lxRefreshCartUI();
+          } else {
+            location.reload();
+          }
+        }, 200);
       }
     } catch (e) {
       console.error('Remove coupon error:', e);
