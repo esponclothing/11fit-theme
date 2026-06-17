@@ -128,6 +128,15 @@
   .fit11-variant-pill.is-color {
     padding: 0; width: auto; height: auto; background: transparent; border: none; overflow: visible; opacity: 0.6; transition: all .3s ease; flex-shrink: 0; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; scroll-snap-align: start;
   }
+  /* Mobile vs Desktop color selectors visibility */
+  @media (min-width: 1025px) {
+    .mobile-only-color { display: none !important; }
+    .desktop-only-color { display: block !important; }
+  }
+  @media (max-width: 1024px) {
+    .mobile-only-color { display: block !important; }
+    .desktop-only-color { display: none !important; }
+  }
   .fit11-variant-pill.is-color:hover { opacity: 1; }
   .fit11-color-swatch-wrap {
     width: 72px; height: 96px; border-radius: 6px; overflow: hidden; border: 1px solid transparent; transition: border-color 0.3s ease;
@@ -301,6 +310,69 @@
         </div>
       </div>
 
+      {% comment %} ── COLOR VARIANTS AS THUMBNAILS (MOBILE) ── {% endcomment %}
+      {% unless product.has_only_default_variant %}
+        {% for option in product.options_with_values %}
+          {% assign option_name_lower = option.name | downcase %}
+          {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
+            <div class="fit11-variant-selectors top-color-selector mobile-only-color" style="padding: 0 16px; margin-bottom: 0px; margin-top: 8px;">
+              <fieldset class="fit11-option-fieldset" style="border:none; padding:0; margin:0;">
+                <div class="fit11-option-name" style="display: block; margin-bottom: 12px; font-weight: 500; font-size: 13px; text-transform: none; letter-spacing: normal; white-space: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; padding-bottom: 4px;">
+                  Selected Color - <span class="fit11-selected-color-label" style="font-weight: 700; color: var(--lux-text); text-transform: capitalize;">{{ option.selected_value }}</span>
+                </div>
+                <div class="fit11-variant-pills">
+                  {% for value in option.values %}
+                    <input type="radio" 
+                           id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}-mobile"
+                           name="{{ option.name }}-mobile" 
+                           value="{{ value | escape }}"
+                           {% if option.selected_value == value %}checked{% endif %}
+                           class="fit11-variant-radio"
+                           data-is-color="true">
+                    
+                    <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}-mobile" class="fit11-variant-pill is-color" title="{{ value }}">
+                      {% assign variant_image = null %}
+                      {% for variant in product.variants %}
+                        {% if variant.options contains value and variant.featured_image %}
+                          {% assign variant_image = variant.featured_image %}
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+                      
+                      <div class="fit11-color-swatch-wrap">
+                        {% if variant_image != null %}
+                          <span class="fit11-color-swatch" style="background-image: url('{{ variant_image | img_url: '200x250' }}'); background-size: cover; background-position: center;"></span>
+                        {% else %}
+                          {% assign color_handle = value | handle %}
+                          {% assign css_color = color_handle %}
+                          {% case color_handle %}
+                            {% when 'navy-blue' %}{% assign css_color = '#000080' %}
+                            {% when 'bottle-green' %}{% assign css_color = '#006A4E' %}
+                            {% when 'light-baby-pink' %}{% assign css_color = '#F4C2C2' %}
+                            {% when 'lavender' %}{% assign css_color = '#E6E6FA' %}
+                            {% when 'baby-blue' %}{% assign css_color = '#89CFF0' %}
+                            {% when 'flamingo' %}{% assign css_color = '#FC8EAC' %}
+                            {% when 'jade' %}{% assign css_color = '#00A86B' %}
+                            {% when 'off-white' %}{% assign css_color = '#FAF9F6' %}
+                            {% when 'maroon' %}{% assign css_color = '#800000' %}
+                            {% when 'white' %}{% assign css_color = '#FFFFFF' %}
+                            {% when 'black' %}{% assign css_color = '#000000' %}
+                            {% when 'red' %}{% assign css_color = '#FF0000' %}
+                            {% else %}{% assign css_color = value | split: ' ' | last | downcase %}
+                          {% endcase %}
+                          <span class="fit11-color-swatch" style="background-color: {{ css_color }};"></span>
+                        {% endif %}
+                      </div>
+                      <span class="fit11-color-name">{{ value }}</span>
+                    </label>
+                  {% endfor %}
+                </div>
+              </fieldset>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endunless %}
+
       {% comment %} Ticker Moved Up {% endcomment %}
     </div>
 
@@ -336,12 +408,12 @@
       
       {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
         
-        {% comment %} ── COLOR VARIANTS AS THUMBNAILS ── {% endcomment %}
+        {% comment %} ── COLOR VARIANTS AS THUMBNAILS (DESKTOP) ── {% endcomment %}
         {% unless product.has_only_default_variant %}
           {% for option in product.options_with_values %}
             {% assign option_name_lower = option.name | downcase %}
             {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
-              <div class="fit11-variant-selectors top-color-selector" style="margin-bottom: 0px; margin-top: 8px; width: 100%;">
+              <div class="fit11-variant-selectors top-color-selector desktop-only-color" style="margin-bottom: 0px; margin-top: 8px; width: 100%;">
                 <fieldset class="fit11-option-fieldset" style="border:none; padding:0; margin:0;">
                   <div class="fit11-option-name" style="display: block; margin-bottom: 12px; font-weight: 500; font-size: 13px; text-transform: none; letter-spacing: normal; white-space: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; padding-bottom: 4px;">
                     Selected Color - <span class="fit11-selected-color-label" style="font-weight: 700; color: var(--lux-text); text-transform: capitalize;">{{ option.selected_value }}</span>
@@ -349,14 +421,14 @@
                   <div class="fit11-variant-pills">
                     {% for value in option.values %}
                       <input type="radio" 
-                             id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                             id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}-desktop"
                              name="{{ option.name }}" 
                              value="{{ value | escape }}"
                              {% if option.selected_value == value %}checked{% endif %}
                              class="fit11-variant-radio"
                              data-is-color="true">
                       
-                      <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="fit11-variant-pill is-color" title="{{ value }}">
+                      <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}-desktop" class="fit11-variant-pill is-color" title="{{ value }}">
                         {% assign variant_image = null %}
                         {% for variant in product.variants %}
                           {% if variant.options contains value and variant.featured_image %}
@@ -758,8 +830,9 @@
         if (checkedRadio) {
           selectedOptions.push(checkedRadio.value);
           if (checkedRadio.getAttribute('data-is-color') === 'true') {
-            var colorLabel = fieldset.querySelector('.fit11-selected-color-label');
-            if (colorLabel) colorLabel.innerText = checkedRadio.value;
+            document.querySelectorAll('.fit11-selected-color-label').forEach(function(lbl) {
+              lbl.innerText = checkedRadio.value;
+            });
           }
         }
       });
@@ -789,7 +862,17 @@
     }
 
     variantRadios.forEach(function(radio) {
-      radio.addEventListener('change', updateSelectedVariant);
+      radio.addEventListener('change', function(e) {
+        if (radio.getAttribute('data-is-color') === 'true') {
+          var val = radio.value;
+          document.querySelectorAll('.fit11-variant-radio[data-is-color="true"]').forEach(function(r) {
+            if (r.value === val && r !== radio) {
+              r.checked = true;
+            }
+          });
+        }
+        updateSelectedVariant();
+      });
     });
   }
 

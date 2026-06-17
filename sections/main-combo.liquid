@@ -136,6 +136,16 @@
   .fit11-offer-timer { position: absolute; bottom: -10px; right: 16px; background: #ed8936; color: #ffffff; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; z-index: 2; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: background 0.3s; }
   .fit11-offer-card.expired .fit11-offer-timer { background: #a0aec0; }
 
+  /* Mobile vs Desktop color selectors visibility */
+  @media (min-width: 1025px) {
+    .mobile-only-color { display: none !important; }
+    .desktop-only-color { display: block !important; }
+  }
+  @media (max-width: 1024px) {
+    .mobile-only-color { display: block !important; }
+    .desktop-only-color { display: none !important; }
+  }
+
   /* ── FASHION BAG FLY ANIMATION ── */
   .fit11-fly-bag { 
     position: fixed !important; 
@@ -297,6 +307,10 @@
         {% comment %} Ratings now below MRP {% endcomment %}
         <div class="fit11-rating-row" style="justify-content: flex-start;">
           <div class="AirReviews-Widget AirReviews-Widget--Stars"></div>
+        </div>
+
+        <div class="fit11-size-chart-link" onclick="fit11ToggleModal(true)" style="display: flex; align-items: center; gap: 4px; font-size: 13px; text-decoration: underline; color: var(--lux-accent); font-weight: 500; cursor: pointer; margin-top: 8px; margin-bottom: 8px;">
+          <i class="ti ti-ruler-2"></i><span>Size Guide</span>
         </div>
       </div>
       
