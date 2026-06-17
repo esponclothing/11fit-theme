@@ -267,10 +267,19 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
 .lx-cs-item { min-width: 120px; max-width: 120px; flex-shrink: 0; }
 .lx-cs-img { height: 150px; background: var(--lx-surface2); border-radius: var(--lx-radius-sm); margin-bottom: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--lx-text-xlight); overflow: hidden; }
 .lx-cs-img img { width: 100%; height: 100%; object-fit: cover; }
-.lx-cs-name { font-size: 11.5px; font-weight: 500; margin: 0 0 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--lx-text); }
+.lx-cs-img-link { display: block; height: 150px; border-radius: var(--lx-radius-sm); overflow: hidden; margin-bottom: 8px; background: var(--lx-surface2); }
+.lx-cs-img-real { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease; }
+.lx-cs-img-link:hover .lx-cs-img-real { transform: scale(1.04); }
+.lx-cs-name { font-size: 11.5px; font-weight: 500; margin: 0 0 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--lx-text); text-decoration: none; display: block; }
+.lx-cs-name:hover { color: var(--lx-gold); }
 .lx-cs-price { font-size: 12px; font-weight: 700; margin: 0 0 7px; color: var(--lx-text); }
+.lx-cs-compare { font-size: 10.5px; font-weight: 400; color: var(--lx-text-xlight); text-decoration: line-through; margin-left: 4px; }
 .lx-cs-add-btn { width: 100%; background: var(--lx-surface2); border: 1px solid var(--lx-border); color: var(--lx-text); border-radius: 5px; padding: 5px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: var(--font); transition: all var(--transition); }
 .lx-cs-add-btn:hover { background: var(--lx-text); color: #fff; }
+.lx-cs-loading { display: flex; gap: 12px; }
+.lx-cs-placeholder { min-width: 120px; height: 190px; background: linear-gradient(90deg, var(--lx-surface2) 25%, #e9e8e4 50%, var(--lx-surface2) 75%); background-size: 200% 100%; border-radius: var(--lx-radius-sm); animation: lxShimmer 1.4s infinite; }
+@keyframes lxShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
 
 /* ═══════════════ MOBILE STICKY BAR ═══════════════ */
 @media (max-width: 989px) {
@@ -427,29 +436,91 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                 {%- endfor -%}
               </div>
 
-              <div class="lx-cross-sell lx-desktop" style="margin-top: 20px;">
+
+              {%- if cart.item_count > 0 -%}
+              <div class="lx-cross-sell lx-desktop" style="margin-top: 20px;" id="lx-cross-sell-wrapper">
                 <h4 class="lx-cross-sell-title">You May Also Like</h4>
-                <div class="lx-cs-scroll">
-                  <div class="lx-cs-item">
-                    <div class="lx-cs-img">Product</div>
-                    <p class="lx-cs-name">Active Track Pant</p>
-                    <p class="lx-cs-price">₹1,299</p>
-                    <button class="lx-cs-add-btn" type="button">+ Quick Add</button>
-                  </div>
-                  <div class="lx-cs-item">
-                    <div class="lx-cs-img">Product</div>
-                    <p class="lx-cs-name">Performance T-Shirt</p>
-                    <p class="lx-cs-price">₹899</p>
-                    <button class="lx-cs-add-btn" type="button">+ Quick Add</button>
-                  </div>
-                  <div class="lx-cs-item">
-                    <div class="lx-cs-img">Product</div>
-                    <p class="lx-cs-name">Training Shorts</p>
-                    <p class="lx-cs-price">₹799</p>
-                    <button class="lx-cs-add-btn" type="button">+ Quick Add</button>
+                <div class="lx-cs-scroll" id="lx-cs-products">
+                  <div class="lx-cs-loading">
+                    <div class="lx-cs-placeholder"></div>
+                    <div class="lx-cs-placeholder"></div>
+                    <div class="lx-cs-placeholder"></div>
                   </div>
                 </div>
               </div>
+
+              <script>
+              (function() {
+                var productId = {{ cart.items.first.product_id | json }};
+                var limit = 6;
+                var url = window.Shopify.routes.root + 'recommendations/products.json?product_id=' + productId + '&limit=' + limit + '&intent=related';
+
+                fetch(url)
+                  .then(function(res) { return res.json(); })
+                  .then(function(data) {
+                    var container = document.getElementById('lx-cs-products');
+                    if (!container) return;
+
+                    var products = data.products;
+                    if (!products || products.length === 0) {
+                      document.getElementById('lx-cross-sell-wrapper').style.display = 'none';
+                      return;
+                    }
+
+                    var html = '';
+                    products.forEach(function(p) {
+                      var img = p.featured_image ? p.featured_image : '';
+                      var price = (p.price / 100).toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 });
+                      var comparePrice = '';
+                      if (p.compare_at_price && p.compare_at_price > p.price) {
+                        comparePrice = '<span class="lx-cs-compare">' + (p.compare_at_price / 100).toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }) + '</span>';
+                      }
+                      var variantId = p.variants && p.variants[0] ? p.variants[0].id : '';
+                      html += '<div class="lx-cs-item">';
+                      html += '<a href="' + p.url + '" class="lx-cs-img-link">';
+                      if (img) {
+                        html += '<img src="' + img + '" alt="' + p.title + '" class="lx-cs-img-real" loading="lazy">';
+                      } else {
+                        html += '<div class="lx-cs-img">No Image</div>';
+                      }
+                      html += '</a>';
+                      html += '<a href="' + p.url + '" class="lx-cs-name">' + p.title + '</a>';
+                      html += '<p class="lx-cs-price">' + price + ' ' + comparePrice + '</p>';
+                      html += '<button class="lx-cs-add-btn" type="button" data-variant-id="' + variantId + '" onclick="lxQuickAdd(this, \'' + variantId + '\')">+ Quick Add</button>';
+                      html += '</div>';
+                    });
+
+                    container.innerHTML = html;
+                  })
+                  .catch(function() {
+                    var wrapper = document.getElementById('lx-cross-sell-wrapper');
+                    if (wrapper) wrapper.style.display = 'none';
+                  });
+
+                window.lxQuickAdd = function(btn, variantId) {
+                  if (!variantId) return;
+                  btn.textContent = 'Adding...';
+                  btn.disabled = true;
+                  fetch(window.Shopify.routes.root + 'cart/add.js', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: variantId, quantity: 1 })
+                  })
+                  .then(function(res) { return res.json(); })
+                  .then(function() {
+                    btn.textContent = '✓ Added!';
+                    btn.style.background = 'var(--lx-success)';
+                    setTimeout(function() { location.reload(); }, 800);
+                  })
+                  .catch(function() {
+                    btn.textContent = '+ Quick Add';
+                    btn.disabled = false;
+                  });
+                };
+              })();
+              </script>
+              {%- endif -%}
+
             </div>
 
             <div class="lx-cart-sidebar lx-summary-outer">
