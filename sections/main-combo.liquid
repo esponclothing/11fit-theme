@@ -721,8 +721,8 @@
           if (targetSlide) {
             var slideElements = Array.from(document.querySelectorAll('.fit11-slide'));
             var targetIndex = slideElements.indexOf(targetSlide);
-            if (targetIndex !== -1 && typeof goTo === 'function') {
-              goTo(targetIndex);
+            if (targetIndex !== -1 && typeof window.goToSlide === 'function') {
+              window.goToSlide(targetIndex);
             }
           }
         }
@@ -853,12 +853,13 @@
   if (!slides) return;
   var dots = dotsWrap ? dotsWrap.querySelectorAll('.fit11-dot') : [], thumbs = thumbsWrap ? thumbsWrap.querySelectorAll('.fit11-thumb') : [];
   var total = dots.length, cur = 0;
-  function goTo(n) {
+  window.goToSlide = function(n) {
     if (n < 0) n = total - 1; if (n >= total) n = 0;
     if (dots[cur]) dots[cur].classList.remove('on'); if (thumbs[cur]) thumbs[cur].classList.remove('on');
     cur = n; slides.scrollTo({ left: cur * slides.clientWidth, behavior: 'smooth' });
     if (dots[cur]) dots[cur].classList.add('on'); if (thumbs[cur]) thumbs[cur].classList.add('on');
-  }
+  };
+  function goTo(n) { window.goToSlide(n); }
   slides.addEventListener('scroll', function() {
     var idx = Math.round(slides.scrollLeft / slides.clientWidth);
     if (idx !== cur && idx >= 0 && idx < total) {
