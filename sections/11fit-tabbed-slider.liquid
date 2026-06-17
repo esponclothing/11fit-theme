@@ -183,6 +183,16 @@
     border-radius: 4px;
     z-index: 2;
     text-transform: capitalize;
+    overflow: hidden;
+  }
+  .fit11-tab-badge::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -150%; width: 50%; height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent);
+    transform: skewX(-25deg);
+    animation: badge-shimmer-diamond 2.5s infinite forwards;
+    z-index: 1;
   }
 
   .fit11-tab-img-wrap {

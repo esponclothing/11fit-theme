@@ -2929,6 +2929,26 @@ details-disclosure > details {
   border-color: rgba(var(--color-badge-border), var(--alpha-badge-border));
   color: rgb(var(--color-badge-foreground));
   word-break: break-word;
+  position: relative;
+  overflow: hidden;
+}
+
+.badge::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8), transparent);
+  transform: skewX(-25deg);
+  animation: badge-shimmer-diamond 2.5s infinite forwards;
+  z-index: 1;
+}
+
+@keyframes badge-shimmer-diamond {
+  0% { left: -150%; }
+  100% { left: 200%; }
 }
 
 .gradient {
