@@ -539,7 +539,7 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                   <i class="ti ti-receipt"></i> Order Summary
                 </h2>
 
-                <div id="lx-vip-error-notice" style="display:none; color: var(--lx-danger); font-size: 11px; margin-bottom: 12px; background: var(--lx-danger-bg); padding: 8px; border-radius: 5px; border: 1px solid var(--lx-danger);">
+                <div id="lx-vip-error-notice" style="display:none !important; color: var(--lx-danger); font-size: 11px; margin-bottom: 12px; background: var(--lx-danger-bg); padding: 8px; border-radius: 5px; border: 1px solid var(--lx-danger);">
                   ⚠️ VIP Code rejected by Shopify. Make sure the code exists and is active in your Admin.
                 </div>
 
@@ -805,9 +805,7 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
         // LOOP PROTECTION: If it just tried to apply and it didn't stick, Shopify rejected it.
         if (attemptStatus === 'trying') {
           sessionStorage.setItem(attemptKey, 'failed');
-          const errorNotice = document.getElementById('lx-vip-error-notice');
-          if (errorNotice) errorNotice.style.display = 'block';
-          console.error('VIP Code "' + vipCode + '" was rejected by Shopify. Ensure it exists, is active, and is set to combine with other discounts.');
+          // Silently fail — do not show error to customer
           return;
         } else if (attemptStatus === 'failed') {
           return; // Give up until cart value drops below threshold and goes back up.
