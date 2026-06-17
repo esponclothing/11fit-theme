@@ -177,6 +177,13 @@
   .fit11-spec-table td:first-child { color: var(--lux-text-muted); width: 40%; }
   .fit11-spec-table td:last-child { color: var(--lux-text); font-weight: 400; word-break: break-word; }
 
+  .fit11-size-table { width: 100%; border-collapse: collapse; }
+  .fit11-size-table tr { border-bottom: 1px solid var(--lux-border); }
+  .fit11-size-table th, .fit11-size-table td { padding: 12px 4px; font-size: 13px; text-align: center; }
+  .fit11-size-table th { font-weight: 600; color: var(--lux-text-muted); }
+  .fit11-size-table td { color: var(--lux-text); font-weight: 400; }
+  .fit11-size-table th:first-child, .fit11-size-table td:first-child { text-align: left; width: 25%; font-weight: 600; color: var(--lux-accent); }
+
   /* ── STICKY BAR ── */
   .fit11-sticky { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--lux-border); z-index: 99999; transform: translateY(110%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
   .fit11-sticky.show { transform: translateY(0); }
@@ -288,13 +295,6 @@
           <div class="fit11-size-chart-link" onclick="fit11ToggleModal(true)">
             <i class="ti ti-ruler-2"></i><span>Size Guide</span>
           </div>
-        </div>
-
-        {% comment %} ── TRUST BADGES ── {% endcomment %}
-        <div class="fit11-trust-badges">
-          <div class="fit11-trust-item"><i class="ti ti-cash"></i>CASH ON<br>DELIVERY</div>
-          <div class="fit11-trust-item"><i class="ti ti-truck-delivery"></i>FREE<br>SHIPPING</div>
-          <div class="fit11-trust-item"><i class="ti ti-rotate-clockwise"></i>EASY<br>RETURNS</div>
         </div>
       </div>
       
@@ -456,6 +456,13 @@
 
       {% endform %}
 
+      {% comment %} ── TRUST BADGES ── {% endcomment %}
+      <div class="fit11-trust-badges">
+        <div class="fit11-trust-item"><i class="ti ti-cash"></i>CASH ON<br>DELIVERY</div>
+        <div class="fit11-trust-item"><i class="ti ti-truck-delivery"></i>FREE<br>SHIPPING</div>
+        <div class="fit11-trust-item"><i class="ti ti-rotate-clockwise"></i>EASY<br>RETURNS</div>
+      </div>
+
       {% comment %} ── ACCORDIONS ── {% endcomment %}
       <div class="fit11-accord-group">
         {% if product.description != blank %}
@@ -528,17 +535,19 @@
       {% elsif section.settings.size_chart_page != blank %}
         {{ pages[section.settings.size_chart_page].content }}
       {% else %}
-        <table class="fit11-spec-table" style="text-align: left;">
-          <thead>
-            <tr style="border-bottom: 2px solid var(--lux-border); font-weight:500;"><th>Size</th><th>Chest (in)</th><th>Waist (in)</th><th>Hips (in)</th></tr>
-          </thead>
-          <tbody>
+        <div style="overflow-x: auto; width: 100%;">
+          <table class="fit11-size-table">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--lux-border); font-weight:500;"><th>Size</th><th>Chest (in)</th><th>Waist (in)</th><th>Hips (in)</th></tr>
+            </thead>
+            <tbody>
             <tr><td>S</td><td>34 - 36</td><td>28 - 30</td><td>35 - 37</td></tr>
             <tr><td>M</td><td>38 - 40</td><td>32 - 34</td><td>39 - 41</td></tr>
             <tr><td>L</td><td>42 - 44</td><td>36 - 38</td><td>43 - 45</td></tr>
             <tr><td>XL</td><td>46 - 48</td><td>40 - 42</td><td>47 - 49</td></tr>
           </tbody>
         </table>
+        </div>
       {% endif %}
     </div>
   </div>
