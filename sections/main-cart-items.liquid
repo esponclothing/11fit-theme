@@ -110,11 +110,10 @@
 .lx-item-variant { font-size: 11.5px; color: var(--lx-text-light); margin: 0 0 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* Price breakdown */
-.lx-price-block { background: var(--lx-surface2); border-radius: var(--lx-radius-xs); padding: 8px 10px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 3px; }
-.lx-price-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--lx-text-light); }
-.lx-price-row.lx-discount-row { color: var(--lx-success); }
-.lx-price-row.lx-final-row { font-size: 15px; font-weight: 700; color: var(--lx-text); border-top: 1px solid var(--lx-border); margin-top: 4px; padding-top: 4px; }
-.lx-saving-pill { display: inline-flex; align-items: center; gap: 4px; background: var(--lx-success-bg); color: var(--lx-success); font-size: 10.5px; font-weight: 600; padding: 3px 8px; border-radius: 20px; border: 1px solid var(--lx-success-bdr); margin-bottom: 8px; width: fit-content; }
+.lx-compact-price { display: flex; align-items: baseline; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+.lx-final-price { font-size: 16px; font-weight: 700; color: var(--lx-text); }
+.lx-original-price { font-size: 13px; color: var(--lx-text-xlight); text-decoration: line-through; }
+.lx-discount-pct { font-size: 12px; font-weight: 600; color: var(--lx-success); }
 
 /* Actions row */
 .lx-item-actions { display: flex; align-items: center; justify-content: space-between; }
@@ -380,30 +379,14 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                           </p>
                         {%- endif -%}
 
-                        <div class="lx-price-block">
-                          <div class="lx-price-row">
-                            <span>MRP</span>
-                            <span>{{ item.original_line_price | money }}</span>
-                          </div>
+                        <div class="lx-compact-price">
+                          <span class="lx-final-price">{{ item.final_line_price | money }}</span>
                           {%- if line_saving > 0 -%}
+                            <span class="lx-original-price">{{ item.original_line_price | money }}</span>
                             {%- assign disc_pct = item.original_line_price | minus: item.final_line_price | times: 100.0 | divided_by: item.original_line_price | round -%}
-                            <div class="lx-price-row lx-discount-row">
-                              <span>Discount ({{ disc_pct }}% off)</span>
-                              <span>-{{ line_saving | money }}</span>
-                            </div>
+                            <span class="lx-discount-pct">({{ disc_pct }}% OFF)</span>
                           {%- endif -%}
-                          <div class="lx-price-row lx-final-row">
-                            <span>Final Price</span>
-                            <span>{{ item.final_line_price | money }}</span>
-                          </div>
                         </div>
-
-                        {%- if line_saving > 0 -%}
-                          <div class="lx-saving-pill">
-                            <i class="ti ti-rosette-discount-check" style="font-size:12px;"></i>
-                            You're saving {{ line_saving | money }}
-                          </div>
-                        {%- endif -%}
                       </div>
 
                       <div class="lx-item-actions">
