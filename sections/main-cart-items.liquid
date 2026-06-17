@@ -352,10 +352,14 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
           products.forEach(function(p) {
             window._lxProducts[p.id] = p;
             var img = p.featured_image || (p.images && p.images[0] ? p.images[0].src : p.image || '');
-            var price = (p.price/100).toLocaleString('en-IN',{style:'currency',currency:'INR',minimumFractionDigits:0});
+            var firstVariant = p.variants && p.variants[0];
+            var priceVal = firstVariant ? parseFloat(firstVariant.price) : 0;
+            var comparePriceVal = firstVariant && firstVariant.compare_at_price ? parseFloat(firstVariant.compare_at_price) : 0;
+            
+            var price = priceVal.toLocaleString('en-IN',{style:'currency',currency:'INR',minimumFractionDigits:0});
             var comparePrice = '';
-            if(p.compare_at_price && p.compare_at_price > p.price){
-              comparePrice = '<span style="font-size:10.5px;color:#9CA3AF;text-decoration:line-through;margin-left:4px;">'+(p.compare_at_price/100).toLocaleString('en-IN',{style:'currency',currency:'INR',minimumFractionDigits:0})+'</span>';
+            if(comparePriceVal > priceVal){
+              comparePrice = '<span style="font-size:10.5px;color:#9CA3AF;text-decoration:line-through;margin-left:4px;">'+comparePriceVal.toLocaleString('en-IN',{style:'currency',currency:'INR',minimumFractionDigits:0})+'</span>';
             }
             var hasOnlyDefault = p.variants && p.variants.length === 1 && p.variants[0].title === 'Default Title';
             var variantId = p.variants && p.variants[0] ? p.variants[0].id : '';
@@ -752,12 +756,11 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                   {%- for discount in cart.discount_applications -%}
                     {%- assign disc_title_upper = discount.title | upcase -%}
                     {%- if disc_title_upper == vip_code -%}
-                      <div class="lx-totals-row lx-vip-discount-row" style="display:flex; justify-content:space-between; align-items:center; background:linear-gradient(90deg, #fffbeb, #fef3c7); border:1px solid #fcd34d; border-radius:8px; padding:6px 12px; margin:4px 0; font-size:13px; color:#92400e; width: 100%; box-sizing: border-box;">
-                        <span class="lx-totals-row-label" style="font-weight:600; display:flex; align-items:center; gap:6px; font-family: inherit;">
-                          <span class="lx-vip-badge" style="background:linear-gradient(135deg, #b45309, #d97706); color:#fff; font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; letter-spacing:0.5px; white-space:nowrap; display: inline-block;">👑 VIP</span>
-                          <span style="font-size:12px; white-space: nowrap;">Discount ({{ discount.title }})</span>
+                      <div class="lx-totals-row" style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:13px; color:#92400e; width: 100%; box-sizing: border-box;">
+                        <span class="lx-totals-row-label" style="font-weight:600; display:flex; align-items:center; gap:4px; color:#92400e; font-family: inherit;">
+                          <span>👑 VIP Discount ({{ discount.title }})</span>
                         </span>
-                        <span class="lx-totals-row-value lx-vip-amount" style="font-weight:700; font-size:14px; color:#b45309; white-space: nowrap; flex-shrink: 0; margin-left: auto;">-{{ discount.total_allocated_amount | money }}</span>
+                        <span class="lx-totals-row-value lx-vip-amount" style="font-weight:700; font-size:13px; color:#92400e; white-space: nowrap; flex-shrink: 0; margin-left: auto;">-{{ discount.total_allocated_amount | money }}</span>
                       </div>
                     {%- else -%}
                       <div class="lx-totals-row lx-totals-row--discount" style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:13px; color:#16A34A;">
