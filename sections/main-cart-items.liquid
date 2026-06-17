@@ -461,6 +461,10 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                   <i class="ti ti-receipt"></i> Order Summary
                 </h2>
 
+                <div id="lx-vip-error-notice" style="display:none; color: var(--lx-danger); font-size: 11px; margin-bottom: 12px; background: var(--lx-danger-bg); padding: 8px; border-radius: 5px; border: 1px solid var(--lx-danger);">
+                  ⚠️ VIP Code rejected by Shopify. Make sure the code exists and is active in your Admin.
+                </div>
+
                 <div class="lx-progress-block">
                   {%- if cart_total >= free_ship_threshold -%}
                     <div class="lx-progress-unlocked">
@@ -683,7 +687,7 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
   const STORAGE_TIME = 'lx_coupon_time';
   let isVerifyingVip = false;
 
-  // --- DYNAMIC VIP AUTO-APPLY & AUTO-REMOVE ---
+  // --- DYNAMIC VIP AUTO-APPLY & AUTO-REMOVE WITH LOOP PROTECTION ---
   async function verifyVipState() {
     if (isVerifyingVip) return;
     
@@ -693,6 +697,7 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
     if (!vipCode || vipCode.trim() === '') return;
 
     isVerifyingVip = true;
+    const attemptKey = 'lx_vip_attempt_' + vipCode.toUpperCase();
 
     try {
       // Fetch the true underlying state of the cart directly from Shopify API
@@ -704,27 +709,55 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
       const hasVipCode = appliedDiscounts.includes(vipCode.toUpperCase());
       const manualCode = localStorage.getItem(STORAGE_KEY);
       
-      // LOGIC: If cart is above threshold and code IS NOT applied -> Apply it.
+      // LOGIC 1: Cart is above threshold, but code is NOT applied -> Try to apply it.
       if (cartTotal >= vipThreshold && !hasVipCode) {
+        const attemptStatus = sessionStorage.getItem(attemptKey);
+        
+        // LOOP PROTECTION: If it just tried to apply and it didn't stick, Shopify rejected it.
+        if (attemptStatus === 'trying') {
+          sessionStorage.setItem(attemptKey, 'failed');
+          const errorNotice = document.getElementById('lx-vip-error-notice');
+          if (errorNotice) errorNotice.style.display = 'block';
+          console.error('VIP Code "' + vipCode + '" was rejected by Shopify. Ensure it exists, is active, and is set to combine with other discounts.');
+          return;
+        } else if (attemptStatus === 'failed') {
+          return; // Give up until cart value drops below threshold and goes back up.
+        }
+
+        // We haven't tried yet, so try now.
+        sessionStorage.setItem(attemptKey, 'trying');
+
         let combinedCodes = vipCode;
         if (manualCode && manualCode.toUpperCase() !== vipCode.toUpperCase()) {
           combinedCodes += ',' + manualCode;
         }
+
         await fetch(window.Shopify.routes.root + 'cart/update.js', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ discount: combinedCodes })
         });
-        location.reload(); // Refresh the DOM to show new grand total
+        location.reload(); 
       } 
-      // LOGIC: If cart drops below threshold and code IS applied -> Remove it.
+      // LOGIC 2: Successfully applied -> Clear flags
+      else if (cartTotal >= vipThreshold && hasVipCode) {
+        sessionStorage.removeItem(attemptKey);
+        const errorNotice = document.getElementById('lx-vip-error-notice');
+        if (errorNotice) errorNotice.style.display = 'none';
+      }
+      // LOGIC 3: Cart dropped below threshold, but VIP is still applied -> Remove it.
       else if (cartTotal < vipThreshold && hasVipCode) {
         await fetch(window.Shopify.routes.root + 'cart/update.js', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ discount: manualCode || '' }) 
         });
-        location.reload(); // Refresh the DOM to revert the grand total
+        sessionStorage.removeItem(attemptKey);
+        location.reload(); 
+      }
+      // LOGIC 4: Cart is below threshold and it is correctly not applied -> Clear flags.
+      else if (cartTotal < vipThreshold && !hasVipCode) {
+         sessionStorage.removeItem(attemptKey);
       }
     } catch (err) {
       console.error('VIP Verification Error:', err);
@@ -746,7 +779,6 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
     const response = await originalFetch.apply(this, arguments);
     const url = arguments[0];
     
-    // If the theme makes an update to the cart via AJAX, wait a beat, then run the VIP check
     if (typeof url === 'string' && (url.includes('/cart/change') || url.includes('/cart/add') || url.includes('/cart/update'))) {
       setTimeout(() => {
         verifyVipState();
