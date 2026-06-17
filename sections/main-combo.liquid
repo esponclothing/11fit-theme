@@ -491,7 +491,15 @@
             {% endfor %}
           {% endunless %}
 
-          {% comment %} ── NEW OFFERS & DISCOUNTS SECTION (MOVED ABOVE APP BLOCK) ── {% endcomment %}
+          {%- for block in section.blocks -%}
+            {%- if block.type == '@app' -%}
+              <div class="fit11-app-wrapper">
+                {% render block %}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+
+          {% comment %} ── OFFERS & DISCOUNTS SECTION (MOVED BELOW APP BLOCK) ── {% endcomment %}
           {% assign offer_blocks = section.blocks | where: "type", "offer" %}
           
           {% if offer_blocks.size > 0 %}
@@ -524,14 +532,6 @@
               </div>
             </div>
           {% endif %}
-
-          {%- for block in section.blocks -%}
-            {%- if block.type == '@app' -%}
-              <div class="fit11-app-wrapper">
-                {% render block %}
-              </div>
-            {%- endif -%}
-          {%- endfor -%}
           
           <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
           <input type="hidden" name="quantity" value="1" class="qty-input">
