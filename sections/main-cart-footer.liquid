@@ -19,11 +19,10 @@
   /* ── BULLETPROOF CHECKOUT BUTTON FIX ── */
   #main-cart-footer button#checkout.cart__checkout-button.button {
     color: #ffffff !important; 
-    -webkit-text-fill-color: #ffffff !important; 
-    background: #C5A059 !important; 
-    background-color: #C5A059 !important;
+    -webkit-text-fill-color: #ffffff !important; /* Overrides iOS/Safari stubbornness */
+    background: #1a202c !important; /* Change to #C5A059 for gold */
+    background-color: #1a202c !important;
     border: none !important;
-    outline: none !important; /* Removes the blue outline */
     box-shadow: none !important;
     transition: opacity 0.3s ease !important;
   }

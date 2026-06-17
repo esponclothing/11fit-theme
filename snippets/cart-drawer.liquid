@@ -15,45 +15,6 @@
   .drawer {
     visibility: hidden;
   }
-  .cart-shipping-bar-container {
-    padding: 15px 20px;
-    background: #fdfbf7;
-    border-bottom: 1px solid rgba(197, 160, 89, 0.15);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .cart-shipping-bar-text {
-    font-family: var(--font-body-family);
-    font-size: 13px;
-    color: #333333;
-    text-align: center;
-    letter-spacing: 0.5px;
-  }
-  .shipping-bar-highlight {
-    font-weight: 700;
-    color: #111111;
-  }
-  .cart-shipping-bar-track {
-    width: 100%;
-    height: 6px;
-    background: #eaeaea;
-    border-radius: 3px;
-    overflow: hidden;
-    position: relative;
-  }
-  .cart-shipping-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #c5a059 0%, #e6ca94 100%);
-    border-radius: 3px;
-    transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    box-shadow: 0 0 8px rgba(197, 160, 89, 0.4);
-  }
-
-  @import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css');
-  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
-
-
 </style>
 
 <cart-drawer class="drawer{% if cart == empty %} is-empty{% endif %}">
@@ -113,7 +74,6 @@
           </span>
         </button>
       </div>
-
       <cart-drawer-items
         {% if cart == empty %}
           class=" is-empty"
@@ -513,7 +473,6 @@
           </div>
           <div id="CartDrawer-CartErrors" role="alert"></div>
         </form>
-        
       </cart-drawer-items>
       <div class="drawer__footer">
         {%- if settings.show_cart_note -%}

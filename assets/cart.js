@@ -27,16 +27,14 @@ class CartItems extends HTMLElement {
 
   cartUpdateUnsubscriber = undefined;
 
-    connectedCallback() {
+  connectedCallback() {
     this.cartUpdateUnsubscriber = subscribe(PUB_SUB_EVENTS.cartUpdate, (event) => {
-      // product-form.js already calls renderContents() with section data — skip to avoid duplicate slow fetch
-      if (event.source === 'cart-items' || event.source === 'product-form') {
+      if (event.source === 'cart-items') {
         return;
       }
       return this.onCartUpdate();
     });
   }
-
 
   disconnectedCallback() {
     if (this.cartUpdateUnsubscriber) {
@@ -91,36 +89,24 @@ class CartItems extends HTMLElement {
 
   onCartUpdate() {
     if (this.tagName === 'CART-DRAWER-ITEMS') {
-      // Open drawer immediately (for Qikify/combo apps) — don't wait for the fetch
-      const cartDrawer = document.querySelector('cart-drawer');
-      if (cartDrawer) {
-        cartDrawer.classList.remove('is-empty');
-        cartDrawer.open();
-      }
-
-      // Fetch updated drawer content in the background
       return fetch(`${routes.cart_url}?section_id=cart-drawer`)
         .then((response) => response.text())
         .then((responseText) => {
           const html = new DOMParser().parseFromString(responseText, 'text/html');
-          const selector = '.drawer__inner';
-          const targetElement = document.querySelector(selector);
-          const sourceElement = html.querySelector(selector);
-          if (targetElement && sourceElement) {
-            targetElement.replaceWith(sourceElement);
-          }
-
-          const sourceCartDrawer = html.querySelector('cart-drawer');
-          if (cartDrawer && sourceCartDrawer) {
-            cartDrawer.classList.toggle('is-empty', sourceCartDrawer.classList.contains('is-empty'));
+          const selectors = ['cart-drawer-items', '.cart-drawer__footer'];
+          for (const selector of selectors) {
+            const targetElement = document.querySelector(selector);
+            const sourceElement = html.querySelector(selector);
+            if (targetElement && sourceElement) {
+              targetElement.replaceWith(sourceElement);
+            }
           }
         })
         .catch((e) => {
           console.error(e);
         });
     } else {
-      const sectionId = document.getElementById('main-cart-items')?.dataset?.id || 'main-cart-items';
-      return fetch(`${routes.cart_url}?section_id=${sectionId}`)
+      return fetch(`${routes.cart_url}?section_id=main-cart-items`)
         .then((response) => response.text())
         .then((responseText) => {
           const html = new DOMParser().parseFromString(responseText, 'text/html');
@@ -134,7 +120,7 @@ class CartItems extends HTMLElement {
   }
 
   getSectionsToRender() {
-    const sections = [
+    return [
       {
         id: 'main-cart-items',
         section: document.getElementById('main-cart-items').dataset.id,
@@ -156,10 +142,6 @@ class CartItems extends HTMLElement {
         selector: '.js-contents',
       },
     ];
-
-
-
-    return sections;
   }
 
   updateQuantity(line, quantity, event, name, variantId) {
