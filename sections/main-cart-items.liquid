@@ -388,12 +388,23 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                         <a href="{{ item.url }}" class="lx-item-title">{{ item.product.title | escape }}</a>
 
                         {%- if item.product.has_only_default_variant == false -%}
-                          <p class="lx-item-variant">
-                            {%- for option in item.options_with_values -%}
-                              {{ option.name }}: <strong>{{ option.value }}</strong>{%- unless forloop.last -%} &nbsp;&middot;&nbsp; {%- endunless -%}
+                          <div class="lx-direct-picker" data-line-index="{{ line_index }}" data-qty="{{ item.quantity }}" data-product-id="{{ item.product.id }}" style="margin-top: 8px; font-family: inherit;">
+                            {%- for option in item.product.options_with_values -%}
+                              {%- assign option_index = forloop.index0 -%}
+                              {%- assign selected_value = item.variant.options[option_index] -%}
+                              <div class="lx-direct-option-row" style="margin-top: 4px; display: flex; align-items: center; gap: 6px;">
+                                <span style="font-size: 11px; color: #6B7280; text-transform: uppercase; font-weight: 600; font-family: inherit;">{{ option.name }}:</span>
+                                <select class="lx-direct-option-select" data-option-index="{{ option_index }}" onchange="lxDirectChangeVariant(this)" style="font-size: 12px; padding: 3px 6px; border-radius: 4px; border: 1px solid #E5E7EB; background: #fff; font-family: inherit; cursor: pointer; color: #1A202C;">
+                                  {%- for value in option.values -%}
+                                    <option value="{{ value | escape }}" {% if value == selected_value %}selected{% endif %}>{{ value }}</option>
+                                  {%- endfor -%}
+                                </select>
+                              </div>
                             {%- endfor -%}
-                            <button type="button" class="lx-change-variant-btn" onclick="lxOpenChangeVariant('{{ item.product_id }}', {{ line_index }}, {{ item.quantity }})" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--lx-gold);font-weight:600;text-decoration:underline;padding:0;margin-left:6px;font-family:inherit;">Change</button>
-                          </p>
+                            <script type="application/json" class="lx-direct-variants-json">
+                              {{ item.product.variants | json }}
+                            </script>
+                          </div>
                         {%- endif -%}
 
                         <div class="lx-compact-price">
@@ -468,7 +479,7 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                       return;
                     }
 
-                    window._lxProducts = {};
+                    window._lxProducts = window._lxProducts || {};
                     var html = '';
                     products.forEach(function(p) {
                       window._lxProducts[p.id] = p;
@@ -515,11 +526,36 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
               {%- assign free_ship_threshold = section.settings.free_shipping_threshold | times: 100 -%}
               {%- assign vip_threshold = section.settings.vip_threshold | times: 100 -%}
 
-              {%- assign all_item_savings = 0 -%}
+              {%- assign vip_code = section.settings.vip_discount_code | default: 'PURCHASE1999' | upcase -%}
+              {%- assign total_mrp_discount = 0 -%}
+              {%- assign total_vip_discount = 0 -%}
+              {%- assign total_other_discount = 0 -%}
+
               {%- for item in cart.items -%}
-                {%- assign s = item.original_line_price | minus: item.final_line_price -%}
-                {%- assign all_item_savings = all_item_savings | plus: s -%}
+                {%- assign item_compare = item.variant.compare_at_price | default: item.variant.price -%}
+                {%- assign item_mrp_discount = item_compare | minus: item.variant.price | times: item.quantity -%}
+                {%- assign total_mrp_discount = total_mrp_discount | plus: item_mrp_discount -%}
+
+                {%- for allocation in item.line_level_discount_allocations -%}
+                  {%- assign alloc_title_upper = allocation.discount_application.title | upcase -%}
+                  {%- if alloc_title_upper == vip_code -%}
+                    {%- assign total_vip_discount = total_vip_discount | plus: allocation.amount -%}
+                  {%- else -%}
+                    {%- assign total_other_discount = total_other_discount | plus: allocation.amount -%}
+                  {%- endif -%}
+                {%- endfor -%}
               {%- endfor -%}
+
+              {%- for discount in cart.cart_level_discount_applications -%}
+                {%- assign disc_title_upper = discount.title | upcase -%}
+                {%- if disc_title_upper == vip_code -%}
+                  {%- assign total_vip_discount = total_vip_discount | plus: discount.total_allocated_amount -%}
+                {%- else -%}
+                  {%- assign total_other_discount = total_other_discount | plus: discount.total_allocated_amount -%}
+                {%- endif -%}
+              {%- endfor -%}
+
+              {%- assign total_cart_savings = total_mrp_discount | plus: total_vip_discount | plus: total_other_discount -%}
 
               <div class="lx-summary-card">
                 <h2 class="lx-summary-heading">
@@ -646,30 +682,28 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                     <span class="lx-totals-row-value">{{ cart.original_total_price | money }}</span>
                   </div>
 
-                  {% if all_item_savings > 0 %}
+                  {% if total_mrp_discount > 0 %}
                   <div class="lx-totals-row lx-totals-row--discount">
                     <span class="lx-totals-row-label">Discount on MRP <span style="font-size:10px;font-weight:400;opacity:0.7;">(product offer)</span></span>
-                    <span class="lx-totals-row-value">-{{ all_item_savings | money }}</span>
+                    <span class="lx-totals-row-value">-{{ total_mrp_discount | money }}</span>
                   </div>
                   {% endif %}
 
-                  {%- assign vip_code = section.settings.vip_discount_code | upcase -%}
-                  {%- for discount in cart.cart_level_discount_applications -%}
-                    {%- assign disc_title_upper = discount.title | upcase -%}
-                    {%- if disc_title_upper == vip_code -%}
+                  {% if total_vip_discount > 0 %}
                   <div class="lx-totals-row lx-vip-discount-row">
                     <span class="lx-totals-row-label">
-                      <span class="lx-vip-badge">👑 VIP</span> Discount ({{ discount.title }})
+                      <span class="lx-vip-badge">👑 VIP</span> Discount
                     </span>
-                    <span class="lx-totals-row-value lx-vip-amount">-{{ discount.total_allocated_amount | money }}</span>
+                    <span class="lx-totals-row-value lx-vip-amount">-{{ total_vip_discount | money }}</span>
                   </div>
-                    {%- else -%}
+                  {% endif %}
+
+                  {% if total_other_discount > 0 %}
                   <div class="lx-totals-row lx-totals-row--discount">
-                    <span class="lx-totals-row-label">Coupon ({{ discount.title }})</span>
-                    <span class="lx-totals-row-value">-{{ discount.total_allocated_amount | money }}</span>
+                    <span class="lx-totals-row-label">Coupon / Automatic Discount</span>
+                    <span class="lx-totals-row-value">-{{ total_other_discount | money }}</span>
                   </div>
-                    {%- endif -%}
-                  {%- endfor -%}
+                  {% endif %}
 
                   <div class="lx-totals-row">
                     <span class="lx-totals-row-label">Shipping</span>
@@ -686,10 +720,6 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                   </div>
                 </div>
 
-                {%- assign total_cart_savings = all_item_savings -%}
-                {%- for discount in cart.cart_level_discount_applications -%}
-                  {%- assign total_cart_savings = total_cart_savings | plus: discount.total_allocated_amount -%}
-                {%- endfor -%}
                 {% if total_cart_savings > 0 %}
                 <div class="lx-total-savings-banner">
                   <i class="ti ti-pig-money"></i>
@@ -759,8 +789,10 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                   if(w) w.style.display='none';
                   return;
                 }
+                window._lxProducts = window._lxProducts || {};
                 var html = '';
                 products.forEach(function(p) {
+                  window._lxProducts[p.id] = p;
                   var img = p.featured_image || '';
                   var price = (p.price/100).toLocaleString('en-IN',{style:'currency',currency:'INR',minimumFractionDigits:0});
                   var comparePrice = '';
@@ -796,8 +828,8 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
             <div class="lx-mob-total">
               <span class="lx-mob-total-label">Amount Payable</span>
               <span class="lx-mob-total-val">{{ cart.total_price | money }}</span>
-              {%- if all_item_savings > 0 -%}
-                <span class="lx-mob-savings">Saving {{ all_item_savings | money }}</span>
+              {%- if total_cart_savings > 0 -%}
+                <span class="lx-mob-savings">Saving {{ total_cart_savings | money }}</span>
               {%- endif -%}
             </div>
             <button type="submit" class="lx-checkout-btn cart__checkout-button button" name="checkout" form="cart">
