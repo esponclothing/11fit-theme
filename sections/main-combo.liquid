@@ -72,7 +72,7 @@
   .fit11-info { display: flex; flex-direction: column; gap: 8px; width: 100%; padding-top: 0px; }
   
   .fit11-header-group { display: flex; flex-direction: column; gap: 4px; border-bottom: none; padding-bottom: 0px; width: 100%; }
-  .fit11-title { font-size: 32px; font-weight: 400; line-height: 1.2; color: var(--lux-text); font-family: var(--font-heading); word-wrap: break-word; margin-bottom: 4px; }
+  .fit11-title { font-size: 28px; font-weight: 400; line-height: 1.2; color: var(--lux-text); font-family: var(--font-heading); word-wrap: break-word; margin-bottom: 4px; }
   
   /* ── RATINGS ROW & SIZE CHART LINK (MOVED BELOW PRICE) ── */
   .fit11-rating-row { display: flex; justify-content: flex-start; align-items: center; width: 100%; margin-top: 8px; gap: 12px; }
@@ -260,15 +260,16 @@
     .fit11-gallery-box { width: 100%; aspect-ratio: 4/5; height: auto; border-radius: 0; border: none; border-bottom: 1px solid var(--lux-border); }
     .fit11-slide { width: 100%; padding: 0; }
     .fit11-slide img { width: 100%; height: 100%; object-fit: contain; padding: 0; } 
-    .fit11-thumbs { padding: 8px 16px; }
+    .fit11-thumbs { display: none !important; }
     
     .fit11-info { width: 100%; padding: 4px 16px 24px 16px; gap: 0px; text-align: left; margin: 0; }
     .fit11-header-group { padding-bottom: 0px; margin-bottom: 0px; border-bottom: none; align-items: flex-start; }
-    .fit11-title { font-size: 26px; text-align: left; } 
+    .fit11-title { font-size: 20px; text-align: left; } 
     .fit11-price-row { justify-content: flex-start; }
     
     .fit11-main-action-btns { width: 100%; padding: 20px 0; border-left: none; border-right: none; border-radius: 0; margin: 0; background: transparent; }
-    .fit11-app-wrapper { width: 100%; padding: 4px; padding-top: 15px; margin-left: -4px; overflow: visible; }
+    .fit11-offers-wrapper { order: 1; }
+    .fit11-app-wrapper { order: 2; width: 100%; padding: 4px; padding-top: 15px; margin-left: -4px; overflow: visible; }
     
     #fit11-form-cart-main { width: 100%; margin: 0; padding: 0; }
     .fit11-main-action-btns .fit11-btn-cart { display: flex !important; width: 100% !important; height: 52px !important; margin: 16px 0 0 0 !important; }
@@ -490,6 +491,40 @@
             {% endfor %}
           {% endunless %}
 
+          {% comment %} ── NEW OFFERS & DISCOUNTS SECTION (MOVED ABOVE APP BLOCK) ── {% endcomment %}
+          {% assign offer_blocks = section.blocks | where: "type", "offer" %}
+          
+          {% if offer_blocks.size > 0 %}
+            <div class="fit11-offers-wrapper" style="margin-top: 8px; margin-bottom: 20px;">
+              <div class="fit11-offers-header">
+                <div class="fit11-offers-title-wrap">
+                  <div class="fit11-offers-icon"><i class="ti ti-percentage"></i></div>
+                  <span class="fit11-offers-title">{{ section.settings.offers_heading | default: "Offers & Discounts" }}</span>
+                </div>
+                {% if section.settings.show_view_all %}
+                  <div class="fit11-offers-view-all" onclick="fit11ToggleOffersModal(true)">View all Offers</div>
+                {% endif %}
+              </div>
+              
+              <div class="fit11-offers-scroll">
+                {% for block in offer_blocks %}
+                  <div class="fit11-offer-card" onclick="fit11CopyCoupon(this, '{{ block.settings.offer_code }}')" {{ block.shopify_attributes }}>
+                    <div class="fit11-offer-content-wrap">
+                      <div class="fit11-offer-code">{{ block.settings.offer_code }}</div>
+                      <div class="fit11-offer-desc">{{ block.settings.offer_desc }}</div>
+                      {% if block.settings.offer_code != blank %}
+                        <div class="fit11-copy-hint"><i class="ti ti-copy"></i> Click to Copy</div>
+                      {% endif %}
+                    </div>
+                    {% if block.settings.offer_timer != blank %}
+                      <div class="fit11-offer-timer">{{ block.settings.offer_timer }}</div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+
           {%- for block in section.blocks -%}
             {%- if block.type == '@app' -%}
               <div class="fit11-app-wrapper">
@@ -513,39 +548,7 @@
         <div class="fit11-trust-item"><i class="ti ti-rotate-clockwise"></i>EASY<br>RETURNS</div>
       </div>
 
-      {% comment %} ── NEW OFFERS & DISCOUNTS SECTION ── {% endcomment %}
-      {% assign offer_blocks = section.blocks | where: "type", "offer" %}
-      
-      {% if offer_blocks.size > 0 %}
-        <div class="fit11-offers-wrapper" style="margin-top: 20px;">
-          <div class="fit11-offers-header">
-            <div class="fit11-offers-title-wrap">
-              <div class="fit11-offers-icon"><i class="ti ti-percentage"></i></div>
-              <span class="fit11-offers-title">{{ section.settings.offers_heading | default: "Offers & Discounts" }}</span>
-            </div>
-            {% if section.settings.show_view_all %}
-              <div class="fit11-offers-view-all" onclick="fit11ToggleOffersModal(true)">View all Offers</div>
-            {% endif %}
-          </div>
-          
-          <div class="fit11-offers-scroll">
-            {% for block in offer_blocks %}
-              <div class="fit11-offer-card" onclick="fit11CopyCoupon(this, '{{ block.settings.offer_code }}')" {{ block.shopify_attributes }}>
-                <div class="fit11-offer-content-wrap">
-                  <div class="fit11-offer-code">{{ block.settings.offer_code }}</div>
-                  <div class="fit11-offer-desc">{{ block.settings.offer_desc }}</div>
-                  {% if block.settings.offer_code != blank %}
-                    <div class="fit11-copy-hint"><i class="ti ti-copy"></i> Click to Copy</div>
-                  {% endif %}
-                </div>
-                {% if block.settings.offer_timer != blank %}
-                  <div class="fit11-offer-timer">{{ block.settings.offer_timer }}</div>
-                {% endif %}
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      {% endif %}
+
 
       {% comment %} ── KEY HIGHLIGHTS ── {% endcomment %}
       <div class="fit11-highlights-wrapper">
