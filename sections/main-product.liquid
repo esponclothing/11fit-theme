@@ -118,17 +118,22 @@
   .fit11-variant-pills { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; }
   .fit11-variant-pills::-webkit-scrollbar { display: none; }
   .fit11-variant-pill.is-color {
-    padding: 0; width: 72px; height: 96px; background: transparent; border: 1px solid transparent; border-radius: 6px; overflow: hidden; opacity: 0.6; transition: all .3s ease; flex-shrink: 0; cursor: pointer;
+    padding: 0; width: auto; height: auto; background: transparent; border: none; overflow: visible; opacity: 0.6; transition: all .3s ease; flex-shrink: 0; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px;
   }
   .fit11-variant-pill.is-color:hover { opacity: 1; }
-  .fit11-variant-radio:checked + .fit11-variant-pill.is-color {
-    border-color: var(--lux-text); background: transparent; opacity: 1;
+  .fit11-color-swatch-wrap {
+    width: 72px; height: 96px; border-radius: 6px; overflow: hidden; border: 1px solid transparent; transition: border-color 0.3s ease;
   }
   .fit11-color-swatch {
-    display: inline-block; width: 100%; height: 100%; border-radius: 0;
-    margin: 0; border: none;
-    background-color: var(--lux-surface);
+    display: inline-block; width: 100%; height: 100%; border-radius: 0; margin: 0; border: none; background-color: var(--lux-surface);
   }
+  .fit11-variant-radio:checked + .fit11-variant-pill.is-color {
+    border: none; background: transparent; opacity: 1;
+  }
+  .fit11-variant-radio:checked + .fit11-variant-pill.is-color .fit11-color-swatch-wrap {
+    border-color: var(--lux-text);
+  }
+  .fit11-color-name { font-size: 10px; font-weight: 500; color: var(--lux-text); text-transform: capitalize; letter-spacing: 0.05em; text-align: center; max-width: 72px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
 
   /* ── OFFERS & DISCOUNTS SECTION (SIMPLIFIED) ── */
   .fit11-offers-wrapper { background: #eef6f0; border-radius: 4px; padding: 16px; width: 100%; margin-top: 8px; }
@@ -313,28 +318,31 @@
                         {% endif %}
                       {% endfor %}
                       
-                      {% if variant_image != null %}
-                        <span class="fit11-color-swatch" style="background-image: url('{{ variant_image | img_url: '200x250' }}'); background-size: cover; background-position: center;"></span>
-                      {% else %}
-                        {% assign color_handle = value | handle %}
-                        {% assign css_color = color_handle %}
-                        {% case color_handle %}
-                          {% when 'navy-blue' %}{% assign css_color = '#000080' %}
-                          {% when 'bottle-green' %}{% assign css_color = '#006A4E' %}
-                          {% when 'light-baby-pink' %}{% assign css_color = '#F4C2C2' %}
-                          {% when 'lavender' %}{% assign css_color = '#E6E6FA' %}
-                          {% when 'baby-blue' %}{% assign css_color = '#89CFF0' %}
-                          {% when 'flamingo' %}{% assign css_color = '#FC8EAC' %}
-                          {% when 'jade' %}{% assign css_color = '#00A86B' %}
-                          {% when 'off-white' %}{% assign css_color = '#FAF9F6' %}
-                          {% when 'maroon' %}{% assign css_color = '#800000' %}
-                          {% when 'white' %}{% assign css_color = '#FFFFFF' %}
-                          {% when 'black' %}{% assign css_color = '#000000' %}
-                          {% when 'red' %}{% assign css_color = '#FF0000' %}
-                          {% else %}{% assign css_color = value | split: ' ' | last | downcase %}
-                        {% endcase %}
-                        <span class="fit11-color-swatch" style="background-color: {{ css_color }};"></span>
-                      {% endif %}
+                      <div class="fit11-color-swatch-wrap">
+                        {% if variant_image != null %}
+                          <span class="fit11-color-swatch" style="background-image: url('{{ variant_image | img_url: '200x250' }}'); background-size: cover; background-position: center;"></span>
+                        {% else %}
+                          {% assign color_handle = value | handle %}
+                          {% assign css_color = color_handle %}
+                          {% case color_handle %}
+                            {% when 'navy-blue' %}{% assign css_color = '#000080' %}
+                            {% when 'bottle-green' %}{% assign css_color = '#006A4E' %}
+                            {% when 'light-baby-pink' %}{% assign css_color = '#F4C2C2' %}
+                            {% when 'lavender' %}{% assign css_color = '#E6E6FA' %}
+                            {% when 'baby-blue' %}{% assign css_color = '#89CFF0' %}
+                            {% when 'flamingo' %}{% assign css_color = '#FC8EAC' %}
+                            {% when 'jade' %}{% assign css_color = '#00A86B' %}
+                            {% when 'off-white' %}{% assign css_color = '#FAF9F6' %}
+                            {% when 'maroon' %}{% assign css_color = '#800000' %}
+                            {% when 'white' %}{% assign css_color = '#FFFFFF' %}
+                            {% when 'black' %}{% assign css_color = '#000000' %}
+                            {% when 'red' %}{% assign css_color = '#FF0000' %}
+                            {% else %}{% assign css_color = value | split: ' ' | last | downcase %}
+                          {% endcase %}
+                          <span class="fit11-color-swatch" style="background-color: {{ css_color }};"></span>
+                        {% endif %}
+                      </div>
+                      <span class="fit11-color-name">{{ value }}</span>
                     </label>
                   {% endfor %}
                 </div>
@@ -633,6 +641,24 @@
       }
     });
   });
+
+  /* AUTO SCROLL COLOR VARIANTS */
+  var colorPillsWrap = document.querySelector('.fit11-variant-pills');
+  if (colorPillsWrap && colorPillsWrap.scrollWidth > colorPillsWrap.clientWidth) {
+    var autoScrollInterval = setInterval(function() {
+      var maxScroll = colorPillsWrap.scrollWidth - colorPillsWrap.clientWidth;
+      var scrollAmount = 82; // thumbnail width + gap
+      var nextScroll = colorPillsWrap.scrollLeft + scrollAmount;
+      
+      if (nextScroll > maxScroll + scrollAmount / 2) {
+        colorPillsWrap.scrollTo({left: 0, behavior: 'smooth'});
+      } else {
+        colorPillsWrap.scrollTo({left: nextScroll, behavior: 'smooth'});
+      }
+    }, 3000);
+    colorPillsWrap.addEventListener('touchstart', function() { clearInterval(autoScrollInterval); }, {passive:true});
+    colorPillsWrap.addEventListener('mousedown', function() { clearInterval(autoScrollInterval); }, {passive:true});
+  }
 
   /* SMART STICKY BAR LOGIC */
   var stickyBar = document.getElementById('fit11StickyBar');
