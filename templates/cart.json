@@ -20,7 +20,7 @@
         "show_available_offers": true,
         "offers_label": "Available Offers",
         "free_shipping_threshold": 500,
-        "vip_threshold": 2500
+        "vip_threshold": 1999
       }
     },
     "cart-footer": {
