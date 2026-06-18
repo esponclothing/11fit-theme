@@ -144,128 +144,60 @@
           >
             <div class="loading-overlay gradient"></div>
             <style>
-              .fit-premium-grid {
+                            .fit-premium-grid {
                 display: grid !important;
                 grid-template-columns: repeat(2, 1fr) !important;
-                column-gap: 10px !important;
-                row-gap: 24px !important;
-                padding: 0 12px; /* Slight edge padding for mobile */
+                column-gap: 8px !important;
+                row-gap: 16px !important;
               }
               .fit-premium-grid .grid__item {
                 width: 100% !important;
                 max-width: 100% !important;
                 margin: 0 !important;
                 padding: 0 !important;
-                min-width: 0 !important;
+                min-width: 0 !important; /* CRITICAL FIX to prevent grid blowout */
               }
               .fit-premium-grid .card-wrapper {
-                height: 100% !important;
-                display: flex !important;
-                flex-direction: column !important;
+                height: auto !important; /* REMOVE height 100% to prevent empty bottom space */
+                display: block !important;
               }
               .fit-premium-grid .card {
-                --image-padding: 0 !important;
-                border-radius: 12px !important;
+                border-radius: 8px !important;
                 overflow: hidden !important;
                 border: none !important;
                 background-color: transparent !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                display: flex;
-                flex-direction: column;
-                height: 100%;
               }
               .fit-premium-grid .card__inner {
-                border-radius: 12px !important;
-                background-color: #f4f4f4 !important; /* Soft backdrop for product images */
+                border-radius: 8px !important;
+                background-color: #f8f8f8 !important;
                 --ratio-percent: 125% !important; /* 4:5 aspect ratio */
-                margin: 0 !important;
-                padding: 0 !important;
-                width: 100% !important;
-                overflow: hidden;
-                position: relative;
               }
               .fit-premium-grid .card__inner::before {
                 padding-bottom: 125% !important;
-              }
-              .fit-premium-grid .card__media {
-                margin: 0 !important;
-                padding: 0 !important;
-                width: 100% !important;
-                height: 100% !important;
-              }
-              .fit-premium-grid .media {
-                margin: 0 !important;
-                padding: 0 !important;
-                width: 100% !important;
-                height: 100% !important;
               }
               .fit-premium-grid .media img {
                 object-fit: cover !important;
                 object-position: center top !important;
                 width: 100% !important;
                 height: 100% !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                left: 0 !important;
-                top: 0 !important;
               }
-              /* Content & Text Enhancements */
-              .fit-premium-grid .card__content {
-                padding: 12px 4px 0 4px !important;
-                text-align: left !important;
-                flex-grow: 1;
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-              }
-              .fit-premium-grid .card-information {
-                text-align: left !important;
-              }
-              .fit-premium-grid .card__heading {
-                font-size: 1.4rem !important;
-                font-weight: 600 !important;
-                line-height: 1.4 !important;
-                margin-bottom: 6px !important;
-                display: -webkit-box;
-                -webkit-line-clamp: 1; /* Truncate to one line like Nobero */
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-                text-overflow: ellipsis;
-              }
-              .fit-premium-grid .price {
-                display: flex !important;
-                align-items: center !important;
-                gap: 6px !important;
-                flex-wrap: wrap;
-                margin-top: auto;
-              }
-              .fit-premium-grid .price__regular .price-item--regular,
-              .fit-premium-grid .price__sale .price-item--sale {
-                font-size: 1.5rem !important;
-                font-weight: 700 !important;
-                color: #111 !important;
-              }
-              .fit-premium-grid .price__sale s.price-item--regular {
-                font-size: 1.2rem !important;
-                color: #888 !important;
-                font-weight: 400 !important;
-              }
-              
-              /* Desktop Overrides */
               @media screen and (min-width: 750px) {
                 .fit-premium-grid {
                   grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr) !important;
-                  column-gap: 20px !important;
+                  column-gap: 24px !important;
                   row-gap: 40px !important;
-                  padding: 0;
                 }
-                .fit-premium-grid .card__inner {
-                  transition: transform 0.3s ease, box-shadow 0.3s ease;
+                .fit-premium-grid .card-wrapper:hover .card {
+                  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+                  transition: box-shadow 0.3s ease;
                 }
-                .fit-premium-grid .card-wrapper:hover .card__inner {
-                  box-shadow: 0 8px 24px rgba(0,0,0,0.06) !important;
-                  transform: translateY(-4px);
+              }, 1fr) !important;
+                  column-gap: 24px !important;
+                  row-gap: 40px !important;
+                }
+                .fit-premium-grid .card-wrapper:hover .card {
+                  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+                  transition: box-shadow 0.3s ease;
                 }
               }
             </style>
@@ -530,3 +462,4 @@
   ]
 }
 {% endschema %}
+
