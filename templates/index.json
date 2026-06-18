@@ -116,6 +116,15 @@
             "link": "shopify://collections/cockroach-special"
           }
         },
+        "category_k7wwaT": {
+          "type": "category",
+          "name": "T-shirts",
+          "settings": {
+            "image": "shopify://shop_images/Front_1_c_2_1000x1250_b27a1689-e4f4-4dc2-b95c-d95f2bf6be7c.webp",
+            "title": "T-shirts",
+            "link": "shopify://collections/t-shirts"
+          }
+        },
         "category_D6qQPw": {
           "type": "category",
           "name": "Swimwear",
@@ -154,15 +163,6 @@
             "link": "shopify://collections/joggers"
           }
         },
-        "category_k7wwaT": {
-          "type": "category",
-          "name": "T-shirts",
-          "settings": {
-            "image": "shopify://shop_images/Front_1_c_2_1000x1250_b27a1689-e4f4-4dc2-b95c-d95f2bf6be7c.webp",
-            "title": "T-shirts",
-            "link": "shopify://collections/t-shirts"
-          }
-        },
         "category_WKnXtX": {
           "type": "category",
           "name": "Accessories",
@@ -176,11 +176,11 @@
       },
       "block_order": [
         "category_JPBDEx",
+        "category_k7wwaT",
         "category_D6qQPw",
         "category_QgxK7J",
         "category_cLGiAM",
         "category_JzGtHK",
-        "category_k7wwaT",
         "category_WKnXtX"
       ],
       "name": "11 fit Category Bubbles",
