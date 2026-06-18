@@ -881,73 +881,75 @@
   cursor: pointer;
 }
 
-  /* ---- FIT11 PRICE ROW ---- */
+    /* ---- FIT11 PRICE ROW ---- */
   .fit11-card-price-row {
     display: flex;
     align-items: baseline;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-top: 6px;
+    gap: 4px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    margin-top: 2px;
     margin-bottom: 0px;
+    overflow: hidden;
   }
   
   .fit11-price-final {
     color: #121212;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 13px;
+    white-space: nowrap;
   }
   
   .fit11-price-compare {
     color: #8c8c8c;
-    font-size: 12px;
+    font-size: 11px;
     text-decoration: line-through;
     font-weight: 400;
+    white-space: nowrap;
   }
   
   .fit11-price-discount {
     color: #121212;
     font-weight: 600;
-    font-size: 12px;
-    letter-spacing: 0.5px;
+    font-size: 11px;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
   }
 
   .card__heading {
-    font-size: 14px !important;
+    font-size: 13px !important;
     color: #121212 !important;
     font-weight: 500 !important;
-    margin-bottom: 4px !important;
+    margin-bottom: 0px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
   
   .card__information {
-    padding: 16px 12px !important;
+    padding: 8px 8px !important;
   }
   
   @media screen and (max-width: 749px) {
     .card__information {
-      padding: 12px 8px !important;
+      padding: 8px 6px !important;
     }
     
     .fit11-card-price-row {
-      margin-top: 4px !important;
+      margin-top: 2px !important;
     }
     
     .fit11-price-final {
-      font-size: 14px !important;
-      color: #121212 !important;
+      font-size: 12px !important;
     }
     .fit11-price-compare {
-      font-size: 12px !important;
-      color: #8c8c8c !important;
+      font-size: 10px !important;
     }
     .fit11-price-discount {
-      font-size: 11px !important;
-      color: #121212 !important;
+      font-size: 10px !important;
     }
     
     .card__heading {
-      font-size: 13px !important;
-      margin-bottom: 4px !important;
-      white-space: normal !important;
-      color: #121212 !important;
+      font-size: 12px !important;
     }
   }
