@@ -119,6 +119,7 @@
         "category_D6qQPw": {
           "type": "category",
           "name": "Swimwear",
+          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/Untitleddesign_48.jpg",
             "title": "Swimwear",
