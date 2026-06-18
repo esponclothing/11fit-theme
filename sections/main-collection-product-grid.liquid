@@ -144,7 +144,7 @@
           >
             <div class="loading-overlay gradient"></div>
             <style>
-              .fit-premium-grid {
+                            .fit-premium-grid {
                 display: grid !important;
                 grid-template-columns: repeat(2, 1fr) !important;
                 column-gap: 8px !important;
@@ -155,11 +155,11 @@
                 max-width: 100% !important;
                 margin: 0 !important;
                 padding: 0 !important;
+                min-width: 0 !important; /* CRITICAL FIX to prevent grid blowout */
               }
               .fit-premium-grid .card-wrapper {
-                height: 100%;
-                display: flex;
-                flex-direction: column;
+                height: auto !important; /* REMOVE height 100% to prevent empty bottom space */
+                display: block !important;
               }
               .fit-premium-grid .card {
                 border-radius: 8px !important;
@@ -175,9 +175,23 @@
               .fit-premium-grid .card__inner::before {
                 padding-bottom: 125% !important;
               }
+              .fit-premium-grid .media img {
+                object-fit: cover !important;
+                object-position: center top !important;
+                width: 100% !important;
+                height: 100% !important;
+              }
               @media screen and (min-width: 750px) {
                 .fit-premium-grid {
                   grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr) !important;
+                  column-gap: 24px !important;
+                  row-gap: 40px !important;
+                }
+                .fit-premium-grid .card-wrapper:hover .card {
+                  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+                  transition: box-shadow 0.3s ease;
+                }
+              }, 1fr) !important;
                   column-gap: 24px !important;
                   row-gap: 40px !important;
                 }
@@ -448,3 +462,4 @@
   ]
 }
 {% endschema %}
+

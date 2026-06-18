@@ -881,20 +881,23 @@
   cursor: pointer;
 }
 
-      /* ---- FIT11 PRICE ROW ---- */
+        /* ---- FIT11 PRICE ROW ---- */
   .fit11-card-price-row {
     display: flex;
     align-items: baseline;
     gap: 4px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     margin-top: 2px;
     margin-bottom: 0px;
+    width: 100%;
+    min-width: 0;
   }
   
   .fit11-price-final {
     color: #121212;
     font-weight: 600;
     font-size: 13px;
+    white-space: nowrap;
   }
   
   .fit11-price-compare {
@@ -902,6 +905,7 @@
     font-size: 11px;
     text-decoration: line-through;
     font-weight: 400;
+    white-space: nowrap;
   }
   
   .fit11-price-discount {
@@ -909,6 +913,7 @@
     font-weight: 600;
     font-size: 11px;
     letter-spacing: 0.3px;
+    white-space: nowrap;
   }
 
   .card__heading {
