@@ -922,9 +922,7 @@
   }
   
   .card-wrapper.product-card-wrapper {
-    border: 1px solid #E8E9EA !important;
-    border-radius: 0 !important;
-    overflow: hidden;
+    border: none !important;
   }
   
   .card__inner {
@@ -939,23 +937,23 @@
     margin-bottom: 2px !important;
   }
   .card__heading a {
-    font-size: 14px !important;
-    line-height: 20px !important;
-    color: #505985 !important;
+    font-size: 13px !important;
+    color: #1A1E31 !important;
+    font-weight: 400 !important;
   }
   
   .fit11-card-price-row {
-    margin-top: 0 !important;
+    margin-top: 2px !important;
     margin-bottom: 0 !important;
   }
   
   .fit11-price-final {
-    font-size: 14px !important;
-    color: #121212 !important;
+    font-size: 13px !important;
+    color: #1A1E31 !important;
   }
   .fit11-price-compare {
-    font-size: 12px !important;
-    color: #666875 !important;
+    font-size: 11px !important;
+    color: #7B828F !important;
   }
   .fit11-price-discount {
     font-size: 11px !important;
