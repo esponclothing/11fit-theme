@@ -28,8 +28,8 @@
 
   /* ── GALLERY ── */
   .fit11-gallery-wrap { position: sticky; top: 40px; display: flex; flex-direction: column; gap: 12px; width: 100%; }
-  .fit11-gallery-box { width: 100%; aspect-ratio: 3/4; background: var(--lux-surface); overflow: hidden; position: relative; border-radius: 8px; border: 1px solid var(--lux-border); }
-  .fit11-slides { display: flex; height: 100%; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .fit11-gallery-box { width: 100%; height: auto; aspect-ratio: 3/4; background: var(--lux-surface); overflow: hidden; position: relative; border-radius: 8px; border: 1px solid var(--lux-border); }
+  .fit11-slides { display: flex; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
   .fit11-slides::-webkit-scrollbar { display: none; }
   .fit11-slide { flex: 0 0 100%; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; width: 100%; height: 100%; }
   .fit11-slide img { width: 100%; height: 100%; object-fit: contain; } 
@@ -38,7 +38,7 @@
   .fit11-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.5); transition: all .4s ease; pointer-events: auto; cursor: pointer; }
   .fit11-dot.on { background: var(--lux-text); transform: scale(1.2); border-color: transparent; }
   
-  .fit11-thumbs { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; }
+  .fit11-thumbs { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
   .fit11-thumbs::-webkit-scrollbar { display: none; }
   .fit11-thumb { width: 72px; height: 96px; flex-shrink: 0; overflow: hidden; cursor: pointer; opacity: 0.6; transition: all .3s ease; background: var(--lux-surface); border-radius: 6px; border: 1px solid transparent; }
   .fit11-thumb.on { opacity: 1; border-color: var(--lux-text); }
@@ -70,7 +70,7 @@
 
 
   /* ── DETAILS PANEL ── */
-  .fit11-info { display: flex; flex-direction: column; gap: 8px; width: 100%; padding-top: 0px; }
+  .fit11-info { display: flex; flex-direction: column; gap: 8px; width: 100%; padding-top: 0px; min-width: 0; }
   
   .fit11-header-group { display: flex; flex-direction: column; gap: 4px; border-bottom: none; padding-bottom: 0px; width: 100%; }
   .fit11-title { font-size: 28px; font-weight: 400; line-height: 1.2; color: var(--lux-text); font-family: var(--font-heading); word-wrap: break-word; margin-bottom: 4px; }
@@ -103,7 +103,7 @@
   .fit11-btn-cart:hover { opacity: 0.9; }
 
   /* ── VARIANT SELECTORS (LUXURY ADAPTATION) ── */
-  .fit11-variant-selectors { display: flex; flex-direction: column; gap: 20px; margin-bottom: 8px; width: 100%; }
+  .fit11-variant-selectors { display: flex; flex-direction: column; gap: 20px; margin-bottom: 8px; width: 100%; min-width: 0; }
   .fit11-option-fieldset { border: none; padding: 0; margin: 0; }
   .fit11-option-name { font-size: 12px; font-weight: 500; color: var(--lux-text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-family: var(--font-body); white-space: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; }
   .fit11-option-name::-webkit-scrollbar { display: none; }
@@ -124,7 +124,7 @@
     opacity: 0.5; text-decoration: line-through; cursor: not-allowed; 
   }
   /* COLOR DOT OVERRIDES */
-  .fit11-variant-pills { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; -webkit-overflow-scrolling: touch; touch-action: pan-x; scroll-snap-type: x mandatory; }
+  .fit11-variant-pills { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; -webkit-overflow-scrolling: touch; touch-action: pan-y; scroll-snap-type: x mandatory; }
   .fit11-variant-pills::-webkit-scrollbar { display: none; }
   .fit11-variant-pill.is-color {
     padding: 0; width: auto; height: auto; background: transparent; border: none; overflow: visible; opacity: 0.6; transition: all .3s ease; flex-shrink: 0; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; scroll-snap-align: start;
@@ -161,7 +161,7 @@
   .fit11-offers-title { font-size: 16px; font-weight: 600; color: #1a202c; }
   .fit11-offers-view-all { font-size: 13px; font-weight: 600; color: #b89356; cursor: pointer; }
   
-  .fit11-offers-scroll { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding-bottom: 12px; scroll-snap-type: x mandatory; }
+  .fit11-offers-scroll { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding-bottom: 12px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
   .fit11-offers-scroll::-webkit-scrollbar { display: none; }
   
   .fit11-offer-card { background: #ffffff; border: 1px dashed #cbd5e0; border-radius: 6px; min-width: 250px; display: flex; position: relative; flex-shrink: 0; cursor: pointer; transition: transform 0.1s ease, opacity 0.3s ease; scroll-snap-align: start; }
@@ -408,7 +408,7 @@
         </div>
       </div>
       
-      {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
+      {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form', style: 'width: 100%; flex-direction: column; min-width: 0;' %}
         
         <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
         <input type="hidden" name="quantity" value="1" class="qty-input">
