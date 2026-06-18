@@ -418,9 +418,6 @@
           <div class="AirReviews-Widget AirReviews-Widget--Stars"></div>
         </div>
 
-        <div class="fit11-size-chart-link" onclick="fit11ToggleModal(true)" style="display: flex; align-items: center; gap: 4px; font-size: 13px; text-decoration: underline; color: var(--lux-accent); font-weight: 500; cursor: pointer; margin-top: 8px; margin-bottom: 8px;">
-          <i class="ti ti-ruler-2"></i><span>Size Guide</span>
-        </div>
       </div>
       
       {% comment %} ── HIGHLIGHTED COMBO SELECTION AREA ── {% endcomment %}
@@ -492,6 +489,43 @@
                 </div>
               {% endif %}
             {% endfor %}
+          {% endunless %}
+
+          {% comment %} ── VARIANT SELECTOR (OTHER THAN COLOR) ── {% endcomment %}
+          {% unless product.has_only_default_variant %}
+            <div class="fit11-variant-selectors">
+              {% for option in product.options_with_values %}
+                {% assign option_name_lower = option.name | downcase %}
+                {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
+                  {% continue %}
+                {% endif %}
+
+                <div class="fit11-option-fieldset" role="group" style="min-width: 0; width: 100%;">
+                  <div class="fit11-option-name-row" style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 8px;">
+                    <span class="fit11-option-name-label" style="font-size: 12px; font-weight: 500; color: var(--lux-text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-family: var(--font-body);">{{ option.name }}</span>
+                    {% if option_name_lower == 'size' %}
+                      <div class="fit11-size-chart-link" onclick="fit11ToggleModal(true)" style="display: flex; align-items: center; gap: 4px; font-size: 11px; text-decoration: underline; color: var(--lux-accent); font-weight: 500; cursor: pointer;">
+                        <i class="ti ti-ruler-2"></i><span>Size Guide</span>
+                      </div>
+                    {% endif %}
+                  </div>
+                  <div class="fit11-variant-pills">
+                    {% for value in option.values %}
+                      <input type="radio" 
+                             id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                             name="{{ option.name }}" 
+                             value="{{ value | escape }}"
+                             {% if option.selected_value == value %}checked{% endif %}
+                             class="fit11-variant-radio">
+                      
+                      <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="fit11-variant-pill">
+                        {{ value }}
+                      </label>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
           {% endunless %}
 
           {%- for block in section.blocks -%}
