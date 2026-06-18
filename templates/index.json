@@ -108,6 +108,14 @@
     "11fit_category_bubbles_wmm7Lw": {
       "type": "11fit-category-bubbles",
       "blocks": {
+        "category_JPBDEx": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/1.png",
+            "title": "CJP SPECIAL",
+            "link": "shopify://collections/cockroache-special"
+          }
+        },
         "category_D6qQPw": {
           "type": "category",
           "name": "Swimwear",
@@ -166,6 +174,7 @@
         }
       },
       "block_order": [
+        "category_JPBDEx",
         "category_D6qQPw",
         "category_QgxK7J",
         "category_cLGiAM",
