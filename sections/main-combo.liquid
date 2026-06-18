@@ -290,7 +290,7 @@
   .AirReviews-Widget { margin: 0 !important; padding: 0 !important; }
 </style>
 
-<div class="fit11-page">
+<div class="fit11-page" id="fit11-page-{{ section.id }}">
   <div class="fit11-grid">
 
     {% comment %} ── LEFT: EDITORIAL GALLERY ── {% endcomment %}
@@ -399,16 +399,16 @@
           <div class="fit11-price-wrapper">
             <div class="fit11-price-top">
               <span class="fit11-price-main">{{ product.price | money_without_trailing_zeros }}</span>
-              {% if product.compare_at_price > product.price %}
-                <span class="fit11-price-off">{{ product.compare_at_price | minus: product.price | money_without_trailing_zeros }} OFF</span>
-              {% endif %}
+              <span class="fit11-price-off"{% if product.compare_at_price <= product.price or product.compare_at_price == blank %} style="display:none;"{% endif %}>
+                {% if product.compare_at_price > product.price %}
+                  {{ product.compare_at_price | minus: product.price | money_without_trailing_zeros }} OFF
+                {% endif %}
+              </span>
             </div>
-            {% if product.compare_at_price > product.price %}
-              <div class="fit11-price-mrp">
-                MRP: <span class="fit11-price-old">{{ product.compare_at_price | money_without_trailing_zeros }}</span> <span class="fit11-price-taxes">Inclusive of all Taxes</span>
-              </div>
-              <div class="fit11-price-lowest">Lowest price in last 30 days</div>
-            {% endif %}
+            <div class="fit11-price-mrp"{% if product.compare_at_price <= product.price or product.compare_at_price == blank %} style="display:none;"{% endif %}>
+              MRP: <span class="fit11-price-old">{{ product.compare_at_price | money_without_trailing_zeros }}</span> <span class="fit11-price-taxes">Inclusive of all Taxes</span>
+            </div>
+            <div class="fit11-price-lowest"{% if product.compare_at_price <= product.price or product.compare_at_price == blank %} style="display:none;"{% endif %}>Lowest price in last 30 days</div>
           </div>
           <i class="ti ti-share" onclick="if(navigator.share){navigator.share({url: window.location.href, title: document.title});}" style="font-size: 24px; color: var(--lux-text); cursor: pointer; padding: 4px; margin-top: 4px;"></i>
         </div>
@@ -650,19 +650,83 @@
       {% elsif section.settings.size_chart_page != blank %}
         {{ pages[section.settings.size_chart_page].content }}
       {% else %}
-        <div style="overflow-x: auto; width: 100%;">
+        <style>
+          .fit11-size-tabs { display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--lux-border); }
+          .fit11-size-tab { padding: 8px 16px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--lux-text-muted); border-bottom: 2px solid transparent; }
+          .fit11-size-tab.active { color: var(--lux-text); border-bottom: 2px solid var(--lux-text); }
+          .fit11-size-pane { display: none; overflow-x: auto; width: 100%; }
+          .fit11-size-pane.active { display: block; }
+        </style>
+        
+        <div class="fit11-size-tabs">
+          <div class="fit11-size-tab active" onclick="fit11SwitchSizeTab(this, 'tshirt')">T-Shirt</div>
+          <div class="fit11-size-tab" onclick="fit11SwitchSizeTab(this, 'trackpants')">Track Pants</div>
+          <div class="fit11-size-tab" onclick="fit11SwitchSizeTab(this, 'shorts')">Shorts</div>
+        </div>
+
+        <div id="size-pane-tshirt" class="fit11-size-pane active">
           <table class="fit11-size-table">
             <thead>
-              <tr style="border-bottom: 2px solid var(--lux-border); font-weight:500;"><th>Size</th><th>Chest (in)</th><th>Waist (in)</th><th>Hips (in)</th></tr>
+              <tr style="border-bottom: 2px solid var(--lux-border); font-weight:500;"><th>Size</th><th>Chest (in)</th><th>Length (in)</th></tr>
             </thead>
             <tbody>
-              <tr><td>S</td><td>34 - 36</td><td>28 - 30</td><td>35 - 37</td></tr>
-              <tr><td>M</td><td>38 - 40</td><td>32 - 34</td><td>39 - 41</td></tr>
-              <tr><td>L</td><td>42 - 44</td><td>36 - 38</td><td>43 - 45</td></tr>
-              <tr><td>XL</td><td>46 - 48</td><td>40 - 42</td><td>47 - 49</td></tr>
+              <tr><td>XS</td><td>36</td><td>25</td></tr>
+              <tr><td>S</td><td>38</td><td>26</td></tr>
+              <tr><td>M</td><td>40</td><td>27</td></tr>
+              <tr><td>L</td><td>42</td><td>28</td></tr>
+              <tr><td>XL</td><td>44</td><td>29</td></tr>
+              <tr><td>2XL</td><td>46</td><td>30</td></tr>
+              <tr><td>3XL</td><td>48</td><td>31</td></tr>
+              <tr><td>4XL</td><td>50</td><td>32</td></tr>
+              <tr><td>5XL</td><td>52</td><td>32</td></tr>
+              <tr><td>6XL</td><td>56</td><td>33</td></tr>
+              <tr><td>7XL</td><td>60</td><td>33</td></tr>
             </tbody>
           </table>
         </div>
+
+        <div id="size-pane-trackpants" class="fit11-size-pane">
+          <table class="fit11-size-table">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--lux-border); font-weight:500;"><th>Size</th><th>Waist (in)</th><th>Length (in)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>S</td><td>28 - 30</td><td>38</td></tr>
+              <tr><td>M</td><td>30 - 32</td><td>39</td></tr>
+              <tr><td>L</td><td>32 - 34</td><td>40</td></tr>
+              <tr><td>XL</td><td>34 - 36</td><td>41</td></tr>
+              <tr><td>2XL</td><td>36 - 38</td><td>42</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="size-pane-shorts" class="fit11-size-pane">
+          <table class="fit11-size-table">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--lux-border); font-weight:500;"><th>Size</th><th>Waist (in)</th><th>Length (in)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>S</td><td>28 - 30</td><td>18</td></tr>
+              <tr><td>M</td><td>30 - 32</td><td>19</td></tr>
+              <tr><td>L</td><td>32 - 34</td><td>20</td></tr>
+              <tr><td>XL</td><td>34 - 36</td><td>21</td></tr>
+              <tr><td>2XL</td><td>36 - 38</td><td>22</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <script>
+          function fit11SwitchSizeTab(tabElem, paneId) {
+            var tabs = tabElem.parentElement.querySelectorAll('.fit11-size-tab');
+            tabs.forEach(function(t) { t.classList.remove('active'); });
+            tabElem.classList.add('active');
+            
+            var panes = tabElem.parentElement.parentElement.querySelectorAll('.fit11-size-pane');
+            panes.forEach(function(p) { p.classList.remove('active'); });
+            var targetPane = tabElem.parentElement.parentElement.querySelector('#size-pane-' + paneId);
+            if (targetPane) targetPane.classList.add('active');
+          }
+        </script>
       {% endif %}
     </div>
   </div>
@@ -690,30 +754,40 @@
 // ADD TO CART & LOADER SPIN CONTROLLER (RUNS INDEPENDENTLY)
 (function() {
   /* ── VARIANT SELECTION LOGIC ── */
-  var variantRadios = document.querySelectorAll('.fit11-variant-radio');
-  var variantIdInput = document.getElementById('fit11-variant-id');
-  var variantsJsonEl = document.getElementById('ProductVariantsData');
+  var sectionContainer = document.getElementById('fit11-page-{{ section.id }}') || document;
+  var variantRadios = sectionContainer.querySelectorAll('.fit11-variant-radio');
+  var variantIdInput = sectionContainer.querySelector('#fit11-variant-id') || document.getElementById('fit11-variant-id');
+  var variantsJsonEl = sectionContainer.querySelector('#ProductVariantsData') || document.getElementById('ProductVariantsData');
   
   if (variantsJsonEl) {
     var variantsData = JSON.parse(variantsJsonEl.textContent);
 
+    function formatMoney(cents) {
+      var val = (cents / 100).toFixed(0);
+      var formatted = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return "Rs. " + formatted; 
+    }
+
     function updateSelectedVariant() {
       var selectedOptions = [];
-      document.querySelectorAll('.fit11-option-fieldset').forEach(function(fieldset) {
+      sectionContainer.querySelectorAll('.fit11-option-fieldset').forEach(function(fieldset) {
         var checkedRadio = fieldset.querySelector('.fit11-variant-radio:checked');
         if (checkedRadio) {
-          selectedOptions.push(checkedRadio.value);
+          var val = checkedRadio.value;
+          if (selectedOptions.indexOf(val) === -1) {
+            selectedOptions.push(val);
+          }
           if (checkedRadio.getAttribute('data-is-color') === 'true') {
-            document.querySelectorAll('.fit11-selected-color-label').forEach(function(lbl) {
-              lbl.innerText = checkedRadio.value;
+            sectionContainer.querySelectorAll('.fit11-selected-color-label').forEach(function(lbl) {
+              lbl.innerText = val;
             });
           }
         }
       });
 
       var matchedVariant = variantsData.find(function(variant) {
-        return selectedOptions.every(function(val) {
-          return variant.options.indexOf(val) !== -1;
+        return variant.options.every(function(val) {
+          return selectedOptions.indexOf(val) !== -1;
         });
       });
 
@@ -721,6 +795,30 @@
         variantIdInput.value = matchedVariant.id;
         window.history.replaceState({}, '', '?variant=' + matchedVariant.id);
         
+        var priceMain = sectionContainer.querySelector('.fit11-price-main');
+        var priceOff = sectionContainer.querySelector('.fit11-price-off');
+        var priceMrp = sectionContainer.querySelector('.fit11-price-mrp');
+        var priceLowest = sectionContainer.querySelector('.fit11-price-lowest');
+        var priceOld = sectionContainer.querySelector('.fit11-price-old');
+        var stickyPrice = sectionContainer.querySelector('.fit11-sticky-text p');
+
+        if (priceMain) priceMain.innerText = formatMoney(matchedVariant.price);
+        if (stickyPrice) stickyPrice.innerText = formatMoney(matchedVariant.price);
+
+        if (matchedVariant.compare_at_price > matchedVariant.price) {
+          if (priceOff) {
+            priceOff.innerText = formatMoney(matchedVariant.compare_at_price - matchedVariant.price) + ' OFF';
+            priceOff.style.display = 'inline';
+          }
+          if (priceOld) priceOld.innerText = formatMoney(matchedVariant.compare_at_price);
+          if (priceMrp) priceMrp.style.display = 'block';
+          if (priceLowest) priceLowest.style.display = 'block';
+        } else {
+          if (priceOff) priceOff.style.display = 'none';
+          if (priceMrp) priceMrp.style.display = 'none';
+          if (priceLowest) priceLowest.style.display = 'none';
+        }
+
         if (matchedVariant.featured_image && matchedVariant.featured_image.id) {
           var imageId = matchedVariant.featured_image.id;
           var targetSlide = document.querySelector('.fit11-slide[data-image-id="' + imageId + '"]');
