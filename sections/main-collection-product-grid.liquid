@@ -144,143 +144,37 @@
           >
             <div class="loading-overlay gradient"></div>
             <style>
-              .fit-beyoung-grid {
-                column-gap: 10px !important;
-                row-gap: 20px !important;
+              .fit-premium-grid {
+                column-gap: 8px !important;
+                row-gap: 16px !important;
+              }
+              .fit-premium-grid .card-wrapper {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+              }
+              .fit-premium-grid .card {
+                border-radius: 8px !important;
+                overflow: hidden !important;
+                border: none !important;
+                background-color: transparent !important;
+              }
+              .fit-premium-grid .card__inner {
+                border-radius: 8px !important;
+                background-color: #f8f8f8 !important;
+                --ratio-percent: 125% !important; /* 4:5 aspect ratio */
+              }
+              .fit-premium-grid .card__inner::before {
+                padding-bottom: 125% !important;
               }
               @media screen and (min-width: 750px) {
-                .fit-beyoung-grid {
-                  column-gap: 16px !important;
-                  row-gap: 32px !important;
+                .fit-premium-grid {
+                  column-gap: 24px !important;
+                  row-gap: 40px !important;
                 }
-                .fit-beyoung-grid .grid__item {
-                  width: calc(25% - 16px * 3 / 4) !important;
-                  max-width: calc(25% - 16px * 3 / 4) !important;
-                }
-                .fit-beyoung-grid .card,
-                .fit-beyoung-grid .card__inner {
-                  --ratio-percent: 150% !important;
-                }
-                .fit-beyoung-grid .card__inner::before {
-                  padding-bottom: 150% !important;
-                }
-                .fit-beyoung-grid .card {
-                  --image-padding: 0 !important;
-                  border-radius: 0 !important;
-                  border: none !important;
-                  box-shadow: none !important;
-                }
-                .fit-beyoung-grid .card__inner {
-                  border-radius: 0 !important;
-                  border: none !important;
-                }
-                .fit-beyoung-grid .card__media {
-                  margin: 0 !important;
-                  width: 100% !important;
-                  border-radius: 0 !important;
-                }
-                .fit-beyoung-grid .media {
-                  margin: 0 !important;
-                  padding: 0 !important;
-                  width: 100% !important;
-                  height: 100% !important;
-                  border-radius: 0 !important;
-                }
-                .fit-beyoung-grid .media img {
-                  object-fit: cover !important;
-                  object-position: center top !important;
-                  width: 100% !important;
-                  height: 100% !important;
-                  margin: 0 !important;
-                  padding: 0 !important;
-                  left: 0 !important;
-                  top: 0 !important;
-                  max-width: none !important;
-                }
-                .fit-beyoung-grid .card__information {
-                  padding: 12px 0 0 0 !important;
-                }
-                .fit-beyoung-grid .card__heading {
-                  margin-bottom: 4px !important;
-                }
-              }
-              @media screen and (max-width: 749px) {
-                .collection.page-width,
-                .facets-vertical.page-width {
-                  padding-left: 0 !important;
-                  padding-right: 0 !important;
-                }
-                .fit-beyoung-grid {
-                  margin-left: 0 !important;
-                  margin-right: 0 !important;
-                  width: 100% !important;
-                  column-gap: 0px !important;
-                  row-gap: 0px !important;
-                }
-                .fit-beyoung-grid .grid__item {
-                  width: 50% !important;
-                  max-width: 50% !important;
-                  padding: 0 !important;
-                  margin: 0 !important;
-                }
-                .fit-beyoung-grid .card-wrapper {
-                  margin-bottom: 0 !important;
-                }
-                .fit-beyoung-grid .card,
-                .fit-beyoung-grid .card__inner {
-                  --ratio-percent: 150% !important;
-                }
-                .fit-beyoung-grid .card__inner::before {
-                  padding-bottom: 150% !important;
-                }
-                .fit-beyoung-grid .card {
-                  --image-padding: 0 !important;
-                  border-radius: 0 !important;
-                  border: none !important;
-                  box-shadow: none !important;
-                }
-                .fit-beyoung-grid .card__inner {
-                  border-radius: 0 !important;
-                  border: none !important;
-                }
-                .fit-beyoung-grid .card__media {
-                  margin: 0 !important;
-                  width: 100% !important;
-                  border-radius: 0 !important;
-                }
-                .fit-beyoung-grid .media {
-                  margin: 0 !important;
-                  padding: 0 !important;
-                  width: 100% !important;
-                  height: 100% !important;
-                  border-radius: 0 !important;
-                }
-                .fit-beyoung-grid .media img {
-                  object-fit: cover !important;
-                  object-position: center top !important;
-                  width: 100% !important;
-                  height: 100% !important;
-                  margin: 0 !important;
-                  padding: 0 !important;
-                  left: 0 !important;
-                  top: 0 !important;
-                  max-width: none !important;
-                }
-                .fit-beyoung-grid .card__information {
-                  padding: 4px 6px 6px 6px !important;
-                }
-                .fit-beyoung-grid .card__heading {
-                  margin-bottom: 2px !important;
-                  white-space: nowrap !important;
-                  overflow: hidden !important;
-                  text-overflow: ellipsis !important;
-                }
-                .fit-beyoung-grid .card-information > * + * {
-                  margin-top: 2px !important;
-                }
-                .fit-beyoung-grid .fit11-card-price-row {
-                  margin-top: 0 !important;
-                  margin-bottom: 0 !important;
+                .fit-premium-grid .card-wrapper:hover .card {
+                  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+                  transition: box-shadow 0.3s ease;
                 }
               }
             </style>
@@ -289,7 +183,7 @@
               data-id="{{ section.id }}"
               class="
                 grid product-grid grid--{{ section.settings.columns_mobile }}-col-tablet-down
-                grid--{{ section.settings.columns_desktop }}-col-desktop pc-reveal-stagger fit-beyoung-grid
+                grid--{{ section.settings.columns_desktop }}-col-desktop pc-reveal-stagger fit-premium-grid
                 {% if section.settings.quick_add == 'bulk' %} collection-quick-add-bulk{% endif %}
               "
             >

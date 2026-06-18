@@ -881,82 +881,73 @@
   cursor: pointer;
 }
 
-/* ---- FIT11 PRICE ROW ---- */
-.fit11-card-price-row {
-  display: flex;
-  align-items: baseline;
-  gap: 5px;
-  flex-wrap: wrap;
-  margin-top: 2px;
-  margin-bottom: 4px;
-}
-
-.fit11-price-final {
-  color: rgb(var(--color-foreground));
-  font-weight: 700;
-  font-size: 13px;
-}
-
-.fit11-price-compare {
-  color: rgba(var(--color-foreground), 0.5);
-  font-size: 11px;
-  text-decoration: line-through;
-  font-weight: 400;
-}
-
-.fit11-price-discount {
-  color: #178a3c;
-  font-weight: 700;
-  font-size: 11px;
-  letter-spacing: 0.3px;
-  margin-left: 2px;
-}
-
-
-
-@media screen and (max-width: 749px) {
-  /* Match Nobero Grid and Spacing */
-  ul#product-grid, .grid--2-col-tablet-down {
-    column-gap: 2px !important;
-    row-gap: 2px !important;
-  }
-  
-  .card-wrapper.product-card-wrapper {
-    border: none !important;
-  }
-  
-  .card__inner {
-    border-radius: 0 !important;
-  }
-  
-  .card__information {
-    padding: 8px 8px 8px !important;
-  }
-  
-  .card__heading {
-    margin-bottom: 2px !important;
-  }
-  .card__heading a {
-    font-size: 13px !important;
-    color: #1A1E31 !important;
-    font-weight: 400 !important;
-  }
-  
+  /* ---- FIT11 PRICE ROW ---- */
   .fit11-card-price-row {
-    margin-top: 2px !important;
-    margin-bottom: 0 !important;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+    margin-bottom: 0px;
   }
   
   .fit11-price-final {
-    font-size: 13px !important;
-    color: #1A1E31 !important;
+    color: #121212;
+    font-weight: 600;
+    font-size: 14px;
   }
+  
   .fit11-price-compare {
-    font-size: 11px !important;
-    color: #7B828F !important;
+    color: #8c8c8c;
+    font-size: 12px;
+    text-decoration: line-through;
+    font-weight: 400;
   }
+  
   .fit11-price-discount {
-    font-size: 11px !important;
-    color: #008C2D !important;
+    color: #121212;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.5px;
   }
-}
+
+  .card__heading {
+    font-size: 14px !important;
+    color: #121212 !important;
+    font-weight: 500 !important;
+    margin-bottom: 4px !important;
+  }
+  
+  .card__information {
+    padding: 16px 12px !important;
+  }
+  
+  @media screen and (max-width: 749px) {
+    .card__information {
+      padding: 12px 8px !important;
+    }
+    
+    .fit11-card-price-row {
+      margin-top: 4px !important;
+    }
+    
+    .fit11-price-final {
+      font-size: 14px !important;
+      color: #121212 !important;
+    }
+    .fit11-price-compare {
+      font-size: 12px !important;
+      color: #8c8c8c !important;
+    }
+    .fit11-price-discount {
+      font-size: 11px !important;
+      color: #121212 !important;
+    }
+    
+    .card__heading {
+      font-size: 13px !important;
+      margin-bottom: 4px !important;
+      white-space: normal !important;
+      color: #121212 !important;
+    }
+  }
