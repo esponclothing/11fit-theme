@@ -428,6 +428,9 @@
         <div class="fit11-combo-title">Curate Your Combo</div>
         {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
           
+          <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
+          <input type="hidden" name="quantity" value="1" class="qty-input">
+
           {% comment %} ── COLOR VARIANTS AS THUMBNAILS (DESKTOP) ── {% endcomment %}
           {% unless product.has_only_default_variant %}
             {% for option in product.options_with_values %}
@@ -533,8 +536,9 @@
             </div>
           {% endif %}
           
-          <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
-          <input type="hidden" name="quantity" value="1" class="qty-input">
+          <button type="submit" name="add" class="fit11-btn-cart product-form__submit" id="fit11MainAddToCartBtn" style="margin-top: 16px;">
+            <span class="fit11-btn-text">Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
+          </button>
         {% endform %}
         <script type="application/json" id="ProductVariantsData">
           {{ product.variants | json }}
@@ -671,7 +675,7 @@
     </div>
     <div class="fit11-sticky-btns">
       <div class="fit11-form-inline">
-        <button type="submit" form="fit11-form-cart-main" name="add" class="fit11-btn-cart">
+        <button type="button" class="fit11-btn-cart product-form__submit" onclick="document.getElementById('fit11MainAddToCartBtn').click();">
           <span>Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
           {%- render 'loading-spinner' -%}
         </button>
@@ -758,27 +762,7 @@
       });
     }
 
-    if (comboForm) {
-      comboForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        showLoaders();
-        
-        var rootUrl = window.Shopify && window.Shopify.routes && window.Shopify.routes.root ? window.Shopify.routes.root : '/';
-        var formData = new FormData(comboForm);
-        
-        fetch(rootUrl + 'cart/add.js', {
-          method: 'POST',
-          body: formData
-        })
-        .then(function(res) {
-          window.location.href = rootUrl + 'cart';
-        })
-        .catch(function(err) {
-          console.error('Error adding to cart:', err);
-          window.location.href = rootUrl + 'cart';
-        });
-      });
-    }
+    // Removed form submit intercept to allow combo app default submission behavior
 
     // FASHION BAG FLY ANIMATION FUNCTION
     function playBagAnimation(sourceButton) {

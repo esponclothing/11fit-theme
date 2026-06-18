@@ -410,6 +410,9 @@
       
       {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
         
+        <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
+        <input type="hidden" name="quantity" value="1" class="qty-input">
+
         {% comment %} ── COLOR VARIANTS AS THUMBNAILS (DESKTOP) ── {% endcomment %}
         {% unless product.has_only_default_variant %}
           {% for option in product.options_with_values %}
@@ -561,12 +564,11 @@
             </div>
           {% endunless %}
           
-          <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
-          <input type="hidden" name="quantity" value="1" class="qty-input">
         </div>
-
-
-
+        
+        <button type="submit" name="add" class="fit11-btn-cart product-form__submit" id="fit11MainAddToCartBtnProd" style="margin-top: 16px;">
+          <span class="fit11-btn-text">Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
+        </button>
       {% endform %}
 
       {% comment %} ── TRUST BADGES ── {% endcomment %}
@@ -699,7 +701,7 @@
     </div>
     <div class="fit11-sticky-btns">
       <div class="fit11-form-inline">
-        <button type="submit" form="fit11-form-cart-main" name="add" class="fit11-btn-cart product-form__submit">
+        <button type="button" class="fit11-btn-cart product-form__submit" onclick="document.getElementById('fit11MainAddToCartBtnProd').click();">
           <span>Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
         </button>
       </div>
