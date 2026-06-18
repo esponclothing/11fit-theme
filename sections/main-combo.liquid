@@ -645,11 +645,6 @@
     <button type="button" class="fit11-modal-close" onclick="fit11ToggleModal(false);"><i class="ti ti-x"></i></button>
     <h3 style="font-family: var(--font-heading); font-size: 24px; font-weight: 400; margin: 0 0 20px 0; border-bottom: 1px solid var(--lux-border); padding-bottom: 12px;">Size Guide</h3>
     <div class="fit11-modal-body">
-      {% if section.settings.size_chart_image != blank %}
-        <img src="{{ section.settings.size_chart_image | img_url: '800x' }}" alt="Size Chart" style="width:100%; height:auto; display:block; border-radius:4px;">
-      {% elsif section.settings.size_chart_page != blank %}
-        {{ pages[section.settings.size_chart_page].content }}
-      {% else %}
         <style>
           .fit11-size-tabs { display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--lux-border); }
           .fit11-size-tab { padding: 8px 16px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--lux-text-muted); border-bottom: 2px solid transparent; }
@@ -703,14 +698,21 @@
         <div id="size-pane-shorts" class="fit11-size-pane">
           <table class="fit11-size-table">
             <thead>
-              <tr style="border-bottom: 2px solid var(--lux-border); font-weight:500;"><th>Size</th><th>Waist (in)</th><th>Length (in)</th></tr>
+              <tr style="border-bottom: 2px solid var(--lux-border); font-weight:500;">
+                <th>Size</th>
+                <th>Waist (in)</th>
+                <th>Inseam (in)</th>
+                <th>Hip (in)</th>
+                <th>Outseam (in)</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td>S</td><td>28 - 30</td><td>18</td></tr>
-              <tr><td>M</td><td>30 - 32</td><td>19</td></tr>
-              <tr><td>L</td><td>32 - 34</td><td>20</td></tr>
-              <tr><td>XL</td><td>34 - 36</td><td>21</td></tr>
-              <tr><td>2XL</td><td>36 - 38</td><td>22</td></tr>
+              <tr><td>S</td><td>28-30</td><td>8.5</td><td>38</td><td>16</td></tr>
+              <tr><td>M</td><td>30-32</td><td>8.5</td><td>40</td><td>17</td></tr>
+              <tr><td>L</td><td>32-34</td><td>8.5</td><td>42</td><td>18</td></tr>
+              <tr><td>XL</td><td>34-36</td><td>8.5</td><td>44</td><td>19</td></tr>
+              <tr><td>XXL</td><td>36-38</td><td>8.5</td><td>46</td><td>20</td></tr>
+              <tr><td>XXXL</td><td>38-40</td><td>8.5</td><td>48</td><td>21</td></tr>
             </tbody>
           </table>
         </div>
@@ -727,7 +729,6 @@
             if (targetPane) targetPane.classList.add('active');
           }
         </script>
-      {% endif %}
     </div>
   </div>
 </div>
