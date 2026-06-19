@@ -40,23 +40,20 @@
 }
 {%- endstyle -%}
 
-<!-- DEBUG: collection.handle = {{ collection.handle }} -->
-<!-- DEBUG: All collections in store:
-{% for col in collections %}
-  - {{ col.handle }} (Title: {{ col.title }})
-{% endfor %}
--->
+<!-- DEBUG: collections['t-shirts-oversized'].title = {{ collections['t-shirts-oversized'].title }} -->
+<!-- DEBUG: collections['t-shirts-cjp'].title = {{ collections['t-shirts-cjp'].title }} -->
+<!-- DEBUG: collections['t-shirts-regular-fit'].title = {{ collections['t-shirts-regular-fit'].title }} -->
 
-{%- assign current_handle_prefix = collection.handle | append: '-' -%}
-{%- assign prefix_size = current_handle_prefix | size -%}
+{%- assign sub_suffixes = section.settings.subcategories | downcase | replace: " ", "" | split: "," -%}
 
 {%- capture subcategories_html -%}
-  {%- for col in collections -%}
-    {%- assign col_prefix = col.handle | slice: 0, prefix_size -%}
-    {%- if col_prefix == current_handle_prefix -%}
-      {%- assign display_title = col.title | split: "-" | last | strip -%}
+  {%- for suffix in sub_suffixes -%}
+    {%- assign sub_handle = collection.handle | append: "-" | append: suffix -%}
+    {%- assign sub_col = collections[sub_handle] -%}
+    {%- if sub_col and sub_col.title != blank -%}
+      {%- assign display_title = sub_col.title | split: "-" | last | strip -%}
       <li class="subcategory-item">
-        <a href="{{ col.url }}" class="subcategory-link {% if request.path == col.url %}active{% endif %}">
+        <a href="{{ sub_col.url }}" class="subcategory-link {% if request.path == sub_col.url %}active{% endif %}">
           {{ display_title }}
         </a>
       </li>
@@ -82,8 +79,11 @@
   "name": "Collection Subcategories",
   "settings": [
     {
-      "type": "paragraph",
-      "content": "This section automatically displays subcategory links. For example, if you are on the T-Shirts page (handle: t-shirts), it will fetch all collections starting with 't-shirts-' (e.g. T-Shirts - Oversized, T-Shirts - CJP) and display them as subcategories."
+      "type": "text",
+      "id": "subcategories",
+      "label": "Subcategory Suffixes",
+      "default": "oversized, cjp, regular-fit, denim, gym, cotton",
+      "info": "Comma-separated list of handle suffixes to look for (e.g. if main is 't-shirts', looking for 't-shirts-oversized')."
     }
   ],
   "presets": [
