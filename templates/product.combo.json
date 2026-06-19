@@ -12,11 +12,19 @@
     "main_combo_rTJBJB": {
       "type": "main-combo",
       "blocks": {
+        "offer_fq3RKM": {
+          "type": "offer",
+          "settings": {
+            "offer_code": "",
+            "offer_desc": "5% Off Automatically On All Prepaid Order",
+            "offer_timer": "Ends in 07h 06m 05s"
+          }
+        },
         "offer_3RpxwH": {
           "type": "offer",
           "settings": {
-            "offer_code": "Freeship",
-            "offer_desc": "Get Free Shipping On All Orders",
+            "offer_code": "PURCHASE1999",
+            "offer_desc": "VIP Disscount of Rs.100 On Order Above Rs.1999",
             "offer_timer": "Ends in 07h 06m 05s"
           }
         },
@@ -28,6 +36,7 @@
         }
       },
       "block_order": [
+        "offer_fq3RKM",
         "offer_3RpxwH",
         "qikify_volume_discount_volume_offer_XQUR6G"
       ],
