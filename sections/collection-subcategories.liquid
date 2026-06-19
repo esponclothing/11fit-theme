@@ -40,20 +40,31 @@
 }
 {%- endstyle -%}
 
-<!-- DEBUG: collections['t-shirts-oversized'].title = {{ collections['t-shirts-oversized'].title }} -->
-<!-- DEBUG: collections['t-shirts-cjp'].title = {{ collections['t-shirts-cjp'].title }} -->
-<!-- DEBUG: collections['t-shirts-regular-fit'].title = {{ collections['t-shirts-regular-fit'].title }} -->
-
+{%- assign current_handle = collection.handle -%}
+{%- assign parent_handle = current_handle -%}
 {%- assign sub_suffixes = section.settings.subcategories | downcase | replace: " ", "" | split: "," -%}
+
+{%- comment -%}
+  Find the parent handle if currently viewing a subcategory page
+{%- endcomment -%}
+{%- for suffix in sub_suffixes -%}
+  {%- assign suffix_with_dash = "-" | append: suffix -%}
+  {%- if current_handle contains suffix_with_dash -%}
+    {%- assign parent_handle = current_handle | replace: suffix_with_dash, "" -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- assign parent_col = collections[parent_handle] -%}
 
 {%- capture subcategories_html -%}
   {%- for suffix in sub_suffixes -%}
-    {%- assign sub_handle = collection.handle | append: "-" | append: suffix -%}
+    {%- assign sub_handle = parent_handle | append: "-" | append: suffix -%}
     {%- assign sub_col = collections[sub_handle] -%}
     {%- if sub_col and sub_col.title != blank -%}
       {%- assign display_title = sub_col.title | split: "-" | last | strip -%}
       <li class="subcategory-item">
-        <a href="{{ sub_col.url }}" class="subcategory-link {% if request.path == sub_col.url %}active{% endif %}">
+        <a href="{{ sub_col.url }}" class="subcategory-link {% if current_handle == sub_handle %}active{% endif %}">
           {{ display_title }}
         </a>
       </li>
@@ -61,11 +72,11 @@
   {%- endfor -%}
 {%- endcapture -%}
 
-{%- if subcategories_html != blank -%}
+{%- if parent_col -%}
   <div class="collection-subcategories page-width">
     <ul class="subcategories-list">
       <li class="subcategory-item">
-        <a href="{{ collection.url }}" class="subcategory-link {% unless request.path contains '-' %}active{% endunless %}">
+        <a href="{{ parent_col.url }}" class="subcategory-link {% if current_handle == parent_handle %}active{% endif %}">
           All
         </a>
       </li>
