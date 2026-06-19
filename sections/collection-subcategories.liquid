@@ -1,0 +1,88 @@
+{%- style -%}
+.collection-subcategories {
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+}
+.subcategories-list {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  list-style: none;
+  padding: 0 1.5rem;
+  margin: 0;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+.subcategories-list::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+.subcategory-item {
+  flex-shrink: 0;
+}
+.subcategory-link {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 1px solid rgba(var(--color-foreground), 0.1);
+  border-radius: 20px;
+  text-decoration: none;
+  color: rgb(var(--color-foreground));
+  background-color: rgb(var(--color-background));
+  font-size: 1.4rem;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+.subcategory-link:hover,
+.subcategory-link.active {
+  background-color: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  border-color: rgb(var(--color-foreground));
+}
+{%- endstyle -%}
+
+{%- assign current_handle_prefix = collection.handle | append: '-' -%}
+{%- assign prefix_size = current_handle_prefix | size -%}
+
+{%- capture subcategories_html -%}
+  {%- for col in collections -%}
+    {%- assign col_prefix = col.handle | slice: 0, prefix_size -%}
+    {%- if col_prefix == current_handle_prefix -%}
+      {%- assign display_title = col.title | split: "-" | last | strip -%}
+      <li class="subcategory-item">
+        <a href="{{ col.url }}" class="subcategory-link {% if request.path == col.url %}active{% endif %}">
+          {{ display_title }}
+        </a>
+      </li>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if subcategories_html != blank -%}
+  <div class="collection-subcategories page-width">
+    <ul class="subcategories-list">
+      <li class="subcategory-item">
+        <a href="{{ collection.url }}" class="subcategory-link {% unless request.path contains '-' %}active{% endunless %}">
+          All
+        </a>
+      </li>
+      {{ subcategories_html }}
+    </ul>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Collection Subcategories",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "This section automatically displays subcategory links. For example, if you are on the T-Shirts page (handle: t-shirts), it will fetch all collections starting with 't-shirts-' (e.g. T-Shirts - Oversized, T-Shirts - CJP) and display them as subcategories."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Subcategories"
+    }
+  ]
+}
+{% endschema %}

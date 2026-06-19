@@ -17,6 +17,10 @@
         "color_scheme": "scheme-1"
       }
     },
+    "subcategories": {
+      "type": "collection-subcategories",
+      "settings": {}
+    },
     "product-grid": {
       "type": "main-collection-product-grid",
       "settings": {
@@ -40,6 +44,7 @@
   },
   "order": [
     "banner",
+    "subcategories",
     "product-grid"
   ]
 }
