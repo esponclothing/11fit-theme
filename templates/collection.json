@@ -19,7 +19,9 @@
     },
     "subcategories": {
       "type": "collection-subcategories",
-      "settings": {}
+      "settings": {
+        "subcategories": "oversized, cjp, regular-fit, denim, gym, cotton"
+      }
     },
     "product-grid": {
       "type": "main-collection-product-grid",
