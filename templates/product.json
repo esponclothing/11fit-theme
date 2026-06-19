@@ -97,10 +97,10 @@
     "collection_list_nyGQ3i": {
       "type": "collection-list",
       "blocks": {
-        "featured_collection_JD3jgN": {
+        "featured_collection_BTyaPV": {
           "type": "featured_collection",
           "settings": {
-            "collection": "trackpants"
+            "collection": "t-shirts"
           }
         },
         "featured_collection_rcDiEp": {
@@ -109,17 +109,24 @@
             "collection": "shorts"
           }
         },
-        "featured_collection_BTyaPV": {
+        "featured_collection_JD3jgN": {
           "type": "featured_collection",
           "settings": {
-            "collection": "t-shirts"
+            "collection": "trackpants"
+          }
+        },
+        "featured_collection_BxCk8i": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "cockroach-special"
           }
         }
       },
       "block_order": [
-        "featured_collection_JD3jgN",
+        "featured_collection_BTyaPV",
         "featured_collection_rcDiEp",
-        "featured_collection_BTyaPV"
+        "featured_collection_JD3jgN",
+        "featured_collection_BxCk8i"
       ],
       "name": "t:sections.collection-list.presets.name",
       "settings": {
