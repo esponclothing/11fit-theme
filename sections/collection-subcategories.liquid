@@ -40,6 +40,13 @@
 }
 {%- endstyle -%}
 
+<!-- DEBUG: collection.handle = {{ collection.handle }} -->
+<!-- DEBUG: All collections in store:
+{% for col in collections %}
+  - {{ col.handle }} (Title: {{ col.title }})
+{% endfor %}
+-->
+
 {%- assign current_handle_prefix = collection.handle | append: '-' -%}
 {%- assign prefix_size = current_handle_prefix | size -%}
 
