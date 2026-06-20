@@ -120,18 +120,34 @@
             </div>
           </div>
         {%- else -%}
-          <div class="collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %} pc-reveal">
+          <div class="collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}">
             <div class="loading-overlay gradient"></div>
             <style>
-              /* --- FIX FOR INVISIBLE PRODUCTS ON LOAD --- */
-              #ProductGridContainer, 
-              #ProductGridContainer .scroll-trigger,
-              #ProductGridContainer .grid__item,
-              .pc-reveal {
-                opacity: 1 !important;
-                transform: none !important;
+              /* --- PREMIUM CUSTOM SCROLL ANIMATION --- */
+              .custom-fade-in-up {
+                opacity: 0;
+                transform: translateY(40px);
+                transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+                will-change: opacity, transform;
+              }
+              .custom-fade-in-up.is-visible {
+                opacity: 1;
+                transform: translateY(0);
+              }
+              /* Fallback if user prefers reduced motion */
+              @media (prefers-reduced-motion: reduce) {
+                .custom-fade-in-up {
+                  opacity: 1 !important;
+                  transform: none !important;
+                  transition: none !important;
+                }
+              }
+
+              /* Theme Override fix */
+              #ProductGridContainer .scroll-trigger.animate--slide-in {
                 animation: none !important;
-                visibility: visible !important;
+                transform: none !important;
+                opacity: 1 !important;
               }
 
               .fit-premium-grid {
@@ -409,7 +425,7 @@
                 {%- if forloop.index > 2 -%}{%- assign lazy_load = true -%}{%- endif -%}
                 {% assign current_product_index = forloop.index %}
 
-                <li class="grid__item">
+                <li class="grid__item custom-fade-in-up">
                   {% render 'card-product',
                     card_product: product,
                     media_aspect_ratio: section.settings.image_ratio,
@@ -434,7 +450,7 @@
                     {%- endif -%}
 
                     {%- if show_campaign -%}
-                      <li class="grid__item collection-slider-full-width" {{ block.shopify_attributes }}>
+                      <li class="grid__item collection-slider-full-width custom-fade-in-up" {{ block.shopify_attributes }}>
                         
                         {% comment %} Offer Banner Carousel (Supports up to 3 slides) {% endcomment %}
                         <div class="offer-carousel-wrapper">
@@ -562,6 +578,44 @@
       </div>
     </div>
   {%- endpaginate -%}
+
+  {% comment %} --- CUSTOM SCROLL ANIMATION SCRIPT --- {% endcomment %}
+  <script>
+    (function() {
+      function initCustomReveal() {
+        const observer = new IntersectionObserver((entries, obs) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              obs.unobserve(entry.target); // Stop observing once it's visible
+            }
+          });
+        }, {
+          threshold: 0.05, // Trigger when 5% of the card is visible
+          rootMargin: "0px 0px 50px 0px" // Trigger slightly before it enters the screen
+        });
+
+        // Find all grid items that haven't been animated yet
+        const elements = document.querySelectorAll('.custom-fade-in-up:not(.is-visible)');
+        elements.forEach(el => observer.observe(el));
+      }
+
+      // Initialize instantly on load
+      initCustomReveal();
+
+      // Ensure it triggers if Shopify dynamically reloads products (like when using filters)
+      document.addEventListener('shopify:section:load', initCustomReveal);
+      
+      // Fallback mutation observer for dynamic DOM injections (filtering/pagination)
+      const gridContainer = document.getElementById('ProductGridContainer');
+      if (gridContainer) {
+        const mutationObserver = new MutationObserver(() => {
+          initCustomReveal();
+        });
+        mutationObserver.observe(gridContainer, { childList: true, subtree: true });
+      }
+    })();
+  </script>
 </div>
 
 {% schema %}
