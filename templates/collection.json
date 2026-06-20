@@ -26,6 +26,19 @@
     "product-grid": {
       "type": "main-collection-product-grid",
       "blocks": {
+        "slider_campaign_ggtzdq": {
+          "type": "slider_campaign",
+          "settings": {
+            "insert_after": 4,
+            "campaign_id": "promo-1",
+            "heading": "PREMIUM COLLECTION SALE",
+            "subheading": "Modern performance luxury at Flat 20% OFF.",
+            "coupon_code": "LUXE20",
+            "bg_color_1": "#111111",
+            "bg_color_2": "#2b2b2b",
+            "text_color": "#ffffff"
+          }
+        },
         "slider_item_wRWY8a": {
           "type": "slider_item",
           "settings": {
@@ -67,6 +80,7 @@
         }
       },
       "block_order": [
+        "slider_campaign_ggtzdq",
         "slider_item_wRWY8a",
         "slider_item_T7En7E",
         "slider_item_9nQdzt"
