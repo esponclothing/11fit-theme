@@ -191,8 +191,30 @@
               .collection-slider-full-width {
                 grid-column: 1 / -1 !important; 
                 width: 100% !important;
-                margin: 16px 0 !important;
+                margin: 16px 0 24px 0 !important;
               }
+              
+              /* Offer Box */
+              .slider-offer-box {
+                margin-bottom: 12px;
+                padding: 0 4px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+              }
+              .slider-offer-box h3 {
+                margin: 0 0 4px 0;
+                font-size: 1.8rem;
+                font-weight: 700;
+                line-height: 1.2;
+              }
+              .slider-offer-box p {
+                margin: 0;
+                font-size: 1.3rem;
+                color: rgba(var(--color-foreground), 0.75);
+              }
+
+              /* Scrollable Area */
               .custom-inline-slider {
                 display: flex;
                 overflow-x: auto;
@@ -206,18 +228,74 @@
                 display: none; 
               }
               .custom-inline-slider .slider-item {
-                flex: 0 0 75vw; 
-                max-width: 400px;
-                scroll-snap-align: center;
+                flex: 0 0 65vw; /* Adjust width to peek next item */
+                max-width: 320px;
+                scroll-snap-align: start;
                 border-radius: 8px;
                 overflow: hidden;
               }
+              .slider-item-img-wrapper {
+                border-radius: 8px;
+                overflow: hidden;
+                background: #f4f4f4;
+                aspect-ratio: 4/5; /* Keep consistent with grid */
+              }
               .custom-inline-slider .slider-item img {
                 width: 100%;
-                height: auto;
+                height: 100%;
                 display: block;
                 object-fit: cover;
               }
+              
+              /* Slider Item Content Details */
+              .slider-item-details {
+                padding: 10px 4px 0 4px;
+                text-align: left;
+              }
+              .slider-item-title {
+                font-size: 1.3rem;
+                font-weight: 500;
+                margin-bottom: 6px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                color: rgb(var(--color-foreground));
+              }
+              .slider-item-price-row {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 6px;
+                margin-bottom: 6px;
+              }
+              .slider-item-price {
+                font-weight: 700;
+                font-size: 1.4rem;
+                color: rgb(var(--color-foreground));
+              }
+              .slider-item-compare {
+                text-decoration: line-through;
+                font-size: 1.2rem;
+                color: rgba(var(--color-foreground), 0.6);
+              }
+              .slider-item-discount {
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: #d82a2a; /* Red highlight for discount */
+              }
+              .slider-item-rating {
+                font-size: 1.2rem;
+                color: rgba(var(--color-foreground), 0.7);
+                display: flex;
+                align-items: center;
+                gap: 4px;
+              }
+              .slider-item-rating svg {
+                width: 14px;
+                height: 14px;
+                fill: #FFD700;
+              }
+
               .dummy-placeholder {
                 background: #f4f4f4;
                 padding: 40px 20px;
@@ -239,7 +317,7 @@
                   transition: box-shadow 0.3s ease;
                 }
                 .custom-inline-slider .slider-item {
-                  flex: 0 0 30vw; 
+                  flex: 0 0 25vw; 
                 }
               }
             </style>
@@ -258,7 +336,7 @@
                 {% assign lazy_load = false %}
                 {%- if forloop.index > 2 -%}{%- assign lazy_load = true -%}{%- endif -%}
 
-                {% comment %} --- PRODUCT CARD --- {% endcomment %}
+                {% comment %} --- STANDARD PRODUCT CARD --- {% endcomment %}
                 <li class="grid__item">
                   {% render 'card-product',
                     card_product: product,
@@ -274,28 +352,70 @@
                   %}
                 </li>
 
-                {% comment %} --- INLINE SLIDER INJECTION --- {% endcomment %}
-                {%- if forloop.index == section.settings.slider_position -%}
+                {% comment %} --- INLINE SLIDER INJECTION (REPEATS EVERY X PRODUCTS) --- {% endcomment %}
+                {%- assign repeat_interval = section.settings.slider_position | default: 4 -%}
+                {%- assign modulo_check = forloop.index | modulo: repeat_interval -%}
+                
+                {%- if modulo_check == 0 -%}
                   <li class="grid__item collection-slider-full-width">
+                    
+                    {%- if section.settings.slider_offer_text != blank or section.settings.slider_offer_subtext != blank -%}
+                      <div class="slider-offer-box">
+                        {%- if section.settings.slider_offer_text != blank -%}
+                          <h3>{{ section.settings.slider_offer_text }}</h3>
+                        {%- endif -%}
+                        {%- if section.settings.slider_offer_subtext != blank -%}
+                          <p>{{ section.settings.slider_offer_subtext }}</p>
+                        {%- endif -%}
+                      </div>
+                    {%- endif -%}
+
                     <div class="custom-inline-slider">
                       {%- if section.blocks.size > 0 -%}
                         {%- for block in section.blocks -%}
                           <div class="slider-item" {{ block.shopify_attributes }}>
-                            {%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}">{%- endif -%}
-                            
-                            {%- if block.settings.image != blank -%}
-                              {{ block.settings.image | image_url: width: 800 | image_tag: loading: 'lazy' }}
-                            {%- else -%}
-                              {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
-                            {%- endif -%}
+                            <a href="{{ block.settings.link | default: '#' }}" style="text-decoration: none; color: inherit;">
+                              
+                              <div class="slider-item-img-wrapper">
+                                {%- if block.settings.image != blank -%}
+                                  {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy' }}
+                                {%- else -%}
+                                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                {%- endif -%}
+                              </div>
+                              
+                              <div class="slider-item-details">
+                                {%- if block.settings.title != blank -%}
+                                  <div class="slider-item-title">{{ block.settings.title }}</div>
+                                {%- endif -%}
+                                
+                                <div class="slider-item-price-row">
+                                  {%- if block.settings.price != blank -%}
+                                    <span class="slider-item-price">{{ block.settings.price }}</span>
+                                  {%- endif -%}
+                                  {%- if block.settings.compare_price != blank -%}
+                                    <span class="slider-item-compare">{{ block.settings.compare_price }}</span>
+                                  {%- endif -%}
+                                  {%- if block.settings.discount != blank -%}
+                                    <span class="slider-item-discount">{{ block.settings.discount }}</span>
+                                  {%- endif -%}
+                                </div>
+                                
+                                {%- if block.settings.rating != blank -%}
+                                  <div class="slider-item-rating">
+                                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    {{ block.settings.rating }}
+                                  </div>
+                                {%- endif -%}
+                              </div>
 
-                            {%- if block.settings.link != blank -%}</a>{%- endif -%}
+                            </a>
                           </div>
                         {%- endfor -%}
                       {%- else -%}
                         <div class="slider-item dummy-placeholder">
-                           <h3 style="margin:0; font-size: 16px;">Slider Working Successfully! ✅</h3>
-                           <p style="margin: 5px 0 0; font-size: 14px;">Open your Theme Editor, click on <strong>Product Grid</strong> on the left, and click <strong>Add Slider Image</strong> to replace this box.</p>
+                           <h3 style="margin:0; font-size: 16px;">Slider Ready! ✅</h3>
+                           <p style="margin: 5px 0 0; font-size: 14px;">Add <strong>Slider Item</strong> blocks in the Theme Editor.</p>
                         </div>
                       {%- endif -%}
                     </div>
@@ -333,8 +453,20 @@
       "type": "number",
       "id": "slider_position",
       "default": 4,
-      "label": "Show slider after exactly X products",
-      "info": "Example: Type 4 to show it after the 4th product."
+      "label": "Repeat slider after every X products",
+      "info": "Example: Type 4 to repeat the slider after every 4th product continuously."
+    },
+    {
+      "type": "text",
+      "id": "slider_offer_text",
+      "label": "Offer Box Heading",
+      "default": "🔥 Best of Season Sale"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "slider_offer_subtext",
+      "label": "Offer Box Subtext",
+      "default": "Flat 20% OFF | Code: BOSS20"
     },
     {
       "type": "range",
@@ -488,7 +620,7 @@
   "blocks": [
     {
       "type": "slider_image",
-      "name": "Slider Image",
+      "name": "Slider Item",
       "settings": [
         {
           "type": "image_picker",
@@ -499,6 +631,36 @@
           "type": "url",
           "id": "link",
           "label": "Link (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Product Name",
+          "default": "Classic T-Shirt"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "Rs. 599"
+        },
+        {
+          "type": "text",
+          "id": "compare_price",
+          "label": "Compare at Price",
+          "default": "Rs. 799"
+        },
+        {
+          "type": "text",
+          "id": "discount",
+          "label": "Discount Tag",
+          "default": "Rs. 200 OFF"
+        },
+        {
+          "type": "text",
+          "id": "rating",
+          "label": "Rating (e.g., 4.5)",
+          "default": "4.5"
         }
       ]
     }
