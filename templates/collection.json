@@ -26,27 +26,24 @@
     "product-grid": {
       "type": "main-collection-product-grid",
       "blocks": {
-        "slider_image_KWCHBQ": {
-          "type": "slider_image",
+        "slider_item_wRWY8a": {
+          "type": "slider_item",
           "settings": {
-            "image": "shopify://shop_images/Front_1_c_64_9a935893-a0d6-4f56-8fbb-0984287f3ba2.jpg",
-            "link": "https://11fit.in/products/lost-in-woods-graphic-t-shirt"
-          }
-        },
-        "slider_image_zcX3dz": {
-          "type": "slider_image",
-          "settings": {
-            "image": "shopify://shop_images/Front_1_c_10_2651ccc2-2891-46c6-ae7e-4ab3fc05949b.jpg",
-            "link": "https://11fit.in/products/lion-king-jungle-t-shirt"
+            "campaign_id": "promo-1",
+            "image": "shopify://shop_images/Front_1_c_63_180aeb53-e559-407c-882f-bd196307e4bc.jpg",
+            "link": "",
+            "title": "Classic T shirts",
+            "price": "Rs. 899",
+            "compare_price": "Rs. 1299",
+            "discount": "Rs. 400 OFF",
+            "rating": "4.8"
           }
         }
       },
       "block_order": [
-        "slider_image_KWCHBQ",
-        "slider_image_zcX3dz"
+        "slider_item_wRWY8a"
       ],
       "settings": {
-        "slider_position": 4,
         "products_per_page": 16,
         "columns_desktop": 4,
         "columns_mobile": "1",
