@@ -26,6 +26,32 @@
     "product-grid": {
       "type": "main-collection-product-grid",
       "blocks": {
+        "slider_item_8zpNhJ": {
+          "type": "slider_item",
+          "settings": {
+            "campaign_id": "promo-2",
+            "image": "shopify://shop_images/Front_1_c_2_c2e48760-6a54-40fe-88a2-846112af8e77.jpg",
+            "link": "",
+            "title": "Classic Track Pant",
+            "price": "Rs. 899",
+            "compare_price": "Rs. 1299",
+            "discount": "Rs. 400 OFF",
+            "rating": "4.8"
+          }
+        },
+        "slider_item_FbH6VH": {
+          "type": "slider_item",
+          "settings": {
+            "campaign_id": "promo-2",
+            "image": "shopify://shop_images/Front_1_c_3_3d82fbd4-d11d-451b-ae8c-6498173b41c4.jpg",
+            "link": "",
+            "title": "Classic Track Pant",
+            "price": "Rs. 899",
+            "compare_price": "Rs. 1299",
+            "discount": "Rs. 400 OFF",
+            "rating": "4.8"
+          }
+        },
         "slider_campaign_qK88GB": {
           "type": "slider_campaign",
           "settings": {
@@ -93,6 +119,8 @@
         }
       },
       "block_order": [
+        "slider_item_8zpNhJ",
+        "slider_item_FbH6VH",
         "slider_campaign_qK88GB",
         "slider_campaign_ggtzdq",
         "slider_item_wRWY8a",
