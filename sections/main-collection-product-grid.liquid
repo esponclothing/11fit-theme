@@ -38,7 +38,6 @@
 
 <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
   {%- paginate collection.products by section.settings.products_per_page -%}
-    {% comment %} Sort is the first tabbable element when filter type is vertical {% endcomment %}
     {%- if section.settings.enable_sorting and section.settings.filter_type == 'vertical' -%}
       <facet-filters-form class="facets facets-vertical-sort page-width small-hide pc-reveal">
         <form class="facets-vertical-form" id="FacetSortForm">
@@ -58,9 +57,7 @@
                   {%- for option in collection.sort_options -%}
                     <option
                       value="{{ option.value | escape }}"
-                      {% if option.value == sort_by %}
-                        selected="selected"
-                      {% endif %}
+                      {% if option.value == sort_by %}selected="selected"{% endif %}
                     >
                       {{ option.name | escape }}
                     </option>
@@ -77,17 +74,11 @@
             <h2 class="product-count__text text-body">
               <span id="ProductCountDesktop">
                 {%- if collection.results_count -%}
-                  {{
-                    'templates.search.results_with_count'
-                    | t: terms: collection.terms, count: collection.results_count
-                  }}
+                  {{ 'templates.search.results_with_count' | t: terms: collection.terms, count: collection.results_count }}
                 {%- elsif collection.products_count == collection.all_products_count -%}
                   {{ 'products.facets.product_count_simple' | t: count: collection.products_count }}
                 {%- else -%}
-                  {{
-                    'products.facets.product_count'
-                    | t: product_count: collection.products_count, count: collection.all_products_count
-                  }}
+                  {{ 'products.facets.product_count' | t: product_count: collection.products_count, count: collection.all_products_count }}
                 {%- endif -%}
               </span>
             </h2>
@@ -120,28 +111,20 @@
       <div
         class="product-grid-container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
         id="ProductGridContainer"
-        {% if settings.animations_reveal_on_scroll %}
-          data-cascade
-        {% endif %}
+        {% if settings.animations_reveal_on_scroll %}data-cascade{% endif %}
       >
         {%- if collection.products.size == 0 -%}
           <div class="collection collection--empty page-width" id="product-grid" data-id="{{ section.id }}">
             <div class="loading-overlay gradient"></div>
             <div class="title-wrapper center">
               <h2 class="title title--primary">
-                {{ 'sections.collection_template.empty' | t -}}
-                <br>
-                {{
-                  'sections.collection_template.use_fewer_filters_html'
-                  | t: link: collection.url, class: 'underlined-link link'
-                }}
+                {{ 'sections.collection_template.empty' | t -}}<br>
+                {{ 'sections.collection_template.use_fewer_filters_html' | t: link: collection.url, class: 'underlined-link link' }}
               </h2>
             </div>
           </div>
         {%- else -%}
-          <div
-            class="collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %} pc-reveal"
-          >
+          <div class="collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %} pc-reveal">
             <div class="loading-overlay gradient"></div>
             <style>
               .fit-premium-grid {
@@ -204,37 +187,45 @@
                 top: 0 !important;
               }
 
-              /* SLIDER CUSTOM CSS */
+              /* --- INLINE SLIDER CSS --- */
               .collection-slider-full-width {
-                grid-column: 1 / -1 !important; /* Spans across all grid columns */
+                grid-column: 1 / -1 !important; 
                 width: 100% !important;
-                margin: 10px 0 !important;
+                margin: 16px 0 !important;
               }
               .custom-inline-slider {
                 display: flex;
                 overflow-x: auto;
                 gap: 12px;
                 scroll-snap-type: x mandatory;
-                scrollbar-width: none; /* Firefox */
-                -ms-overflow-style: none; /* IE/Edge */
+                scrollbar-width: none; 
+                -ms-overflow-style: none; 
                 padding-bottom: 10px;
               }
               .custom-inline-slider::-webkit-scrollbar {
-                display: none; /* Chrome/Safari */
+                display: none; 
               }
               .custom-inline-slider .slider-item {
-                flex: 0 0 75vw; /* Shows 75% of screen width so next image peeks */
+                flex: 0 0 75vw; 
                 max-width: 400px;
                 scroll-snap-align: center;
                 border-radius: 8px;
                 overflow: hidden;
               }
-              .custom-inline-slider .slider-item img,
-              .custom-inline-slider .slider-item svg {
+              .custom-inline-slider .slider-item img {
                 width: 100%;
                 height: auto;
                 display: block;
                 object-fit: cover;
+              }
+              .dummy-placeholder {
+                background: #f4f4f4;
+                padding: 40px 20px;
+                text-align: center;
+                border: 2px dashed #ccc;
+                width: 100%;
+                max-width: 100% !important;
+                flex: 0 0 100% !important;
               }
 
               @media screen and (min-width: 750px) {
@@ -248,7 +239,7 @@
                   transition: box-shadow 0.3s ease;
                 }
                 .custom-inline-slider .slider-item {
-                  flex: 0 0 30vw; /* Desktop sizing */
+                  flex: 0 0 30vw; 
                 }
               }
             </style>
@@ -265,36 +256,9 @@
               {% assign skip_card_product_styles = false %}
               {%- for product in collection.products -%}
                 {% assign lazy_load = false %}
-                {%- if forloop.index > 2 -%}
-                  {%- assign lazy_load = true -%}
-                {%- endif -%}
+                {%- if forloop.index > 2 -%}{%- assign lazy_load = true -%}{%- endif -%}
 
-                {% comment %} --- INLINE SLIDER INJECTION --- {% endcomment %}
-                {%- if forloop.index0 == section.settings.slider_position and section.blocks.size > 0 -%}
-                  <li class="grid__item collection-slider-full-width">
-                    <div class="custom-inline-slider">
-                      {%- for block in section.blocks -%}
-                        <div class="slider-item" {{ block.shopify_attributes }}>
-                          {%- if block.settings.link != blank -%}
-                            <a href="{{ block.settings.link }}">
-                          {%- endif -%}
-                          
-                          {%- if block.settings.image != blank -%}
-                            {{ block.settings.image | image_url: width: 800 | image_tag: loading: 'lazy' }}
-                          {%- else -%}
-                            {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
-                          {%- endif -%}
-
-                          {%- if block.settings.link != blank -%}
-                            </a>
-                          {%- endif -%}
-                        </div>
-                      {%- endfor -%}
-                    </div>
-                  </li>
-                {%- endif -%}
-                {% comment %} --- END INLINE SLIDER INJECTION --- {% endcomment %}
-
+                {% comment %} --- PRODUCT CARD --- {% endcomment %}
                 <li class="grid__item">
                   {% render 'card-product',
                     card_product: product,
@@ -309,6 +273,36 @@
                     section_id: section.id
                   %}
                 </li>
+
+                {% comment %} --- INLINE SLIDER INJECTION --- {% endcomment %}
+                {%- if forloop.index == section.settings.slider_position -%}
+                  <li class="grid__item collection-slider-full-width">
+                    <div class="custom-inline-slider">
+                      {%- if section.blocks.size > 0 -%}
+                        {%- for block in section.blocks -%}
+                          <div class="slider-item" {{ block.shopify_attributes }}>
+                            {%- if block.settings.link != blank -%}<a href="{{ block.settings.link }}">{%- endif -%}
+                            
+                            {%- if block.settings.image != blank -%}
+                              {{ block.settings.image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+                            {%- else -%}
+                              {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                            {%- endif -%}
+
+                            {%- if block.settings.link != blank -%}</a>{%- endif -%}
+                          </div>
+                        {%- endfor -%}
+                      {%- else -%}
+                        <div class="slider-item dummy-placeholder">
+                           <h3 style="margin:0; font-size: 16px;">Slider Working Successfully! ✅</h3>
+                           <p style="margin: 5px 0 0; font-size: 14px;">Open your Theme Editor, click on <strong>Product Grid</strong> on the left, and click <strong>Add Slider Image</strong> to replace this box.</p>
+                        </div>
+                      {%- endif -%}
+                    </div>
+                  </li>
+                {%- endif -%}
+                {% comment %} --- END INLINE SLIDER --- {% endcomment %}
+
                 {%- assign skip_card_product_styles = true -%}
               {%- endfor -%}
             </ul>
@@ -336,14 +330,11 @@
       "content": "Inline Slider Settings"
     },
     {
-      "type": "range",
+      "type": "number",
       "id": "slider_position",
-      "min": 2,
-      "max": 24,
-      "step": 2,
       "default": 4,
-      "label": "Show slider after X products",
-      "info": "Upload slider images using the 'Add Block' button."
+      "label": "Show slider after exactly X products",
+      "info": "Example: Type 4 to show it after the 4th product."
     },
     {
       "type": "range",
@@ -369,14 +360,8 @@
       "default": "2",
       "label": "t:sections.main-collection-product-grid.settings.columns_mobile.label",
       "options": [
-        {
-          "value": "1",
-          "label": "t:sections.main-collection-product-grid.settings.columns_mobile.options__1.label"
-        },
-        {
-          "value": "2",
-          "label": "t:sections.main-collection-product-grid.settings.columns_mobile.options__2.label"
-        }
+        { "value": "1", "label": "t:sections.main-collection-product-grid.settings.columns_mobile.options__1.label" },
+        { "value": "2", "label": "t:sections.main-collection-product-grid.settings.columns_mobile.options__2.label" }
       ]
     },
     {
@@ -394,18 +379,9 @@
       "type": "select",
       "id": "image_ratio",
       "options": [
-        {
-          "value": "adapt",
-          "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__1.label"
-        },
-        {
-          "value": "portrait",
-          "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__2.label"
-        },
-        {
-          "value": "square",
-          "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__3.label"
-        }
+        { "value": "adapt", "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__1.label" },
+        { "value": "portrait", "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__2.label" },
+        { "value": "square", "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__3.label" }
       ],
       "default": "adapt",
       "label": "t:sections.main-collection-product-grid.settings.image_ratio.label"
@@ -414,38 +390,14 @@
       "type": "select",
       "id": "image_shape",
       "options": [
-        {
-          "value": "default",
-          "label": "t:sections.all.image_shape.options__1.label"
-        },
-        {
-          "value": "arch",
-          "label": "t:sections.all.image_shape.options__2.label"
-        },
-        {
-          "value": "blob",
-          "label": "t:sections.all.image_shape.options__3.label"
-        },
-        {
-          "value": "chevronleft",
-          "label": "t:sections.all.image_shape.options__4.label"
-        },
-        {
-          "value": "chevronright",
-          "label": "t:sections.all.image_shape.options__5.label"
-        },
-        {
-          "value": "diamond",
-          "label": "t:sections.all.image_shape.options__6.label"
-        },
-        {
-          "value": "parallelogram",
-          "label": "t:sections.all.image_shape.options__7.label"
-        },
-        {
-          "value": "round",
-          "label": "t:sections.all.image_shape.options__8.label"
-        }
+        { "value": "default", "label": "t:sections.all.image_shape.options__1.label" },
+        { "value": "arch", "label": "t:sections.all.image_shape.options__2.label" },
+        { "value": "blob", "label": "t:sections.all.image_shape.options__3.label" },
+        { "value": "chevronleft", "label": "t:sections.all.image_shape.options__4.label" },
+        { "value": "chevronright", "label": "t:sections.all.image_shape.options__5.label" },
+        { "value": "diamond", "label": "t:sections.all.image_shape.options__6.label" },
+        { "value": "parallelogram", "label": "t:sections.all.image_shape.options__7.label" },
+        { "value": "round", "label": "t:sections.all.image_shape.options__8.label" }
       ],
       "default": "default",
       "label": "t:sections.all.image_shape.label"
@@ -475,18 +427,9 @@
       "default": "none",
       "label": "t:sections.main-collection-product-grid.settings.quick_add.label",
       "options": [
-        {
-          "value": "none",
-          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_1"
-        },
-        {
-          "value": "standard",
-          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_2"
-        },
-        {
-          "value": "bulk",
-          "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_3"
-        }
+        { "value": "none", "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_1" },
+        { "value": "standard", "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_2" },
+        { "value": "bulk", "label": "t:sections.main-collection-product-grid.settings.quick_add.options.option_3" }
       ]
     },
     {
@@ -504,18 +447,9 @@
       "type": "select",
       "id": "filter_type",
       "options": [
-        {
-          "value": "horizontal",
-          "label": "t:sections.main-collection-product-grid.settings.filter_type.options__1.label"
-        },
-        {
-          "value": "vertical",
-          "label": "t:sections.main-collection-product-grid.settings.filter_type.options__2.label"
-        },
-        {
-          "value": "drawer",
-          "label": "t:sections.main-collection-product-grid.settings.filter_type.options__3.label"
-        }
+        { "value": "horizontal", "label": "t:sections.main-collection-product-grid.settings.filter_type.options__1.label" },
+        { "value": "vertical", "label": "t:sections.main-collection-product-grid.settings.filter_type.options__2.label" },
+        { "value": "drawer", "label": "t:sections.main-collection-product-grid.settings.filter_type.options__3.label" }
       ],
       "default": "horizontal",
       "label": "t:sections.main-collection-product-grid.settings.filter_type.label"
