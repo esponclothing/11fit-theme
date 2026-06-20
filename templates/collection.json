@@ -26,6 +26,13 @@
     "product-grid": {
       "type": "main-collection-product-grid",
       "blocks": {
+        "slider_image_KWCHBQ": {
+          "type": "slider_image",
+          "settings": {
+            "image": "shopify://shop_images/Front_1_c_64_9a935893-a0d6-4f56-8fbb-0984287f3ba2.jpg",
+            "link": ""
+          }
+        },
         "slider_image_zcX3dz": {
           "type": "slider_image",
           "settings": {
@@ -35,6 +42,7 @@
         }
       },
       "block_order": [
+        "slider_image_KWCHBQ",
         "slider_image_zcX3dz"
       ],
       "settings": {
