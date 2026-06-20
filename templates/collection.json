@@ -59,7 +59,7 @@
           "settings": {
             "insert_after": 8,
             "campaign_id": "promo-2",
-            "target_collection": "",
+            "target_collection": "t-shirts",
             "offer_box_height": 70,
             "bg_color_1": "#111111",
             "bg_color_2": "#2b2b2b",
@@ -83,7 +83,7 @@
           "settings": {
             "insert_after": 4,
             "campaign_id": "promo-1",
-            "target_collection": "",
+            "target_collection": "t-shirts",
             "offer_box_height": 70,
             "bg_color_1": "#111111",
             "bg_color_2": "#2b2b2b",
