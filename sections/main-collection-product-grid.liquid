@@ -191,21 +191,39 @@
               .collection-slider-full-width {
                 grid-column: 1 / -1 !important; 
                 width: 100% !important;
-                margin: 24px 0 32px 0 !important;
+                margin: 16px 0 24px 0 !important;
+                overflow: hidden;
               }
+
+              /* Offer Carousel (Swipeable Banners) */
+              .offer-carousel-wrapper {
+                display: flex;
+                overflow-x: auto;
+                gap: 8px;
+                scroll-snap-type: x mandatory;
+                scrollbar-width: none; 
+                -ms-overflow-style: none; 
+                margin-bottom: 16px;
+                padding-bottom: 4px;
+              }
+              .offer-carousel-wrapper::-webkit-scrollbar { display: none; }
               
               /* Premium Creative Offer Box */
               .lucrative-offer-box {
+                flex: 0 0 92%; /* 92% lets the next offer peek to show it's swipeable */
+                scroll-snap-align: center;
                 border-radius: 8px;
-                padding: 24px 28px;
+                padding: 16px 20px; /* Reduced padding for compact look */
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                margin-bottom: 20px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
                 position: relative;
                 overflow: hidden;
                 border: 1px solid rgba(255,255,255,0.1);
+              }
+              @media screen and (min-width: 750px) {
+                .lucrative-offer-box { flex: 0 0 100%; }
               }
               .lucrative-offer-box::before {
                 content: '';
@@ -223,35 +241,39 @@
               }
               .lucrative-offer-content {
                 z-index: 2;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
               }
               .lucrative-offer-heading {
-                font-size: 2.2rem;
+                font-size: 1.8rem;
                 font-weight: 800;
-                margin: 0 0 6px;
+                margin: 0 0 2px;
                 text-transform: uppercase;
-                letter-spacing: 1px;
+                letter-spacing: 0.5px;
+                line-height: 1.1;
               }
               .lucrative-offer-sub {
-                font-size: 1.4rem;
+                font-size: 1.3rem;
                 font-weight: 400;
                 margin: 0;
-                opacity: 0.85;
-                letter-spacing: 0.5px;
+                opacity: 0.9;
               }
               .lucrative-offer-coupon {
                 z-index: 2;
-                background: rgba(0,0,0,0.2);
-                border: 1px solid rgba(255,255,255,0.3);
-                padding: 8px 16px;
+                background: rgba(0,0,0,0.25);
+                border: 1px dashed rgba(255,255,255,0.4);
+                padding: 6px 12px;
                 border-radius: 4px;
-                font-weight: 600;
-                font-size: 1.3rem;
+                font-weight: 700;
+                font-size: 1.2rem;
                 letter-spacing: 1px;
                 backdrop-filter: blur(8px);
                 text-transform: uppercase;
+                white-space: nowrap;
               }
 
-              /* Scrollable Area */
+              /* Product Scrollable Area */
               .custom-inline-slider {
                 display: flex;
                 overflow-x: auto;
@@ -261,12 +283,10 @@
                 -ms-overflow-style: none; 
                 padding-bottom: 10px;
               }
-              .custom-inline-slider::-webkit-scrollbar {
-                display: none; 
-              }
+              .custom-inline-slider::-webkit-scrollbar { display: none; }
               .custom-inline-slider .slider-item {
                 flex: 0 0 65vw; 
-                max-width: 320px;
+                max-width: 300px;
                 scroll-snap-align: start;
                 border-radius: 8px;
                 overflow: hidden;
@@ -284,41 +304,47 @@
                 object-fit: cover;
               }
               
-              /* Slider Item Content Details */
+              /* Editable Product Details Typography */
               .slider-item-details {
-                padding: 12px 4px 0 4px;
+                padding: 12px 2px 0 2px;
                 text-align: left;
               }
               .slider-item-title {
-                font-size: 1.3rem;
+                font-size: var(--title-size, 1.4rem);
                 font-weight: 500;
-                margin-bottom: 6px;
+                margin-bottom: 4px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 color: rgb(var(--color-foreground));
+                letter-spacing: 0.2px;
               }
               .slider-item-price-row {
                 display: flex;
                 align-items: center;
                 flex-wrap: wrap;
-                gap: 8px;
-                margin-bottom: 6px;
+                gap: 6px;
+                margin-bottom: 4px;
               }
               .slider-item-price {
-                font-weight: 700;
-                font-size: 1.4rem;
+                font-weight: 800; /* Bolder price for visual hierarchy */
+                font-size: var(--price-size, 1.5rem);
                 color: rgb(var(--color-foreground));
               }
               .slider-item-compare {
                 text-decoration: line-through;
-                font-size: 1.2rem;
-                color: rgba(var(--color-foreground), 0.6);
+                font-size: calc(var(--price-size, 1.5rem) * 0.8); /* Scales with price */
+                color: rgba(var(--color-foreground), 0.5);
               }
               .slider-item-discount {
-                font-size: 1.1rem;
-                font-weight: 700;
+                font-size: var(--discount-size, 1.1rem);
+                font-weight: 800;
                 color: #d82a2a; 
+                background: #ffebeb; /* Modern pill look */
+                padding: 2px 6px;
+                border-radius: 4px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
               }
               .slider-item-rating {
                 font-size: 1.2rem;
@@ -326,10 +352,11 @@
                 display: flex;
                 align-items: center;
                 gap: 4px;
+                font-weight: 500;
               }
               .slider-item-rating svg {
-                width: 14px;
-                height: 14px;
+                width: 13px;
+                height: 13px;
                 fill: #FFD700;
               }
 
@@ -343,16 +370,13 @@
                 flex: 0 0 100% !important;
               }
 
-              @media (max-width: 749px) {
+              @media (max-width: 450px) {
                 .lucrative-offer-box {
-                  flex-direction: column;
-                  align-items: flex-start;
-                  padding: 20px;
-                  gap: 16px;
+                  padding: 12px 14px;
                 }
-                .lucrative-offer-heading {
-                  font-size: 1.8rem;
-                }
+                .lucrative-offer-heading { font-size: 1.5rem; }
+                .lucrative-offer-sub { font-size: 1.1rem; }
+                .lucrative-offer-coupon { font-size: 1.0rem; padding: 4px 8px; }
               }
 
               @media screen and (min-width: 750px) {
@@ -360,10 +384,6 @@
                   grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr) !important;
                   column-gap: 24px !important;
                   row-gap: 40px !important;
-                }
-                .fit-premium-grid .card-wrapper:hover .card {
-                  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
-                  transition: box-shadow 0.3s ease;
                 }
                 .custom-inline-slider .slider-item {
                   flex: 0 0 25vw; 
@@ -374,11 +394,7 @@
             <ul
               id="product-grid"
               data-id="{{ section.id }}"
-              class="
-                grid product-grid grid--{{ section.settings.columns_mobile }}-col-tablet-down
-                grid--{{ section.settings.columns_desktop }}-col-desktop fit-premium-grid
-                {% if section.settings.quick_add == 'bulk' %} collection-quick-add-bulk{% endif %}
-              "
+              class="grid product-grid grid--{{ section.settings.columns_mobile }}-col-tablet-down grid--{{ section.settings.columns_desktop }}-col-desktop fit-premium-grid"
             >
               {% assign skip_card_product_styles = false %}
               {%- for product in collection.products -%}
@@ -386,7 +402,6 @@
                 {%- if forloop.index > 2 -%}{%- assign lazy_load = true -%}{%- endif -%}
                 {% assign current_product_index = forloop.index %}
 
-                {% comment %} --- STANDARD PRODUCT CARD --- {% endcomment %}
                 <li class="grid__item">
                   {% render 'card-product',
                     card_product: product,
@@ -408,21 +423,49 @@
                     
                     <li class="grid__item collection-slider-full-width" {{ block.shopify_attributes }}>
                       
-                      {% comment %} High-End Offer Box {% endcomment %}
-                      <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ block.settings.bg_color_1 }}, {{ block.settings.bg_color_2 }}); color: {{ block.settings.text_color }};">
-                        <div class="lucrative-offer-content">
-                          <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading }}</h3>
-                          <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading }}</p>
-                        </div>
-                        {%- if block.settings.coupon_code != blank -%}
-                          <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }};">
-                            Code: <span>{{ block.settings.coupon_code }}</span>
+                      {% comment %} Offer Banner Carousel (Supports up to 3 slides) {% endcomment %}
+                      <div class="offer-carousel-wrapper">
+                        
+                        {%- if block.settings.heading_1 != blank -%}
+                        <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ block.settings.bg_color_1 }}, {{ block.settings.bg_color_2 }}); color: {{ block.settings.text_color }}; min-height: {{ block.settings.offer_box_height }}px;">
+                          <div class="lucrative-offer-content">
+                            <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_1 }}</h3>
+                            <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_1 }}</p>
                           </div>
+                          {%- if block.settings.coupon_code_1 != blank -%}
+                            <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }};">Code: <span>{{ block.settings.coupon_code_1 }}</span></div>
+                          {%- endif -%}
+                        </div>
                         {%- endif -%}
+
+                        {%- if block.settings.heading_2 != blank -%}
+                        <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ block.settings.bg_color_1 }}, {{ block.settings.bg_color_2 }}); color: {{ block.settings.text_color }}; min-height: {{ block.settings.offer_box_height }}px;">
+                          <div class="lucrative-offer-content">
+                            <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_2 }}</h3>
+                            <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_2 }}</p>
+                          </div>
+                          {%- if block.settings.coupon_code_2 != blank -%}
+                            <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }};">Code: <span>{{ block.settings.coupon_code_2 }}</span></div>
+                          {%- endif -%}
+                        </div>
+                        {%- endif -%}
+
+                        {%- if block.settings.heading_3 != blank -%}
+                        <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ block.settings.bg_color_1 }}, {{ block.settings.bg_color_2 }}); color: {{ block.settings.text_color }}; min-height: {{ block.settings.offer_box_height }}px;">
+                          <div class="lucrative-offer-content">
+                            <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_3 }}</h3>
+                            <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_3 }}</p>
+                          </div>
+                          {%- if block.settings.coupon_code_3 != blank -%}
+                            <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }};">Code: <span>{{ block.settings.coupon_code_3 }}</span></div>
+                          {%- endif -%}
+                        </div>
+                        {%- endif -%}
+
                       </div>
 
-                      {% comment %} Matched Slider Items {% endcomment %}
-                      <div class="custom-inline-slider">
+                      {% comment %} Matched Product Slider Items (Using custom typography sizes from block) {% endcomment %}
+                      <div class="custom-inline-slider" style="--title-size: {{ block.settings.font_size_title }}rem; --price-size: {{ block.settings.font_size_price }}rem; --discount-size: {{ block.settings.font_size_discount }}rem;">
                         {% assign has_items = false %}
                         {% assign target_campaign_id = block.settings.campaign_id %}
                         
@@ -497,9 +540,6 @@
       </div>
     </div>
   {%- endpaginate -%}
-  {% if section.settings.image_shape == 'arch' %}
-    {{ 'mask-arch.svg' | inline_asset_content }}
-  {%- endif -%}
 </div>
 
 {% schema %}
@@ -539,7 +579,6 @@
       "type": "color_scheme",
       "id": "color_scheme",
       "label": "t:sections.all.colors.label",
-      "info": "t:sections.all.colors.has_cards_info",
       "default": "scheme-1"
     },
     {
@@ -558,22 +597,6 @@
       "label": "t:sections.main-collection-product-grid.settings.image_ratio.label"
     },
     {
-      "type": "select",
-      "id": "image_shape",
-      "options": [
-        { "value": "default", "label": "t:sections.all.image_shape.options__1.label" },
-        { "value": "arch", "label": "t:sections.all.image_shape.options__2.label" },
-        { "value": "blob", "label": "t:sections.all.image_shape.options__3.label" },
-        { "value": "chevronleft", "label": "t:sections.all.image_shape.options__4.label" },
-        { "value": "chevronright", "label": "t:sections.all.image_shape.options__5.label" },
-        { "value": "diamond", "label": "t:sections.all.image_shape.options__6.label" },
-        { "value": "parallelogram", "label": "t:sections.all.image_shape.options__7.label" },
-        { "value": "round", "label": "t:sections.all.image_shape.options__8.label" }
-      ],
-      "default": "default",
-      "label": "t:sections.all.image_shape.label"
-    },
-    {
       "type": "checkbox",
       "id": "show_secondary_image",
       "default": false,
@@ -589,8 +612,7 @@
       "type": "checkbox",
       "id": "show_rating",
       "default": false,
-      "label": "t:sections.main-collection-product-grid.settings.show_rating.label",
-      "info": "t:sections.main-collection-product-grid.settings.show_rating.info"
+      "label": "t:sections.main-collection-product-grid.settings.show_rating.label"
     },
     {
       "type": "select",
@@ -611,8 +633,7 @@
       "type": "checkbox",
       "id": "enable_filtering",
       "default": true,
-      "label": "t:sections.main-collection-product-grid.settings.enable_filtering.label",
-      "info": "t:sections.main-collection-product-grid.settings.enable_filtering.info"
+      "label": "t:sections.main-collection-product-grid.settings.enable_filtering.label"
     },
     {
       "type": "select",
@@ -665,44 +686,40 @@
           "type": "number",
           "id": "insert_after",
           "label": "Show after exactly X products",
-          "default": 4,
-          "info": "Example: 4 will insert this specific slider after the 4th product."
+          "default": 4
         },
         {
           "type": "text",
           "id": "campaign_id",
           "label": "Campaign ID (Important!)",
           "default": "promo-1",
-          "info": "Give this banner a unique ID (e.g. 'promo-1' or 'summer-sale'). You will use this exact same ID in the Slider Image blocks to group them here."
+          "info": "Use this ID in Slider Image blocks to group them here."
         },
         {
-          "type": "text",
-          "id": "heading",
-          "label": "Offer Heading",
-          "default": "PREMIUM COLLECTION SALE"
+          "type": "header",
+          "content": "Offer Banner Box Design"
         },
         {
-          "type": "text",
-          "id": "subheading",
-          "label": "Offer Subtext",
-          "default": "Modern performance luxury at Flat 20% OFF."
-        },
-        {
-          "type": "text",
-          "id": "coupon_code",
-          "label": "Coupon Code (Optional)",
-          "default": "LUXE20"
+          "type": "range",
+          "id": "offer_box_height",
+          "min": 40,
+          "max": 150,
+          "step": 5,
+          "unit": "px",
+          "label": "Banner Height",
+          "default": 70,
+          "info": "Lower the number for a thinner, compact banner."
         },
         {
           "type": "color",
           "id": "bg_color_1",
-          "label": "Background Gradient Start",
+          "label": "Gradient Start",
           "default": "#111111"
         },
         {
           "type": "color",
           "id": "bg_color_2",
-          "label": "Background Gradient End",
+          "label": "Gradient End",
           "default": "#2b2b2b"
         },
         {
@@ -710,6 +727,100 @@
           "id": "text_color",
           "label": "Text Color",
           "default": "#ffffff"
+        },
+        {
+          "type": "header",
+          "content": "Product Fonts (Applies to images below)"
+        },
+        {
+          "type": "range",
+          "id": "font_size_title",
+          "min": 1.0,
+          "max": 2.5,
+          "step": 0.1,
+          "unit": "rem",
+          "label": "Title Font Size",
+          "default": 1.3
+        },
+        {
+          "type": "range",
+          "id": "font_size_price",
+          "min": 1.0,
+          "max": 3.0,
+          "step": 0.1,
+          "unit": "rem",
+          "label": "Price Font Size",
+          "default": 1.5
+        },
+        {
+          "type": "range",
+          "id": "font_size_discount",
+          "min": 0.8,
+          "max": 2.0,
+          "step": 0.1,
+          "unit": "rem",
+          "label": "Discount Tag Font Size",
+          "default": 1.1
+        },
+        {
+          "type": "header",
+          "content": "Slide 1 Content"
+        },
+        {
+          "type": "text",
+          "id": "heading_1",
+          "label": "Heading 1",
+          "default": "PREMIUM COLLECTION SALE"
+        },
+        {
+          "type": "text",
+          "id": "subheading_1",
+          "label": "Subheading 1",
+          "default": "Modern performance luxury at Flat 20% OFF."
+        },
+        {
+          "type": "text",
+          "id": "coupon_code_1",
+          "label": "Coupon Code 1",
+          "default": "LUXE20"
+        },
+        {
+          "type": "header",
+          "content": "Slide 2 Content (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "heading_2",
+          "label": "Heading 2"
+        },
+        {
+          "type": "text",
+          "id": "subheading_2",
+          "label": "Subheading 2"
+        },
+        {
+          "type": "text",
+          "id": "coupon_code_2",
+          "label": "Coupon Code 2"
+        },
+        {
+          "type": "header",
+          "content": "Slide 3 Content (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "heading_3",
+          "label": "Heading 3"
+        },
+        {
+          "type": "text",
+          "id": "subheading_3",
+          "label": "Subheading 3"
+        },
+        {
+          "type": "text",
+          "id": "coupon_code_3",
+          "label": "Coupon Code 3"
         }
       ]
     },
@@ -755,8 +866,8 @@
         {
           "type": "text",
           "id": "discount",
-          "label": "Discount Tag",
-          "default": "Rs. 400 OFF"
+          "label": "Discount Text",
+          "default": "400 OFF"
         },
         {
           "type": "text",
