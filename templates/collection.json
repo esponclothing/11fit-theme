@@ -38,10 +38,38 @@
             "discount": "Rs. 400 OFF",
             "rating": "4.8"
           }
+        },
+        "slider_item_T7En7E": {
+          "type": "slider_item",
+          "settings": {
+            "campaign_id": "promo-1",
+            "image": "shopify://shop_images/Front_1_c_3_5927145b-8757-4081-88b6-b4fe3c7247b4.jpg",
+            "link": "",
+            "title": "Classic Track Pant",
+            "price": "Rs. 899",
+            "compare_price": "Rs. 1299",
+            "discount": "Rs. 400 OFF",
+            "rating": "4.8"
+          }
+        },
+        "slider_item_9nQdzt": {
+          "type": "slider_item",
+          "settings": {
+            "campaign_id": "promo-1",
+            "image": "shopify://shop_images/Front_1_c_64_f9192836-b933-4364-a378-9b679fe78e0a.jpg",
+            "link": "",
+            "title": "Classic T shirts",
+            "price": "Rs. 899",
+            "compare_price": "Rs. 1299",
+            "discount": "Rs. 400 OFF",
+            "rating": "4.8"
+          }
         }
       },
       "block_order": [
-        "slider_item_wRWY8a"
+        "slider_item_wRWY8a",
+        "slider_item_T7En7E",
+        "slider_item_9nQdzt"
       ],
       "settings": {
         "products_per_page": 16,
