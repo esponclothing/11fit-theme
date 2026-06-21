@@ -19,8 +19,21 @@
     },
     "subcategories": {
       "type": "collection-subcategories",
+      "blocks": {
+        "subcategory_myC3mg": {
+          "type": "subcategory",
+          "settings": {
+            "suffix": "Oversized",
+            "icon_svg": "",
+            "icon_image": "shopify://shop_images/Front_1_c_64_f9192836-b933-4364-a378-9b679fe78e0a.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "subcategory_myC3mg"
+      ],
       "settings": {
-        "subcategories": "oversized, cjp, regular-fit, denim, gym, cotton"
+        "all_icon_svg": ""
       }
     },
     "product-grid": {
