@@ -189,6 +189,7 @@
         "products_per_page": 16,
         "columns_desktop": 4,
         "columns_mobile": "2",
+        "mobile_image_ratio": 145,
         "color_scheme": "scheme-1",
         "image_ratio": "adapt",
         "show_secondary_image": false,
