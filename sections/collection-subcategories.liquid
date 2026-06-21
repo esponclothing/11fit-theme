@@ -21,10 +21,12 @@
   flex-shrink: 0;
 }
 .subcategory-link {
-  display: inline-block;
-  padding: 8px 16px;
-  border: 1px solid rgba(var(--color-foreground), 0.1);
-  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem; /* Space between icon and text */
+  padding: 8px 18px;
+  border: 1px solid rgba(var(--color-foreground), 0.15);
+  border-radius: 30px; /* Slightly rounder for a luxury pill shape */
   text-decoration: none;
   color: rgb(var(--color-foreground));
   background-color: rgb(var(--color-background));
@@ -38,16 +40,41 @@
   color: rgb(var(--color-background));
   border-color: rgb(var(--color-foreground));
 }
+
+/* Icon Styling */
+.subcategory-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  transition: transform 0.3s ease;
+}
+.subcategory-link:hover .subcategory-icon {
+  transform: scale(1.1); /* Subtle zoom on hover */
+}
+.subcategory-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor; /* Ensures SVG changes color on hover/active */
+}
+.subcategory-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 {%- endstyle -%}
 
 {%- assign current_handle = collection.handle -%}
 {%- assign parent_handle = current_handle -%}
-{%- assign sub_suffixes = section.settings.subcategories | downcase | replace: " ", "" | split: "," -%}
 
 {%- comment -%}
-  Find the parent handle if currently viewing a subcategory page
+  Find the parent handle by looping through block suffixes
 {%- endcomment -%}
-{%- for suffix in sub_suffixes -%}
+{%- for block in section.blocks -%}
+  {%- assign suffix = block.settings.suffix | downcase | replace: " ", "" -%}
+  {%- if suffix == blank %}{% continue %}{% endif -%}
+  
   {%- assign suffix_with_dash = "-" | append: suffix -%}
   {%- if current_handle contains suffix_with_dash -%}
     {%- assign parent_handle = current_handle | replace: suffix_with_dash, "" -%}
@@ -58,14 +85,30 @@
 {%- assign parent_col = collections[parent_handle] -%}
 
 {%- capture subcategories_html -%}
-  {%- for suffix in sub_suffixes -%}
+  {%- for block in section.blocks -%}
+    {%- assign suffix = block.settings.suffix | downcase | replace: " ", "" -%}
+    {%- if suffix == blank %}{% continue %}{% endif -%}
+    
     {%- assign sub_handle = parent_handle | append: "-" | append: suffix -%}
     {%- assign sub_col = collections[sub_handle] -%}
+    
     {%- if sub_col and sub_col.title != blank -%}
       {%- assign display_title = sub_col.title | split: "-" | last | strip -%}
-      <li class="subcategory-item">
+      <li class="subcategory-item" {{ block.shopify_attributes }}>
         <a href="{{ sub_col.url }}" class="subcategory-link {% if current_handle == sub_handle %}active{% endif %}">
-          {{ display_title }}
+          
+          {%- comment -%} Render Icon {%- endcomment -%}
+          {%- if block.settings.icon_svg != blank or block.settings.icon_image != blank -%}
+            <span class="subcategory-icon">
+              {%- if block.settings.icon_svg != blank -%}
+                {{ block.settings.icon_svg }}
+              {%- else -%}
+                {{ block.settings.icon_image | image_url: width: 40 | image_tag: loading: 'lazy' }}
+              {%- endif -%}
+            </span>
+          {%- endif -%}
+
+          <span class="subcategory-text">{{ display_title }}</span>
         </a>
       </li>
     {%- endif -%}
@@ -75,11 +118,23 @@
 {%- if parent_col -%}
   <div class="collection-subcategories page-width">
     <ul class="subcategories-list">
+      
+      {%- comment -%} "All" Button {%- endcomment -%}
       <li class="subcategory-item">
         <a href="{{ parent_col.url }}" class="subcategory-link {% if current_handle == parent_handle %}active{% endif %}">
-          All
+          {%- if section.settings.all_icon_svg != blank or section.settings.all_icon_image != blank -%}
+            <span class="subcategory-icon">
+              {%- if section.settings.all_icon_svg != blank -%}
+                {{ section.settings.all_icon_svg }}
+              {%- else -%}
+                {{ section.settings.all_icon_image | image_url: width: 40 | image_tag: loading: 'lazy' }}
+              {%- endif -%}
+            </span>
+          {%- endif -%}
+          <span class="subcategory-text">All</span>
         </a>
       </li>
+      
       {{ subcategories_html }}
     </ul>
   </div>
@@ -90,16 +145,55 @@
   "name": "Collection Subcategories",
   "settings": [
     {
-      "type": "text",
-      "id": "subcategories",
-      "label": "Subcategory Suffixes",
-      "default": "oversized, cjp, regular-fit, denim, gym, cotton",
-      "info": "Comma-separated list of handle suffixes to look for (e.g. if main is 't-shirts', looking for 't-shirts-oversized')."
+      "type": "header",
+      "content": "Settings for the 'All' Button"
+    },
+    {
+      "type": "html",
+      "id": "all_icon_svg",
+      "label": "Icon (SVG Code)",
+      "info": "Paste raw SVG code for crisp, scalable icons."
+    },
+    {
+      "type": "image_picker",
+      "id": "all_icon_image",
+      "label": "Icon (Image Fallback)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "subcategory",
+      "name": "Subcategory",
+      "settings": [
+        {
+          "type": "text",
+          "id": "suffix",
+          "label": "Handle Suffix",
+          "info": "e.g., 'oversized', 'denim', 'cotton'"
+        },
+        {
+          "type": "html",
+          "id": "icon_svg",
+          "label": "Icon (SVG Code)",
+          "info": "Paste raw SVG code for crisp, scalable icons."
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon (Image Fallback)",
+          "info": "Used if SVG code is blank."
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "Collection Subcategories"
+      "name": "Collection Subcategories",
+      "blocks": [
+        { "type": "subcategory", "settings": { "suffix": "oversized" } },
+        { "type": "subcategory", "settings": { "suffix": "cjp" } },
+        { "type": "subcategory", "settings": { "suffix": "regular-fit" } }
+      ]
     }
   ]
 }
