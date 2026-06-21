@@ -148,6 +148,7 @@
                 margin: 0 !important;
                 padding: 0 !important;
                 box-shadow: none !important;
+                overflow: visible !important; /* Prevents font clipping */
               }
               .fit-premium-grid .card__inner {
                 border-radius: 6px !important; 
@@ -183,7 +184,8 @@
 
               /* --- PERFECT ALIGNMENT & REMOVING ALL THEME GAPS --- */
               .fit-premium-grid .card__content {
-                padding: 10px 0 0 0 !important; /* PERFECT LEFT ALIGNMENT */
+                /* Added a 2px invisible buffer to the left to prevent the "L" from getting chopped off */
+                padding: 8px 2px 0 2px !important; 
                 margin: 0 !important;
                 text-align: left !important; 
                 display: flex !important;
@@ -192,7 +194,8 @@
                 justify-content: flex-start !important;
                 flex-grow: 1 !important;
                 background: transparent !important;
-                gap: 0 !important; /* Kill native grid gap */
+                gap: 0 !important; 
+                overflow: visible !important; /* Prevents font clipping */
               }
               
               .fit-premium-grid .card__information,
@@ -205,10 +208,10 @@
                 width: 100% !important;
                 display: flex !important;
                 flex-direction: column !important;
-                gap: 0 !important; /* Kill native grid gap */
+                gap: 0 !important; 
+                overflow: visible !important;
               }
 
-              /* KILLS SHOPIFY'S NATIVE MARGIN-TOP BUG BETWEEN ELEMENTS */
               .fit-premium-grid .card-information > * + * {
                 margin-top: 0 !important;
               }
@@ -244,7 +247,7 @@
               .slider-item-price-row {
                 display: flex !important;
                 justify-content: flex-start !important;
-                align-items: baseline !important;
+                align-items: baseline !important; /* Aligns text cleanly on the bottom edge */
                 text-align: left !important;
                 flex-wrap: wrap !important;
                 gap: 5px !important; 
@@ -297,7 +300,7 @@
                 display: none !important; 
               }
 
-              /* Clean Green Discount Text */
+              /* Clean Green Discount Text (No Pill) */
               .fit-premium-grid .price .badge,
               .fit-premium-grid .price__badge-sale,
               .fit-premium-grid .price-item--sale + span,
@@ -326,7 +329,7 @@
                 display: block !important;
                 color: #7c3aed !important; /* Purple */
                 font-size: 1.05rem !important;
-                margin: 0 !important; /* NO EXTRA GAP */
+                margin: 0 !important; 
                 padding: 0 !important;
                 text-align: left !important;
                 font-weight: 400 !important;
@@ -436,7 +439,7 @@
                 max-width: 280px;
                 scroll-snap-align: start;
                 border-radius: 6px; 
-                overflow: hidden;
+                overflow: visible; /* Prevents font clipping */
                 display: flex;
                 flex-direction: column;
               }
@@ -472,12 +475,14 @@
               }
 
               .slider-item-details {
-                padding: 10px 0 0 0 !important; 
+                /* 2px buffer on left/right to protect fonts from clipping */
+                padding: 8px 2px 0 2px !important; 
                 margin: 0 !important;
                 text-align: left; 
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
+                overflow: visible !important; 
               }
 
               .dummy-placeholder {
@@ -515,6 +520,10 @@
                 .lowest-price-text,
                 .fit-premium-grid .card-information::after {
                   font-size: 0.95rem !important;
+                }
+                .fit-premium-grid .price, 
+                .slider-item-price-row {
+                  gap: 4px !important; 
                 }
                 .lucrative-offer-box {
                   flex-direction: column !important;
