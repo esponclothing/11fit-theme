@@ -128,17 +128,26 @@
                 margin: 0 !important;
               }
 
-              /* --- REMOVING THE THEME'S UGLY WHITE CARD & GAPS --- */
-              .fit-premium-grid .card-wrapper,
-              .fit-premium-grid .card {
-                height: 100% !important;
-                display: flex !important;
-                flex-direction: column !important;
-                background: transparent !important; /* Kills the white box */
-                border: none !important;
-                box-shadow: none !important;
+              /* --- FIX: HIDE DUPLICATE TITLE ON IMAGE --- */
+              .fit-premium-grid .card__inner .card__content {
+                display: none !important; /* Hides the theme's duplicate text inside the image wrapper */
+              }
+
+              /* Removing Default Card Borders & Padding */
+              .fit-premium-grid .card-wrapper {
+                height: auto !important;
+                display: block !important;
                 margin: 0 !important;
                 padding: 0 !important;
+                background: transparent !important;
+                border: none !important;
+              }
+              .fit-premium-grid .card {
+                background: transparent !important;
+                border: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
               }
               .fit-premium-grid .card__inner {
                 border-radius: 12px !important;
@@ -171,10 +180,9 @@
                 transform: scale(1.06) !important;
               }
 
-              /* --- STRICT LEFT ALIGNMENT & PERFECT FITTING --- */
-              .fit-premium-grid .card__content,
-              .fit-premium-grid .card-wrapper .card__content {
-                padding: 10px 0 0 0 !important; /* Exactly aligned with left edge of image */
+              /* --- PERFECT LEFT ALIGNMENT & CREATIVE TYPOGRAPHY --- */
+              .fit-premium-grid .card__content {
+                padding: 10px 0 0 0 !important; 
                 margin: 0 !important;
                 text-align: left !important; 
                 display: flex !important;
@@ -185,8 +193,7 @@
                 background: transparent !important;
               }
               
-              .fit-premium-grid .card__information,
-              .fit-premium-grid .card-information {
+              .fit-premium-grid .card__information {
                 padding: 0 !important;
                 margin: 0 !important;
                 text-align: left !important;
@@ -198,13 +205,12 @@
               }
               
               /* Product Title */
-              .fit-premium-grid .card__heading,
-              .fit-premium-grid .card-wrapper .card__heading {
+              .fit-premium-grid .card__heading {
                 text-align: left !important;
-                font-size: min(1.4rem, 3.8vw) !important; 
+                font-size: 1.4rem !important; 
                 font-weight: 600 !important;
                 color: #111 !important;
-                margin: 0 0 6px 0 !important; /* Tiny gap before price */
+                margin: 0 0 6px 0 !important;
                 padding: 0 !important;
                 line-height: 1.3 !important;
                 letter-spacing: 0.3px !important;
@@ -219,8 +225,7 @@
               /* Creative Price Row */
               .fit-premium-grid .price, 
               .fit-premium-grid .price__container,
-              .fit-premium-grid .price__sale,
-              .fit-premium-grid .card-wrapper .price {
+              .fit-premium-grid .price__sale {
                 display: flex !important;
                 justify-content: flex-start !important;
                 align-items: center !important;
@@ -232,32 +237,42 @@
                 padding: 0 !important;
               }
               
-              /* Bold Sale Price */
+              /* FIX: Bold Sale Price & Currency Alignment */
               .fit-premium-grid .price-item,
               .fit-premium-grid .price .price-item--sale {
-                font-size: min(1.6rem, 4.2vw) !important; 
+                font-size: 1.5rem !important; 
                 font-weight: 800 !important;
                 color: #111 !important;
                 margin: 0 !important;
-                line-height: 1 !important;
+                line-height: 1.2 !important;
+                white-space: nowrap !important;
+              }
+
+              /* Forces nested currency tags (like Rs.) to match the number size perfectly */
+              .fit-premium-grid .price-item *,
+              .slider-item-price * {
+                font-size: inherit !important;
+                font-weight: inherit !important;
+                vertical-align: baseline !important;
               }
               
               /* Subtle Compare Price */
               .fit-premium-grid .price__sale s.price-item--regular, 
               .fit-premium-grid .price s,
               .fit-premium-grid .price-item--regular {
-                font-size: min(1.2rem, 3.2vw) !important;
+                font-size: 1.2rem !important;
                 color: #888 !important;
                 font-weight: 500 !important;
                 text-decoration: line-through !important;
-                line-height: 1 !important;
+                line-height: 1.2 !important;
+                white-space: nowrap !important;
               }
 
               .fit-premium-grid .card-wrapper .card__badge {
                 display: none !important; 
               }
 
-              /* Premium Green Discount Pill (Catches all standard theme output methods) */
+              /* Premium Green Discount Pill */
               .fit-premium-grid .price .badge,
               .fit-premium-grid .price__badge-sale,
               .fit-premium-grid .price-item--sale + span,
@@ -265,7 +280,7 @@
                 background-color: #e6f6ec !important; 
                 color: #1b8a44 !important; 
                 border: 1px solid rgba(27, 138, 68, 0.15) !important;
-                font-size: min(1.05rem, 2.8vw) !important;
+                font-size: 1.05rem !important;
                 font-weight: 800 !important;
                 padding: 3px 6px !important;
                 border-radius: 4px !important;
@@ -275,6 +290,7 @@
                 display: inline-flex !important;
                 align-items: center !important;
                 margin: 0 !important;
+                white-space: nowrap !important;
               }
 
 
@@ -417,7 +433,7 @@
                 fill: #FFD700;
               }
               .slider-item-title {
-                font-size: min(var(--title-size, 1.4rem), 3.8vw) !important;
+                font-size: var(--title-size, 1.4rem) !important;
                 font-weight: 600;
                 margin-bottom: 6px;
                 line-height: 1.3;
@@ -442,19 +458,21 @@
               }
               .slider-item-price {
                 font-weight: 800; 
-                font-size: min(var(--price-size, 1.6rem), 4.2vw) !important;
+                font-size: var(--price-size, 1.5rem) !important;
                 color: #111;
-                line-height: 1;
+                line-height: 1.2;
+                white-space: nowrap !important;
               }
               .slider-item-compare {
                 text-decoration: line-through;
-                font-size: calc(min(var(--price-size, 1.6rem), 4.2vw) * 0.75) !important;
+                font-size: calc(var(--price-size, 1.5rem) * 0.75) !important;
                 color: #888;
                 font-weight: 500;
-                line-height: 1;
+                line-height: 1.2;
+                white-space: nowrap !important;
               }
               .slider-item-discount {
-                font-size: min(var(--discount-size, 1.05rem), 2.8vw) !important;
+                font-size: var(--discount-size, 1.05rem) !important;
                 font-weight: 800;
                 color: #1b8a44; 
                 background: #e6f6ec; 
@@ -464,6 +482,7 @@
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
                 line-height: 1;
+                white-space: nowrap !important;
               }
 
               .dummy-placeholder {
@@ -479,13 +498,12 @@
               /* --- SPECIFIC MOBILE FIXES --- */
               @media (max-width: 749px) {
                 .fit-premium-grid .card__heading,
-                .fit-premium-grid .card-wrapper .card__heading,
                 .slider-item-title {
-                  font-size: 1.25rem !important; 
+                  font-size: 1.3rem !important; 
                 }
                 .fit-premium-grid .price-item,
                 .slider-item-price {
-                  font-size: 1.4rem !important; 
+                  font-size: 1.35rem !important; 
                 }
                 .fit-premium-grid .price__sale s.price-item--regular, 
                 .fit-premium-grid .price s,
@@ -498,6 +516,10 @@
                 .fit-premium-grid .price__sale > span:not(.price-item) {
                   font-size: 0.95rem !important;
                   padding: 2px 5px !important;
+                }
+                .fit-premium-grid .price, 
+                .slider-item-price-row {
+                  gap: 4px !important; /* Tighter gap on mobile so tags fit */
                 }
                 .lucrative-offer-box {
                   flex-direction: column !important;
