@@ -201,7 +201,7 @@
         "mobile_image_ratio": 145,
         "color_scheme": "scheme-1",
         "image_ratio": "adapt",
-        "show_secondary_image": false,
+        "show_secondary_image": true,
         "show_vendor": false,
         "show_rating": true,
         "quick_add": "none",
