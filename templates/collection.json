@@ -20,6 +20,14 @@
     "subcategories": {
       "type": "collection-subcategories",
       "blocks": {
+        "subcategory_4bebxh": {
+          "type": "subcategory",
+          "settings": {
+            "suffix": "CJP",
+            "icon_svg": "",
+            "icon_image": "shopify://shop_images/1.png"
+          }
+        },
         "subcategory_myC3mg": {
           "type": "subcategory",
           "settings": {
@@ -30,6 +38,7 @@
         }
       },
       "block_order": [
+        "subcategory_4bebxh",
         "subcategory_myC3mg"
       ],
       "settings": {
