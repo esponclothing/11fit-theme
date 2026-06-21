@@ -39,7 +39,7 @@
 <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
   {%- paginate collection.products by section.settings.products_per_page -%}
     
-    {% comment %} --- FILTER & SORT COMPLETELY HIDDEN TO REMOVE EMPTY SPACE --- {% endcomment %}
+    {% comment %} --- FILTER & SORT COMPLETELY HIDDEN --- {% endcomment %}
     <style>
       .facets-wrapper, .facet-filters, .mobile-facets__wrapper, facet-filters-form {
         display: none !important;
@@ -101,101 +101,82 @@
                 }
               }
 
-              /* --- REMOVE EXTRA SPACING & STRUCTURE GRID --- */
+              /* --- GRID STRUCTURE --- */
               .fit-premium-grid {
                 display: grid !important;
                 grid-template-columns: repeat(2, 1fr) !important;
                 column-gap: 12px !important;
-                row-gap: 24px !important; /* Reduced to remove extra vertical space */
+                row-gap: 24px !important; 
               }
               .fit-premium-grid .grid__item {
                 width: 100% !important;
                 max-width: 100% !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                min-width: 0 !important;
-              }
-              .fit-premium-grid .card-wrapper {
-                height: auto !important;
-                display: block !important;
-                margin-bottom: 0 !important;
-              }
-              .fit-premium-grid .card {
-                --image-padding: 0 !important;
-                border-radius: 8px !important;
-                overflow: hidden !important;
-                border: none !important;
-                background-color: transparent !important;
-                margin: 0 !important;
-                padding: 0 !important;
-              }
-              .fit-premium-grid .card__inner {
-                border-radius: 8px !important;
-                background-color: #f8f8f8 !important;
-                --ratio-percent: 125% !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                width: 100% !important;
-                overflow: hidden; /* For zoom effect */
-              }
-              .fit-premium-grid .card__inner::before {
-                padding-bottom: 125% !important;
               }
 
-              /* Luxury Hover Effect */
-              .card__media img, .slider-item-img-wrapper img {
-                transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
-                object-fit: cover !important;
-                object-position: center top !important;
-                width: 100% !important;
-                height: 100% !important;
-              }
-              .card-wrapper:hover .card__media img, .slider-item:hover .slider-item-img-wrapper img {
-                transform: scale(1.06) !important; /* Subtle luxury zoom */
-              }
-
-              /* --- STANDARD PRODUCT CARD TYPOGRAPHY & GREEN DISCOUNT --- */
-              .card__content {
-                padding: 12px 2px 0 2px !important;
-                text-align: left !important; /* Left Align */
-              }
-              .card-information {
+              /* --- FIX ALIGNMENT FOR STANDARD PRODUCT CARDS --- */
+              .fit-premium-grid .card-wrapper .card__content {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
                 text-align: left !important;
               }
-              .card__heading {
-                font-weight: 500 !important;
-                font-size: 1.4rem !important;
-                letter-spacing: 0.2px !important;
-                margin-bottom: 4px !important;
+              .fit-premium-grid .card-wrapper .card-information {
+                text-align: left !important;
+                align-items: flex-start !important;
+                justify-content: flex-start !important;
               }
-              .price {
-                justify-content: flex-start !important; /* Left Align Price */
+              .fit-premium-grid .card-wrapper .card__heading {
+                text-align: left !important;
+                font-size: 1.4rem !important;
+                font-weight: 500 !important;
+                margin-bottom: 4px !important;
+                letter-spacing: 0.2px !important;
+              }
+              
+              /* Standard Card Price Row Alignment */
+              .fit-premium-grid .card-wrapper .price {
+                display: flex !important;
+                justify-content: flex-start !important;
+                text-align: left !important;
                 align-items: center !important;
+                flex-wrap: wrap !important;
                 gap: 6px !important;
               }
-              .price-item {
+              .fit-premium-grid .card-wrapper .price__container {
+                display: flex !important;
+                align-items: center !important;
+                gap: 6px !important;
+                margin-bottom: 0 !important;
+              }
+              .fit-premium-grid .card-wrapper .price-item {
+                font-size: 1.4rem !important;
                 font-weight: 800 !important;
-                font-size: 1.5rem !important;
+                margin: 0 !important;
               }
-              /* Luxury Green Sale Badges */
-              .price__sale .price-item--sale, .price-item--sale {
-                color: #1b8a44 !important; /* Vibrant Green */
-              }
-              .badge {
-                background-color: #1b8a44 !important; /* Green background for default badges */
-                color: #ffffff !important;
-                border: none !important;
-                border-radius: 4px !important;
-                font-weight: 700 !important;
+              
+              /* Standard Card Luxury Green Discount Format */
+              .fit-premium-grid .card-wrapper .price .badge,
+              .fit-premium-grid .card-wrapper .price__badge-sale,
+              .fit-premium-grid .card-wrapper .price__sale > span:last-child {
+                color: #1b8a44 !important; /* Green Color */
+                font-weight: 800 !important;
+                font-size: 1.1rem !important;
+                text-transform: uppercase !important;
                 letter-spacing: 0.5px !important;
               }
 
+              /* Luxury Image Zoom Effect for Standard Cards */
+              .fit-premium-grid .card-wrapper .media img {
+                transition: transform 0.5s ease !important;
+              }
+              .fit-premium-grid .card-wrapper:hover .media img {
+                transform: scale(1.05) !important;
+              }
 
               /* --- INLINE SLIDER CSS --- */
               .collection-slider-full-width {
                 grid-column: 1 / -1 !important; 
                 width: 100% !important;
-                margin: 8px 0 24px 0 !important; /* Reduced top margin to remove space */
+                margin: 16px 0 24px 0 !important;
                 overflow: hidden;
               }
 
@@ -301,10 +282,20 @@
                 background: #f8f8f8;
                 aspect-ratio: 4/5; 
               }
+              .slider-item-img-wrapper img {
+                width: 100%;
+                height: 100%;
+                display: block;
+                object-fit: cover;
+                transition: transform 0.5s ease;
+              }
+              .slider-item:hover .slider-item-img-wrapper img {
+                transform: scale(1.05);
+              }
               
               /* Editable Product Details Typography */
               .slider-item-details {
-                padding: 12px 2px 0 2px;
+                padding: 12px 0 0 0;
                 text-align: left; /* Left Align */
               }
               
@@ -313,6 +304,7 @@
                 color: rgba(var(--color-foreground), 0.7);
                 display: flex;
                 align-items: center;
+                justify-content: flex-start;
                 gap: 6px;
                 font-weight: 500;
                 margin-bottom: 6px;
@@ -347,12 +339,12 @@
               }
               .slider-item-price {
                 font-weight: 800; 
-                font-size: var(--price-size, 1.5rem);
+                font-size: var(--price-size, 1.4rem);
                 color: rgb(var(--color-foreground));
               }
               .slider-item-compare {
                 text-decoration: line-through;
-                font-size: calc(var(--price-size, 1.5rem) * 0.8); 
+                font-size: calc(var(--price-size, 1.4rem) * 0.8); 
                 color: rgba(var(--color-foreground), 0.5);
               }
               .slider-item-discount {
@@ -389,7 +381,7 @@
                 .fit-premium-grid {
                   grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr) !important;
                   column-gap: 24px !important;
-                  row-gap: 32px !important; /* Slightly larger on desktop but still tight */
+                  row-gap: 32px !important; 
                 }
                 .custom-inline-slider .slider-item {
                   flex: 0 0 25vw; 
@@ -819,7 +811,7 @@
           "step": 0.1,
           "unit": "rem",
           "label": "Price Font Size",
-          "default": 1.5
+          "default": 1.4
         },
         {
           "type": "range",
