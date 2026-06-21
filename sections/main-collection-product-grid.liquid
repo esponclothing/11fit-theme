@@ -38,75 +38,23 @@
 
 <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
   {%- paginate collection.products by section.settings.products_per_page -%}
-    {%- if section.settings.enable_sorting and section.settings.filter_type == 'vertical' -%}
-      <facet-filters-form class="facets facets-vertical-sort page-width small-hide pc-reveal">
-        <form class="facets-vertical-form" id="FacetSortForm">
-          <div class="facet-filters sorting caption">
-            <div class="facet-filters__field">
-              <h2 class="facet-filters__label caption-large text-body">
-                <label for="SortBy">{{ 'products.facets.sort_by_label' | t }}</label>
-              </h2>
-              <div class="select">
-                {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
-                <select
-                  name="sort_by"
-                  class="facet-filters__sort select__select caption-large"
-                  id="SortBy"
-                  aria-describedby="a11y-refresh-page-message"
-                >
-                  {%- for option in collection.sort_options -%}
-                    <option
-                      value="{{ option.value | escape }}"
-                      {% if option.value == sort_by %}selected="selected"{% endif %}
-                    >
-                      {{ option.name | escape }}
-                    </option>
-                  {%- endfor -%}
-                </select>
-                <span class="svg-wrapper">
-                  {{- 'icon-caret.svg' | inline_asset_content -}}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="product-count-vertical light" role="status">
-            <h2 class="product-count__text text-body">
-              <span id="ProductCountDesktop">
-                {%- if collection.results_count -%}
-                  {{ 'templates.search.results_with_count' | t: terms: collection.terms, count: collection.results_count }}
-                {%- elsif collection.products_count == collection.all_products_count -%}
-                  {{ 'products.facets.product_count_simple' | t: count: collection.products_count }}
-                {%- else -%}
-                  {{ 'products.facets.product_count' | t: product_count: collection.products_count, count: collection.all_products_count }}
-                {%- endif -%}
-              </span>
-            </h2>
-            {%- render 'loading-spinner' -%}
-          </div>
-        </form>
-      </facet-filters-form>
-    {%- endif -%}
+    
+    {% comment %} --- FILTER & SORT COMPLETELY HIDDEN TO REMOVE EMPTY SPACE --- {% endcomment %}
+    <style>
+      .facets-wrapper, .facet-filters, .mobile-facets__wrapper, facet-filters-form {
+        display: none !important;
+      }
+      .facets-vertical {
+        display: block !important;
+      }
+      .facets-vertical .product-grid-container {
+        width: 100% !important;
+      }
+    </style>
 
     <div class="{% if section.settings.filter_type == 'vertical' %} facets-vertical page-width{% endif %}">
       {{ 'component-facets.css' | asset_url | stylesheet_tag }}
       <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
-      {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
-        <aside
-          aria-labelledby="verticalTitle"
-          class="facets-wrapper{% unless section.settings.enable_filtering %} facets-wrapper--no-filters{% endunless %}{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}"
-          id="main-collection-filters"
-          data-id="{{ section.id }}"
-        >
-          {% render 'facets',
-            results: collection,
-            enable_filtering: section.settings.enable_filtering,
-            enable_sorting: section.settings.enable_sorting,
-            filter_type: section.settings.filter_type,
-            paginate: paginate
-          %}
-        </aside>
-      {%- endif -%}
 
       <div class="product-grid-container" id="ProductGridContainer">
         {%- if collection.products.size == 0 -%}
@@ -120,10 +68,21 @@
             </div>
           </div>
         {%- else -%}
-          <div class="collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}">
+          <div class="collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %} pc-reveal">
             <div class="loading-overlay gradient"></div>
             <style>
-              /* --- PREMIUM CUSTOM SCROLL ANIMATION --- */
+              /* --- FIX FOR INVISIBLE PRODUCTS ON LOAD --- */
+              #ProductGridContainer, 
+              #ProductGridContainer .scroll-trigger,
+              #ProductGridContainer .grid__item,
+              .pc-reveal {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+                visibility: visible !important;
+              }
+
+              /* --- PREMIUM SCROLL ANIMATION --- */
               .custom-fade-in-up {
                 opacity: 0;
                 transform: translateY(40px);
@@ -134,20 +93,12 @@
                 opacity: 1;
                 transform: translateY(0);
               }
-              /* Fallback if user prefers reduced motion */
               @media (prefers-reduced-motion: reduce) {
                 .custom-fade-in-up {
                   opacity: 1 !important;
                   transform: none !important;
                   transition: none !important;
                 }
-              }
-
-              /* Theme Override fix */
-              #ProductGridContainer .scroll-trigger.animate--slide-in {
-                animation: none !important;
-                transform: none !important;
-                opacity: 1 !important;
               }
 
               .fit-premium-grid {
@@ -327,11 +278,31 @@
                 object-fit: cover;
               }
               
-              /* Editable Product Details Typography */
+              /* NEW Editable Product Details Typography */
               .slider-item-details {
                 padding: 12px 2px 0 2px;
                 text-align: left;
               }
+              
+              .slider-item-rating {
+                font-size: 1.2rem;
+                color: rgba(var(--color-foreground), 0.7);
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-weight: 500;
+                margin-bottom: 6px;
+              }
+              .stars-wrapper {
+                display: flex;
+                gap: 2px;
+              }
+              .stars-wrapper svg {
+                width: 12px;
+                height: 12px;
+                fill: #FFD700;
+              }
+
               .slider-item-title {
                 font-size: var(--title-size, 1.4rem);
                 font-weight: 500;
@@ -368,19 +339,6 @@
                 border-radius: 4px;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
-              }
-              .slider-item-rating {
-                font-size: 1.2rem;
-                color: rgba(var(--color-foreground), 0.7);
-                display: flex;
-                align-items: center;
-                gap: 4px;
-                font-weight: 500;
-              }
-              .slider-item-rating svg {
-                width: 13px;
-                height: 13px;
-                fill: #FFD700;
               }
 
               .dummy-placeholder {
@@ -521,10 +479,26 @@
                                     </div>
                                     
                                     <div class="slider-item-details">
+                                      {% comment %} REORDERED: 1. Rating {% endcomment %}
+                                      {%- if item.settings.rating != blank -%}
+                                        <div class="slider-item-rating">
+                                          <div class="stars-wrapper">
+                                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                          </div>
+                                          <span style="opacity: 0.8;">({{ item.settings.rating }})</span>
+                                        </div>
+                                      {%- endif -%}
+
+                                      {% comment %} REORDERED: 2. Title {% endcomment %}
                                       {%- if item.settings.title != blank -%}
                                         <div class="slider-item-title">{{ item.settings.title }}</div>
                                       {%- endif -%}
                                       
+                                      {% comment %} REORDERED: 3. Price & Discount {% endcomment %}
                                       <div class="slider-item-price-row">
                                         {%- if item.settings.price != blank -%}
                                           <span class="slider-item-price">{{ item.settings.price }}</span>
@@ -536,13 +510,6 @@
                                           <span class="slider-item-discount">{{ item.settings.discount }}</span>
                                         {%- endif -%}
                                       </div>
-                                      
-                                      {%- if item.settings.rating != blank -%}
-                                        <div class="slider-item-rating">
-                                          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                                          {{ item.settings.rating }}
-                                        </div>
-                                      {%- endif -%}
                                     </div>
 
                                   </a>
@@ -587,26 +554,22 @@
           entries.forEach(entry => {
             if (entry.isIntersecting) {
               entry.target.classList.add('is-visible');
-              obs.unobserve(entry.target); // Stop observing once it's visible
+              obs.unobserve(entry.target);
             }
           });
         }, {
-          threshold: 0.05, // Trigger when 5% of the card is visible
-          rootMargin: "0px 0px 50px 0px" // Trigger slightly before it enters the screen
+          threshold: 0.05,
+          rootMargin: "0px 0px 50px 0px"
         });
 
-        // Find all grid items that haven't been animated yet
         const elements = document.querySelectorAll('.custom-fade-in-up:not(.is-visible)');
         elements.forEach(el => observer.observe(el));
       }
 
-      // Initialize instantly on load
       initCustomReveal();
 
-      // Ensure it triggers if Shopify dynamically reloads products (like when using filters)
       document.addEventListener('shopify:section:load', initCustomReveal);
       
-      // Fallback mutation observer for dynamic DOM injections (filtering/pagination)
       const gridContainer = document.getElementById('ProductGridContainer');
       if (gridContainer) {
         const mutationObserver = new MutationObserver(() => {
@@ -708,7 +671,7 @@
     {
       "type": "checkbox",
       "id": "enable_filtering",
-      "default": true,
+      "default": false,
       "label": "t:sections.main-collection-product-grid.settings.enable_filtering.label"
     },
     {
@@ -725,7 +688,7 @@
     {
       "type": "checkbox",
       "id": "enable_sorting",
-      "default": true,
+      "default": false,
       "label": "t:sections.main-collection-product-grid.settings.enable_sorting.label"
     },
     {
