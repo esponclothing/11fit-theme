@@ -20,6 +20,14 @@
     "subcategories": {
       "type": "collection-subcategories",
       "blocks": {
+        "subcategory_b3abtq": {
+          "type": "subcategory",
+          "settings": {
+            "suffix": "Regular Fit",
+            "icon_svg": "",
+            "icon_image": "shopify://shop_images/T-shirt.png"
+          }
+        },
         "subcategory_4bebxh": {
           "type": "subcategory",
           "settings": {
@@ -38,6 +46,7 @@
         }
       },
       "block_order": [
+        "subcategory_b3abtq",
         "subcategory_4bebxh",
         "subcategory_myC3mg"
       ],
