@@ -82,7 +82,6 @@
                 visibility: visible !important;
               }
 
-              /* --- PREMIUM SCROLL ANIMATION --- */
               .custom-fade-in-up {
                 opacity: 0;
                 transform: translateY(30px);
@@ -128,9 +127,9 @@
                 margin: 0 !important;
               }
 
-              /* --- FIX: HIDE DUPLICATE TITLE ON IMAGE --- */
+              /* HIDE DUPLICATE TITLE ON IMAGE */
               .fit-premium-grid .card__inner .card__content {
-                display: none !important; /* Hides the theme's duplicate text inside the image wrapper */
+                display: none !important; 
               }
 
               /* Removing Default Card Borders & Padding */
@@ -150,7 +149,7 @@
                 box-shadow: none !important;
               }
               .fit-premium-grid .card__inner {
-                border-radius: 12px !important;
+                border-radius: 6px !important; /* Slightly sharper corners to match reference */
                 background-color: #f4f4f4 !important; 
                 margin: 0 !important;
                 padding: 0 !important;
@@ -158,6 +157,7 @@
                 border: none !important;
                 overflow: hidden !important;
                 flex-shrink: 0 !important;
+                position: relative !important;
               }
               .fit-premium-grid .card__media {
                 margin: 0 !important;
@@ -180,9 +180,9 @@
                 transform: scale(1.06) !important;
               }
 
-              /* --- PERFECT LEFT ALIGNMENT & CREATIVE TYPOGRAPHY --- */
+              /* --- PERFECT ALIGNMENT & CREATIVE TYPOGRAPHY --- */
               .fit-premium-grid .card__content {
-                padding: 10px 0 0 0 !important; 
+                padding: 10px 4px 0 4px !important; 
                 margin: 0 !important;
                 text-align: left !important; 
                 display: flex !important;
@@ -204,31 +204,33 @@
                 flex-direction: column !important;
               }
               
-              /* Product Title */
-              .fit-premium-grid .card__heading {
+              /* Product Title - Soft Grey, Single Line */
+              .fit-premium-grid .card__heading,
+              .fit-premium-grid .card-wrapper .card__heading,
+              .slider-item-title {
                 text-align: left !important;
-                font-size: 1.4rem !important; 
-                font-weight: 600 !important;
-                color: #111 !important;
+                font-size: var(--title-size, 1.25rem) !important; 
+                font-weight: 400 !important;
+                color: #6b7280 !important; /* Slate grey */
                 margin: 0 0 6px 0 !important;
                 padding: 0 !important;
                 line-height: 1.3 !important;
-                letter-spacing: 0.3px !important;
-                display: -webkit-box !important;
-                -webkit-line-clamp: 2 !important;
-                -webkit-box-orient: vertical !important;
+                letter-spacing: 0px !important;
+                display: block !important;
+                white-space: nowrap !important; /* Single line */
                 overflow: hidden !important;
+                text-overflow: ellipsis !important;
                 width: 100% !important;
-                word-break: break-word !important; 
               }
               
               /* Creative Price Row */
               .fit-premium-grid .price, 
               .fit-premium-grid .price__container,
-              .fit-premium-grid .price__sale {
+              .fit-premium-grid .price__sale,
+              .slider-item-price-row {
                 display: flex !important;
                 justify-content: flex-start !important;
-                align-items: center !important;
+                align-items: baseline !important;
                 text-align: left !important;
                 flex-wrap: wrap !important;
                 gap: 6px !important;
@@ -237,18 +239,19 @@
                 padding: 0 !important;
               }
               
-              /* FIX: Bold Sale Price & Currency Alignment */
+              /* Bold Sale Price */
               .fit-premium-grid .price-item,
-              .fit-premium-grid .price .price-item--sale {
-                font-size: 1.5rem !important; 
-                font-weight: 800 !important;
+              .fit-premium-grid .price .price-item--sale,
+              .slider-item-price {
+                font-size: var(--price-size, 1.5rem) !important; 
+                font-weight: 700 !important;
                 color: #111 !important;
                 margin: 0 !important;
                 line-height: 1.2 !important;
                 white-space: nowrap !important;
               }
 
-              /* Forces nested currency tags (like Rs.) to match the number size perfectly */
+              /* Ensures currency symbol matches the price font size */
               .fit-premium-grid .price-item *,
               .slider-item-price * {
                 font-size: inherit !important;
@@ -259,10 +262,11 @@
               /* Subtle Compare Price */
               .fit-premium-grid .price__sale s.price-item--regular, 
               .fit-premium-grid .price s,
-              .fit-premium-grid .price-item--regular {
-                font-size: 1.2rem !important;
-                color: #888 !important;
-                font-weight: 500 !important;
+              .fit-premium-grid .price-item--regular,
+              .slider-item-compare {
+                font-size: calc(var(--price-size, 1.5rem) * 0.8) !important;
+                color: #9ca3af !important;
+                font-weight: 400 !important;
                 text-decoration: line-through !important;
                 line-height: 1.2 !important;
                 white-space: nowrap !important;
@@ -272,27 +276,40 @@
                 display: none !important; 
               }
 
-              /* Premium Green Discount Pill */
+              /* Clean Green Discount Text (No Pill) */
               .fit-premium-grid .price .badge,
               .fit-premium-grid .price__badge-sale,
               .fit-premium-grid .price-item--sale + span,
-              .fit-premium-grid .price__sale > span:not(.price-item) {
-                background-color: #e6f6ec !important; 
-                color: #1b8a44 !important; 
-                border: 1px solid rgba(27, 138, 68, 0.15) !important;
-                font-size: 1.05rem !important;
-                font-weight: 800 !important;
-                padding: 3px 6px !important;
-                border-radius: 4px !important;
+              .fit-premium-grid .price__sale > span:not(.price-item),
+              .slider-item-discount {
+                background-color: transparent !important; 
+                color: #059669 !important; /* Vibrant green text */
+                border: none !important;
+                font-size: var(--discount-size, 1.05rem) !important;
+                font-weight: 700 !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
                 text-transform: uppercase !important;
-                letter-spacing: 0.5px !important;
-                line-height: 1 !important;
+                letter-spacing: 0px !important;
+                line-height: 1.2 !important;
                 display: inline-flex !important;
                 align-items: center !important;
                 margin: 0 !important;
                 white-space: nowrap !important;
               }
 
+              /* Lowest Price Last 30 Days (Purple) */
+              .lowest-price-text,
+              .fit-premium-grid .card-information::after {
+                content: "Lowest price in last 30 days";
+                display: block;
+                color: #7c3aed !important; /* Purple */
+                font-size: 1.05rem !important;
+                margin-top: 4px !important;
+                text-align: left !important;
+                font-weight: 400 !important;
+                width: 100%;
+              }
 
               /* --- INLINE SLIDER CSS --- */
               .collection-slider-full-width {
@@ -395,94 +412,46 @@
                 flex: 0 0 75vw;
                 max-width: 300px;
                 scroll-snap-align: start;
-                border-radius: 12px;
+                border-radius: 6px; /* Matching standard card radius */
                 overflow: hidden;
               }
               .slider-item-img-wrapper {
-                border-radius: 12px;
+                border-radius: 6px;
                 overflow: hidden;
                 background: #f4f4f4;
                 aspect-ratio: 4/5; 
+                position: relative;
               }
               
-              /* Slider Typography Matching */
+              /* Reference Overlay Rating Badge */
+              .slider-rating-badge {
+                position: absolute;
+                bottom: 8px;
+                left: 8px;
+                background: rgba(255, 255, 255, 0.95);
+                padding: 2px 6px;
+                border-radius: 4px;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #111;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                z-index: 2;
+              }
+              .slider-rating-badge svg {
+                width: 12px;
+                height: 12px;
+                fill: #FBBF24;
+              }
+
               .slider-item-details {
-                padding: 10px 0 0 0;
+                padding: 10px 4px 0 4px;
                 text-align: left; 
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
-              }
-              .slider-item-rating {
-                font-size: 1.1rem;
-                color: #888;
-                display: flex;
-                align-items: center;
-                justify-content: flex-start;
-                gap: 4px;
-                font-weight: 500;
-                margin-bottom: 6px;
-              }
-              .stars-wrapper {
-                display: flex;
-                gap: 2px;
-              }
-              .stars-wrapper svg {
-                width: 11px;
-                height: 11px;
-                fill: #FFD700;
-              }
-              .slider-item-title {
-                font-size: var(--title-size, 1.4rem) !important;
-                font-weight: 600;
-                margin-bottom: 6px;
-                line-height: 1.3;
-                color: #111;
-                letter-spacing: 0.3px;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-                white-space: normal;
-                word-break: break-word;
-                text-align: left;
-              }
-              .slider-item-price-row {
-                display: flex;
-                align-items: center;
-                justify-content: flex-start; 
-                flex-wrap: wrap;
-                gap: 6px;
-                margin: 0;
-                text-align: left;
-              }
-              .slider-item-price {
-                font-weight: 800; 
-                font-size: var(--price-size, 1.5rem) !important;
-                color: #111;
-                line-height: 1.2;
-                white-space: nowrap !important;
-              }
-              .slider-item-compare {
-                text-decoration: line-through;
-                font-size: calc(var(--price-size, 1.5rem) * 0.75) !important;
-                color: #888;
-                font-weight: 500;
-                line-height: 1.2;
-                white-space: nowrap !important;
-              }
-              .slider-item-discount {
-                font-size: var(--discount-size, 1.05rem) !important;
-                font-weight: 800;
-                color: #1b8a44; 
-                background: #e6f6ec; 
-                border: 1px solid rgba(27, 138, 68, 0.15);
-                padding: 3px 6px;
-                border-radius: 4px;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                line-height: 1;
-                white-space: nowrap !important;
               }
 
               .dummy-placeholder {
@@ -499,11 +468,11 @@
               @media (max-width: 749px) {
                 .fit-premium-grid .card__heading,
                 .slider-item-title {
-                  font-size: 1.3rem !important; 
+                  font-size: 1.25rem !important; 
                 }
                 .fit-premium-grid .price-item,
                 .slider-item-price {
-                  font-size: 1.35rem !important; 
+                  font-size: 1.4rem !important; 
                 }
                 .fit-premium-grid .price__sale s.price-item--regular, 
                 .fit-premium-grid .price s,
@@ -514,12 +483,15 @@
                 .fit-premium-grid .price__badge-sale,
                 .slider-item-discount,
                 .fit-premium-grid .price__sale > span:not(.price-item) {
-                  font-size: 0.95rem !important;
-                  padding: 2px 5px !important;
+                  font-size: 1.0rem !important;
+                }
+                .lowest-price-text,
+                .fit-premium-grid .card-information::after {
+                  font-size: 1.0rem !important;
                 }
                 .fit-premium-grid .price, 
                 .slider-item-price-row {
-                  gap: 4px !important; /* Tighter gap on mobile so tags fit */
+                  gap: 4px !important; 
                 }
                 .lucrative-offer-box {
                   flex-direction: column !important;
@@ -644,29 +616,23 @@
                                       {%- else -%}
                                         {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
                                       {%- endif -%}
+
+                                      {% comment %} Rating overlay inside image box {% endcomment %}
+                                      {%- if item.settings.rating != blank -%}
+                                        <div class="slider-rating-badge">
+                                          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                          {{ item.settings.rating }}
+                                        </div>
+                                      {%- endif -%}
                                     </div>
                                     
                                     <div class="slider-item-details">
-                                      {% comment %} 1. Rating {% endcomment %}
-                                      {%- if item.settings.rating != blank -%}
-                                        <div class="slider-item-rating">
-                                          <div class="stars-wrapper">
-                                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                                          </div>
-                                          <span>({{ item.settings.rating }})</span>
-                                        </div>
-                                      {%- endif -%}
-
-                                      {% comment %} 2. Title {% endcomment %}
+                                      {% comment %} 1. Title {% endcomment %}
                                       {%- if item.settings.title != blank -%}
                                         <div class="slider-item-title">{{ item.settings.title }}</div>
                                       {%- endif -%}
                                       
-                                      {% comment %} 3. Price & Green Discount {% endcomment %}
+                                      {% comment %} 2. Price & Green Discount {% endcomment %}
                                       <div class="slider-item-price-row">
                                         {%- if item.settings.price != blank -%}
                                           <span class="slider-item-price">{{ item.settings.price }}</span>
@@ -678,6 +644,9 @@
                                           <span class="slider-item-discount">{{ item.settings.discount }}</span>
                                         {%- endif -%}
                                       </div>
+
+                                      {% comment %} 3. Lowest Price Text {% endcomment %}
+                                      <div class="lowest-price-text">Lowest price in last 30 days</div>
                                     </div>
 
                                   </a>
@@ -952,7 +921,7 @@
           "step": 0.1,
           "unit": "rem",
           "label": "Title Font Size",
-          "default": 1.4
+          "default": 1.3
         },
         {
           "type": "range",
@@ -962,7 +931,7 @@
           "step": 0.1,
           "unit": "rem",
           "label": "Price Font Size",
-          "default": 1.6
+          "default": 1.5
         },
         {
           "type": "range",
