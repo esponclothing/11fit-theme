@@ -85,8 +85,8 @@
               /* --- PREMIUM SCROLL ANIMATION --- */
               .custom-fade-in-up {
                 opacity: 0;
-                transform: translateY(40px);
-                transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+                transform: translateY(30px);
+                transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
                 will-change: opacity, transform;
               }
               .custom-fade-in-up.is-visible {
@@ -101,11 +101,12 @@
                 }
               }
 
+              /* --- REMOVE EXTRA SPACING & STRUCTURE GRID --- */
               .fit-premium-grid {
                 display: grid !important;
                 grid-template-columns: repeat(2, 1fr) !important;
-                column-gap: 8px !important;
-                row-gap: 16px !important;
+                column-gap: 12px !important;
+                row-gap: 24px !important; /* Reduced to remove extra vertical space */
               }
               .fit-premium-grid .grid__item {
                 width: 100% !important;
@@ -117,6 +118,7 @@
               .fit-premium-grid .card-wrapper {
                 height: auto !important;
                 display: block !important;
+                margin-bottom: 0 !important;
               }
               .fit-premium-grid .card {
                 --image-padding: 0 !important;
@@ -134,38 +136,66 @@
                 margin: 0 !important;
                 padding: 0 !important;
                 width: 100% !important;
+                overflow: hidden; /* For zoom effect */
               }
               .fit-premium-grid .card__inner::before {
                 padding-bottom: 125% !important;
               }
-              .fit-premium-grid .card__media {
-                margin: 0 !important;
-                padding: 0 !important;
-                width: 100% !important;
-                height: 100% !important;
-              }
-              .fit-premium-grid .media {
-                margin: 0 !important;
-                padding: 0 !important;
-                width: 100% !important;
-                height: 100% !important;
-              }
-              .fit-premium-grid .media img {
+
+              /* Luxury Hover Effect */
+              .card__media img, .slider-item-img-wrapper img {
+                transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
                 object-fit: cover !important;
                 object-position: center top !important;
                 width: 100% !important;
                 height: 100% !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                left: 0 !important;
-                top: 0 !important;
               }
+              .card-wrapper:hover .card__media img, .slider-item:hover .slider-item-img-wrapper img {
+                transform: scale(1.06) !important; /* Subtle luxury zoom */
+              }
+
+              /* --- STANDARD PRODUCT CARD TYPOGRAPHY & GREEN DISCOUNT --- */
+              .card__content {
+                padding: 12px 2px 0 2px !important;
+                text-align: left !important; /* Left Align */
+              }
+              .card-information {
+                text-align: left !important;
+              }
+              .card__heading {
+                font-weight: 500 !important;
+                font-size: 1.4rem !important;
+                letter-spacing: 0.2px !important;
+                margin-bottom: 4px !important;
+              }
+              .price {
+                justify-content: flex-start !important; /* Left Align Price */
+                align-items: center !important;
+                gap: 6px !important;
+              }
+              .price-item {
+                font-weight: 800 !important;
+                font-size: 1.5rem !important;
+              }
+              /* Luxury Green Sale Badges */
+              .price__sale .price-item--sale, .price-item--sale {
+                color: #1b8a44 !important; /* Vibrant Green */
+              }
+              .badge {
+                background-color: #1b8a44 !important; /* Green background for default badges */
+                color: #ffffff !important;
+                border: none !important;
+                border-radius: 4px !important;
+                font-weight: 700 !important;
+                letter-spacing: 0.5px !important;
+              }
+
 
               /* --- INLINE SLIDER CSS --- */
               .collection-slider-full-width {
                 grid-column: 1 / -1 !important; 
                 width: 100% !important;
-                margin: 16px 0 24px 0 !important;
+                margin: 8px 0 24px 0 !important; /* Reduced top margin to remove space */
                 overflow: hidden;
               }
 
@@ -271,17 +301,11 @@
                 background: #f8f8f8;
                 aspect-ratio: 4/5; 
               }
-              .custom-inline-slider .slider-item img {
-                width: 100%;
-                height: 100%;
-                display: block;
-                object-fit: cover;
-              }
               
-              /* NEW Editable Product Details Typography */
+              /* Editable Product Details Typography */
               .slider-item-details {
                 padding: 12px 2px 0 2px;
-                text-align: left;
+                text-align: left; /* Left Align */
               }
               
               .slider-item-rating {
@@ -316,6 +340,7 @@
               .slider-item-price-row {
                 display: flex;
                 align-items: center;
+                justify-content: flex-start; /* Left Align */
                 flex-wrap: wrap;
                 gap: 6px;
                 margin-bottom: 4px;
@@ -333,9 +358,9 @@
               .slider-item-discount {
                 font-size: var(--discount-size, 1.1rem);
                 font-weight: 800;
-                color: #d82a2a; 
-                background: #ffebeb; 
-                padding: 2px 6px;
+                color: #1b8a44; /* Luxury Green Text */
+                background: #e6f6ec; /* Soft green pill background */
+                padding: 3px 6px;
                 border-radius: 4px;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
@@ -364,7 +389,7 @@
                 .fit-premium-grid {
                   grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr) !important;
                   column-gap: 24px !important;
-                  row-gap: 40px !important;
+                  row-gap: 32px !important; /* Slightly larger on desktop but still tight */
                 }
                 .custom-inline-slider .slider-item {
                   flex: 0 0 25vw; 
@@ -479,7 +504,7 @@
                                     </div>
                                     
                                     <div class="slider-item-details">
-                                      {% comment %} REORDERED: 1. Rating {% endcomment %}
+                                      {% comment %} 1. Rating {% endcomment %}
                                       {%- if item.settings.rating != blank -%}
                                         <div class="slider-item-rating">
                                           <div class="stars-wrapper">
@@ -493,12 +518,12 @@
                                         </div>
                                       {%- endif -%}
 
-                                      {% comment %} REORDERED: 2. Title {% endcomment %}
+                                      {% comment %} 2. Title {% endcomment %}
                                       {%- if item.settings.title != blank -%}
                                         <div class="slider-item-title">{{ item.settings.title }}</div>
                                       {%- endif -%}
                                       
-                                      {% comment %} REORDERED: 3. Price & Discount {% endcomment %}
+                                      {% comment %} 3. Price & Green Discount {% endcomment %}
                                       <div class="slider-item-price-row">
                                         {%- if item.settings.price != blank -%}
                                           <span class="slider-item-price">{{ item.settings.price }}</span>
@@ -916,8 +941,9 @@
         {
           "type": "text",
           "id": "discount",
-          "label": "Discount Text",
-          "default": "400 OFF"
+          "label": "Percentage Discount",
+          "default": "20% OFF",
+          "info": "Example: 20% OFF"
         },
         {
           "type": "text",
