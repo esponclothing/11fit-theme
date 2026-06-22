@@ -69,15 +69,17 @@
 {%- assign parent_handle = current_handle -%}
 
 {%- comment -%}
-  Find the parent handle by looping through block suffixes
+  Find the parent handle dynamically by checking against the list of known parent handles
 {%- endcomment -%}
-{%- for block in section.blocks -%}
-  {%- assign suffix = block.settings.suffix | downcase | replace: " ", "-" -%}
-  {%- if suffix == blank %}{% continue %}{% endif -%}
-  
-  {%- assign suffix_with_dash = "-" | append: suffix -%}
-  {%- if current_handle contains suffix_with_dash -%}
-    {%- assign parent_handle = current_handle | replace: suffix_with_dash, "" -%}
+{%- assign main_handles_str = "t-shirts,trackpants,swimwear,shorts,joggers,accessories,frontpage,avada-best-sellers,cockroach-special" -%}
+{%- assign main_handles = main_handles_str | split: "," -%}
+{%- for main_handle in main_handles -%}
+  {%- assign handle_prefix = main_handle | append: "-" -%}
+  {%- if current_handle == main_handle -%}
+    {%- assign parent_handle = main_handle -%}
+    {%- break -%}
+  {%- elsif current_handle contains handle_prefix -%}
+    {%- assign parent_handle = main_handle -%}
     {%- break -%}
   {%- endif -%}
 {%- endfor -%}
@@ -160,7 +162,6 @@
       "id": "all_icon_image",
       "label": "Icon (Image Fallback)"
     }
-  ],
   ]
 }
 {% endschema %}
