@@ -976,10 +976,10 @@
   if (!slides) return;
   var dots = dotsWrap ? dotsWrap.querySelectorAll('.fit11-dot') : [], thumbs = thumbsWrap ? thumbsWrap.querySelectorAll('.fit11-thumb') : [];
   var total = dots.length, cur = 0;
-  window.goToSlide = function(n) {
+  window.goToSlide = function(n, instant) {
     if (n < 0) n = total - 1; if (n >= total) n = 0;
     if (dots[cur]) dots[cur].classList.remove('on'); if (thumbs[cur]) thumbs[cur].classList.remove('on');
-    cur = n; slides.scrollTo({ left: cur * slides.clientWidth, behavior: 'smooth' });
+    cur = n; slides.scrollTo({ left: cur * slides.clientWidth, behavior: instant ? 'auto' : 'smooth' });
     if (dots[cur]) dots[cur].classList.add('on'); if (thumbs[cur]) thumbs[cur].classList.add('on');
   };
   function goTo(n) { window.goToSlide(n); }
@@ -994,7 +994,14 @@
   dots.forEach(function(d, i) { d.addEventListener('click', function() { goTo(i); }); });
   thumbs.forEach(function(t, i) { t.addEventListener('click', function() { goTo(i); }); });
 
-  /* AUTO-SWIPE LOGIC REMOVED */
+  /* AUTO-SWIPE LOGIC (INSTANT TRANSITION / NO ANIMATION) */
+  if (total > 1) {
+    var autoSlideInterval = setInterval(function() {
+      window.goToSlide((cur + 1) % total, true);
+    }, 4000);
+    slides.addEventListener('touchstart', function() { clearInterval(autoSlideInterval); }, {passive:true});
+    slides.addEventListener('mousedown', function() { clearInterval(autoSlideInterval); }, {passive:true});
+  }
 
   /* LIGHTBOX LOGIC */
   document.querySelectorAll('.fit11-slide img').forEach(function(img) {
