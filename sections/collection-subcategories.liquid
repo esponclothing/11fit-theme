@@ -72,7 +72,7 @@
   Find the parent handle by looping through block suffixes
 {%- endcomment -%}
 {%- for block in section.blocks -%}
-  {%- assign suffix = block.settings.suffix | downcase | replace: " ", "" -%}
+  {%- assign suffix = block.settings.suffix | downcase | replace: " ", "-" -%}
   {%- if suffix == blank %}{% continue %}{% endif -%}
   
   {%- assign suffix_with_dash = "-" | append: suffix -%}
@@ -85,8 +85,9 @@
 {%- assign parent_col = collections[parent_handle] -%}
 
 {%- capture subcategories_html -%}
-  {%- for block in section.blocks -%}
-    {%- assign suffix = block.settings.suffix | downcase | replace: " ", "" -%}
+  {%- assign subcategories = parent_col.metafields.price_editor.subcategories.value -%}
+  {%- for sub in subcategories -%}
+    {%- assign suffix = sub.suffix | downcase | replace: " ", "-" -%}
     {%- if suffix == blank %}{% continue %}{% endif -%}
     
     {%- assign sub_handle = parent_handle | append: "-" | append: suffix -%}
@@ -94,17 +95,17 @@
     
     {%- if sub_col and sub_col.title != blank -%}
       {%- assign display_title = sub_col.title | split: "-" | last | strip -%}
-      <li class="subcategory-item" {{ block.shopify_attributes }}>
+      <li class="subcategory-item">
         <a href="{{ sub_col.url }}" class="subcategory-link {% if current_handle == sub_handle %}active{% endif %}">
           
           {%- comment -%} Render Icon {%- endcomment -%}
-          {%- if block.settings.icon_svg != blank or block.settings.icon_image != blank -%}
+          {%- if sub.custom_icon_asset != blank -%}
             <span class="subcategory-icon">
-              {%- if block.settings.icon_svg != blank -%}
-                {{ block.settings.icon_svg }}
-              {%- else -%}
-                {{ block.settings.icon_image | image_url: width: 40 | image_tag: loading: 'lazy' }}
-              {%- endif -%}
+              <img src="{{ sub.custom_icon_asset | asset_url }}" loading="lazy" />
+            </span>
+          {%- elsif sub.icon_image != blank -%}
+            <span class="subcategory-icon">
+              <img src="{{ sub.icon_image }}" loading="lazy" />
             </span>
           {%- endif -%}
 
@@ -160,41 +161,6 @@
       "label": "Icon (Image Fallback)"
     }
   ],
-  "blocks": [
-    {
-      "type": "subcategory",
-      "name": "Subcategory",
-      "settings": [
-        {
-          "type": "text",
-          "id": "suffix",
-          "label": "Handle Suffix",
-          "info": "e.g., 'oversized', 'denim', 'cotton'"
-        },
-        {
-          "type": "html",
-          "id": "icon_svg",
-          "label": "Icon (SVG Code)",
-          "info": "Paste raw SVG code for crisp, scalable icons."
-        },
-        {
-          "type": "image_picker",
-          "id": "icon_image",
-          "label": "Icon (Image Fallback)",
-          "info": "Used if SVG code is blank."
-        }
-      ]
-    }
-  ],
-  "presets": [
-    {
-      "name": "Collection Subcategories",
-      "blocks": [
-        { "type": "subcategory", "settings": { "suffix": "oversized" } },
-        { "type": "subcategory", "settings": { "suffix": "cjp" } },
-        { "type": "subcategory", "settings": { "suffix": "regular-fit" } }
-      ]
-    }
   ]
 }
 {% endschema %}

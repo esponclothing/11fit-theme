@@ -27,6 +27,31 @@
     text-shadow: 0 15px 25px rgba(245, 200, 66, 0.4);
     color: #F5C842;
   }
+
+  /* CUSTOM LAYOUT: Stack image below text in PC view */
+  @media screen and (min-width: 750px) {
+    .collection-hero__inner {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+    }
+    .collection-hero--with-image .collection-hero__text-wrapper {
+      padding: 2rem 0 !important;
+      flex-basis: auto !important;
+      width: 100%;
+    }
+    .collection-hero__image-container {
+      margin-left: 0 !important;
+      flex: none !important;
+      width: 100%;
+      min-height: auto !important;
+      margin-top: 1rem;
+    }
+    .collection-hero__image-container img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+  }
 </style>
 
 <div class="collection-hero{% if section.settings.show_collection_image and collection.image %} collection-hero--with-image{% endif %} color-{{ section.settings.color_scheme }} gradient">
