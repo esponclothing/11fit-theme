@@ -29,43 +29,48 @@
   /* ── GALLERY ── */
   .fit11-gallery-wrap { position: sticky; top: 40px; display: flex; flex-direction: column; gap: 12px; width: 100%; min-width: 0; }
   .fit11-gallery-box { width: 100%; aspect-ratio: 3/4; background: var(--lux-surface); overflow: hidden; position: relative; border-radius: 8px; border: 1px solid var(--lux-border); }
-  .fit11-slides { display: flex; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch;  }
+  .fit11-slides { display: flex; position: absolute; top: 0; left: 0; height: calc(100% - 64px); width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch;  }
   .fit11-slides::-webkit-scrollbar { display: none; }
   .fit11-slide { flex: 0 0 100%; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; width: 100%; height: 100%; }
   .fit11-slide img { width: 100%; height: 100%; object-fit: contain; } 
   
   .fit11-dots {
     position: absolute;
-    bottom: 56px;
+    bottom: 34px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    gap: 8px;
-    pointer-events: none;
-    z-index: 99999 !important;
-    background: rgba(0, 0, 0, 0.45);
-    padding: 6px 12px;
-    border-radius: 20px;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-  }
-  .fit11-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 6px;
     pointer-events: auto;
+    z-index: 10 !important;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    max-width: 70px;
+    height: 30px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+  }
+  .fit11-dots::before, .fit11-dots::after { content: ''; margin: auto; }
+  .fit11-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #D1D5DB;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     flex-shrink: 0;
   }
   .fit11-dot.on {
-    background: #ffffff;
-    width: 20px;
-    border-radius: 4px;
+    background: #4B5563;
+    width: 6px;
+    transform: scale(1.4);
     flex-shrink: 0;
   }
   
@@ -869,7 +874,14 @@
         slides.scrollTo({ left: cur * slideWidth, behavior: 'smooth' });
       }
       
-      if (dots[cur]) dots[cur].classList.add('on');
+      if (dots[cur]) {
+        dots[cur].classList.add('on');
+        // Swipable dots creative centering behavior
+        if (dotsWrap) {
+          var centerPos = dots[cur].offsetLeft - (dotsWrap.clientWidth / 2) + (dots[cur].clientWidth / 2);
+          dotsWrap.scrollTo({ left: centerPos, behavior: 'smooth' });
+        }
+      }
       if (thumbs[cur]) thumbs[cur].classList.add('on');
     };
     
@@ -887,7 +899,14 @@
           if (dots[cur]) dots[cur].classList.remove('on');
           if (thumbs[cur]) thumbs[cur].classList.remove('on');
           cur = idx;
-          if (dots[cur]) dots[cur].classList.add('on');
+          if (dots[cur]) {
+            dots[cur].classList.add('on');
+            // Swipable dots creative centering behavior
+            if (dotsWrap) {
+              var centerPos = dots[cur].offsetLeft - (dotsWrap.clientWidth / 2) + (dots[cur].clientWidth / 2);
+              dotsWrap.scrollTo({ left: centerPos, behavior: 'smooth' });
+            }
+          }
           if (thumbs[cur]) thumbs[cur].classList.add('on');
         }
       }, 50);
@@ -1290,7 +1309,8 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   }
-  enableDragScroll('.fit11-slides, .fit11-variant-pills, .fit11-offers-scroll, .fit11-thumbs');
+  // Added .fit11-dots so users can drag the dots container horizontally!
+  enableDragScroll('.fit11-slides, .fit11-variant-pills, .fit11-offers-scroll, .fit11-thumbs, .fit11-dots');
 });
 </script>
 
