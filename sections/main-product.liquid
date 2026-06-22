@@ -27,57 +27,49 @@
   .fit11-grid { display: grid; grid-template-columns: 11fr 9fr; gap: 40px; align-items: start; padding: 0 20px; width: 100%; min-width: 0; }
 
   /* ── GALLERY ── */
-  .fit11-gallery-wrap { position: sticky; top: 40px; display: flex; flex-direction: column; gap: 12px; width: 100%; min-width: 0; }
+  .fit11-gallery-wrap { position: sticky; top: 40px; display: flex; flex-direction: column; gap: 0px; width: 100%; min-width: 0; }
   .fit11-gallery-box { width: 100%; aspect-ratio: 3/4; background: var(--lux-surface); overflow: hidden; position: relative; border-radius: 8px; border: 1px solid var(--lux-border); }
   .fit11-slides { display: flex; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch;  }
   .fit11-slides::-webkit-scrollbar { display: none; }
   .fit11-slide { flex: 0 0 100%; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; width: 100%; height: 100%; }
-  .fit11-slide img { width: 100%; height: 100%; object-fit: contain; } 
+  .fit11-slide img { width: 100%; height: 100%; object-fit: cover; } 
   
+  /* ── GALLERY DOTS (MOVED BELOW IMAGE) ── */
   .fit11-dots {
-    position: absolute;
-    bottom: 56px;
-    left: 50%;
-    transform: translateX(-50%);
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 8px;
-    pointer-events: none;
-    z-index: 99999 !important;
-    background: rgba(0, 0, 0, 0.45);
-    padding: 6px 12px;
-    border-radius: 20px;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    gap: 6px;
+    padding: 16px 0 12px 0;
+    width: 100%;
+    background: transparent;
+  }
+  @media (min-width: 1025px) {
+    .fit11-dots { display: none !important; }
   }
   .fit11-dot {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: auto;
+    background: #d1d5db;
+    transition: all 0.3s ease;
     cursor: pointer;
     flex-shrink: 0;
   }
   .fit11-dot.on {
-    background: #ffffff;
-    width: 20px;
-    border-radius: 4px;
-    flex-shrink: 0;
+    background: #111111;
   }
   
-  .fit11-thumbs { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; -webkit-overflow-scrolling: touch;  }
+  .fit11-thumbs { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 12px 0 4px 0; width: 100%; -webkit-overflow-scrolling: touch;  }
   .fit11-thumbs::-webkit-scrollbar { display: none; }
   .fit11-thumb { width: 72px; height: 96px; flex-shrink: 0; overflow: hidden; cursor: pointer; opacity: 0.6; transition: all .3s ease; background: var(--lux-surface); border-radius: 6px; border: 1px solid transparent; }
   .fit11-thumb.on { opacity: 1; border-color: var(--lux-text); }
   .fit11-thumb img { width: 100%; height: 100%; object-fit: contain; }
   
-  /* ── ANIMATED TICKER ── */
+  /* ── ANIMATED TICKER (MOVED BELOW DOTS) ── */
   .fit11-info-ticker {
-    position: absolute; bottom: 0; left: 0; width: 100%; height: 34px; overflow: hidden; margin: 0; border-radius: 0;
+    position: relative;
+    width: 100%; height: 34px; overflow: hidden; margin: 0; border-radius: 0;
     background: linear-gradient(89.98deg, #FFFFFF 0.02%, #F8F8FF 64.12%, #EEEEFE 86.04%, #FFFFFF 98.04%);
     z-index: 10;
   }
@@ -98,7 +90,7 @@
     width: 100%; height: 34px; flex-shrink: 0; text-align: center; line-height: 34px; font-size: 13px; color: #1A2148; margin: 0; padding: 0; font-family: var(--font-body);
   }
   .fit11-ticker-item span { font-weight: 700; color: #0C10E9; }
-
+  .fit11-ticker-item.highlight span { color: #FF4500; }
 
   /* ── DETAILS PANEL ── */
   .fit11-info { display: flex; flex-direction: column; gap: 8px; width: 100%; padding-top: 0px; min-width: 0; }
@@ -106,7 +98,7 @@
   .fit11-header-group { display: flex; flex-direction: column; gap: 4px; border-bottom: none; padding-bottom: 0px; width: 100%; }
   .fit11-title { font-size: 28px; font-weight: 400; line-height: 1.2; color: var(--lux-text); font-family: var(--font-heading); word-wrap: break-word; margin-bottom: 4px; }
   
-  /* ── RATINGS ROW & SIZE CHART LINK (MOVED BELOW PRICE) ── */
+  /* ── RATINGS ROW & SIZE CHART LINK ── */
   .fit11-rating-row { display: flex; justify-content: flex-start; align-items: center; width: 100%; margin-top: 8px; gap: 12px; }
   .fit11-size-chart-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--lux-accent); cursor: pointer; text-decoration: underline; text-underline-offset: 4px; transition: color 0.3s ease; }
   .fit11-size-chart-link:hover { color: var(--lux-text); }
@@ -132,6 +124,10 @@
   
   .fit11-btn-cart { width: 100% !important; height: 54px !important; margin: 24px 0 0 0 !important; background: var(--lux-text); color: var(--lux-surface); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; border: none; display: flex; align-items: center; justify-content: center; gap: 12px; transition: opacity 0.3s ease, background 0.4s ease; cursor: pointer; font-family: var(--font-body); border-radius: 4px; }
   .fit11-btn-cart:hover { opacity: 0.9; }
+  
+  .fit11-btn-buy { width: 100% !important; height: 54px !important; margin: 0 !important; background: #FFD700; color: #111; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; border: none; display: flex; align-items: center; justify-content: center; gap: 12px; transition: opacity 0.3s ease; cursor: pointer; font-family: var(--font-body); border-radius: 4px; }
+
+  .fit11-action-row { display: flex; gap: 12px; width: 100%; margin-top: 16px; }
 
   /* ── VARIANT SELECTORS (LUXURY ADAPTATION) ── */
   .fit11-variant-selectors { display: flex; flex-direction: column; gap: 20px; margin-bottom: 8px; width: 100%; min-width: 0; }
@@ -184,7 +180,7 @@
   }
   .fit11-color-name { font-size: 10px; font-weight: 500; color: var(--lux-text); text-transform: capitalize; letter-spacing: 0.05em; text-align: center; max-width: 72px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
 
-  /* ── OFFERS & DISCOUNTS SECTION (SIMPLIFIED) ── */
+  /* ── OFFERS & DISCOUNTS SECTION ── */
   .fit11-offers-wrapper { background: #eef6f0; border-radius: 4px; padding: 16px; width: 100%; margin-top: 8px; }
   .fit11-offers-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
   .fit11-offers-title-wrap { display: flex; align-items: center; gap: 8px; }
@@ -247,13 +243,6 @@
   .fit11-highlight-label { font-size: 12px; color: var(--lux-text-muted); font-family: var(--font-body); }
   .fit11-highlight-val { font-size: 14px; font-weight: 500; color: var(--lux-text); font-family: var(--font-body); text-transform: capitalize; }
 
-  .fit11-size-table { width: 100%; border-collapse: collapse; }
-  .fit11-size-table tr { border-bottom: 1px solid var(--lux-border); }
-  .fit11-size-table th, .fit11-size-table td { padding: 12px 4px; font-size: 13px; text-align: center; }
-  .fit11-size-table th { font-weight: 600; color: var(--lux-text-muted); }
-  .fit11-size-table td { color: var(--lux-text); font-weight: 400; }
-  .fit11-size-table th:first-child, .fit11-size-table td:first-child { text-align: left; width: 25%; font-weight: 600; color: var(--lux-accent); }
-
   /* ── STICKY BAR ── */
   .fit11-sticky { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--lux-border); z-index: 99999; transform: translateY(0); transition: none; }
   .fit11-sticky.show { transform: translateY(0); }
@@ -262,8 +251,7 @@
   .fit11-sticky-img { width: 50px; height: 65px; object-fit: contain; }
   .fit11-sticky-text h3 { font-size: 14px; font-family: var(--font-heading); font-weight: 500; color: var(--lux-text); margin: 0 0 4px; }
   .fit11-sticky-text p { font-size: 13px; color: var(--lux-text-muted); margin: 0; }
-  .fit11-sticky-btns { width: 280px; flex-shrink: 0; }
-  .fit11-sticky-btns .fit11-btn-cart { margin: 0 !important; height: 48px !important; }
+  .fit11-sticky-btns { width: 100%; flex-shrink: 0; display: flex; gap: 10px; }
 
   /* ── MODALS ── */
   .fit11-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 100000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
@@ -284,22 +272,25 @@
     .fit11-grid { display: flex; flex-direction: column; width: 100%; padding: 0; }
     
     .fit11-gallery-wrap { width: 100%; margin: 0; padding: 0; }
-    .fit11-gallery-box { width: 100%; aspect-ratio: 4/5; height: auto; border-radius: 0; border: none; border-bottom: 1px solid var(--lux-border); }
+    .fit11-gallery-box { width: 100%; aspect-ratio: 4/5; height: auto; border-radius: 0; border: none; }
     .fit11-slide { width: 100%; padding: 0; }
-    .fit11-slide img { width: 100%; height: 100%; object-fit: contain; padding: 0; } 
+    .fit11-slide img { width: 100%; height: 100%; object-fit: cover; padding: 0; } 
     .fit11-thumbs { display: none !important; }
     
+    .fit11-info-ticker { border-bottom: 1px solid var(--lux-border); }
+
     .fit11-info { width: 100%; padding: 4px 16px 24px 16px; gap: 0px; text-align: left; margin: 0; }
     .fit11-header-group { padding-bottom: 0px; margin-bottom: 0px; border-bottom: none; align-items: flex-start; }
     .fit11-title { font-size: 20px; text-align: left; } 
-    .fit11-price-row { justify-content: flex-start; }
     
     .fit11-main-action-btns { width: 100%; padding: 20px 0; border-left: none; border-right: none; border-radius: 0; margin: 0; background: transparent; }
     .fit11-offers-wrapper { order: 1; }
     .fit11-app-wrapper { order: 2; width: 100%; padding: 4px; padding-top: 15px; margin-left: -4px; overflow: visible; }
     
     #fit11-form-cart-main { width: 100%; margin: 0; padding: 0; }
-    .fit11-main-action-btns .fit11-btn-cart { display: flex !important; width: 100% !important; height: 52px !important; margin: 16px 0 0 0 !important; }
+    .fit11-action-row { flex-direction: row; }
+    .fit11-main-action-btns .fit11-btn-cart { display: flex !important; width: 50% !important; height: 52px !important; margin: 0 !important; background: #222; }
+    .fit11-main-action-btns .fit11-btn-buy { display: flex !important; width: 50% !important; height: 52px !important; margin: 0 !important; }
     
     /* Responsive snappy coupon layout */
     .fit11-offers-wrapper { width: 100%; padding: 16px 12px; }
@@ -309,8 +300,9 @@
     
     .fit11-sticky-inner { display: block !important; padding: 12px 16px !important; } 
     .fit11-sticky-meta { display: none !important; } 
-    .fit11-sticky-btns { width: 100% !important; margin: 0 auto; display: block; } 
-    .fit11-sticky-btns .fit11-btn-cart { height: 48px !important; width: 100% !important; }
+    .fit11-sticky-btns { width: 100% !important; margin: 0 auto; display: flex; gap: 8px; } 
+    .fit11-sticky-btns .fit11-btn-cart { height: 48px !important; width: 50% !important; background: #222;}
+    .fit11-sticky-btns .fit11-btn-buy { height: 48px !important; width: 50% !important;}
 
     .fit11-trust-badges { margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; }
   }
@@ -328,20 +320,21 @@
             <div class="fit11-slide" data-image-id="{{ image.id }}"><img src="{{ image | img_url: '1000x1250' }}" alt="{{ image.alt | escape }}"></div>
           {% endfor %}
         </div>
-        {% if product.images.size > 1 %}
-          <div class="fit11-dots" id="fit11Dots">
-            {% for image in product.images %}<div class="fit11-dot{% if forloop.first %} on{% endif %}"></div>{% endfor %}
-          </div>
-        {% endif %}
-        
-        {% comment %} ── TICKER (LOWEST PRICE / RETURN BANNER) ── {% endcomment %}
-        <div class="fit11-info-ticker">
-          <div class="fit11-shimmer-effect"></div>
-          <div class="fit11-ticker-inner fit11TickerWrapper">
-            <p class="fit11-ticker-item"><span>Lowest price</span> in last 30 days</p>
-            <p class="fit11-ticker-item"><span>7 Days Free Return/Exchange,</span> 11fit guaranteed</p>
-            <p class="fit11-ticker-item"><span>Lowest price</span> in last 30 days</p>
-          </div>
+      </div>
+      
+      {% if product.images.size > 1 %}
+        <div class="fit11-dots" id="fit11Dots">
+          {% for image in product.images %}<div class="fit11-dot{% if forloop.first %} on{% endif %}"></div>{% endfor %}
+        </div>
+      {% endif %}
+      
+      {% comment %} ── TICKER (MOVED BELOW DOTS) ── {% endcomment %}
+      <div class="fit11-info-ticker">
+        <div class="fit11-shimmer-effect"></div>
+        <div class="fit11-ticker-inner fit11TickerWrapper">
+          <p class="fit11-ticker-item highlight"><span>🔥 Limited Edition:</span> Own Before They're Gone!</p>
+          <p class="fit11-ticker-item"><span>7 Days Free Return/Exchange,</span> guaranteed</p>
+          <p class="fit11-ticker-item highlight"><span>🔥 Limited Edition:</span> Own Before They're Gone!</p>
         </div>
       </div>
       
@@ -417,14 +410,18 @@
           {% endif %}
         {% endfor %}
       {% endunless %}
-
-      {% comment %} Ticker Moved Up {% endcomment %}
     </div>
 
     {% comment %} ── RIGHT: DETAILS ── {% endcomment %}
     <div class="fit11-info">
       
       <div class="fit11-header-group">
+        
+        {% comment %} Ratings now above title (matching reference image) {% endcomment %}
+        <div class="fit11-rating-row" style="justify-content: flex-start; margin-bottom: 4px;">
+          <div class="AirReviews-Widget AirReviews-Widget--Stars"></div>
+        </div>
+
         <h1 class="fit11-title">{{ product.title }}</h1>
         
         <div class="fit11-price-and-share" style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
@@ -443,11 +440,6 @@
             <div class="fit11-price-lowest"{% if product.compare_at_price <= product.price or product.compare_at_price == blank %} style="display:none;"{% endif %}>Lowest price in last 30 days</div>
           </div>
           <i class="ti ti-share" onclick="if(navigator.share){navigator.share({url: window.location.href, title: document.title});}" style="font-size: 24px; color: var(--lux-text); cursor: pointer; padding: 4px; margin-top: 4px;"></i>
-        </div>
-
-        {% comment %} Ratings now below MRP {% endcomment %}
-        <div class="fit11-rating-row" style="justify-content: flex-start;">
-          <div class="AirReviews-Widget AirReviews-Widget--Stars"></div>
         </div>
       </div>
       
@@ -519,8 +511,6 @@
           {% endfor %}
         {% endunless %}
         
-
-
         {% comment %} ── HIGHLIGHTED COMBO SELECTION AREA (APP + VARIANTS) ── {% endcomment %}
         <div class="fit11-main-action-btns" id="fit11MainBtnContainer">
           
@@ -607,11 +597,15 @@
             </div>
           {% endunless %}
           
+          <div class="fit11-action-row">
+            <button type="submit" name="add" class="fit11-btn-cart product-form__submit" id="fit11MainAddToCartBtnProd">
+              <span>Add to Cart</span>
+            </button>
+            <button type="button" class="fit11-btn-buy" onclick="document.querySelector('.shopify-payment-button__button--unbranded').click();">
+              <span>Buy Now</span>
+            </button>
+          </div>
         </div>
-        
-        <button type="submit" name="add" class="product-form__submit" id="fit11MainAddToCartBtnProd" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none;">
-          <span class="fit11-btn-text">Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
-        </button>
       {% endform %}
 
       {% comment %} ── TRUST BADGES ── {% endcomment %}
@@ -747,8 +741,6 @@
               <tr style="border-bottom: 2px solid var(--lux-border); font-weight:500;"><th>Size</th><th>Chest (in)</th><th>Length (in)</th></tr>
             </thead>
             <tbody>
-              <tr><td>XS</td><td>36</td><td>25</td></tr>
-              <tr><td>S</td><td>38</td><td>26</td></tr>
               <tr><td>M</td><td>40</td><td>27</td></tr>
               <tr><td>L</td><td>42</td><td>28</td></tr>
               <tr><td>XL</td><td>44</td><td>29</td></tr>
@@ -768,7 +760,6 @@
               <tr style="border-bottom: 2px solid var(--lux-border); font-weight:500;"><th>Size</th><th>Waist (in)</th><th>Length (in)</th></tr>
             </thead>
             <tbody>
-              <tr><td>S</td><td>28 - 30</td><td>38</td></tr>
               <tr><td>M</td><td>30 - 32</td><td>39</td></tr>
               <tr><td>L</td><td>32 - 34</td><td>40</td></tr>
               <tr><td>XL</td><td>34 - 36</td><td>41</td></tr>
@@ -789,7 +780,6 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td>S</td><td>28-30</td><td>8.5</td><td>38</td><td>16</td></tr>
               <tr><td>M</td><td>30-32</td><td>8.5</td><td>40</td><td>17</td></tr>
               <tr><td>L</td><td>32-34</td><td>8.5</td><td>42</td><td>18</td></tr>
               <tr><td>XL</td><td>34-36</td><td>8.5</td><td>44</td><td>19</td></tr>
@@ -823,9 +813,12 @@
       <div class="fit11-sticky-text"><h3>{{ product.title }}</h3><p>{{ product.price | money }}</p></div>
     </div>
     <div class="fit11-sticky-btns">
-      <div class="fit11-form-inline">
+      <div class="fit11-form-inline" style="display: flex; gap: 8px; width: 100%;">
         <button type="button" class="fit11-btn-cart product-form__submit" onclick="document.getElementById('fit11MainAddToCartBtnProd').click();">
-          <span>Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
+          <span>Add to Cart</span>
+        </button>
+        <button type="button" class="fit11-btn-buy" onclick="document.querySelector('.shopify-payment-button__button--unbranded').click();">
+          <span>Buy Now</span>
         </button>
       </div>
     </div>
@@ -847,12 +840,6 @@
     var total = Math.max(dots.length, slides.children.length);
     if (dots.length > 0) total = dots.length;
     var cur = 0;
-    var autoSlideInterval = null;
-    var isUserInteracting = false;
-    var resumeTimeout = null;
-    
-    // Get auto-swipe speed from theme settings (in milliseconds)
-    var autoSwipeSpeed = {{ section.settings.auto_swipe_speed | default: 3000 }};
     
     window.goToSlide = function(n) {
       if (total <= 0) return;
@@ -875,81 +862,36 @@
     
     function goTo(n) { window.goToSlide(n); }
     
-    // FIXED: More reliable scroll detection for dot updates
-    var scrollTimeout;
     slides.addEventListener('scroll', function() {
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(function() {
-        var slideWidth = slides.clientWidth || (slides.firstElementChild ? slides.firstElementChild.clientWidth : 0);
-        if (slideWidth <= 0) return;
-        var idx = Math.round(slides.scrollLeft / slideWidth);
-        if (idx !== cur && idx >= 0 && idx < total) {
-          if (dots[cur]) dots[cur].classList.remove('on');
-          if (thumbs[cur]) thumbs[cur].classList.remove('on');
-          cur = idx;
-          if (dots[cur]) dots[cur].classList.add('on');
-          if (thumbs[cur]) thumbs[cur].classList.add('on');
-        }
-      }, 50);
+      var slideWidth = slides.clientWidth || (slides.firstElementChild ? slides.firstElementChild.clientWidth : 0);
+      if (slideWidth <= 0) return;
+      var idx = Math.round(slides.scrollLeft / slideWidth);
+      if (idx !== cur && idx >= 0 && idx < total) {
+        if (dots[cur]) dots[cur].classList.remove('on');
+        if (thumbs[cur]) thumbs[cur].classList.remove('on');
+        cur = idx;
+        if (dots[cur]) dots[cur].classList.add('on');
+        if (thumbs[cur]) thumbs[cur].classList.add('on');
+      }
     });
     
     dots.forEach(function(d, i) {
-      d.addEventListener('click', function() { 
-        resetAutoSwipe();
-        goTo(i); 
-      });
+      d.addEventListener('click', function() { goTo(i); });
     });
     
     thumbs.forEach(function(t, i) {
-      t.addEventListener('click', function() { 
-        resetAutoSwipe();
-        goTo(i); 
-      });
+      t.addEventListener('click', function() { goTo(i); });
     });
     
-    function startAutoSwipe() {
-      if (autoSlideInterval) clearInterval(autoSlideInterval);
-      if (total > 1) {
-        autoSlideInterval = setInterval(function() {
-          if (!isUserInteracting) {
-            goTo((cur + 1) % total);
-          }
-        }, autoSwipeSpeed);
-      }
+    /* AUTO-SWIPE LOGIC (SMOOTH SWIPING ANIMATION) */
+    if (total > 1) {
+      var autoSlideInterval = setInterval(function() {
+        goTo((cur + 1) % total);
+      }, 1000);
+      
+      slides.addEventListener('touchstart', function() { clearInterval(autoSlideInterval); }, {passive:true});
+      slides.addEventListener('mousedown', function() { clearInterval(autoSlideInterval); }, {passive:true});
     }
-    
-    function stopAutoSwipe() {
-      isUserInteracting = true;
-      if (resumeTimeout) clearTimeout(resumeTimeout);
-    }
-    
-    function resetAutoSwipe() {
-      stopAutoSwipe();
-      resumeTimeout = setTimeout(function() {
-        isUserInteracting = false;
-      }, 5000); // Resume auto-swipe 5 seconds after last interaction
-    }
-    
-    // Touch events for mobile swipe
-    slides.addEventListener('touchstart', function() {
-      stopAutoSwipe();
-    }, {passive: true});
-    
-    slides.addEventListener('touchend', function() {
-      resetAutoSwipe();
-    }, {passive: true});
-    
-    // Mouse events for desktop drag
-    slides.addEventListener('mousedown', function() {
-      stopAutoSwipe();
-    }, {passive: true});
-    
-    slides.addEventListener('mouseup', function() {
-      resetAutoSwipe();
-    }, {passive: true});
-    
-    // Start auto-swipe on init
-    startAutoSwipe();
   }
 
   if (document.readyState === 'loading') {
@@ -998,10 +940,6 @@
       }
     }, true);
   });
-
-  /* Auto-swipe is now fully functional with both manual and automatic modes */
-
-  /* SMART STICKY BAR LOGIC REMOVED - ALWAYS SHOWN */
 
   /* SIZE MODAL */
   window.fit11ToggleModal = function(show) {
@@ -1369,21 +1307,6 @@ document.addEventListener('DOMContentLoaded', function() {
       "id": "show_view_all",
       "label": "Show 'View all Offers' button",
       "default": true
-    },
-    {
-      "type": "header",
-      "content": "Gallery Auto-Swipe Settings"
-    },
-    {
-      "type": "range",
-      "id": "auto_swipe_speed",
-      "label": "Auto Swipe Speed",
-      "min": 1000,
-      "max": 9000,
-      "step": 500,
-      "unit": "ms",
-      "default": 1000,
-      "info": "Time between auto-swipes in milliseconds. 1000 = 1 second. Set to 0 to disable auto-swipe."
     },
     {
       "type": "header",
