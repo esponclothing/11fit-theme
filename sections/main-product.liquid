@@ -35,8 +35,8 @@
   .fit11-slide img { width: 100%; height: 100%; object-fit: contain; } 
   
   .fit11-dots { position: absolute; bottom: 44px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; pointer-events: none; z-index: 11; }
-  .fit11-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.5); transition: all .4s ease; pointer-events: auto; cursor: pointer; }
-  .fit11-dot.on { background: var(--lux-text); transform: scale(1.2); border-color: transparent; }
+  .fit11-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.55); border: 2px solid rgba(255,255,255,0.85); transition: all .4s ease; pointer-events: auto; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.35); }
+  .fit11-dot.on { background: #fff; width: 22px; border-radius: 4px; border-color: #fff; box-shadow: 0 1px 6px rgba(0,0,0,0.4); }
   
   .fit11-thumbs { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; -webkit-overflow-scrolling: touch;  }
   .fit11-thumbs::-webkit-scrollbar { display: none; }
@@ -574,7 +574,7 @@
       {% comment %} ── TRUST BADGES ── {% endcomment %}
       <div class="fit11-trust-badges">
         <div class="fit11-trust-item"><i class="ti ti-cash"></i>CASH ON<br>DELIVERY</div>
-        <div class="fit11-trust-item"><i class="ti ti-truck-delivery"></i>FREE<br>SHIPPING</div>
+        <div class="fit11-trust-item"><i class="ti ti-refresh"></i>RETURN &amp;<br>EXCHANGE</div>
         <div class="fit11-trust-item"><i class="ti ti-rotate-clockwise"></i>EASY<br>RETURNS</div>
       </div>
 
@@ -622,9 +622,9 @@
         {% if section.settings.delivery_text != blank %}
           <details class="fit11-accord">
             <summary style="display: flex; align-items: center; gap: 10px;">
-              <i class="ti ti-truck" style="font-size:20px; color:var(--lux-text);"></i>
+              <i class="ti ti-arrow-back-up" style="font-size:20px; color:var(--lux-text);"></i>
               <div style="display:flex; flex-direction:column; gap:2px; margin-right:auto;">
-                <span style="font-weight:600; text-transform:none; letter-spacing:normal;">Free Shipping</span>
+                <span style="font-weight:600; text-transform:none; letter-spacing:normal;">Return &amp; Exchange</span>
               </div>
               <i class="ti ti-chevron-down" aria-hidden="true" style="margin-left:auto;"></i>
             </summary>
@@ -802,14 +802,7 @@
   dots.forEach(function(d, i) { d.addEventListener('click', function() { goTo(i); }); });
   thumbs.forEach(function(t, i) { t.addEventListener('click', function() { goTo(i); }); });
 
-  /* AUTO-SWIPE LOGIC */
-  if (total > 1) {
-    var autoSlideInterval = setInterval(function() {
-      goTo((cur + 1) % total);
-    }, 4000);
-    slides.addEventListener('touchstart', function() { clearInterval(autoSlideInterval); }, {passive:true});
-    slides.addEventListener('mousedown', function() { clearInterval(autoSlideInterval); }, {passive:true});
-  }
+  /* AUTO-SWIPE LOGIC REMOVED */
 
   /* LIGHTBOX LOGIC */
   document.querySelectorAll('.fit11-slide img').forEach(function(img) {
