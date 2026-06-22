@@ -29,7 +29,7 @@
   /* ── GALLERY ── */
   .fit11-gallery-wrap { position: sticky; top: 40px; display: flex; flex-direction: column; gap: 12px; width: 100%; min-width: 0; }
   .fit11-gallery-box { width: 100%; aspect-ratio: 3/4; background: var(--lux-surface); overflow: hidden; position: relative; border-radius: 8px; border: 1px solid var(--lux-border); }
-  .fit11-slides { display: flex; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch;  }
+  .fit11-slides { display: flex; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
   .fit11-slides::-webkit-scrollbar { display: none; }
   .fit11-slide { flex: 0 0 100%; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; width: 100%; height: 100%; }
   .fit11-slide img { width: 100%; height: 100%; object-fit: contain; } 
@@ -42,15 +42,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 8px;
-    pointer-events: none;
+    gap: 6px;
     z-index: 99999 !important;
     background: rgba(0, 0, 0, 0.45);
-    padding: 6px 12px;
+    padding: 8px 14px;
     border-radius: 20px;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.25);
+    max-width: 90%;
+    flex-wrap: wrap;
   }
   .fit11-dot {
     width: 8px;
@@ -58,15 +59,15 @@
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.5);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: auto;
     cursor: pointer;
     flex-shrink: 0;
+    display: inline-block;
+    pointer-events: auto;
   }
   .fit11-dot.on {
     background: #ffffff;
     width: 20px;
     border-radius: 4px;
-    flex-shrink: 0;
   }
   
   .fit11-thumbs { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; -webkit-overflow-scrolling: touch;  }
@@ -844,8 +845,7 @@
     
     var dots = dotsWrap ? dotsWrap.querySelectorAll('.fit11-dot') : [];
     var thumbs = thumbsWrap ? thumbsWrap.querySelectorAll('.fit11-thumb') : [];
-    var total = Math.max(dots.length, slides.children.length);
-    if (dots.length > 0) total = dots.length;
+    var total = slides.children.length;
     var cur = 0;
     var autoSlideInterval = null;
     var isUserInteracting = false;
@@ -853,53 +853,61 @@
     
     // Get auto-swipe speed from theme settings (in milliseconds)
     var autoSwipeSpeed = {{ section.settings.auto_swipe_speed | default: 3000 }};
+    var autoSwipeEnabled = autoSwipeSpeed > 0;
+    
+    function updateDots(index) {
+      if (dots.length > 0) {
+        dots.forEach(function(d) { d.classList.remove('on'); });
+        if (dots[index]) dots[index].classList.add('on');
+      }
+      if (thumbs.length > 0) {
+        thumbs.forEach(function(t) { t.classList.remove('on'); });
+        if (thumbs[index]) thumbs[index].classList.add('on');
+      }
+    }
     
     window.goToSlide = function(n) {
       if (total <= 0) return;
       if (n < 0) n = total - 1; 
       if (n >= total) n = 0;
       
-      if (dots[cur]) dots[cur].classList.remove('on');
-      if (thumbs[cur]) thumbs[cur].classList.remove('on');
-      
       cur = n;
+      updateDots(cur);
       
-      var slideWidth = slides.clientWidth || (slides.firstElementChild ? slides.firstElementChild.clientWidth : 0);
+      var slideWidth = slides.clientWidth;
       if (slideWidth > 0) {
         slides.scrollTo({ left: cur * slideWidth, behavior: 'smooth' });
       }
-      
-      if (dots[cur]) dots[cur].classList.add('on');
-      if (thumbs[cur]) thumbs[cur].classList.add('on');
     };
     
     function goTo(n) { window.goToSlide(n); }
     
-    // FIXED: More reliable scroll detection for dot updates
+    // Scroll listener with debounce for accurate dot sync
     var scrollTimeout;
     slides.addEventListener('scroll', function() {
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(function() {
-        var slideWidth = slides.clientWidth || (slides.firstElementChild ? slides.firstElementChild.clientWidth : 0);
+        var slideWidth = slides.clientWidth;
         if (slideWidth <= 0) return;
         var idx = Math.round(slides.scrollLeft / slideWidth);
         if (idx !== cur && idx >= 0 && idx < total) {
-          if (dots[cur]) dots[cur].classList.remove('on');
-          if (thumbs[cur]) thumbs[cur].classList.remove('on');
           cur = idx;
-          if (dots[cur]) dots[cur].classList.add('on');
-          if (thumbs[cur]) thumbs[cur].classList.add('on');
+          updateDots(cur);
         }
-      }, 50);
+      }, 100);
     });
     
+    // Dot clicks
     dots.forEach(function(d, i) {
-      d.addEventListener('click', function() { 
+      d.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         resetAutoSwipe();
-        goTo(i); 
+        goTo(i);
       });
     });
     
+    // Thumb clicks
     thumbs.forEach(function(t, i) {
       t.addEventListener('click', function() { 
         resetAutoSwipe();
@@ -908,14 +916,13 @@
     });
     
     function startAutoSwipe() {
+      if (!autoSwipeEnabled || total <= 1) return;
       if (autoSlideInterval) clearInterval(autoSlideInterval);
-      if (total > 1) {
-        autoSlideInterval = setInterval(function() {
-          if (!isUserInteracting) {
-            goTo((cur + 1) % total);
-          }
-        }, autoSwipeSpeed);
-      }
+      autoSlideInterval = setInterval(function() {
+        if (!isUserInteracting) {
+          goTo((cur + 1) % total);
+        }
+      }, autoSwipeSpeed);
     }
     
     function stopAutoSwipe() {
@@ -927,28 +934,19 @@
       stopAutoSwipe();
       resumeTimeout = setTimeout(function() {
         isUserInteracting = false;
-      }, 5000); // Resume auto-swipe 5 seconds after last interaction
+      }, 5000);
     }
     
-    // Touch events for mobile swipe
-    slides.addEventListener('touchstart', function() {
-      stopAutoSwipe();
-    }, {passive: true});
+    // Touch events
+    slides.addEventListener('touchstart', function() { stopAutoSwipe(); }, {passive: true});
+    slides.addEventListener('touchend', function() { resetAutoSwipe(); }, {passive: true});
     
-    slides.addEventListener('touchend', function() {
-      resetAutoSwipe();
-    }, {passive: true});
+    // Mouse drag events
+    slides.addEventListener('mousedown', function() { stopAutoSwipe(); }, {passive: true});
+    slides.addEventListener('mouseup', function() { resetAutoSwipe(); }, {passive: true});
+    slides.addEventListener('mouseleave', function() { resetAutoSwipe(); }, {passive: true});
     
-    // Mouse events for desktop drag
-    slides.addEventListener('mousedown', function() {
-      stopAutoSwipe();
-    }, {passive: true});
-    
-    slides.addEventListener('mouseup', function() {
-      resetAutoSwipe();
-    }, {passive: true});
-    
-    // Start auto-swipe on init
+    // Start auto-swipe
     startAutoSwipe();
   }
 
@@ -1378,13 +1376,14 @@ document.addEventListener('DOMContentLoaded', function() {
       "type": "range",
       "id": "auto_swipe_speed",
       "label": "Auto Swipe Speed",
-      "min": 1000,
+      "min": 0,
       "max": 9000,
       "step": 500,
       "unit": "ms",
       "default": 3000,
       "info": "Time between auto-swipes in milliseconds. 1000 = 1 second. Set to 0 to disable auto-swipe."
     },
+
     {
       "type": "header",
       "content": "Size Chart Settings"
