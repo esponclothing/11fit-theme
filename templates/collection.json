@@ -43,12 +43,19 @@
             "icon_svg": "",
             "icon_image": "shopify://shop_images/Front_1_c_64_f9192836-b933-4364-a378-9b679fe78e0a.jpg"
           }
+        },
+        "subcategory_fiekaf": {
+          "type": "subcategory",
+          "settings": {
+            "suffix": "Regular Fit"
+          }
         }
       },
       "block_order": [
         "subcategory_4bebxh",
         "subcategory_ayCeTT",
-        "subcategory_myC3mg"
+        "subcategory_myC3mg",
+        "subcategory_fiekaf"
       ],
       "settings": {
         "all_icon_svg": ""
