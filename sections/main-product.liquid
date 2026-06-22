@@ -34,42 +34,37 @@
   .fit11-slide { flex: 0 0 100%; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; width: 100%; height: 100%; }
   .fit11-slide img { width: 100%; height: 100%; object-fit: contain; } 
   
-  .fit11-dots {
-    position: absolute;
-    bottom: 46px; /* Positioned clearly above the 34px ticker */
-    left: 50%;
-    transform: translateX(-50%);
+  /* ── SWIPABLE DOTS (MOVED BELOW IMAGE LIKE REFERENCE) ── */
+  .fit11-dots-wrapper {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
-    gap: 6px;
-    pointer-events: auto;
-    z-index: 99999 !important; /* Critical for visibility */
-    background: rgba(255, 255, 255, 0.95); /* White pill for contrast over any image */
-    padding: 0 12px;
-    border-radius: 20px;
-    max-width: 70px;
-    height: 24px;
+    width: 100%;
+    padding: 12px 0 4px 0;
+  }
+  .fit11-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
     overflow-x: auto;
     scrollbar-width: none;
     scroll-behavior: smooth;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    max-width: 100%;
   }
-  .fit11-dots::before, .fit11-dots::after { content: ''; margin: auto; }
+  .fit11-dots::-webkit-scrollbar { display: none; }
   .fit11-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #D1D5DB;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #D1D5DB; /* Light gray to match reference */
+    transition: all 0.3s ease;
     cursor: pointer;
     flex-shrink: 0;
   }
   .fit11-dot.on {
-    background: #4B5563;
-    width: 6px;
-    transform: scale(1.4);
-    flex-shrink: 0;
+    background: #111111; /* Dark/Black for active dot */
+    transform: scale(1.2);
   }
   
   .fit11-thumbs { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; -webkit-overflow-scrolling: touch;  }
@@ -331,11 +326,6 @@
             <div class="fit11-slide" data-image-id="{{ image.id }}"><img src="{{ image | img_url: '1000x1250' }}" alt="{{ image.alt | escape }}"></div>
           {% endfor %}
         </div>
-        {% if product.images.size > 1 %}
-          <div class="fit11-dots" id="fit11Dots">
-            {% for image in product.images %}<div class="fit11-dot{% if forloop.first %} on{% endif %}"></div>{% endfor %}
-          </div>
-        {% endif %}
         
         {% comment %} ── TICKER (LOWEST PRICE / RETURN BANNER) ── {% endcomment %}
         <div class="fit11-info-ticker">
@@ -348,6 +338,15 @@
         </div>
       </div>
       
+      {% comment %} ── DOTS PLACED OUTSIDE IMAGE EXACTLY LIKE REFERENCE ── {% endcomment %}
+      {% if product.images.size > 1 %}
+        <div class="fit11-dots-wrapper">
+          <div class="fit11-dots" id="fit11Dots">
+            {% for image in product.images %}<div class="fit11-dot{% if forloop.first %} on{% endif %}"></div>{% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
       {% if product.images.size > 1 %}
         <div class="fit11-thumbs" id="fit11Thumbs">
           {% for image in product.images %}
