@@ -23,7 +23,7 @@
 
   /* ── GLOBAL STRICT CONSTRAINTS ── */
   .fit11-page, .fit11-page * { box-sizing: border-box !important; }
-  .fit11-page { max-width: 1300px; margin: 0 auto; padding-top: 40px; padding-bottom: 140px; color: var(--lux-text); background: var(--lux-bg); font-family: var(--font-body); width: 100%; overflow-x: hidden; }
+  .fit11-page { max-width: 1300px; margin: 0 auto; padding-top: 40px; padding-bottom: 140px; color: var(--lux-text); background: var(--lux-bg); font-family: var(--font-body); width: 100%; overflow: visible; }
   .fit11-grid { display: grid; grid-template-columns: 11fr 9fr; gap: 40px; align-items: start; padding: 0 20px; width: 100%; }
 
   /* ── GALLERY ── */
@@ -35,8 +35,8 @@
   .fit11-slide img { width: 100%; height: 100%; object-fit: contain; } 
   
   .fit11-dots { position: absolute; bottom: 44px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; pointer-events: none; z-index: 11; }
-  .fit11-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.55); border: 2px solid rgba(255,255,255,0.85); transition: all .4s ease; pointer-events: auto; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.35); }
-  .fit11-dot.on { background: #fff; width: 22px; border-radius: 4px; border-color: #fff; box-shadow: 0 1px 6px rgba(0,0,0,0.4); }
+  .fit11-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(17, 17, 17, 0.45); border: 1.5px solid #ffffff; transition: all .4s ease; pointer-events: auto; cursor: pointer; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5); }
+  .fit11-dot.on { background: #111111; width: 24px; border-radius: 5px; border-color: #ffffff; box-shadow: 0 1px 5px rgba(0, 0, 0, 0.6); }
   
   .fit11-thumbs { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; -webkit-overflow-scrolling: touch;  }
   .fit11-thumbs::-webkit-scrollbar { display: none; }
@@ -987,10 +987,10 @@
   if (!slides) return;
   var dots = dotsWrap ? dotsWrap.querySelectorAll('.fit11-dot') : [], thumbs = thumbsWrap ? thumbsWrap.querySelectorAll('.fit11-thumb') : [];
   var total = dots.length, cur = 0;
-  window.goToSlide = function(n, instant) {
+  window.goToSlide = function(n) {
     if (n < 0) n = total - 1; if (n >= total) n = 0;
     if (dots[cur]) dots[cur].classList.remove('on'); if (thumbs[cur]) thumbs[cur].classList.remove('on');
-    cur = n; slides.scrollTo({ left: cur * slides.clientWidth, behavior: instant ? 'auto' : 'smooth' });
+    cur = n; slides.scrollTo({ left: cur * slides.clientWidth, behavior: 'smooth' });
     if (dots[cur]) dots[cur].classList.add('on'); if (thumbs[cur]) thumbs[cur].classList.add('on');
   };
   function goTo(n) { window.goToSlide(n); }
@@ -1005,10 +1005,10 @@
   dots.forEach(function(d, i) { d.addEventListener('click', function() { goTo(i); }); });
   thumbs.forEach(function(t, i) { t.addEventListener('click', function() { goTo(i); }); });
 
-  /* AUTO-SWIPE LOGIC (INSTANT TRANSITION / NO ANIMATION) */
+  /* AUTO-SWIPE LOGIC (SMOOTH SWIPING ANIMATION) */
   if (total > 1) {
     var autoSlideInterval = setInterval(function() {
-      window.goToSlide((cur + 1) % total, true);
+      window.goToSlide((cur + 1) % total);
     }, 4000);
     slides.addEventListener('touchstart', function() { clearInterval(autoSlideInterval); }, {passive:true});
     slides.addEventListener('mousedown', function() { clearInterval(autoSlideInterval); }, {passive:true});
