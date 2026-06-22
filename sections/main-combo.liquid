@@ -330,9 +330,11 @@
             <div class="fit11-slide" data-image-id="{{ image.id }}"><img src="{{ image | img_url: '1000x1250' }}" alt="{{ image.alt | escape }}"></div>
           {% endfor %}
         </div>
-        <div class="fit11-dots" id="fit11Dots">
-          {% for image in product.images %}<div class="fit11-dot{% if forloop.first %} on{% endif %}"></div>{% endfor %}
-        </div>
+        {% if product.images.size > 1 %}
+          <div class="fit11-dots" id="fit11Dots">
+            {% for image in product.images %}<div class="fit11-dot{% if forloop.first %} on{% endif %}"></div>{% endfor %}
+          </div>
+        {% endif %}
         
         <div class="fit11-info-ticker">
           <div class="fit11-shimmer-effect"></div>
@@ -1071,7 +1073,7 @@
     if (total > 1) {
       var autoSlideInterval = setInterval(function() {
         goTo((cur + 1) % total);
-      }, 2500);
+      }, 1000);
       
       slides.addEventListener('touchstart', function() { clearInterval(autoSlideInterval); }, {passive:true});
       slides.addEventListener('mousedown', function() { clearInterval(autoSlideInterval); }, {passive:true});
