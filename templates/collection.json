@@ -13,26 +13,195 @@
       "type": "main-collection-banner",
       "settings": {
         "show_collection_description": true,
-        "show_collection_image": false,
+        "show_collection_image": true,
         "color_scheme": "scheme-1"
       }
     },
     "subcategories": {
       "type": "collection-subcategories",
+      "blocks": {
+        "subcategory_b3abtq": {
+          "type": "subcategory",
+          "settings": {
+            "suffix": "Regular Fit",
+            "icon_svg": "",
+            "icon_image": "shopify://shop_images/T-shirt.png"
+          }
+        },
+        "subcategory_4bebxh": {
+          "type": "subcategory",
+          "settings": {
+            "suffix": "CJP",
+            "icon_svg": "",
+            "icon_image": "shopify://shop_images/1.png"
+          }
+        },
+        "subcategory_ayCeTT": {
+          "type": "subcategory",
+          "settings": {
+            "suffix": "Regular Fit",
+            "icon_svg": "",
+            "icon_image": "shopify://shop_images/Front_1_c_52_e6db6b30-1282-4531-a5cd-ca793964e664.jpg"
+          }
+        },
+        "subcategory_myC3mg": {
+          "type": "subcategory",
+          "settings": {
+            "suffix": "Oversized",
+            "icon_svg": "",
+            "icon_image": "shopify://shop_images/Front_1_c_64_f9192836-b933-4364-a378-9b679fe78e0a.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "subcategory_b3abtq",
+        "subcategory_4bebxh",
+        "subcategory_ayCeTT",
+        "subcategory_myC3mg"
+      ],
       "settings": {
-        "subcategories": "oversized, cjp, regular-fit, denim, gym, cotton"
+        "all_icon_svg": ""
       }
     },
     "product-grid": {
       "type": "main-collection-product-grid",
+      "blocks": {
+        "slider_item_8zpNhJ": {
+          "type": "slider_item",
+          "settings": {
+            "campaign_id": "promo-2",
+            "target_collection": "t-shirts",
+            "image": "shopify://shop_images/Front_1_c_2_c2e48760-6a54-40fe-88a2-846112af8e77.jpg",
+            "link": "",
+            "title": "Classic Track Pant",
+            "price": "Rs. 899",
+            "compare_price": "Rs. 1299",
+            "discount": "Rs. 400 OFF",
+            "rating": "4.8"
+          }
+        },
+        "slider_item_FbH6VH": {
+          "type": "slider_item",
+          "settings": {
+            "campaign_id": "promo-2",
+            "target_collection": "t-shirts",
+            "image": "shopify://shop_images/Front_1_c_3_3d82fbd4-d11d-451b-ae8c-6498173b41c4.jpg",
+            "link": "",
+            "title": "Classic Track Pant",
+            "price": "Rs. 899",
+            "compare_price": "Rs. 1299",
+            "discount": "Rs. 400 OFF",
+            "rating": "4.8"
+          }
+        },
+        "slider_campaign_qK88GB": {
+          "type": "slider_campaign",
+          "settings": {
+            "insert_after": 8,
+            "campaign_id": "promo-2",
+            "target_collection": "t-shirts",
+            "offer_box_height": 70,
+            "bg_color_1": "#111111",
+            "bg_color_2": "#2b2b2b",
+            "text_color": "#ffffff",
+            "font_size_title": 1.3,
+            "font_size_price": 1.5,
+            "font_size_discount": 1.1,
+            "heading_1": "PREMIUM COLLECTION SALE",
+            "subheading_1": "Modern performance luxury at Flat 20% OFF.",
+            "coupon_code_1": "LUXE20",
+            "heading_2": "",
+            "subheading_2": "",
+            "coupon_code_2": "",
+            "heading_3": "",
+            "subheading_3": "",
+            "coupon_code_3": ""
+          }
+        },
+        "slider_campaign_ggtzdq": {
+          "type": "slider_campaign",
+          "settings": {
+            "insert_after": 4,
+            "campaign_id": "promo-1",
+            "target_collection": "t-shirts",
+            "offer_box_height": 70,
+            "bg_color_1": "#111111",
+            "bg_color_2": "#2b2b2b",
+            "text_color": "#ffffff",
+            "font_size_title": 1.3,
+            "font_size_price": 1.5,
+            "font_size_discount": 1.1,
+            "heading_1": "PREMIUM COLLECTION SALE",
+            "subheading_1": "Modern performance luxury at Flat 20% OFF.",
+            "coupon_code_1": "LUXE20",
+            "heading_2": "",
+            "subheading_2": "",
+            "coupon_code_2": "",
+            "heading_3": "",
+            "subheading_3": "",
+            "coupon_code_3": ""
+          }
+        },
+        "slider_item_wRWY8a": {
+          "type": "slider_item",
+          "settings": {
+            "campaign_id": "promo-1",
+            "target_collection": "t-shirts",
+            "image": "shopify://shop_images/Front_1_c_63_180aeb53-e559-407c-882f-bd196307e4bc.jpg",
+            "link": "https://11fit.in/products/stay-real-11-fit-t-shirt",
+            "title": "Classic T shirts",
+            "price": "Rs. 899",
+            "compare_price": "Rs. 1299",
+            "discount": "Rs. 400 OFF",
+            "rating": "4.8"
+          }
+        },
+        "slider_item_T7En7E": {
+          "type": "slider_item",
+          "settings": {
+            "campaign_id": "promo-1",
+            "target_collection": "t-shirts",
+            "image": "shopify://shop_images/Front_1_c_3_5927145b-8757-4081-88b6-b4fe3c7247b4.jpg",
+            "link": "",
+            "title": "Classic Track Pant",
+            "price": "Rs. 899",
+            "compare_price": "Rs. 1299",
+            "discount": "Rs. 400 OFF",
+            "rating": "4.8"
+          }
+        },
+        "slider_item_9nQdzt": {
+          "type": "slider_item",
+          "settings": {
+            "campaign_id": "promo-1",
+            "target_collection": "t-shirts",
+            "image": "shopify://shop_images/Front_1_c_64_f9192836-b933-4364-a378-9b679fe78e0a.jpg",
+            "link": "",
+            "title": "Classic T shirts",
+            "price": "Rs. 899",
+            "compare_price": "Rs. 1299",
+            "discount": "Rs. 400 OFF",
+            "rating": "4.8"
+          }
+        }
+      },
+      "block_order": [
+        "slider_item_8zpNhJ",
+        "slider_item_FbH6VH",
+        "slider_campaign_qK88GB",
+        "slider_campaign_ggtzdq",
+        "slider_item_wRWY8a",
+        "slider_item_T7En7E",
+        "slider_item_9nQdzt"
+      ],
       "settings": {
         "products_per_page": 16,
         "columns_desktop": 4,
-        "columns_mobile": "1",
+        "columns_mobile": "2",
+        "mobile_image_ratio": 145,
         "color_scheme": "scheme-1",
         "image_ratio": "adapt",
-        "image_shape": "default",
-        "show_secondary_image": false,
+        "show_secondary_image": true,
         "show_vendor": false,
         "show_rating": true,
         "quick_add": "none",

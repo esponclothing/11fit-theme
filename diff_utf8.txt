@@ -1,0 +1,7 @@
+﻿
+InputObject                                                  SideIndicator
+-----------                                                  -------------
+c:\Users\HP\Desktop\11fit theme\sections\main-combo.liquid   =>           
+c:\Users\HP\Desktop\11fit theme\sections\main-product.liquid <=           
+
+
