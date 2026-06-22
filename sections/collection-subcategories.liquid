@@ -67,22 +67,30 @@
 
 {%- assign current_handle = collection.handle -%}
 {%- assign parent_handle = current_handle -%}
+{%- assign is_all_page = false -%}
+
+{%- if current_handle == 'all' -%}
+  {%- assign is_all_page = true -%}
+{%- endif -%}
 
 {%- comment -%}
   Find the parent handle dynamically by checking against the list of known parent handles
 {%- endcomment -%}
-{%- assign main_handles_str = "t-shirts,trackpants,swimwear,shorts,joggers,accessories,frontpage,avada-best-sellers,cockroach-special" -%}
+{%- assign main_handles_str = "t-shirts,trackpants,swimwear,shorts,joggers,accessories" -%}
 {%- assign main_handles = main_handles_str | split: "," -%}
-{%- for main_handle in main_handles -%}
-  {%- assign handle_prefix = main_handle | append: "-" -%}
-  {%- if current_handle == main_handle -%}
-    {%- assign parent_handle = main_handle -%}
-    {%- break -%}
-  {%- elsif current_handle contains handle_prefix -%}
-    {%- assign parent_handle = main_handle -%}
-    {%- break -%}
-  {%- endif -%}
-{%- endfor -%}
+
+{%- unless is_all_page -%}
+  {%- for main_handle in main_handles -%}
+    {%- assign handle_prefix = main_handle | append: "-" -%}
+    {%- if current_handle == main_handle -%}
+      {%- assign parent_handle = main_handle -%}
+      {%- break -%}
+    {%- elsif current_handle contains handle_prefix -%}
+      {%- assign parent_handle = main_handle -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endunless -%}
 
 {%- assign parent_col = collections[parent_handle] -%}
 
@@ -118,7 +126,41 @@
   {%- endfor -%}
 {%- endcapture -%}
 
-{%- if parent_col -%}
+{%- if is_all_page -%}
+  <div class="collection-subcategories page-width">
+    <ul class="subcategories-list">
+      <li class="subcategory-item">
+        <a href="/collections/all" class="subcategory-link active">
+          {%- if section.settings.all_icon_svg != blank or section.settings.all_icon_image != blank -%}
+            <span class="subcategory-icon">
+              {%- if section.settings.all_icon_svg != blank -%}
+                {{ section.settings.all_icon_svg }}
+              {%- else -%}
+                {{ section.settings.all_icon_image | image_url: width: 40 | image_tag: loading: 'lazy' }}
+              {%- endif -%}
+            </span>
+          {%- endif -%}
+          <span class="subcategory-text">All</span>
+        </a>
+      </li>
+      {%- for handle in main_handles -%}
+        {%- assign main_col = collections[handle] -%}
+        {%- if main_col and main_col.title != blank -%}
+          <li class="subcategory-item">
+            <a href="{{ main_col.url }}" class="subcategory-link">
+              {%- if main_col.image != blank -%}
+                <span class="subcategory-icon">
+                  <img src="{{ main_col.image | image_url: width: 40 }}" loading="lazy" />
+                </span>
+              {%- endif -%}
+              <span class="subcategory-text">{{ main_col.title }}</span>
+            </a>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- elsif parent_col -%}
   <div class="collection-subcategories page-width">
     <ul class="subcategories-list">
       
