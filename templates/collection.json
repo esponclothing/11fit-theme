@@ -17,6 +17,12 @@
         "color_scheme": "scheme-1"
       }
     },
+    "subcategories": {
+      "type": "collection-subcategories",
+      "settings": {
+        "all_icon_svg": ""
+      }
+    },
     "product-grid": {
       "type": "main-collection-product-grid",
       "blocks": {
@@ -169,6 +175,7 @@
   },
   "order": [
     "banner",
+    "subcategories",
     "product-grid"
   ]
 }
