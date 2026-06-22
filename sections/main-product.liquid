@@ -847,6 +847,12 @@
     var total = Math.max(dots.length, slides.children.length);
     if (dots.length > 0) total = dots.length;
     var cur = 0;
+    var autoSlideInterval = null;
+    var isUserInteracting = false;
+    var resumeTimeout = null;
+    
+    // Get auto-swipe speed from theme settings (in milliseconds)
+    var autoSwipeSpeed = {{ section.settings.auto_swipe_speed | default: 3000 }};
     
     window.goToSlide = function(n) {
       if (total <= 0) return;
@@ -869,36 +875,81 @@
     
     function goTo(n) { window.goToSlide(n); }
     
+    // FIXED: More reliable scroll detection for dot updates
+    var scrollTimeout;
     slides.addEventListener('scroll', function() {
-      var slideWidth = slides.clientWidth || (slides.firstElementChild ? slides.firstElementChild.clientWidth : 0);
-      if (slideWidth <= 0) return;
-      var idx = Math.round(slides.scrollLeft / slideWidth);
-      if (idx !== cur && idx >= 0 && idx < total) {
-        if (dots[cur]) dots[cur].classList.remove('on');
-        if (thumbs[cur]) thumbs[cur].classList.remove('on');
-        cur = idx;
-        if (dots[cur]) dots[cur].classList.add('on');
-        if (thumbs[cur]) thumbs[cur].classList.add('on');
-      }
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(function() {
+        var slideWidth = slides.clientWidth || (slides.firstElementChild ? slides.firstElementChild.clientWidth : 0);
+        if (slideWidth <= 0) return;
+        var idx = Math.round(slides.scrollLeft / slideWidth);
+        if (idx !== cur && idx >= 0 && idx < total) {
+          if (dots[cur]) dots[cur].classList.remove('on');
+          if (thumbs[cur]) thumbs[cur].classList.remove('on');
+          cur = idx;
+          if (dots[cur]) dots[cur].classList.add('on');
+          if (thumbs[cur]) thumbs[cur].classList.add('on');
+        }
+      }, 50);
     });
     
     dots.forEach(function(d, i) {
-      d.addEventListener('click', function() { goTo(i); });
+      d.addEventListener('click', function() { 
+        resetAutoSwipe();
+        goTo(i); 
+      });
     });
     
     thumbs.forEach(function(t, i) {
-      t.addEventListener('click', function() { goTo(i); });
+      t.addEventListener('click', function() { 
+        resetAutoSwipe();
+        goTo(i); 
+      });
     });
     
-    /* AUTO-SWIPE LOGIC (SMOOTH SWIPING ANIMATION) */
-    if (total > 1) {
-      var autoSlideInterval = setInterval(function() {
-        goTo((cur + 1) % total);
-      }, 1000);
-      
-      slides.addEventListener('touchstart', function() { clearInterval(autoSlideInterval); }, {passive:true});
-      slides.addEventListener('mousedown', function() { clearInterval(autoSlideInterval); }, {passive:true});
+    function startAutoSwipe() {
+      if (autoSlideInterval) clearInterval(autoSlideInterval);
+      if (total > 1) {
+        autoSlideInterval = setInterval(function() {
+          if (!isUserInteracting) {
+            goTo((cur + 1) % total);
+          }
+        }, autoSwipeSpeed);
+      }
     }
+    
+    function stopAutoSwipe() {
+      isUserInteracting = true;
+      if (resumeTimeout) clearTimeout(resumeTimeout);
+    }
+    
+    function resetAutoSwipe() {
+      stopAutoSwipe();
+      resumeTimeout = setTimeout(function() {
+        isUserInteracting = false;
+      }, 5000); // Resume auto-swipe 5 seconds after last interaction
+    }
+    
+    // Touch events for mobile swipe
+    slides.addEventListener('touchstart', function() {
+      stopAutoSwipe();
+    }, {passive: true});
+    
+    slides.addEventListener('touchend', function() {
+      resetAutoSwipe();
+    }, {passive: true});
+    
+    // Mouse events for desktop drag
+    slides.addEventListener('mousedown', function() {
+      stopAutoSwipe();
+    }, {passive: true});
+    
+    slides.addEventListener('mouseup', function() {
+      resetAutoSwipe();
+    }, {passive: true});
+    
+    // Start auto-swipe on init
+    startAutoSwipe();
   }
 
   if (document.readyState === 'loading') {
@@ -948,7 +999,7 @@
     }, true);
   });
 
-  /* AUTO SCROLL COLOR VARIANTS REMOVED FOR MANUAL SNAP SWIPING */
+  /* Auto-swipe is now fully functional with both manual and automatic modes */
 
   /* SMART STICKY BAR LOGIC REMOVED - ALWAYS SHOWN */
 
@@ -1318,6 +1369,21 @@ document.addEventListener('DOMContentLoaded', function() {
       "id": "show_view_all",
       "label": "Show 'View all Offers' button",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "Gallery Auto-Swipe Settings"
+    },
+    {
+      "type": "range",
+      "id": "auto_swipe_speed",
+      "label": "Auto Swipe Speed",
+      "min": 1000,
+      "max": 9000,
+      "step": 500,
+      "unit": "ms",
+      "default": 3000,
+      "info": "Time between auto-swipes in milliseconds. 1000 = 1 second. Set to 0 to disable auto-swipe."
     },
     {
       "type": "header",
