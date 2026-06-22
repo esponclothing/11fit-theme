@@ -20,14 +20,6 @@
     "subcategories": {
       "type": "collection-subcategories",
       "blocks": {
-        "subcategory_b3abtq": {
-          "type": "subcategory",
-          "settings": {
-            "suffix": "Regular Fit",
-            "icon_svg": "",
-            "icon_image": ""
-          }
-        },
         "subcategory_4bebxh": {
           "type": "subcategory",
           "settings": {
@@ -54,7 +46,6 @@
         }
       },
       "block_order": [
-        "subcategory_b3abtq",
         "subcategory_4bebxh",
         "subcategory_ayCeTT",
         "subcategory_myC3mg"
