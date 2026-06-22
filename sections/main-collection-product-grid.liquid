@@ -595,136 +595,216 @@
                   %}
                 </li>
 
-                {% comment %} --- INLINE SLIDER INJECTION (DYNAMIC BY CAMPAIGN BLOCKS) --- {% endcomment %}
-                {%- for block in section.blocks -%}
-                  {%- if block.type == 'slider_campaign' and block.settings.insert_after == current_product_index -%}
-                    
-                    {%- assign show_campaign = true -%}
-                    {%- if block.settings.target_collection != blank and block.settings.target_collection.handle != collection.handle -%}
-                      {%- assign show_campaign = false -%}
+                {%- comment -%} --- INLINE SLIDER INJECTION (DYNAMIC BY METAFELDS & BLOCKS) --- {%- endcomment -%}
+                {%- assign collection_campaigns = collection.metafields.price_editor.campaigns.value -%}
+                {%- if collection_campaigns == blank -%}
+                  {%- comment -%} Try parent collection if available {%- endcomment -%}
+                  {%- if parent_handle != blank -%}
+                    {%- assign parent_col = collections[parent_handle] -%}
+                    {%- if parent_col -%}
+                      {%- assign collection_campaigns = parent_col.metafields.price_editor.campaigns.value -%}
                     {%- endif -%}
+                  {%- endif -%}
+                {%- endif -%}
 
-                    {%- if show_campaign -%}
-                      <li class="grid__item collection-slider-full-width custom-fade-in-up" {{ block.shopify_attributes }}>
+                {%- if collection_campaigns != blank -%}
+                  {%- for camp in collection_campaigns -%}
+                    {%- assign insert_after_num = camp.insert_after | plus: 0 -%}
+                    {%- if insert_after_num == current_product_index -%}
+                      <li class="grid__item collection-slider-full-width custom-fade-in-up">
                         
-                        {% comment %} Offer Banner Carousel (Supports up to 3 slides) {% endcomment %}
                         <div class="offer-carousel-wrapper">
-                          
-                          {%- if block.settings.heading_1 != blank -%}
-                          <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ block.settings.bg_color_1 }}, {{ block.settings.bg_color_2 }}); color: {{ block.settings.text_color }}; min-height: {{ block.settings.offer_box_height }}px;">
+                          {%- if camp.heading_1 != blank -%}
+                          <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ camp.bg_color_1 | default: '#111111' }}, {{ camp.bg_color_2 | default: '#2b2b2b' }}); color: {{ camp.text_color | default: '#ffffff' }}; min-height: {{ camp.offer_box_height | default: 70 }}px;">
                             <div class="lucrative-offer-content">
-                              <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_1 }}</h3>
-                              <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_1 }}</p>
+                              <h3 class="lucrative-offer-heading" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.heading_1 }}</h3>
+                              <p class="lucrative-offer-sub" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.subheading_1 }}</p>
                             </div>
-                            {%- if block.settings.coupon_code_1 != blank -%}
-                              <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }};">Code: <span>{{ block.settings.coupon_code_1 }}</span></div>
+                            {%- if camp.coupon_code_1 != blank -%}
+                              <div class="lucrative-offer-coupon" style="color: {{ camp.text_color | default: '#ffffff' }}; cursor: pointer;" onclick="copyCouponCode(this, '{{ camp.coupon_code_1 }}');">Code: <span>{{ camp.coupon_code_1 }}</span></div>
                             {%- endif -%}
                           </div>
                           {%- endif -%}
 
-                          {%- if block.settings.heading_2 != blank -%}
-                          <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ block.settings.bg_color_1 }}, {{ block.settings.bg_color_2 }}); color: {{ block.settings.text_color }}; min-height: {{ block.settings.offer_box_height }}px;">
+                          {%- if camp.heading_2 != blank -%}
+                          <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ camp.bg_color_1 | default: '#111111' }}, {{ camp.bg_color_2 | default: '#2b2b2b' }}); color: {{ camp.text_color | default: '#ffffff' }}; min-height: {{ camp.offer_box_height | default: 70 }}px;">
                             <div class="lucrative-offer-content">
-                              <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_2 }}</h3>
-                              <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_2 }}</p>
+                              <h3 class="lucrative-offer-heading" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.heading_2 }}</h3>
+                              <p class="lucrative-offer-sub" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.subheading_2 }}</p>
                             </div>
-                            {%- if block.settings.coupon_code_2 != blank -%}
-                              <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }};">Code: <span>{{ block.settings.coupon_code_2 }}</span></div>
+                            {%- if camp.coupon_code_2 != blank -%}
+                              <div class="lucrative-offer-coupon" style="color: {{ camp.text_color | default: '#ffffff' }}; cursor: pointer;" onclick="copyCouponCode(this, '{{ camp.coupon_code_2 }}');">Code: <span>{{ camp.coupon_code_2 }}</span></div>
                             {%- endif -%}
                           </div>
                           {%- endif -%}
 
-                          {%- if block.settings.heading_3 != blank -%}
-                          <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ block.settings.bg_color_1 }}, {{ block.settings.bg_color_2 }}); color: {{ block.settings.text_color }}; min-height: {{ block.settings.offer_box_height }}px;">
+                          {%- if camp.heading_3 != blank -%}
+                          <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ camp.bg_color_1 | default: '#111111' }}, {{ camp.bg_color_2 | default: '#2b2b2b' }}); color: {{ camp.text_color | default: '#ffffff' }}; min-height: {{ camp.offer_box_height | default: 70 }}px;">
                             <div class="lucrative-offer-content">
-                              <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_3 }}</h3>
-                              <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_3 }}</p>
+                              <h3 class="lucrative-offer-heading" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.heading_3 }}</h3>
+                              <p class="lucrative-offer-sub" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.subheading_3 }}</p>
                             </div>
-                            {%- if block.settings.coupon_code_3 != blank -%}
-                              <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }};">Code: <span>{{ block.settings.coupon_code_3 }}</span></div>
+                            {%- if camp.coupon_code_3 != blank -%}
+                              <div class="lucrative-offer-coupon" style="color: {{ camp.text_color | default: '#ffffff' }}; cursor: pointer;" onclick="copyCouponCode(this, '{{ camp.coupon_code_3 }}');">Code: <span>{{ camp.coupon_code_3 }}</span></div>
                             {%- endif -%}
                           </div>
                           {%- endif -%}
-
                         </div>
 
-                        {% comment %} Matched Product Slider Items {% endcomment %}
-                        <div class="custom-inline-slider" style="--title-size: {{ block.settings.font_size_title }}rem; --price-size: {{ block.settings.font_size_price }}rem; --discount-size: {{ block.settings.font_size_discount }}rem;">
-                          {% assign has_items = false %}
-                          {% assign target_campaign_id = block.settings.campaign_id %}
-                          
-                          {%- for item in section.blocks -%}
-                            {%- if item.type == 'slider_item' and item.settings.campaign_id == target_campaign_id -%}
-                              
-                              {%- assign show_item = true -%}
-                              {%- if item.settings.target_collection != blank and item.settings.target_collection.handle != collection.handle -%}
-                                {%- assign show_item = false -%}
-                              {%- endif -%}
-
-                              {%- if show_item -%}
-                                {% assign has_items = true %}
-                                
-                                <div class="slider-item" {{ item.shopify_attributes }}>
-                                  <a href="{{ item.settings.link | default: '#' }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
-                                    
-                                    <div class="slider-item-img-wrapper">
-                                      {%- if item.settings.image != blank -%}
-                                        {{ item.settings.image | image_url: width: 600 | image_tag: loading: 'lazy' }}
-                                      {%- else -%}
-                                        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
-                                      {%- endif -%}
-
-                                      {% comment %} Rating overlay inside image box {% endcomment %}
-                                      {%- if item.settings.rating != blank -%}
-                                        <div class="slider-rating-badge">
-                                          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                                          {{ item.settings.rating }}
-                                        </div>
-                                      {%- endif -%}
+                        <div class="custom-inline-slider" style="--title-size: 1.3rem; --price-size: 1.5rem; --discount-size: 1.1rem;">
+                          {%- assign has_items = false -%}
+                          {%- for item in camp.items -%}
+                            {%- assign has_items = true -%}
+                            <div class="slider-item">
+                              <a href="{{ item.link | default: '#' }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
+                                <div class="slider-item-img-wrapper">
+                                  {%- if item.image != blank -%}
+                                    <img src="{{ item.image }}" loading="lazy" />
+                                  {%- else -%}
+                                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                  {%- endif -%}
+                                  {%- if item.rating != blank -%}
+                                    <div class="slider-rating-badge">
+                                      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                      {{ item.rating }}
                                     </div>
-                                    
-                                    <div class="slider-item-details">
-                                      {% comment %} 1. Title {% endcomment %}
-                                      {%- if item.settings.title != blank -%}
-                                        <div class="slider-item-title">{{ item.settings.title }}</div>
-                                      {%- endif -%}
-                                      
-                                      {% comment %} 2. Price & Green Discount {% endcomment %}
-                                      <div class="slider-item-price-row">
-                                        {%- if item.settings.price != blank -%}
-                                          <span class="slider-item-price">{{ item.settings.price }}</span>
-                                        {%- endif -%}
-                                        {%- if item.settings.compare_price != blank -%}
-                                          <span class="slider-item-compare">{{ item.settings.compare_price }}</span>
-                                        {%- endif -%}
-                                        {%- if item.settings.discount != blank -%}
-                                          <span class="slider-item-discount">{{ item.settings.discount }}</span>
-                                        {%- endif -%}
-                                      </div>
-
-                                      {% comment %} 3. Lowest Price Text {% endcomment %}
-                                      <div class="lowest-price-text">Lowest price in last 30 days</div>
-                                    </div>
-
-                                  </a>
+                                  {%- endif -%}
                                 </div>
-                              {%- endif -%}
-
-                            {%- endif -%}
+                                <div class="slider-item-details">
+                                  {%- if item.title != blank -%}
+                                    <div class="slider-item-title">{{ item.title }}</div>
+                                  {%- endif -%}
+                                  <div class="slider-item-price-row">
+                                    {%- if item.price != blank -%}
+                                      <span class="slider-item-price">{{ item.price }}</span>
+                                    {%- endif -%}
+                                    {%- if item.compare_price != blank -%}
+                                      <span class="slider-item-compare">{{ item.compare_price }}</span>
+                                    {%- endif -%}
+                                    {%- if item.discount != blank -%}
+                                      <span class="slider-item-discount">{{ item.discount }}</span>
+                                    {%- endif -%}
+                                  </div>
+                                  <div class="lowest-price-text">Lowest price in last 30 days</div>
+                                </div>
+                              </a>
+                            </div>
                           {%- endfor -%}
-
                           {%- if has_items == false -%}
                             <div class="slider-item dummy-placeholder">
-                               <h3 style="margin:0; font-size: 16px;">Banner Ready! ✅</h3>
-                               <p style="margin: 5px 0 0; font-size: 14px;">Add <strong>Slider Image Items</strong> in the Theme Editor and set their Campaign ID to: <strong>{{ target_campaign_id }}</strong></p>
+                               <h3 style="margin:0; font-size: 16px;">Campaign Banner Live!</h3>
                             </div>
                           {%- endif -%}
                         </div>
 
                       </li>
                     {%- endif -%}
-                  {%- endif -%}
-                {%- endfor -%}
+                  {%- endfor -%}
+                {%- else -%}
+                  {% comment %} --- ORIGINAL INLINE SLIDER INJECTION (DYNAMIC BY CAMPAIGN BLOCKS) --- {% endcomment %}
+                  {%- for block in section.blocks -%}
+                    {%- if block.type == 'slider_campaign' and block.settings.insert_after == current_product_index -%}
+                      {%- assign show_campaign = true -%}
+                      {%- if block.settings.target_collection != blank and block.settings.target_collection.handle != collection.handle -%}
+                        {%- assign show_campaign = false -%}
+                      {%- endif -%}
+                      {%- if show_campaign -%}
+                        <li class="grid__item collection-slider-full-width custom-fade-in-up" {{ block.shopify_attributes }}>
+                          <div class="offer-carousel-wrapper">
+                            {%- if block.settings.heading_1 != blank -%}
+                            <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ block.settings.bg_color_1 }}, {{ block.settings.bg_color_2 }}); color: {{ block.settings.text_color }}; min-height: {{ block.settings.offer_box_height }}px;">
+                              <div class="lucrative-offer-content">
+                                <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_1 }}</h3>
+                                <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_1 }}</p>
+                              </div>
+                              {%- if block.settings.coupon_code_1 != blank -%}
+                                <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }}; cursor: pointer;" onclick="copyCouponCode(this, '{{ block.settings.coupon_code_1 }}');">Code: <span>{{ block.settings.coupon_code_1 }}</span></div>
+                              {%- endif -%}
+                            </div>
+                            {%- endif -%}
+                            {%- if block.settings.heading_2 != blank -%}
+                            <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ block.settings.bg_color_1 }}, {{ block.settings.bg_color_2 }}); color: {{ block.settings.text_color }}; min-height: {{ block.settings.offer_box_height }}px;">
+                              <div class="lucrative-offer-content">
+                                <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_2 }}</h3>
+                                <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_2 }}</p>
+                              </div>
+                              {%- if block.settings.coupon_code_2 != blank -%}
+                                <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }}; cursor: pointer;" onclick="copyCouponCode(this, '{{ block.settings.coupon_code_2 }}');">Code: <span>{{ block.settings.coupon_code_2 }}</span></div>
+                              {%- endif -%}
+                            </div>
+                            {%- endif -%}
+                            {%- if block.settings.heading_3 != blank -%}
+                            <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ block.settings.bg_color_1 }}, {{ block.settings.bg_color_2 }}); color: {{ block.settings.text_color }}; min-height: {{ block.settings.offer_box_height }}px;">
+                              <div class="lucrative-offer-content">
+                                <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_3 }}</h3>
+                                <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_3 }}</p>
+                              </div>
+                              {%- if block.settings.coupon_code_3 != blank -%}
+                                <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }}; cursor: pointer;" onclick="copyCouponCode(this, '{{ block.settings.coupon_code_3 }}');">Code: <span>{{ block.settings.coupon_code_3 }}</span></div>
+                              {%- endif -%}
+                            </div>
+                            {%- endif -%}
+                          </div>
+                          <div class="custom-inline-slider" style="--title-size: {{ block.settings.font_size_title }}rem; --price-size: {{ block.settings.font_size_price }}rem; --discount-size: {{ block.settings.font_size_discount }}rem;">
+                            {% assign has_items = false %}
+                            {% assign target_campaign_id = block.settings.campaign_id %}
+                            {%- for item in section.blocks -%}
+                              {%- if item.type == 'slider_item' and item.settings.campaign_id == target_campaign_id -%}
+                                {%- assign show_item = true -%}
+                                {%- if item.settings.target_collection != blank and item.settings.target_collection.handle != collection.handle -%}
+                                  {%- assign show_item = false -%}
+                                {%- endif -%}
+                                {%- if show_item -%}
+                                  {% assign has_items = true %}
+                                  <div class="slider-item" {{ item.shopify_attributes }}>
+                                    <a href="{{ item.settings.link | default: '#' }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
+                                      <div class="slider-item-img-wrapper">
+                                        {%- if item.settings.image != blank -%}
+                                          {{ item.settings.image | image_url: width: 600 | image_tag: loading: 'lazy' }}
+                                        {%- else -%}
+                                          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                        {%- endif -%}
+                                        {%- if item.settings.rating != blank -%}
+                                          <div class="slider-rating-badge">
+                                            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                            {{ item.settings.rating }}
+                                          </div>
+                                        {%- endif -%}
+                                      </div>
+                                      <div class="slider-item-details">
+                                        {%- if item.settings.title != blank -%}
+                                          <div class="slider-item-title">{{ item.settings.title }}</div>
+                                        {%- endif -%}
+                                        <div class="slider-item-price-row">
+                                          {%- if item.settings.price != blank -%}
+                                            <span class="slider-item-price">{{ item.settings.price }}</span>
+                                          {%- endif -%}
+                                          {%- if item.settings.compare_price != blank -%}
+                                            <span class="slider-item-compare">{{ item.settings.compare_price }}</span>
+                                          {%- endif -%}
+                                          {%- if item.settings.discount != blank -%}
+                                            <span class="slider-item-discount">{{ item.settings.discount }}</span>
+                                          {%- endif -%}
+                                        </div>
+                                        <div class="lowest-price-text">Lowest price in last 30 days</div>
+                                      </div>
+                                    </a>
+                                  </div>
+                                {%- endif -%}
+                              {%- endif -%}
+                            {%- endfor -%}
+                            {%- if has_items == false -%}
+                              <div class="slider-item dummy-placeholder">
+                                 <h3 style="margin:0; font-size: 16px;">Banner Ready! ✅</h3>
+                                 <p style="margin: 5px 0 0; font-size: 14px;">Add <strong>Slider Image Items</strong> in the Theme Editor and set their Campaign ID to: <strong>{{ target_campaign_id }}</strong></p>
+                              </div>
+                            {%- endif -%}
+                          </div>
+                        </li>
+                      {%- endif -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
                 {% comment %} --- END INLINE SLIDER --- {% endcomment %}
 
                 {%- assign skip_card_product_styles = true -%}
@@ -743,6 +823,23 @@
   {% comment %} --- CUSTOM SCROLL ANIMATION SCRIPT --- {% endcomment %}
   <script>
     (function() {
+      window.copyCouponCode = function(element, code) {
+        if (!navigator.clipboard) return;
+        navigator.clipboard.writeText(code).then(() => {
+          const originalHTML = element.innerHTML;
+          element.innerHTML = "Copied! ✓";
+          const originalBG = element.style.background;
+          const originalBorder = element.style.borderColor;
+          element.style.background = "#10B981"; // Emerald green
+          element.style.borderColor = "#10B981";
+          setTimeout(() => {
+            element.innerHTML = originalHTML;
+            element.style.background = originalBG;
+            element.style.borderColor = originalBorder;
+          }, 2000);
+        });
+      };
+
       function initCustomReveal() {
         const observer = new IntersectionObserver((entries, obs) => {
           entries.forEach(entry => {
