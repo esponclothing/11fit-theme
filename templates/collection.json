@@ -17,50 +17,6 @@
         "color_scheme": "scheme-1"
       }
     },
-    "subcategories": {
-      "type": "collection-subcategories",
-      "blocks": {
-        "subcategory_4bebxh": {
-          "type": "subcategory",
-          "settings": {
-            "suffix": "CJP",
-            "icon_svg": "",
-            "icon_image": "shopify://shop_images/1.png"
-          }
-        },
-        "subcategory_ayCeTT": {
-          "type": "subcategory",
-          "settings": {
-            "suffix": "Regular Fit",
-            "icon_svg": "",
-            "icon_image": "shopify://shop_images/Front_1_c_52_e6db6b30-1282-4531-a5cd-ca793964e664.jpg"
-          }
-        },
-        "subcategory_myC3mg": {
-          "type": "subcategory",
-          "settings": {
-            "suffix": "Oversized",
-            "icon_svg": "",
-            "icon_image": "shopify://shop_images/Front_1_c_64_f9192836-b933-4364-a378-9b679fe78e0a.jpg"
-          }
-        },
-        "subcategory_fiekaf": {
-          "type": "subcategory",
-          "settings": {
-            "suffix": "Regular Fit"
-          }
-        }
-      },
-      "block_order": [
-        "subcategory_4bebxh",
-        "subcategory_ayCeTT",
-        "subcategory_myC3mg",
-        "subcategory_fiekaf"
-      ],
-      "settings": {
-        "all_icon_svg": ""
-      }
-    },
     "product-grid": {
       "type": "main-collection-product-grid",
       "blocks": {
@@ -213,7 +169,6 @@
   },
   "order": [
     "banner",
-    "subcategories",
     "product-grid"
   ]
 }
