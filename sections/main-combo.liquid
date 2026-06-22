@@ -34,9 +34,38 @@
   .fit11-slide { flex: 0 0 100%; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; width: 100%; height: 100%; }
   .fit11-slide img { width: 100%; height: 100%; object-fit: contain; } 
   
-  .fit11-dots { position: absolute; bottom: 44px; left: 0; width: 100%; display: flex; justify-content: center; gap: 8px; pointer-events: none; z-index: 11; }
-  .fit11-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(17, 17, 17, 0.45); border: 1.5px solid #ffffff; transition: all .4s ease; pointer-events: auto; cursor: pointer; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5); }
-  .fit11-dot.on { background: #111111; width: 24px; border-radius: 5px; border-color: #ffffff; box-shadow: 0 1px 5px rgba(0, 0, 0, 0.6); }
+  .fit11-dots {
+    position: absolute;
+    bottom: 44px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+    z-index: 99999 !important;
+    background: rgba(0, 0, 0, 0.35);
+    padding: 6px 12px;
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 0.5px solid rgba(255, 255, 255, 0.15);
+  }
+  .fit11-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+    cursor: pointer;
+  }
+  .fit11-dot.on {
+    background: #ffffff;
+    width: 20px;
+    border-radius: 4px;
+  }
   
   .fit11-thumbs { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; -webkit-overflow-scrolling: touch;  }
   .fit11-thumbs::-webkit-scrollbar { display: none; }
@@ -982,37 +1011,79 @@
 })();
 
 (function() {
-  /* GALLERY SYNC */
-  var slides = document.getElementById('fit11Slides'), dotsWrap = document.getElementById('fit11Dots'), thumbsWrap = document.getElementById('fit11Thumbs');
-  if (!slides) return;
-  var dots = dotsWrap ? dotsWrap.querySelectorAll('.fit11-dot') : [], thumbs = thumbsWrap ? thumbsWrap.querySelectorAll('.fit11-thumb') : [];
-  var total = dots.length, cur = 0;
-  window.goToSlide = function(n) {
-    if (n < 0) n = total - 1; if (n >= total) n = 0;
-    if (dots[cur]) dots[cur].classList.remove('on'); if (thumbs[cur]) thumbs[cur].classList.remove('on');
-    cur = n; slides.scrollTo({ left: cur * slides.clientWidth, behavior: 'smooth' });
-    if (dots[cur]) dots[cur].classList.add('on'); if (thumbs[cur]) thumbs[cur].classList.add('on');
-  };
-  function goTo(n) { window.goToSlide(n); }
-  slides.addEventListener('scroll', function() {
-    var idx = Math.round(slides.scrollLeft / slides.clientWidth);
-    if (idx !== cur && idx >= 0 && idx < total) {
-      if (dots[cur]) dots[cur].classList.remove('on'); if (thumbs[cur]) thumbs[cur].classList.remove('on');
-      cur = idx;
-      if (dots[cur]) dots[cur].classList.add('on'); if (thumbs[cur]) thumbs[cur].classList.add('on');
+  function initGallery() {
+    var sectionContainer = document.getElementById('fit11-page-{{ section.id }}') || document;
+    var slides = sectionContainer.querySelector('.fit11-slides');
+    var dotsWrap = sectionContainer.querySelector('.fit11-dots');
+    var thumbsWrap = sectionContainer.querySelector('.fit11-thumbs');
+    
+    if (!slides) return;
+    
+    var dots = dotsWrap ? dotsWrap.querySelectorAll('.fit11-dot') : [];
+    var thumbs = thumbsWrap ? thumbsWrap.querySelectorAll('.fit11-thumb') : [];
+    var total = Math.max(dots.length, slides.children.length);
+    if (dots.length > 0) total = dots.length;
+    var cur = 0;
+    
+    window.goToSlide = function(n) {
+      if (total <= 0) return;
+      if (n < 0) n = total - 1; 
+      if (n >= total) n = 0;
+      
+      if (dots[cur]) dots[cur].classList.remove('on');
+      if (thumbs[cur]) thumbs[cur].classList.remove('on');
+      
+      cur = n;
+      
+      var slideWidth = slides.clientWidth || (slides.firstElementChild ? slides.firstElementChild.clientWidth : 0);
+      if (slideWidth > 0) {
+        slides.scrollTo({ left: cur * slideWidth, behavior: 'smooth' });
+      }
+      
+      if (dots[cur]) dots[cur].classList.add('on');
+      if (thumbs[cur]) thumbs[cur].classList.add('on');
+    };
+    
+    function goTo(n) { window.goToSlide(n); }
+    
+    slides.addEventListener('scroll', function() {
+      var slideWidth = slides.clientWidth || (slides.firstElementChild ? slides.firstElementChild.clientWidth : 0);
+      if (slideWidth <= 0) return;
+      var idx = Math.round(slides.scrollLeft / slideWidth);
+      if (idx !== cur && idx >= 0 && idx < total) {
+        if (dots[cur]) dots[cur].classList.remove('on');
+        if (thumbs[cur]) thumbs[cur].classList.remove('on');
+        cur = idx;
+        if (dots[cur]) dots[cur].classList.add('on');
+        if (thumbs[cur]) thumbs[cur].classList.add('on');
+      }
+    });
+    
+    dots.forEach(function(d, i) {
+      d.addEventListener('click', function() { goTo(i); });
+    });
+    
+    thumbs.forEach(function(t, i) {
+      t.addEventListener('click', function() { goTo(i); });
+    });
+    
+    /* AUTO-SWIPE LOGIC (SMOOTH SWIPING ANIMATION) */
+    if (total > 1) {
+      var autoSlideInterval = setInterval(function() {
+        goTo((cur + 1) % total);
+      }, 4000);
+      
+      slides.addEventListener('touchstart', function() { clearInterval(autoSlideInterval); }, {passive:true});
+      slides.addEventListener('mousedown', function() { clearInterval(autoSlideInterval); }, {passive:true});
     }
-  });
-  dots.forEach(function(d, i) { d.addEventListener('click', function() { goTo(i); }); });
-  thumbs.forEach(function(t, i) { t.addEventListener('click', function() { goTo(i); }); });
-
-  /* AUTO-SWIPE LOGIC (SMOOTH SWIPING ANIMATION) */
-  if (total > 1) {
-    var autoSlideInterval = setInterval(function() {
-      window.goToSlide((cur + 1) % total);
-    }, 4000);
-    slides.addEventListener('touchstart', function() { clearInterval(autoSlideInterval); }, {passive:true});
-    slides.addEventListener('mousedown', function() { clearInterval(autoSlideInterval); }, {passive:true});
   }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGallery);
+  } else {
+    initGallery();
+  }
+})();
 
   /* LIGHTBOX LOGIC */
   document.querySelectorAll('.fit11-slide img').forEach(function(img) {
