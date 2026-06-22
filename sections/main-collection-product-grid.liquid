@@ -572,14 +572,16 @@
             {%- if collection.handle == 'all' -%}
               {% comment %} --- ALL COLLECTION CATEGORY GROUP SECTIONS --- {% endcomment %}
               <div class="category-all-sections">
-                {%- assign category_handles = "t-shirts,shorts,trackpants,swimwear,joggers,accessories" | split: "," -%}
+                {%- assign category_handles = shop.metafields.price_editor.category_order.value -%}
+                {%- if category_handles == blank -%}
+                  {%- assign category_handles = "t-shirts,shorts,trackpants,swimwear,joggers,accessories" | split: "," -%}
+                {%- endif -%}
                 {%- for cat_handle in category_handles -%}
                   {%- assign cat_collection = collections[cat_handle] -%}
                   {%- if cat_collection != blank and cat_collection.all_products_count > 0 -%}
                     <div class="category-group-section" style="margin-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 32px;">
                       <div class="category-group-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                         <h2 style="font-size: 2.2rem; font-weight: 800; text-transform: uppercase; margin: 0; color: #fff;">{{ cat_collection.title }}</h2>
-                        <a href="{{ cat_collection.url }}" style="font-size: 1.3rem; font-weight: 700; color: #eab308; text-transform: uppercase; text-decoration: none; border-bottom: 2px solid #eab308;">View All</a>
                       </div>
 
                       {% comment %} Fetch featured 4 products from collection metafield {% endcomment %}
@@ -596,6 +598,7 @@
                               {%- assign shown_handles_str = shown_handles_str | append: handle_check_comma -%}
                               {%- assign featured_count = featured_count | plus: 1 -%}
                               <li class="grid__item">
+                                <div style="font-size: 1.05rem; text-transform: uppercase; color: #9ca3af; font-weight: 700; margin-bottom: 4px; letter-spacing: 0.5px; text-align: left; display: block;">{{ cat_collection.title }}</div>
                                 {% render 'card-product',
                                   card_product: prod,
                                   media_aspect_ratio: section.settings.image_ratio,
@@ -622,6 +625,7 @@
                               {%- assign shown_handles_str = shown_handles_str | append: handle_check_comma -%}
                               {%- assign featured_count = featured_count | plus: 1 -%}
                               <li class="grid__item">
+                                <div style="font-size: 1.05rem; text-transform: uppercase; color: #9ca3af; font-weight: 700; margin-bottom: 4px; letter-spacing: 0.5px; text-align: left; display: block;">{{ cat_collection.title }}</div>
                                 {% render 'card-product',
                                   card_product: prod,
                                   media_aspect_ratio: section.settings.image_ratio,
@@ -640,51 +644,51 @@
                         {%- endif -%}
                       </ul>
 
-                      {% comment %} Remaining products in a slider below {% endcomment %}
-                      <div class="category-slider-outer-wrapper" style="position: relative; width: 100%;">
-                        <div class="custom-inline-slider category-auto-slider" id="slider-{{ cat_handle }}" style="--title-size: 1.25rem; --price-size: 1.5rem; --discount-size: 1.1rem; scroll-behavior: smooth;">
-                          {%- assign has_slider_items = false -%}
-                          {%- for prod in cat_collection.products -%}
-                            {%- assign handle_check_comma = prod.handle | append: "," -%}
-                            {%- unless shown_handles_str contains handle_check_comma -%}
-                              {%- assign has_slider_items = true -%}
-                              <div class="slider-item">
-                                <a href="{{ prod.url }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
-                                  <div class="slider-item-img-wrapper">
-                                    {%- if prod.featured_media != blank -%}
-                                      {{ prod.featured_media | image_url: width: 600 | image_tag: loading: 'lazy' }}
-                                    {%- else -%}
-                                      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                      {% comment %} Capture remaining products to see if slider has items {% endcomment %}
+                      {%- capture slider_items_html -%}
+                        {%- for prod in cat_collection.products -%}
+                          {%- assign handle_check_comma = prod.handle | append: "," -%}
+                          {%- unless shown_handles_str contains handle_check_comma -%}
+                            <div class="slider-item">
+                              <a href="{{ prod.url }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
+                                <div class="slider-item-img-wrapper">
+                                  {%- if prod.featured_media != blank -%}
+                                    {{ prod.featured_media | image_url: width: 600 | image_tag: loading: 'lazy' }}
+                                  {%- else -%}
+                                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                  {%- endif -%}
+                                </div>
+                                <div class="slider-item-details">
+                                  <div style="font-size: 1.0rem; text-transform: uppercase; color: #9ca3af; font-weight: 700; margin-bottom: 2px; letter-spacing: 0.5px;">{{ cat_collection.title }}</div>
+                                  <div class="slider-item-title">{{ prod.title }}</div>
+                                  <div class="slider-item-price-row">
+                                    <span class="slider-item-price">{{ prod.price | money }}</span>
+                                    {%- if prod.compare_at_price > prod.price -%}
+                                      <span class="slider-item-compare">{{ prod.compare_at_price | money }}</span>
+                                      <span class="slider-item-discount">
+                                        {%- if prod.compare_at_price_max > 0 -%}
+                                          {{ prod.compare_at_price | minus: prod.price | times: 100 | divided_by: prod.compare_at_price }}% OFF
+                                        {%- endif -%}
+                                      </span>
                                     {%- endif -%}
                                   </div>
-                                  <div class="slider-item-details">
-                                    <div class="slider-item-title">{{ prod.title }}</div>
-                                    <div class="slider-item-price-row">
-                                      <span class="slider-item-price">{{ prod.price | money }}</span>
-                                      {%- if prod.compare_at_price > prod.price -%}
-                                        <span class="slider-item-compare">{{ prod.compare_at_price | money }}</span>
-                                        <span class="slider-item-discount">
-                                          {%- if prod.compare_at_price_max > 0 -%}
-                                            {{ prod.compare_at_price | minus: prod.price | times: 100 | divided_by: prod.compare_at_price }}% OFF
-                                          {%- endif -%}
-                                        </span>
-                                      {%- endif -%}
-                                    </div>
-                                    <div class="lowest-price-text">Lowest price in last 30 days</div>
-                                  </div>
-                                </a>
-                              </div>
-                            {%- endunless -%}
-                          {%- endfor -%}
-                          {%- if has_slider_items == false -%}
-                            <div style="text-align: center; color: #888; font-style: italic; width: 100%; padding: 20px;">No additional products</div>
-                          {%- endif -%}
+                                  <div class="lowest-price-text">Lowest price in last 30 days</div>
+                                </div>
+                              </a>
+                            </div>
+                          {%- endunless -%}
+                        {%- endfor -%}
+                      {%- endcapture -%}
+
+                      {%- if slider_items_html contains "slider-item" -%}
+                        <div class="category-slider-outer-wrapper" style="position: relative; width: 100%;">
+                          <div class="custom-inline-slider category-auto-slider" id="slider-{{ cat_handle }}" style="--title-size: 1.25rem; --price-size: 1.5rem; --discount-size: 1.1rem; scroll-behavior: smooth;">
+                            {{ slider_items_html }}
+                          </div>
+                          <button class="slider-nav-btn prev-btn" onclick="slideCategory('{{ cat_handle }}', 'left')">‹</button>
+                          <button class="slider-nav-btn next-btn" onclick="slideCategory('{{ cat_handle }}', 'right')">›</button>
                         </div>
-                        
-                        {% comment %} Add manual slider arrows {% endcomment %}
-                        <button class="slider-nav-btn prev-btn" onclick="slideCategory('{{ cat_handle }}', 'left')">‹</button>
-                        <button class="slider-nav-btn next-btn" onclick="slideCategory('{{ cat_handle }}', 'right')">›</button>
-                      </div>
+                      {%- endif -%}
                     </div>
                   {%- endif -%}
                 {%- endfor -%}
@@ -767,9 +771,9 @@
                   }
                 }
 
-                // Auto-sliding logic
+                // Auto-sliding logic for both category row and custom inline campaign sliders
                 document.addEventListener('DOMContentLoaded', function() {
-                  const sliders = document.querySelectorAll('.category-auto-slider');
+                  const sliders = document.querySelectorAll('.category-auto-slider, .custom-inline-slider');
                   sliders.forEach(slider => {
                     let interval;
                     function startAutoSlide() {
@@ -777,9 +781,9 @@
                         if (slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 10) {
                           slider.scrollLeft = 0;
                         } else {
-                          slider.scrollLeft += 200;
+                          slider.scrollLeft += 240; // slightly wider scroll step
                         }
-                      }, 4000);
+                      }, 2200); // Swiping speed boosted to 2.2 seconds
                     }
                     function stopAutoSlide() {
                       clearInterval(interval);
