@@ -12,10 +12,16 @@
     "main": {
       "type": "main-product",
       "blocks": {
+        "qikify_volume_discount_volume_offer_kKMmyG": {
+          "type": "shopify://apps/qikify-volume-discount/blocks/volume_offer/f0592105-7af5-4bc5-afd2-d674b4b2de92",
+          "settings": {
+            "product": "{{product}}"
+          }
+        },
         "offer_Qkqxn7": {
           "type": "offer",
           "settings": {
-            "offer_code": "",
+            "offer_code": "Auto Applied",
             "offer_desc": "5% Off Automatically On All Prepaid Order",
             "offer_timer": "Ends in 07h 06m 05s"
           }
@@ -26,12 +32,6 @@
             "offer_code": "PURCHASE1999",
             "offer_desc": "VIP Disscount of Rs.100 On Order Above Rs.1999",
             "offer_timer": "Ends in 07h 06m 05s"
-          }
-        },
-        "qikify_volume_discount_volume_offer_kKMmyG": {
-          "type": "shopify://apps/qikify-volume-discount/blocks/volume_offer/f0592105-7af5-4bc5-afd2-d674b4b2de92",
-          "settings": {
-            "product": "{{product}}"
           }
         }
       },
