@@ -54,7 +54,8 @@
   }
 </style>
 
-<div class="collection-hero{% if section.settings.show_collection_image and collection.image %} collection-hero--with-image{% endif %} color-{{ section.settings.color_scheme }} gradient">
+{%- assign custom_banner_url = collection.metafields.price_editor.banner_image_url.value -%}
+<div class="collection-hero{% if section.settings.show_collection_image and custom_banner_url != blank %} collection-hero--with-image{% elsif section.settings.show_collection_image and collection.image %} collection-hero--with-image{% endif %} color-{{ section.settings.color_scheme }} gradient">
   <div class="collection-hero__inner page-width {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
     <div class="collection-hero__text-wrapper">
       <h1 class="collection-hero__title">
@@ -67,7 +68,15 @@
       {%- endif -%}
     </div>
 
-    {%- if section.settings.show_collection_image and collection.image -%}
+    {%- if section.settings.show_collection_image and custom_banner_url != blank -%}
+      <div class="collection-hero__image-container media gradient">
+        <img
+          src="{{ custom_banner_url }}"
+          alt="{{ collection.title | escape }}"
+          style="width: 100%; height: auto; object-fit: cover;"
+        >
+      </div>
+    {%- elsif section.settings.show_collection_image and collection.image -%}
       <div class="collection-hero__image-container media gradient">
         <img
           srcset="
