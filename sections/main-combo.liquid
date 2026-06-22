@@ -629,18 +629,29 @@
             <div class="fit11-acc-body">{{ product.description }}</div>
           </details>
         {% endif %}
-        {% if section.settings.delivery_text != blank %}
           <details class="fit11-accord">
             <summary style="display: flex; align-items: center; gap: 10px;">
-              <i class="ti ti-arrow-back-up" style="font-size:20px; color:var(--lux-text);"></i>
+              <i class="ti ti-refresh" style="font-size:20px; color:var(--lux-text);"></i>
               <div style="display:flex; flex-direction:column; gap:2px; margin-right:auto;">
-                <span style="font-weight:600; text-transform:none; letter-spacing:normal;">Return &amp; Exchange</span>
+                <span style="font-weight:600; text-transform:none; letter-spacing:normal;">7 Days Returns &amp; Exchange</span>
+                <span style="font-size:12px; font-weight:400; color:var(--lux-text-muted); text-transform:none; letter-spacing:normal;">Know about return &amp; exchange policy</span>
               </div>
               <i class="ti ti-chevron-down" aria-hidden="true" style="margin-left:auto;"></i>
             </summary>
-            <div class="fit11-acc-body">{{ section.settings.delivery_text }}</div>
+            <div class="fit11-acc-body" style="font-weight: 400; line-height: 1.6;">
+              <p style="margin-bottom: 16px; color: var(--lux-text);">Items purchased from 11fit are eligible for return/exchange, if returned within 7 days of delivery.</p>
+              
+              <p style="margin-bottom: 4px; font-weight: 600; color: var(--lux-text);">Free Exchanges</p>
+              <p style="margin-bottom: 16px; color: var(--lux-text-muted);">We accept exchanges free of cost. This means you won't be charged extra to exchange the product(s). It's on us! We want your experience to be hassle-free.</p>
+              
+              <p style="margin-bottom: 4px; font-weight: 600; color: var(--lux-text);">Easy Returns</p>
+              <p style="margin-bottom: 8px; color: var(--lux-text-muted);">For Prepaid Orders - The full amount is refunded into your initial payment mode (bank account, credit card, etc.)</p>
+              <p style="margin-bottom: 16px; color: var(--lux-text-muted);">For Cash On Delivery - A refund will be initiated to the bank account that is provided by you at the time of raising a return.</p>
+              
+              <p style="margin-bottom: 4px; font-weight: 600; color: var(--lux-text);">Exchange For Something Else?</p>
+              <p style="margin-bottom: 0; color: var(--lux-text-muted);">In case of an exchange, you are also allowed to choose a different product. If the value of the replacement product exceeds that of the previously purchased product, you can pay just the difference else if it's less, the same can be refunded to you as gift card.</p>
+            </div>
           </details>
-        {% endif %}
       </div>
 
     </div>
