@@ -12,8 +12,8 @@
     --lux-text-muted: {{ section.settings.color_muted | default: '#666666' }};
     --lux-border: {{ section.settings.color_border | default: '#e8e8e8' }};
     --lux-accent: {{ section.settings.color_accent | default: '#9a7b4f' }};
-    --font-heading: {{ section.settings.font_heading | default: 'serif' }};
-    --font-body: {{ section.settings.font_body | default: 'sans-serif' }};
+    --font-heading: var(--font-heading-family, serif);
+    --font-body: var(--font-body-family, sans-serif);
   }
 
   .fit11-page { background: var(--lux-bg); color: var(--lux-text); font-family: var(--font-body); padding: 40px 0; }
@@ -329,18 +329,6 @@
 {
   "name": "11fit Combo 3 Packs",
   "settings": [
-    {
-      "type": "font_picker",
-      "id": "font_heading",
-      "label": "Heading Font",
-      "default": "serif"
-    },
-    {
-      "type": "font_picker",
-      "id": "font_body",
-      "label": "Body Font",
-      "default": "sans-serif"
-    },
     {
       "type": "color",
       "id": "color_bg",

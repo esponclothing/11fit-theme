@@ -26,8 +26,6 @@
       ],
       "name": "11Fit Combo 3 Packs",
       "settings": {
-        "font_heading": "'Playfair Display', serif",
-        "font_body": "'Outfit', sans-serif",
         "color_bg": "#fafafa",
         "color_surface": "#ffffff",
         "color_text": "#c5a059",
