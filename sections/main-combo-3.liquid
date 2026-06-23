@@ -758,13 +758,18 @@
               .then(response => response.json())
               .then(data => {
                 document.dispatchEvent(new CustomEvent('cart:build'));
+                
+                // Auto-apply discount code
+                const discountCode = `11FIT-COMBO-{{ product.id }}-${comboCount}`;
+                const baseUrl = '/discount/' + discountCode + '?redirect=';
+                
                 if (isBuyNow) {
-                  window.location.href = '/checkout';
+                  window.location.href = baseUrl + '/checkout';
                 } else {
                   if (window.routes && window.routes.cart_url) {
-                    window.location.href = window.routes.cart_url;
+                    window.location.href = baseUrl + window.routes.cart_url;
                   } else {
-                    window.location.href = '/cart';
+                    window.location.href = baseUrl + '/cart';
                   }
                 }
               })
