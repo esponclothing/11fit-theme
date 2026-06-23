@@ -706,18 +706,9 @@
                 if (!color || !size) {
                   allValid = false;
                 } else {
-                  // Find matching variant
-                  const matchedVariant = productVariants.find(variant => {
-                    return variant.options.includes(color) && variant.options.includes(size);
-                  });
-                  if (matchedVariant) {
-                    comboSelections[i].variantId = matchedVariant.id;
-                    comboSelections[i].color = color;
-                    comboSelections[i].size = size;
-                    comboSelections[i].valid = true;
-                  } else {
-                    allValid = false;
-                  }
+                  comboSelections[i].color = color;
+                  comboSelections[i].size = size;
+                  comboSelections[i].valid = true;
                 }
               }
               
@@ -732,22 +723,21 @@
               addBtn.disabled = true;
               buyBtn.disabled = true;
               
-              const comboGroupId = Date.now().toString();
-              const itemsToAdd = [];
-
+              const comboProps = {
+                '_combo_id': Date.now().toString(),
+                'Combo Pack': `${comboCount}-Pack Combo`
+              };
+              
               for (let i = 1; i <= comboCount; i++) {
-                itemsToAdd.push({
-                  id: comboSelections[i].variantId,
-                  quantity: 1,
-                  properties: {
-                    '_combo_id': comboGroupId,
-                    '_combo_required_count': comboCount.toString(),
-                    '_combo_product_id': '{{ product.id }}',
-                    'Combo Pack': `${comboCount}-Pack Combo`,
-                    'Item': `Product ${i}`
-                  }
-                });
+                comboProps[`Item ${i}`] = `${comboSelections[i].color} / ${comboSelections[i].size}`;
               }
+
+              // Add ONE line item representing the entire combo
+              const itemsToAdd = [{
+                id: productVariants[0].id, // Add the default variant of the Combo product
+                quantity: 1,
+                properties: comboProps
+              }];
 
               fetch(window.Shopify.routes.root + 'cart/add.js', {
                 method: 'POST',
