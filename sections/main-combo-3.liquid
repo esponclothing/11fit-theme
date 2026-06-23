@@ -660,6 +660,16 @@
           </div>
 
           <script>
+            // Store selections for the 3 combo items
+            const comboSelections = {
+              1: { color: null, size: null, variantId: null, valid: false },
+              2: { color: null, size: null, variantId: null, valid: false },
+              3: { color: null, size: null, variantId: null, valid: false }
+            };
+
+            // Raw product variants list passed to Javascript
+            const productVariants = {{ product.variants | json }};
+
             function validateCombo() {
               let allValid = true;
               for (let i = 1; i <= 3; i++) {
@@ -667,6 +677,19 @@
                 const size = document.getElementById(`combo3-size-${i}`).value;
                 if (!color || !size) {
                   allValid = false;
+                } else {
+                  // Find matching variant
+                  const matchedVariant = productVariants.find(variant => {
+                    return variant.options.includes(color) && variant.options.includes(size);
+                  });
+                  if (matchedVariant) {
+                    comboSelections[i].variantId = matchedVariant.id;
+                    comboSelections[i].color = color;
+                    comboSelections[i].size = size;
+                    comboSelections[i].valid = true;
+                  } else {
+                    allValid = false;
+                  }
                 }
               }
               
@@ -681,14 +704,20 @@
               addBtn.disabled = true;
               buyBtn.disabled = true;
               
-              const properties = {
-                'Item 1 Color': document.getElementById('combo3-color-1').value,
-                'Item 1 Size': document.getElementById('combo3-size-1').value,
-                'Item 2 Color': document.getElementById('combo3-color-2').value,
-                'Item 2 Size': document.getElementById('combo3-size-2').value,
-                'Item 3 Color': document.getElementById('combo3-color-3').value,
-                'Item 3 Size': document.getElementById('combo3-size-3').value
-              };
+              const comboGroupId = Date.now().toString();
+              const itemsToAdd = [];
+
+              for (let i = 1; i <= 3; i++) {
+                itemsToAdd.push({
+                  id: comboSelections[i].variantId,
+                  quantity: 1,
+                  properties: {
+                    '_combo_id': comboGroupId,
+                    'Combo Pack': '3-Pack Combo',
+                    'Item': `Product ${i}`
+                  }
+                });
+              }
 
               fetch(window.Shopify.routes.root + 'cart/add.js', {
                 method: 'POST',
@@ -696,9 +725,7 @@
                   'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                  id: '{{ product.selected_or_first_available_variant.id }}',
-                  quantity: 1,
-                  properties: properties
+                  items: itemsToAdd
                 })
               })
               .then(response => response.json())
