@@ -9,7 +9,9 @@
     </div>
     
     <div class="fit11-offer-desc" style="font-size: 13px; color: #1a202c; font-weight: 500; margin-top: 4px;">
-      {% if campaign.minQuantity > 1 %}
+      {% if campaign.discountType == 'FLAT_RATE' %}
+        Buy {{ campaign.minQuantity }} or more items for a
+      {% elsif campaign.minQuantity > 1 %}
         Buy {{ campaign.minQuantity }} or more items and get
       {% else %}
         Get
@@ -17,6 +19,8 @@
       <span style="color: #198754; font-weight: 700;">
         {% if campaign.discountType == 'PERCENTAGE' %}
           {{ campaign.discountValue }}% OFF
+        {% elsif campaign.discountType == 'FLAT_RATE' %}
+          FLAT ₹{{ campaign.discountValue }}
         {% else %}
           ₹{{ campaign.discountValue }} OFF Each Item
         {% endif %}
