@@ -34,39 +34,54 @@
   .fit11-slide { flex: 0 0 100%; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; width: 100%; height: 100%; }
   .fit11-slide img { width: 100%; height: 100%; object-fit: contain; } 
   
-  .fit11-dots {
-    position: absolute;
-    bottom: 56px;
-    left: 50%;
-    transform: translateX(-50%);
+  /* ── EXTERNAL SWIPE DOTS (below image, like Beyoung) ── */
+  .fit11-ext-dots {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 8px;
-    pointer-events: none;
-    z-index: 99999 !important;
-    background: rgba(0, 0, 0, 0.45);
-    padding: 6px 12px;
-    border-radius: 20px;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    gap: 6px;
+    padding: 10px 0 4px;
+    width: 100%;
   }
-  .fit11-dot {
-    width: 8px;
-    height: 8px;
+  .fit11-ext-dot {
+    appearance: none;
+    -webkit-appearance: none;
+    border: none;
+    background: #d0d0d0;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: auto;
+    width: 7px;
+    height: 7px;
+    padding: 0;
     cursor: pointer;
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                border-radius 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.35s ease;
     flex-shrink: 0;
+    outline: none;
+    position: relative;
+    overflow: hidden;
   }
-  .fit11-dot.on {
-    background: #ffffff;
-    width: 20px;
+  .fit11-ext-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 60%);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .fit11-ext-dot.on {
+    background: #111111;
+    width: 22px;
     border-radius: 4px;
-    flex-shrink: 0;
+  }
+  .fit11-ext-dot.on::after {
+    opacity: 1;
+  }
+  @media (max-width: 767px) {
+    .fit11-ext-dots {
+      padding: 8px 0 2px;
+    }
   }
   
   .fit11-thumbs { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 0; width: 100%; -webkit-overflow-scrolling: touch;  }
@@ -332,11 +347,6 @@
             <div class="fit11-slide" data-image-id="{{ image.id }}"><img src="{{ image | img_url: '1000x1250' }}" alt="{{ image.alt | escape }}"></div>
           {% endfor %}
         </div>
-        {% if product.images.size > 1 %}
-          <div class="fit11-dots" id="fit11Dots">
-            {% for image in product.images %}<div class="fit11-dot{% if forloop.first %} on{% endif %}"></div>{% endfor %}
-          </div>
-        {% endif %}
         
         <div class="fit11-info-ticker">
           <div class="fit11-shimmer-effect"></div>
@@ -347,6 +357,17 @@
           </div>
         </div>
       </div>
+      
+      {% comment %} ── EXTERNAL DOTS BELOW IMAGE ── {% endcomment %}
+      {% if product.images.size > 1 %}
+        <div class="fit11-ext-dots" id="fit11Dots">
+          {% for image in product.images %}
+            <button class="fit11-ext-dot{% if forloop.first %} on{% endif %}"
+                    aria-label="Go to image {{ forloop.index }}"
+                    type="button"></button>
+          {% endfor %}
+        </div>
+      {% endif %}
       
       {% if product.images.size > 1 %}
         <div class="fit11-thumbs" id="fit11Thumbs">
@@ -1018,68 +1039,127 @@
   function initGallery() {
     var sectionContainer = document.getElementById('fit11-page-{{ section.id }}') || document;
     var slides = sectionContainer.querySelector('.fit11-slides');
-    var dotsWrap = sectionContainer.querySelector('.fit11-dots');
+    var dotsWrap = sectionContainer.querySelector('.fit11-ext-dots');
     var thumbsWrap = sectionContainer.querySelector('.fit11-thumbs');
-    
+
     if (!slides) return;
-    
-    var dots = dotsWrap ? dotsWrap.querySelectorAll('.fit11-dot') : [];
+
+    var slideElements = slides.querySelectorAll('.fit11-slide');
+    var dots = dotsWrap ? dotsWrap.querySelectorAll('.fit11-ext-dot') : [];
     var thumbs = thumbsWrap ? thumbsWrap.querySelectorAll('.fit11-thumb') : [];
-    var total = Math.max(dots.length, slides.children.length);
-    if (dots.length > 0) total = dots.length;
+    var total = slideElements.length;
     var cur = 0;
-    
+    var autoSlideInterval = null;
+    var isUserInteracting = false;
+    var resumeTimeout = null;
+
+    var autoSwipeSpeed = {{ section.settings.auto_swipe_speed | default: 3000 }};
+
     window.goToSlide = function(n) {
       if (total <= 0) return;
-      if (n < 0) n = total - 1; 
+      if (n < 0) n = total - 1;
       if (n >= total) n = 0;
-      
+
       if (dots[cur]) dots[cur].classList.remove('on');
       if (thumbs[cur]) thumbs[cur].classList.remove('on');
-      
+
       cur = n;
-      
+
       var slideWidth = slides.clientWidth || (slides.firstElementChild ? slides.firstElementChild.clientWidth : 0);
       if (slideWidth > 0) {
         slides.scrollTo({ left: cur * slideWidth, behavior: 'smooth' });
       }
-      
+
       if (dots[cur]) dots[cur].classList.add('on');
       if (thumbs[cur]) thumbs[cur].classList.add('on');
     };
-    
+
     function goTo(n) { window.goToSlide(n); }
-    
-    slides.addEventListener('scroll', function() {
-      var slideWidth = slides.clientWidth || (slides.firstElementChild ? slides.firstElementChild.clientWidth : 0);
-      if (slideWidth <= 0) return;
-      var idx = Math.round(slides.scrollLeft / slideWidth);
-      if (idx !== cur && idx >= 0 && idx < total) {
-        if (dots[cur]) dots[cur].classList.remove('on');
-        if (thumbs[cur]) thumbs[cur].classList.remove('on');
-        cur = idx;
-        if (dots[cur]) dots[cur].classList.add('on');
-        if (thumbs[cur]) thumbs[cur].classList.add('on');
-      }
-    });
-    
-    dots.forEach(function(d, i) {
-      d.addEventListener('click', function() { goTo(i); });
-    });
-    
-    thumbs.forEach(function(t, i) {
-      t.addEventListener('click', function() { goTo(i); });
-    });
-    
-    /* AUTO-SWIPE LOGIC (SMOOTH SWIPING ANIMATION) */
-    if (total > 1) {
-      var autoSlideInterval = setInterval(function() {
-        goTo((cur + 1) % total);
-      }, 1000);
-      
-      slides.addEventListener('touchstart', function() { clearInterval(autoSlideInterval); }, {passive:true});
-      slides.addEventListener('mousedown', function() { clearInterval(autoSlideInterval); }, {passive:true});
+
+    if ('IntersectionObserver' in window && total > 0) {
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var idx = Array.prototype.indexOf.call(slideElements, entry.target);
+            if (idx !== -1 && idx !== cur) {
+              if (dots[cur]) dots[cur].classList.remove('on');
+              if (thumbs[cur]) thumbs[cur].classList.remove('on');
+              cur = idx;
+              if (dots[cur]) dots[cur].classList.add('on');
+              if (thumbs[cur]) thumbs[cur].classList.add('on');
+            }
+          }
+        });
+      }, {
+        root: slides,
+        threshold: 0.5 
+      });
+
+      slideElements.forEach(function(slide) {
+        observer.observe(slide);
+      });
+    } else {
+      var scrollTimeout;
+      slides.addEventListener('scroll', function() {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(function() {
+          var slideWidth = slides.clientWidth || (slides.firstElementChild ? slides.firstElementChild.clientWidth : 0);
+          if (slideWidth <= 0) return;
+          var idx = Math.round(slides.scrollLeft / slideWidth);
+          if (idx !== cur && idx >= 0 && idx < total) {
+            if (dots[cur]) dots[cur].classList.remove('on');
+            if (thumbs[cur]) thumbs[cur].classList.remove('on');
+            cur = idx;
+            if (dots[cur]) dots[cur].classList.add('on');
+            if (thumbs[cur]) thumbs[cur].classList.add('on');
+          }
+        }, 50);
+      });
     }
+
+    dots.forEach(function(d, i) {
+      d.addEventListener('click', function() {
+        resetAutoSwipe();
+        goTo(i);
+      });
+    });
+
+    thumbs.forEach(function(t, i) {
+      t.addEventListener('click', function() {
+        resetAutoSwipe();
+        goTo(i);
+      });
+    });
+
+    function startAutoSwipe() {
+      if (autoSlideInterval) clearInterval(autoSlideInterval);
+      if (total > 1 && autoSwipeSpeed > 0) {
+        autoSlideInterval = setInterval(function() {
+          if (!isUserInteracting) {
+            goTo((cur + 1) % total);
+          }
+        }, autoSwipeSpeed);
+      }
+    }
+
+    function stopAutoSwipe() {
+      isUserInteracting = true;
+      if (resumeTimeout) clearTimeout(resumeTimeout);
+    }
+
+    function resetAutoSwipe() {
+      stopAutoSwipe();
+      resumeTimeout = setTimeout(function() {
+        isUserInteracting = false;
+      }, 5000); 
+    }
+
+    slides.addEventListener('touchstart', stopAutoSwipe, {passive: true});
+    slides.addEventListener('touchend', resetAutoSwipe, {passive: true});
+    slides.addEventListener('mousedown', stopAutoSwipe, {passive: true});
+    slides.addEventListener('mouseup', resetAutoSwipe, {passive: true});
+
+    startAutoSwipe();
   }
 
   if (document.readyState === 'loading') {
@@ -1329,6 +1409,21 @@ document.addEventListener('DOMContentLoaded', function() {
       "id": "show_view_all",
       "label": "Show 'View all Offers' button",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "Gallery Auto-Swipe Settings"
+    },
+    {
+      "type": "range",
+      "id": "auto_swipe_speed",
+      "label": "Auto Swipe Speed",
+      "min": 1000,
+      "max": 9000,
+      "step": 500,
+      "unit": "ms",
+      "default": 3000,
+      "info": "Time between auto-swipes in milliseconds. 1000 = 1 second. Set to 0 to disable auto-swipe."
     },
     {
       "type": "header",
