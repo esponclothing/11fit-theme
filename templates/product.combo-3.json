@@ -3,26 +3,26 @@
     "main_combo_3": {
       "type": "main-combo-3",
       "blocks": {
-        "offer_fq3RKM": {
+        "offer_Qkqxn7": {
           "type": "offer",
           "settings": {
-            "offer_code": "",
+            "offer_code": "Auto Applied",
             "offer_desc": "5% Off Automatically On All Prepaid Order",
             "offer_timer": "Ends in 07h 06m 05s"
           }
         },
-        "offer_3RpxwH": {
+        "offer_CB7mjn": {
           "type": "offer",
           "settings": {
             "offer_code": "PURCHASE1999",
-            "offer_desc": "VIP Discount of Rs.100 On Order Above Rs.1999",
+            "offer_desc": "VIP Disscount of Rs.100 On Order Above Rs.1999",
             "offer_timer": "Ends in 07h 06m 05s"
           }
         }
       },
       "block_order": [
-        "offer_fq3RKM",
-        "offer_3RpxwH"
+        "offer_Qkqxn7",
+        "offer_CB7mjn"
       ],
       "name": "11Fit Combo 3 Packs",
       "settings": {
@@ -30,15 +30,14 @@
         "font_body": "'Outfit', sans-serif",
         "color_bg": "#fafafa",
         "color_surface": "#ffffff",
-        "color_text": "#9a7b4f",
+        "color_text": "#c5a059",
         "color_muted": "#666666",
         "color_border": "#e8e8e8",
         "color_accent": "#9a7b4f",
-        "offers_heading": "Special Privileges",
+        "offers_heading": "Offers & Discounts",
         "show_view_all": true,
-        "size_chart_image": "shopify://shop_images/WhatsApp_Image_2026-05-28_at_10.00.05_PM.jpg",
         "size_chart_page": "",
-        "delivery_text": "<p>Ships within 1–2 business days. Free standard delivery on orders above ₹499. 10-day hassle-free returns on unused, undamaged items in original packaging.</p>"
+        "delivery_text": "<p>Ships within 1-2 business days. Free standard delivery on orders above ₹499. 10-day hassle-free returns on unused, undamaged items in original packaging.</p>"
       }
     },
     "related-products": {
@@ -56,13 +55,118 @@
         "show_secondary_image": true,
         "show_vendor": false,
         "show_rating": false,
-        "padding_top": 0,
-        "padding_bottom": 0
+        "padding_top": 36,
+        "padding_bottom": 28
       }
+    },
+    "featured_collection_gAYirN": {
+      "type": "featured-collection",
+      "name": "t:sections.featured-collection.presets.name",
+      "settings": {
+        "collection": "t-shirts",
+        "products_to_show": 4,
+        "title": "Featured collection",
+        "heading_size": "h1",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "columns_desktop": 4,
+        "enable_desktop_slider": true,
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "solid",
+        "color_scheme": "",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "columns_mobile": "2",
+        "swipe_on_mobile": true,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "collection_list_nyGQ3i": {
+      "type": "collection-list",
+      "blocks": {
+        "featured_collection_BTyaPV": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "t-shirts"
+          }
+        },
+        "featured_collection_rcDiEp": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "shorts"
+          }
+        },
+        "featured_collection_JD3jgN": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "trackpants"
+          }
+        },
+        "featured_collection_BxCk8i": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "cockroach-special"
+          }
+        }
+      },
+      "block_order": [
+        "featured_collection_BTyaPV",
+        "featured_collection_rcDiEp",
+        "featured_collection_JD3jgN",
+        "featured_collection_BxCk8i"
+      ],
+      "name": "t:sections.collection-list.presets.name",
+      "settings": {
+        "title": "Collections",
+        "heading_size": "h1",
+        "image_ratio": "square",
+        "columns_desktop": 3,
+        "color_scheme": "",
+        "show_view_all": false,
+        "columns_mobile": "1",
+        "swipe_on_mobile": true,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    },
+    "177953350468f29684": {
+      "type": "apps",
+      "blocks": {
+        "ag_product_reviews_app_block_review_list_a6ndaT": {
+          "type": "shopify://apps/ag-product-reviews/blocks/app-block-review-list/c4e1e9ca-4d46-4e76-bc39-7e42417cb327",
+          "settings": {
+            "air_blockreviews_summaryHeading": "Reviews",
+            "air_blockreviews_layout": "list",
+            "air_blockreviews_singleStarColor": "#16a086",
+            "air_blockreviews_primaryColor": "#121212"
+          }
+        }
+      },
+      "block_order": [
+        "ag_product_reviews_app_block_review_list_a6ndaT"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "floating-video-pip": {
+      "type": "floating-video-pip",
+      "settings": {}
     }
   },
   "order": [
     "main_combo_3",
-    "related-products"
+    "related-products",
+    "featured_collection_gAYirN",
+    "collection_list_nyGQ3i",
+    "177953350468f29684",
+    "floating-video-pip"
   ]
 }
