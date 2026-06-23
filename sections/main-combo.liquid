@@ -476,7 +476,12 @@
       
       {% comment %} ── HIGHLIGHTED COMBO SELECTION AREA ── {% endcomment %}
       <div class="fit11-main-action-btns" id="fit11MainBtnContainer">
-        <div class="fit11-combo-title">Curate Your Combo</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 16px;">
+          <div class="fit11-combo-title" style="margin-bottom: 0;">Curate Your Combo</div>
+          <div class="fit11-size-chart-link" onclick="fit11ToggleModal(true)" style="display: flex; align-items: center; gap: 4px; font-size: 12px; text-decoration: underline; color: var(--lux-accent); font-weight: 500; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em;">
+            <i class="ti ti-ruler-2"></i><span>Size Guide</span>
+          </div>
+        </div>
         {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
           
           <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
@@ -551,6 +556,9 @@
               {% for option in product.options_with_values %}
                 {% assign option_name_lower = option.name | downcase %}
                 {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
+                  {% continue %}
+                {% endif %}
+                {% if option_name_lower == 'size' or option_name_lower contains 'size' %}
                   {% continue %}
                 {% endif %}
 
@@ -890,8 +898,8 @@
       });
 
       var matchedVariant = variantsData.find(function(variant) {
-        return variant.options.every(function(val) {
-          return selectedOptions.indexOf(val) !== -1;
+        return selectedOptions.every(function(val) {
+          return variant.options.indexOf(val) !== -1;
         });
       });
 
