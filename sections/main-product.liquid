@@ -588,11 +588,20 @@
 {% assign combo_active = false %}
 {% assign combo_count = 0 %}
 {% assign combo_price = 0 %}
-{% if product.metafields.price_editor.combo_config.value != blank %}
-  {% if product.metafields.price_editor.combo_config.value.count > 0 %}
+
+{% if product.metafields.price_editor.combo_config != blank %}
+  {% assign c_val = product.metafields.price_editor.combo_config.value %}
+  {% if c_val == blank %}
+    {% assign c_val = product.metafields.price_editor.combo_config %}
+  {% endif %}
+  
+  {% assign c_count = c_val.count | plus: 0 %}
+  {% assign c_price = c_val.price | plus: 0 %}
+  
+  {% if c_count > 0 %}
     {% assign combo_active = true %}
-    {% assign combo_count = product.metafields.price_editor.combo_config.value.count %}
-    {% assign combo_price = product.metafields.price_editor.combo_config.value.price %}
+    {% assign combo_count = c_count %}
+    {% assign combo_price = c_price %}
   {% endif %}
 {% endif %}
 
