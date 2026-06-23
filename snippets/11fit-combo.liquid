@@ -3,31 +3,33 @@
 {% assign regular_total = regular_total_cents | divided_by: 100.0 %}
 {% assign total_saved = regular_total | minus: combo_price %}
 
-<div class="fit11-new-combo-banner" style="position: relative; border: 2px solid #ffdf00; border-radius: 8px; padding: 20px 16px 12px 16px; margin: 24px 0 16px 0; background: #fff;">
-  <div style="position: absolute; top: -16px; left: 16px; background: #ffdf00; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff;">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="2"></circle><circle cx="15" cy="15" r="2"></circle><path d="M5 19L19 5"></path></svg>
+<div class="fit11-new-combo-banner" style="position: relative; border: 2px solid #ffdf00; border-radius: 12px; padding: 20px 16px 16px 16px; margin: 24px 0 20px 0; background: linear-gradient(145deg, #ffffff 0%, #fffbf0 100%); box-shadow: 0 4px 15px rgba(255, 223, 0, 0.15); overflow: hidden;">
+  <!-- Shine effect -->
+  <div style="position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%); transform: skewX(-25deg); animation: fit11Shine 3s infinite;"></div>
+  
+  <div style="position: absolute; top: -16px; left: 16px; background: #ffdf00; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 2;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="2"></circle><circle cx="15" cy="15" r="2"></circle><path d="M5 19L19 5"></path></svg>
   </div>
   
-  <div style="position: absolute; top: -14px; right: 16px; background: #198754; color: #fff; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+  <div style="position: absolute; top: -14px; right: 16px; background: #198754; color: #fff; padding: 6px 14px; border-radius: 30px; font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 6px; box-shadow: 0 3px 8px rgba(25, 135, 84, 0.3); z-index: 2; text-transform: uppercase; letter-spacing: 0.5px;">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
     Deal Applied
   </div>
   
-  <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px;">
-    <div style="font-size: 14px; font-weight: 700; color: #111;">
-      {{ combo_count }} Combo {{ product.title | escape }} at <span style="color: #198754;">Rs.{{ price_per_item | round }} Each</span>
+  <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; position: relative; z-index: 2;">
+    <div style="font-size: 16px; font-weight: 800; color: #111;">
+      {{ combo_count }} Combo {{ product.title | escape }} at <span style="color: #198754; font-size: 18px;">Rs.{{ price_per_item | round }} Each</span>
     </div>
-    <div style="font-size: 14px; font-weight: 600; color: #111;">
-      {{ combo_count }} Individual items at <span style="color: #dc3545;">₹{{ product.price | divided_by: 100.0 | round }} Each</span>
-    </div>
-    <div style="font-size: 14px; font-weight: 700; color: #198754;">
-      You Saved ₹{{ total_saved | round }} Instantly!
+    <div style="font-size: 15px; font-weight: 800; color: #d9480f; display: flex; align-items: center; gap: 6px;">
+      <i class="ti ti-flame" style="font-size: 18px;"></i> You Saved ₹{{ total_saved | round }} Instantly!
     </div>
   </div>
   
-  <div style="border-top: 1px dashed #e0e0e0; margin: 0 -16px; padding: 12px 16px 0 16px; display: flex; justify-content: space-between; align-items: center;">
-    <div style="font-size: 13px; font-weight: 600; color: #111;">Free Delivery Unlocked!</div>
-    <div style="font-size: 12px; font-weight: 500; color: #555; text-decoration: underline;">No Coupon Needed</div>
+  <div style="border-top: 2px dashed #ffdf00; margin: 0 -16px; padding: 12px 16px 0 16px; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 2;">
+    <div style="font-size: 13px; font-weight: 700; color: #111; display: flex; align-items: center; gap: 4px;">
+      <i class="ti ti-truck" style="color: #198754; font-size: 16px;"></i> Free Delivery Unlocked!
+    </div>
+    <div style="font-size: 12px; font-weight: 600; color: #666; text-decoration: underline;">No Coupon Needed</div>
   </div>
 </div>
 

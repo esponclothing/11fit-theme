@@ -1403,19 +1403,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  document.addEventListener('DOMContentLoaded', function() {
+  (function() {
     var stickyBar = document.getElementById('fit11-sticky-bar-main');
-    var observer = new IntersectionObserver(function(entries) {
-      if(entries[0].intersectionRatio === 0 && entries[0].boundingClientRect.top < 0) {
-        stickyBar.classList.add('fit11-is-visible');
-      } else {
-        stickyBar.classList.remove('fit11-is-visible');
-      }
-    }, { threshold: [0, 1] });
-
-    var target = document.querySelector('.fit11-original-buttons-anchor');
-    if(target) observer.observe(target);
-  });
+    var target = document.querySelector('.fit11-main-buttons-container');
+    if(stickyBar && target) {
+      var observer = new IntersectionObserver(function(entries) {
+        var entry = entries[0];
+        // Show sticky bar only when the main buttons container is completely scrolled out of view upwards
+        if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+          stickyBar.classList.add('fit11-is-visible');
+        } else {
+          stickyBar.classList.remove('fit11-is-visible');
+        }
+      }, { threshold: 0 });
+      observer.observe(target);
+    }
+  })();
 </script>
 
 {% schema %}
