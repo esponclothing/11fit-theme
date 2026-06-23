@@ -501,6 +501,7 @@
 {% endif %}
 
       {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form', style: 'width: 100%; flex-direction: column; min-width: 0;' %}
+        {% render 'campaign-banner' %}
 
         <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
         <input type="hidden" name="quantity" value="1" class="qty-input">
@@ -677,6 +678,7 @@
             <span class="fit11-btn-text">BUY NOW</span>
           </button>
         </div>
+        {% render 'campaign-product-carousel' %}
         <div class="fit11-original-buttons-anchor"></div>
         
         <script>

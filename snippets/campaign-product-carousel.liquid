@@ -1,0 +1,41 @@
+{% assign campaign = product.metafields.custom.active_campaign.value %}
+{% if campaign and campaign.relatedProducts.size > 1 %}
+  <div class="fit11-campaign-carousel" style="margin-top: 16px; margin-bottom: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
+    <div style="font-size: 13px; font-weight: 700; color: #1a202c; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+      <i class="ti ti-gift" style="color: #d9480f;"></i> Complete Your Combo & Save!
+    </div>
+    
+    <div style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;" class="scrollbar-hide">
+      {% for product_handle in campaign.relatedProducts %}
+        {% if product_handle != product.handle %}
+          {% assign related_product = all_products[product_handle] %}
+          {% if related_product.id != blank %}
+            <a href="{{ related_product.url }}" style="text-decoration: none; display: flex; flex-direction: column; min-width: 120px; width: 120px; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px; scroll-snap-align: start; background: #fff;">
+              <div style="width: 100%; aspect-ratio: 1; background: #f7fafc; border-radius: 4px; overflow: hidden; margin-bottom: 8px;">
+                {% if related_product.featured_image %}
+                  <img src="{{ related_product.featured_image | img_url: '200x' }}" alt="{{ related_product.title | escape }}" style="width: 100%; height: 100%; object-fit: cover;">
+                {% endif %}
+              </div>
+              <div style="font-size: 11px; font-weight: 600; color: #1a202c; line-height: 1.3; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                {{ related_product.title }}
+              </div>
+              <div style="font-size: 12px; font-weight: 700; color: #d9480f; margin-top: auto;">
+                {{ related_product.price | money_without_trailing_zeros }}
+              </div>
+            </a>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  
+  <style>
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+  </style>
+{% endif %}
