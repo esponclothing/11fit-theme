@@ -453,33 +453,6 @@
     {% comment %} ── RIGHT: DETAILS ── {% endcomment %}
     <div class="fit11-info">
 
-      <div class="fit11-header-group">
-        <h1 class="fit11-title">{{ product.title }}</h1>
-
-        <div class="fit11-price-and-share" style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
-          <div class="fit11-price-wrapper">
-            <div class="fit11-price-top">
-              <span class="fit11-price-main">{{ product.price | money_without_trailing_zeros }}</span>
-              <span class="fit11-price-off"{% if product.compare_at_price <= product.price or product.compare_at_price == blank %} style="display:none;"{% endif %}>
-                {% if product.compare_at_price > product.price %}
-                  {{ product.compare_at_price | minus: product.price | money_without_trailing_zeros }} OFF
-                {% endif %}
-              </span>
-            </div>
-            <div class="fit11-price-mrp"{% if product.compare_at_price <= product.price or product.compare_at_price == blank %} style="display:none;"{% endif %}>
-              MRP: <span class="fit11-price-old">{{ product.compare_at_price | money_without_trailing_zeros }}</span> <span class="fit11-price-taxes">Inclusive of all Taxes</span>
-            </div>
-            <div class="fit11-price-lowest"{% if product.compare_at_price <= product.price or product.compare_at_price == blank %} style="display:none;"{% endif %}>Lowest price in last 30 days</div>
-          </div>
-          <i class="ti ti-share" onclick="if(navigator.share){navigator.share({url: window.location.href, title: document.title});}" style="font-size: 24px; color: var(--lux-text); cursor: pointer; padding: 4px; margin-top: 4px;"></i>
-        </div>
-
-        {% comment %} Ratings now below MRP {% endcomment %}
-        <div class="fit11-rating-row" style="justify-content: flex-start;">
-          <div class="AirReviews-Widget AirReviews-Widget--Stars"></div>
-        </div>
-      </div>
-
 {% assign combo_active = false %}
 {% assign combo_count = 0 %}
 {% assign combo_price = 0 %}
@@ -499,6 +472,45 @@
     {% assign combo_price = c_price %}
   {% endif %}
 {% endif %}
+
+      <div class="fit11-header-group">
+        <h1 class="fit11-title">
+          {{ product.title }}
+          {% if combo_active %} - Pack of {{ combo_count }}{% endif %}
+        </h1>
+
+        {% if combo_active %}
+          {% assign final_price_cents = combo_price | times: 100 %}
+          {% assign compare_at_base = product.compare_at_price | default: product.price %}
+          {% assign final_compare_at_cents = compare_at_base | times: combo_count %}
+        {% else %}
+          {% assign final_price_cents = product.price %}
+          {% assign final_compare_at_cents = product.compare_at_price %}
+        {% endif %}
+
+        <div class="fit11-price-and-share" style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+          <div class="fit11-price-wrapper">
+            <div class="fit11-price-top">
+              <span class="fit11-price-main">{{ final_price_cents | money_without_trailing_zeros }}</span>
+              <span class="fit11-price-off"{% if final_compare_at_cents <= final_price_cents or final_compare_at_cents == blank %} style="display:none;"{% endif %}>
+                {% if final_compare_at_cents > final_price_cents %}
+                  {{ final_compare_at_cents | minus: final_price_cents | money_without_trailing_zeros }} OFF
+                {% endif %}
+              </span>
+            </div>
+            <div class="fit11-price-mrp"{% if final_compare_at_cents <= final_price_cents or final_compare_at_cents == blank %} style="display:none;"{% endif %}>
+              MRP: <span class="fit11-price-old">{{ final_compare_at_cents | money_without_trailing_zeros }}</span> <span class="fit11-price-taxes">Inclusive of all Taxes</span>
+            </div>
+            <div class="fit11-price-lowest"{% if final_compare_at_cents <= final_price_cents or final_compare_at_cents == blank %} style="display:none;"{% endif %}>Lowest price in last 30 days</div>
+          </div>
+          <i class="ti ti-share" onclick="if(navigator.share){navigator.share({url: window.location.href, title: document.title});}" style="font-size: 24px; color: var(--lux-text); cursor: pointer; padding: 4px; margin-top: 4px;"></i>
+        </div>
+
+        {% comment %} Ratings now below MRP {% endcomment %}
+        <div class="fit11-rating-row" style="justify-content: flex-start;">
+          <div class="AirReviews-Widget AirReviews-Widget--Stars"></div>
+        </div>
+      </div>
 
       {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form', style: 'width: 100%; flex-direction: column; min-width: 0;' %}
         {% render 'campaign-banner' %}
