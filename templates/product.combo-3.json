@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main_combo_3": {
@@ -6,17 +15,13 @@
         "offer_Qkqxn7": {
           "type": "offer",
           "settings": {
-            "offer_code": "Auto Applied",
-            "offer_desc": "5% Off Automatically On All Prepaid Order",
-            "offer_timer": "Ends in 07h 06m 05s"
+            "offer_desc": "5% Off Automatically On All Prepaid Order"
           }
         },
         "offer_CB7mjn": {
           "type": "offer",
           "settings": {
-            "offer_code": "PURCHASE1999",
-            "offer_desc": "VIP Disscount of Rs.100 On Order Above Rs.1999",
-            "offer_timer": "Ends in 07h 06m 05s"
+            "offer_desc": "VIP Disscount of Rs.100 On Order Above Rs.1999"
           }
         }
       },
@@ -32,10 +37,7 @@
         "color_muted": "#666666",
         "color_border": "#e8e8e8",
         "color_accent": "#9a7b4f",
-        "offers_heading": "Offers & Discounts",
-        "show_view_all": true,
-        "size_chart_page": "",
-        "delivery_text": "<p>Ships within 1-2 business days. Free standard delivery on orders above ₹499. 10-day hassle-free returns on unused, undamaged items in original packaging.</p>"
+        "offers_heading": "Offers & Discounts"
       }
     },
     "related-products": {
