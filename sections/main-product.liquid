@@ -792,6 +792,28 @@
     <button type="button" class="fit11-modal-close" onclick="fit11ToggleOffersModal(false);"><i class="ti ti-x"></i></button>
     <h3 style="font-family: var(--font-heading); font-size: 24px; font-weight: 400; margin: 0 0 20px 0; border-bottom: 1px solid var(--lux-border); padding-bottom: 12px;">All Offers & Discounts</h3>
     <div class="fit11-modal-body" style="display: flex; flex-direction: column; gap: 16px;">
+      {% if combo_active %}
+        {% assign m_combo_price = product.metafields.price_editor.combo_config.value.comboPrice %}
+        {% assign m_price_per_item = m_combo_price | divided_by: combo_count %}
+        {% assign m_regular_total = product.price | times: combo_count | divided_by: 100.0 %}
+        {% assign m_total_saved = m_regular_total | minus: m_combo_price %}
+        <div class="fit11-offer-card" style="width: 100%; min-width: 100%; scroll-snap-align: none; border-color: #ffdf00; cursor: default; flex-direction: column; padding: 16px;" onclick="fit11ToggleOffersModal(false); document.querySelector('.combo-size-select').focus();">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+            <div class="fit11-offer-code" style="font-size: 14px; font-weight: 600; color: #1a202c;">{{ combo_count }} COMBO OFFER</div>
+            <div style="background: #198754; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase;">Deal Applied</div>
+          </div>
+          <div class="fit11-offer-desc" style="font-size: 13px; color: #1a202c; font-weight: 500; margin-top: 4px;">
+            {{ combo_count }} {{ product.title | escape }} at <span style="color: #198754; font-weight: 700;">Rs.{{ m_price_per_item | round }} Each</span>
+          </div>
+          <div class="fit11-offer-desc" style="font-weight: 600; color: #d9480f; margin-top: 6px; font-size: 13px;">
+            <i class="ti ti-flame"></i> You Saved ₹{{ m_total_saved | round }} Instantly!
+          </div>
+          <div style="border-top: 1px dashed #cbd5e0; margin-top: 12px; padding-top: 10px; display: flex; justify-content: space-between; font-size: 11px; font-weight: 500; color: #718096;">
+            <span style="color: #198754; display: flex; align-items: center; gap: 4px;"><i class="ti ti-truck"></i> Free Delivery</span>
+            <span>No Coupon Needed</span>
+          </div>
+        </div>
+      {% endif %}
       {% for block in offer_blocks %}
         <div class="fit11-offer-card" onclick="fit11CopyCoupon(this, '{{ block.settings.offer_code }}')" style="width: 100%; min-width: 100%; scroll-snap-align: none;">
           <div class="fit11-offer-content-wrap">
