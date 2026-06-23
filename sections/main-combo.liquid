@@ -474,14 +474,7 @@
 
       </div>
       
-      {% comment %} ── HIGHLIGHTED COMBO SELECTION AREA ── {% endcomment %}
       <div class="fit11-main-action-btns" id="fit11MainBtnContainer">
-        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 16px;">
-          <div class="fit11-combo-title" style="margin-bottom: 0;">Curate Your Combo</div>
-          <div class="fit11-size-chart-link" onclick="fit11ToggleModal(true)" style="display: flex; align-items: center; gap: 4px; font-size: 12px; text-decoration: underline; color: var(--lux-accent); font-weight: 500; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em;">
-            <i class="ti ti-ruler-2"></i><span>Size Guide</span>
-          </div>
-        </div>
         {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form', style: 'width: 100%; flex-direction: column;' %}
           
           <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
@@ -492,7 +485,7 @@
             {% for option in product.options_with_values %}
               {% assign option_name_lower = option.name | downcase %}
               {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
-                <div class="fit11-variant-selectors top-color-selector desktop-only-color" style="margin-bottom: 0px; margin-top: 8px; width: 100%;">
+                <div class="fit11-variant-selectors top-color-selector desktop-only-color" style="margin-bottom: 16px; margin-top: 8px; width: 100%;">
                   <div class="fit11-option-fieldset" role="group" style="border:none; padding:0; margin:0; min-width: 0; width: 100%;">
                     <div class="fit11-option-name-row" style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 12px;">
                       <span class="fit11-option-name-label" style="font-weight: 500; font-size: 13px; text-transform: none; letter-spacing: normal; white-space: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; padding-bottom: 4px;">Selected Color - <span class="fit11-selected-color-label" style="font-weight: 700; color: var(--lux-text); text-transform: capitalize;">{{ option.selected_value }}</span></span>
@@ -549,6 +542,13 @@
               {% endif %}
             {% endfor %}
           {% endunless %}
+
+          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 16px; margin-top: 16px;">
+            <div class="fit11-combo-title" style="margin-bottom: 0;">Curate Your Combo</div>
+            <div class="fit11-size-chart-link" onclick="fit11ToggleModal(true)" style="display: flex; align-items: center; gap: 4px; font-size: 12px; text-decoration: underline; color: var(--lux-accent); font-weight: 500; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em;">
+              <i class="ti ti-ruler-2"></i><span>Size Guide</span>
+            </div>
+          </div>
 
           {% comment %} ── VARIANT SELECTOR (OTHER THAN COLOR) ── {% endcomment %}
           {% unless product.has_only_default_variant %}
