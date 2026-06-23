@@ -218,13 +218,10 @@
 <script>
   // Store selections for the 3 combo items
   const comboSelections = {
-    1: { color: null, size: null, variantId: null },
-    2: { color: null, size: null, variantId: null },
-    3: { color: null, size: null, variantId: null }
+    1: { color: null, size: null, valid: false },
+    2: { color: null, size: null, valid: false },
+    3: { color: null, size: null, valid: false }
   };
-
-  // Raw product variants list passed to Javascript
-  const productVariants = {{ product.variants | json }};
 
   function selectComboOption(itemIndex, optionType, value, buttonEl) {
     // Deselect other buttons in same group
@@ -255,22 +252,11 @@
     const badge = document.getElementById(`combo-badge-${itemIndex}`);
     
     if (selection.color && selection.size) {
-      // Find variant matching both selections
-      const matchedVariant = productVariants.find(variant => {
-        return variant.options.includes(selection.color) && variant.options.includes(selection.size);
-      });
-      
-      if (matchedVariant) {
-        selection.variantId = matchedVariant.id;
-        card.classList.add('completed');
-        badge.innerText = 'Ready';
-      } else {
-        selection.variantId = null;
-        card.classList.remove('completed');
-        badge.innerText = 'Unavailable';
-      }
+      selection.valid = true;
+      card.classList.add('completed');
+      badge.innerText = 'Ready';
     } else {
-      selection.variantId = null;
+      selection.valid = false;
       card.classList.remove('completed');
       badge.innerText = 'Pending';
     }
@@ -279,7 +265,7 @@
   function updateComboProgress() {
     let completedCount = 0;
     for (let i = 1; i <= 3; i++) {
-      if (comboSelections[i].variantId) {
+      if (comboSelections[i].valid) {
         completedCount++;
       }
     }
@@ -299,20 +285,14 @@
     addBtn.innerText = 'Adding...';
     addBtn.disabled = true;
 
-    const comboGroupId = Date.now().toString();
-    const itemsToAdd = [];
-
-    for (let i = 1; i <= 3; i++) {
-      itemsToAdd.push({
-        id: comboSelections[i].variantId,
-        quantity: 1,
-        properties: {
-          '_combo_id': comboGroupId,
-          'Combo Pack': '3-Pack Combo',
-          'Item': `Product ${i}`
-        }
-      });
-    }
+    const properties = {
+      'Item 1 Color': comboSelections[1].color,
+      'Item 1 Size': comboSelections[1].size,
+      'Item 2 Color': comboSelections[2].color,
+      'Item 2 Size': comboSelections[2].size,
+      'Item 3 Color': comboSelections[3].color,
+      'Item 3 Size': comboSelections[3].size
+    };
 
     fetch(window.Shopify.routes.root + 'cart/add.js', {
       method: 'POST',
@@ -320,7 +300,9 @@
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        items: itemsToAdd
+        id: '{{ product.selected_or_first_available_variant.id }}',
+        quantity: 1,
+        properties: properties
       })
     })
     .then(response => response.json())
