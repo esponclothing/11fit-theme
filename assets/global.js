@@ -1332,3 +1332,113 @@ class CartPerformance {
     );
   }
 }
+
+// Cart Monitoring Script for Combo Discounts
+(function() {
+  let isUpdatingCart = false;
+
+  async function checkCartComboIntegrity() {
+    if (isUpdatingCart) return;
+    isUpdatingCart = true;
+
+    try {
+      const response = await fetch(window.Shopify.routes.root + 'cart.js');
+      const cart = await response.json();
+      
+      const comboGroups = {};
+      const itemsToRemove = [];
+      const completeCombos = [];
+
+      // 1. Group items by _combo_id
+      cart.items.forEach(item => {
+        const comboId = item.properties?.['_combo_id'];
+        const comboReqCount = parseInt(item.properties?.['_combo_required_count']);
+        const comboProdId = item.properties?.['_combo_product_id'];
+
+        if (comboId && comboReqCount && comboProdId) {
+          if (!comboGroups[comboId]) {
+            comboGroups[comboId] = {
+              items: [],
+              requiredCount: comboReqCount,
+              productId: comboProdId
+            };
+          }
+          comboGroups[comboId].items.push(item);
+        }
+      });
+
+      // 2. Validate combo group counts
+      Object.keys(comboGroups).forEach(comboId => {
+        const group = comboGroups[comboId];
+        const actualCount = group.items.reduce((sum, item) => sum + item.quantity, 0);
+
+        if (actualCount < group.requiredCount) {
+          // Combo is broken! Mark all remaining items in this combo group for removal
+          group.items.forEach(item => {
+            itemsToRemove.push({ id: item.key, quantity: 0 });
+          });
+          console.log(`Combo ${comboId} is incomplete (${actualCount}/${group.requiredCount}). Removing remaining items.`);
+        } else {
+          // Combo is complete! Record it to apply coupon
+          completeCombos.push(group);
+        }
+      });
+
+      // 3. Remove broken items if any
+      if (itemsToRemove.length > 0) {
+        const updatePayload = {
+          updates: {}
+        };
+        itemsToRemove.forEach(item => {
+          updatePayload.updates[item.id] = 0;
+        });
+
+        await fetch(window.Shopify.routes.root + 'cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatePayload)
+        });
+
+        // Trigger cart reload event
+        document.dispatchEvent(new CustomEvent('cart:build'));
+        window.location.reload(); // Refresh the page to sync UI
+        isUpdatingCart = false;
+        return;
+      }
+
+      // 4. Auto apply discount for complete combos
+      // Coupon code format: 11FIT-COMBO-[PRODUCT_ID]-[COUNT]
+      if (completeCombos.length > 0) {
+        const targetCombo = completeCombos[0];
+        const rawProductId = targetCombo.productId.split('/').pop();
+        const discountCode = `11FIT-COMBO-${rawProductId}-${targetCombo.requiredCount}`;
+        
+        await fetch(`/discount/${discountCode}`);
+        console.log(`Applied discount code: ${discountCode}`);
+      }
+
+    } catch (err) {
+      console.error('Error monitoring cart combo:', err);
+    } finally {
+      isUpdatingCart = false;
+    }
+  }
+
+  // Intercept fetch requests to cart endpoints to auto-run our check
+  const originalFetch = window.fetch;
+  window.fetch = async function(...args) {
+    const url = args[0];
+    const result = await originalFetch.apply(this, args);
+    
+    if (typeof url === 'string' && (url.includes('/cart/add') || url.includes('/cart/change') || url.includes('/cart/update') || url.includes('/cart/clear'))) {
+      setTimeout(checkCartComboIntegrity, 500);
+    }
+    return result;
+  };
+
+  // Run once on load
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(checkCartComboIntegrity, 1000);
+  });
+})();
+
