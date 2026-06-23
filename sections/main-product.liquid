@@ -491,9 +491,6 @@
   {% endif %}
 {% endif %}
 
-{% if combo_active %}
-  {% render '11fit-combo', product: product, combo_count: combo_count, combo_price: combo_price %}
-{% else %}
       {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form', style: 'width: 100%; flex-direction: column; min-width: 0;' %}
 
         <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
@@ -608,6 +605,12 @@
           {%- endfor -%}
 
           {% comment %} ── VARIANT SELECTOR (OTHER THAN COLOR) ── {% endcomment %}
+{% if combo_active %}
+  {% render '11fit-combo', product: product, combo_count: combo_count, combo_price: combo_price %}
+  <script type="application/json" id="ProductVariantsData">
+    {{ product.variants | json }}
+  </script>
+{% else %}
           {% unless product.has_only_default_variant %}
             <div class="fit11-variant-selectors">
               {% for option in product.options_with_values %}
@@ -647,14 +650,16 @@
               </script>
             </div>
           {% endunless %}
+{% endif %}
 
         </div>
 
+{% unless combo_active %}
         <button type="submit" name="add" class="product-form__submit" id="fit11MainAddToCartBtnProd" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none;">
           <span class="fit11-btn-text">Add to Cart</span> <i class="ti ti-arrow-right" aria-hidden="true"></i>
         </button>
+{% endunless %}
       {% endform %}
-{% endif %}
 
       {% comment %} ── TRUST BADGES ── {% endcomment %}
       <div class="fit11-trust-badges">
