@@ -1,0 +1,68 @@
+{
+  "sections": {
+    "main_combo_3": {
+      "type": "main-combo-3",
+      "blocks": {
+        "offer_fq3RKM": {
+          "type": "offer",
+          "settings": {
+            "offer_code": "",
+            "offer_desc": "5% Off Automatically On All Prepaid Order",
+            "offer_timer": "Ends in 07h 06m 05s"
+          }
+        },
+        "offer_3RpxwH": {
+          "type": "offer",
+          "settings": {
+            "offer_code": "PURCHASE1999",
+            "offer_desc": "VIP Discount of Rs.100 On Order Above Rs.1999",
+            "offer_timer": "Ends in 07h 06m 05s"
+          }
+        }
+      },
+      "block_order": [
+        "offer_fq3RKM",
+        "offer_3RpxwH"
+      ],
+      "name": "11Fit Combo 3 Packs",
+      "settings": {
+        "font_heading": "'Playfair Display', serif",
+        "font_body": "'Outfit', sans-serif",
+        "color_bg": "#fafafa",
+        "color_surface": "#ffffff",
+        "color_text": "#9a7b4f",
+        "color_muted": "#666666",
+        "color_border": "#e8e8e8",
+        "color_accent": "#9a7b4f",
+        "offers_heading": "Special Privileges",
+        "show_view_all": true,
+        "size_chart_image": "shopify://shop_images/WhatsApp_Image_2026-05-28_at_10.00.05_PM.jpg",
+        "size_chart_page": "",
+        "delivery_text": "<p>Ships within 1–2 business days. Free standard delivery on orders above ₹499. 10-day hassle-free returns on unused, undamaged items in original packaging.</p>"
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "disabled": true,
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "main_combo_3",
+    "related-products"
+  ]
+}

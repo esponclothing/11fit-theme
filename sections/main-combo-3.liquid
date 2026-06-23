@@ -1,0 +1,420 @@
+{% comment %}
+  FIT11KART — main-combo-3.liquid (Dynamic 3-Product Combo Selector)
+{% endcomment %}
+
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+
+<style>
+  :root {
+    --lux-bg: {{ section.settings.color_bg | default: '#fafafa' }};
+    --lux-surface: {{ section.settings.color_surface | default: '#ffffff' }};
+    --lux-text: {{ section.settings.color_text | default: '#9a7b4f' }};
+    --lux-text-muted: {{ section.settings.color_muted | default: '#666666' }};
+    --lux-border: {{ section.settings.color_border | default: '#e8e8e8' }};
+    --lux-accent: {{ section.settings.color_accent | default: '#9a7b4f' }};
+    --font-heading: {{ section.settings.font_heading | default: 'serif' }};
+    --font-body: {{ section.settings.font_body | default: 'sans-serif' }};
+  }
+
+  .fit11-page { background: var(--lux-bg); color: var(--lux-text); font-family: var(--font-body); padding: 40px 0; }
+  .fit11-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; max-width: 1300px; margin: 0 auto; padding: 0 20px; }
+  
+  /* GALLERY styles */
+  .fit11-gallery-wrap { position: sticky; top: 20px; width: 100%; display: flex; flex-direction: column; gap: 15px; }
+  .fit11-gallery-box { position: relative; width: 100%; aspect-ratio: 4/5; border: 1px solid var(--lux-border); border-radius: 8px; overflow: hidden; background: #fff; }
+  .fit11-slides { display: flex; width: 100%; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .fit11-slides::-webkit-scrollbar { display: none; }
+  .fit11-slide { flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: start; display: flex; align-items: center; justify-content: center; background: #fff; }
+  .fit11-slide img { width: 100%; height: 100%; object-fit: contain; }
+  
+  .fit11-ext-dots { display: flex; justify-content: center; gap: 8px; padding: 10px 0; }
+  .fit11-ext-dot { width: 8px; height: 8px; border-radius: 50%; background: #ddd; border: none; cursor: pointer; padding: 0; transition: all 0.3s ease; }
+  .fit11-ext-dot.on { background: var(--lux-text); width: 20px; border-radius: 4px; }
+
+  /* DETAILS PANEL */
+  .fit11-info { display: flex; flex-direction: column; gap: 20px; width: 100%; }
+  .fit11-header-group { display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid var(--lux-border); padding-bottom: 20px; }
+  .fit11-title { font-size: 28px; font-weight: 400; line-height: 1.2; color: var(--lux-text); font-family: var(--font-heading); margin: 0; }
+  
+  .fit11-price-wrapper { display: flex; flex-direction: column; margin-top: 8px; }
+  .fit11-price-top { display: flex; align-items: baseline; gap: 8px; }
+  .fit11-price-main { font-size: 24px; font-weight: 700; color: #111111; }
+  .fit11-price-mrp { font-size: 14px; color: #666666; margin-top: 4px; }
+  .fit11-price-old { text-decoration: line-through; }
+  
+  /* COMBO SELECTORS WIDGET */
+  .combo3-widget { background: var(--lux-surface); border: 1px solid var(--lux-border); border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 24px; }
+  .combo3-widget-title { font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--lux-border); padding-bottom: 10px; margin: 0; display: flex; align-items: center; justify-content: space-between; }
+  
+  .combo-item-card { border: 1px solid var(--lux-border); border-radius: 6px; padding: 16px; background: #fafafa; display: flex; flex-direction: column; gap: 12px; transition: border-color 0.3s ease; }
+  .combo-item-card.completed { border-color: #38a169; background: #fff; }
+  .combo-item-header { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 14px; color: #111; }
+  .combo-item-badge { background: #e2e8f0; color: #4a5568; font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: 500; }
+  .combo-item-card.completed .combo-item-badge { background: #c6f6d5; color: #22543d; }
+  
+  /* Color / Size selections inside card */
+  .combo-option-group { display: flex; flex-direction: column; gap: 6px; }
+  .combo-option-label { font-size: 12px; font-weight: 500; color: var(--lux-text-muted); text-transform: uppercase; }
+  .combo-swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+  
+  .combo-swatch-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--lux-border); cursor: pointer; transition: all 0.2s ease; position: relative; background-size: cover; background-position: center; }
+  .combo-swatch-btn.selected { border-color: #111; transform: scale(1.1); box-shadow: 0 0 0 2px #fff, 0 0 0 3px #111; }
+  
+  .combo-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .combo-pill-btn { padding: 6px 12px; font-size: 12px; border: 1px solid var(--lux-border); border-radius: 4px; background: #fff; cursor: pointer; transition: all 0.2s ease; font-weight: 500; }
+  .combo-pill-btn.selected { background: #111; color: #fff; border-color: #111; }
+  
+  .combo-btn-add { width: 100%; height: 52px; background: var(--lux-text); color: #fff; border: none; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; border-radius: 4px; cursor: pointer; transition: opacity 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; }
+  .combo-btn-add:disabled { background: #cbd5e0; color: #718096; cursor: not-allowed; }
+  
+  /* OFFERS */
+  .fit11-offers-wrapper { background: #eef6f0; border-radius: 6px; padding: 16px; margin-top: 10px; }
+  .fit11-offers-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-weight: 600; }
+  
+  @media(max-width: 1024px) {
+    .fit11-grid { grid-template-columns: 1fr; gap: 24px; }
+    .fit11-gallery-wrap { position: relative; top: 0; }
+  }
+</style>
+
+<div class="fit11-page" id="fit11-page-{{ section.id }}">
+  <div class="fit11-grid">
+    
+    {% comment %} LEFT: GALLERY {% endcomment %}
+    <div class="fit11-gallery-wrap">
+      <div class="fit11-gallery-box">
+        <div class="fit11-slides" id="fit11Slides">
+          {% for image in product.images %}
+            <div class="fit11-slide"><img src="{{ image | img_url: '800x1000' }}" alt="{{ image.alt | escape }}" loading="lazy"></div>
+          {% endfor %}
+        </div>
+      </div>
+      {% if product.images.size > 1 %}
+        <div class="fit11-ext-dots">
+          {% for image in product.images %}
+            <button class="fit11-ext-dot{% if forloop.first %} on{% endif %}" type="button" onclick="document.getElementById('fit11Slides').scrollTo({left: {{ forloop.index0 }} * document.getElementById('fit11Slides').clientWidth, behavior: 'smooth'})"></button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    {% comment %} RIGHT: DETAILS {% endcomment %}
+    <div class="fit11-info">
+      <div class="fit11-header-group">
+        <h1 class="fit11-title">{{ product.title }}</h1>
+        <div class="fit11-price-wrapper">
+          <div class="fit11-price-top">
+            <span class="fit11-price-main">{{ product.price | money_without_trailing_zeros }}</span>
+          </div>
+          {% if product.compare_at_price > product.price %}
+            <div class="fit11-price-mrp">
+              MRP: <span class="fit11-price-old">{{ product.compare_at_price | money_without_trailing_zeros }}</span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      {% comment %} DYNAMIC COMBO WIDGET {% endcomment %}
+      <div class="combo3-widget">
+        <h3 class="combo3-widget-title">
+          <span>Curate Your Pack of 3</span>
+          <span style="font-size: 12px; font-weight: normal; text-transform: none; color: #718096;" id="combo-progress">0/3 Selected</span>
+        </h3>
+
+        {% for i in (1..3) %}
+          <div class="combo-item-card" id="combo-item-{{ i }}" data-item-index="{{ i }}">
+            <div class="combo-item-header">
+              <span>Item {{ i }} Selection</span>
+              <span class="combo-item-badge" id="combo-badge-{{ i }}">Pending</span>
+            </div>
+            
+            {% comment %} Color Swatches Selection {% endcomment %}
+            <div class="combo-option-group">
+              <span class="combo-option-label">Color: <span class="selected-color-name" id="selected-color-name-{{ i }}">-</span></span>
+              <div class="combo-swatches">
+                {% comment %} Loop through product colors {% endcomment %}
+                {% assign found_colors = '' %}
+                {% for variant in product.variants %}
+                  {% assign color_val = '' %}
+                  {% for option in variant.options %}
+                    {% assign option_name = product.options[forloop.index0] | downcase %}
+                    {% if option_name contains 'color' or option_name contains 'colour' %}
+                      {% assign color_val = option %}
+                    {% endif %}
+                  {% endfor %}
+                  
+                  {% if color_val != '' %}
+                    {% unless found_colors contains color_val %}
+                      {% assign found_colors = found_colors | append: ',' | append: color_val %}
+                      {% assign variant_image = variant.featured_image | default: product.featured_image %}
+                      <button type="button" 
+                              class="combo-swatch-btn" 
+                              title="{{ color_val }}" 
+                              data-color="{{ color_val }}"
+                              style="background-image: url('{{ variant_image | img_url: '100x100' }}');"
+                              onclick="selectComboOption({{ i }}, 'color', '{{ color_val }}', this)">
+                      </button>
+                    {% endunless %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+
+            {% comment %} Size Selection {% endcomment %}
+            <div class="combo-option-group">
+              <span class="combo-option-label">Size: <span class="selected-size-name" id="selected-size-name-{{ i }}">-</span></span>
+              <div class="combo-pills">
+                {% assign found_sizes = '' %}
+                {% for variant in product.variants %}
+                  {% assign size_val = '' %}
+                  {% for option in variant.options %}
+                    {% assign option_name = product.options[forloop.index0] | downcase %}
+                    {% if option_name == 'size' or option_name contains 'size' %}
+                      {% assign size_val = option %}
+                    {% endif %}
+                  {% endfor %}
+                  
+                  {% if size_val != '' %}
+                    {% unless found_sizes contains size_val %}
+                      {% assign found_sizes = found_sizes | append: ',' | append: size_val %}
+                      <button type="button" 
+                              class="combo-pill-btn" 
+                              data-size="{{ size_val }}"
+                              onclick="selectComboOption({{ i }}, 'size', '{{ size_val }}', this)">
+                        {{ size_val }}
+                      </button>
+                    {% endunless %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+        <button type="button" class="combo-btn-add" id="combo-add-btn" disabled onclick="addComboToCart()">
+          Add Pack to Cart
+        </button>
+      </div>
+
+      {% comment %} OFFERS {% endcomment %}
+      {% assign offer_blocks = section.blocks | where: "type", "offer" %}
+      {% if offer_blocks.size > 0 %}
+        <div class="fit11-offers-wrapper">
+          <div class="fit11-offers-header">
+            <span class="fit11-offers-title">{{ section.settings.offers_heading | default: "Special Privileges" }}</span>
+          </div>
+          <ul style="margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.6;">
+            {% for block in offer_blocks %}
+              <li>{{ block.settings.offer_desc }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Store selections for the 3 combo items
+  const comboSelections = {
+    1: { color: null, size: null, variantId: null },
+    2: { color: null, size: null, variantId: null },
+    3: { color: null, size: null, variantId: null }
+  };
+
+  // Raw product variants list passed to Javascript
+  const productVariants = {{ product.variants | json }};
+
+  function selectComboOption(itemIndex, optionType, value, buttonEl) {
+    // Deselect other buttons in same group
+    const parentContainer = buttonEl.parentNode;
+    const siblingButtons = parentContainer.querySelectorAll('button');
+    siblingButtons.forEach(btn => btn.classList.remove('selected'));
+    
+    // Select clicked button
+    buttonEl.classList.add('selected');
+
+    // Update selection state
+    comboSelections[itemIndex][optionType] = value;
+    
+    // Update displayed names
+    if (optionType === 'color') {
+      document.getElementById(`selected-color-name-${itemIndex}`).innerText = value;
+    } else {
+      document.getElementById(`selected-size-name-${itemIndex}`).innerText = value;
+    }
+
+    validateItemAndFindVariant(itemIndex);
+    updateComboProgress();
+  }
+
+  function validateItemAndFindVariant(itemIndex) {
+    const selection = comboSelections[itemIndex];
+    const card = document.getElementById(`combo-item-${itemIndex}`);
+    const badge = document.getElementById(`combo-badge-${itemIndex}`);
+    
+    if (selection.color && selection.size) {
+      // Find variant matching both selections
+      const matchedVariant = productVariants.find(variant => {
+        return variant.options.includes(selection.color) && variant.options.includes(selection.size);
+      });
+      
+      if (matchedVariant) {
+        selection.variantId = matchedVariant.id;
+        card.classList.add('completed');
+        badge.innerText = 'Ready';
+      } else {
+        selection.variantId = null;
+        card.classList.remove('completed');
+        badge.innerText = 'Unavailable';
+      }
+    } else {
+      selection.variantId = null;
+      card.classList.remove('completed');
+      badge.innerText = 'Pending';
+    }
+  }
+
+  function updateComboProgress() {
+    let completedCount = 0;
+    for (let i = 1; i <= 3; i++) {
+      if (comboSelections[i].variantId) {
+        completedCount++;
+      }
+    }
+    
+    document.getElementById('combo-progress').innerText = `${completedCount}/3 Selected`;
+    
+    const addBtn = document.getElementById('combo-add-btn');
+    if (completedCount === 3) {
+      addBtn.disabled = false;
+    } else {
+      addBtn.disabled = true;
+    }
+  }
+
+  function addComboToCart() {
+    const addBtn = document.getElementById('combo-add-btn');
+    addBtn.innerText = 'Adding...';
+    addBtn.disabled = true;
+
+    const comboGroupId = Date.now().toString();
+    const itemsToAdd = [];
+
+    for (let i = 1; i <= 3; i++) {
+      itemsToAdd.push({
+        id: comboSelections[i].variantId,
+        quantity: 1,
+        properties: {
+          '_combo_id': comboGroupId,
+          'Combo Pack': '3-Pack Combo',
+          'Item': `Product ${i}`
+        }
+      });
+    }
+
+    fetch(window.Shopify.routes.root + 'cart/add.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        items: itemsToAdd
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      addBtn.innerText = 'Added!';
+      // Dispatch cart build event to update drawers / headers
+      document.dispatchEvent(new CustomEvent('cart:build'));
+      if (window.routes && window.routes.cart_url) {
+        window.location.href = window.routes.cart_url;
+      } else {
+        window.location.href = '/cart';
+      }
+    })
+    .catch(error => {
+      console.error('Error adding combo to cart:', error);
+      addBtn.innerText = 'Add Pack to Cart';
+      addBtn.disabled = false;
+      alert('Failed to add combo. Please try again.');
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "11fit Combo 3 Packs",
+  "settings": [
+    {
+      "type": "font_picker",
+      "id": "font_heading",
+      "label": "Heading Font",
+      "default": "serif"
+    },
+    {
+      "type": "font_picker",
+      "id": "font_body",
+      "label": "Body Font",
+      "default": "sans-serif"
+    },
+    {
+      "type": "color",
+      "id": "color_bg",
+      "label": "Background Color",
+      "default": "#fafafa"
+    },
+    {
+      "type": "color",
+      "id": "color_surface",
+      "label": "Surface Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "Text Color",
+      "default": "#9a7b4f"
+    },
+    {
+      "type": "color",
+      "id": "color_muted",
+      "label": "Muted Text Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "color_border",
+      "label": "Border Color",
+      "default": "#e8e8e8"
+    },
+    {
+      "type": "color",
+      "id": "color_accent",
+      "label": "Accent Color",
+      "default": "#9a7b4f"
+    },
+    {
+      "type": "text",
+      "id": "offers_heading",
+      "label": "Offers Heading",
+      "default": "Special Privileges"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "offer",
+      "name": "Offer Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "offer_desc",
+          "label": "Offer Description",
+          "default": "5% Off Automatically On All Prepaid Order"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
