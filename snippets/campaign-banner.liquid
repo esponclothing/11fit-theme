@@ -3,7 +3,20 @@
 {% assign bg_color = ui.bg_color | default: '#ffdf00' %}
 {% assign text_color = ui.text_color | default: '#1a202c' %}
 {% assign accent_color = ui.accent_color | default: '#d9480f' %}
-{% if campaign and campaign.campaignId != blank %}
+
+{% assign current_time = 'now' | date: '%s' | plus: 0 %}
+{% assign start_time = campaign.starts_at | date: '%s' | plus: 0 %}
+{% assign end_time = campaign.ends_at | date: '%s' | plus: 0 %}
+
+{% assign show_campaign = true %}
+{% if campaign.starts_at != blank and current_time < start_time %}
+  {% assign show_campaign = false %}
+{% endif %}
+{% if campaign.ends_at != blank and current_time > end_time %}
+  {% assign show_campaign = false %}
+{% endif %}
+
+{% if campaign and campaign.campaignId != blank and show_campaign %}
   <div class="fit11-offer-card" style="margin: 16px 0; width: 100%; min-width: 100%; border-color: {{ accent_color }}; background-color: {{ bg_color }}; cursor: default; flex-direction: column; padding: 16px;">
     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
       <div class="fit11-offer-code" style="font-size: 14px; font-weight: 600; color: {{ text_color }}; text-transform: uppercase;">
