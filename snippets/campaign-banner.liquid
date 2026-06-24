@@ -1,14 +1,18 @@
 {% assign campaign = product.metafields.custom.active_campaign.value %}
+{% assign ui = shop.metafields.custom.campaign_ui.value %}
+{% assign bg_color = ui.bg_color | default: '#ffdf00' %}
+{% assign text_color = ui.text_color | default: '#1a202c' %}
+{% assign accent_color = ui.accent_color | default: '#d9480f' %}
 {% if campaign and campaign.campaignId != blank %}
-  <div class="fit11-offer-card" style="margin: 16px 0; width: 100%; min-width: 100%; border-color: #ffdf00; cursor: default; flex-direction: column; padding: 16px;">
+  <div class="fit11-offer-card" style="margin: 16px 0; width: 100%; min-width: 100%; border-color: {{ accent_color }}; background-color: {{ bg_color }}; cursor: default; flex-direction: column; padding: 16px;">
     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-      <div class="fit11-offer-code" style="font-size: 14px; font-weight: 600; color: #1a202c; text-transform: uppercase;">
+      <div class="fit11-offer-code" style="font-size: 14px; font-weight: 600; color: {{ text_color }}; text-transform: uppercase;">
         {{ campaign.campaignName | escape }}
       </div>
       <div style="background: #198754; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase;">Auto Applied</div>
     </div>
     
-    <div class="fit11-offer-desc" style="font-size: 13px; color: #1a202c; font-weight: 500; margin-top: 4px;">
+    <div class="fit11-offer-desc" style="font-size: 13px; color: {{ text_color }}; font-weight: 500; margin-top: 4px;">
       {% if campaign.discountType == 'FLAT_RATE' %}
         Buy {{ campaign.minQuantity }} items for a
       {% elsif campaign.minQuantity > 1 %}
@@ -27,7 +31,7 @@
       </span>
     </div>
     
-    <div class="fit11-offer-desc" style="font-weight: 600; color: #d9480f; margin-top: 6px; font-size: 13px;">
+    <div class="fit11-offer-desc" style="font-weight: 600; color: {{ accent_color }}; margin-top: 6px; font-size: 13px;">
       <i class="ti ti-flame"></i> Limited Time Deal!
     </div>
     

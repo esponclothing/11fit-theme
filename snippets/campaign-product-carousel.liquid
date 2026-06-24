@@ -1,8 +1,11 @@
 {% assign campaign = product.metafields.custom.active_campaign.value %}
+{% assign ui = shop.metafields.custom.campaign_ui.value %}
+{% assign text_color = ui.text_color | default: '#1a202c' %}
+{% assign accent_color = ui.accent_color | default: '#d9480f' %}
 {% if campaign and campaign.relatedProducts.size > 1 %}
   <div class="fit11-campaign-carousel" style="margin-top: 16px; margin-bottom: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
-    <div style="font-size: 13px; font-weight: 700; color: #1a202c; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-      <i class="ti ti-gift" style="color: #d9480f;"></i> Complete Your Combo & Save!
+    <div style="font-size: 13px; font-weight: 700; color: {{ text_color }}; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+      <i class="ti ti-gift" style="color: {{ accent_color }};"></i> Complete Your Combo & Save!
     </div>
     
     <div style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;" class="scrollbar-hide">
