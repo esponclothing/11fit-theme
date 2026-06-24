@@ -865,6 +865,15 @@
 
                   {%- if collection_campaigns != blank -%}
                     {%- for camp in collection_campaigns -%}
+                      {%- assign current_time = 'now' | date: '%s' | plus: 0 -%}
+                      {%- assign start_time = camp.starts_at | date: '%s' | plus: 0 -%}
+                      {%- assign end_time = camp.ends_at | date: '%s' | plus: 0 -%}
+                      {%- if camp.starts_at != blank and current_time < start_time -%}
+                        {%- continue -%}
+                      {%- endif -%}
+                      {%- if camp.ends_at != blank and current_time > end_time -%}
+                        {%- continue -%}
+                      {%- endif -%}
                       {%- assign insert_after_num = camp.insert_after | plus: 0 -%}
                       {%- if insert_after_num == current_product_index -%}
                         <li class="grid__item collection-slider-full-width custom-fade-in-up">
