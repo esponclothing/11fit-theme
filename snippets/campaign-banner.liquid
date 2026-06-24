@@ -1,5 +1,5 @@
 {% assign campaign = product.metafields.custom.active_campaign.value %}
-{% if campaign %}
+{% if campaign and campaign.campaignId != blank %}
   <div class="fit11-offer-card" style="margin: 16px 0; width: 100%; min-width: 100%; border-color: #ffdf00; cursor: default; flex-direction: column; padding: 16px;">
     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
       <div class="fit11-offer-code" style="font-size: 14px; font-weight: 600; color: #1a202c; text-transform: uppercase;">
