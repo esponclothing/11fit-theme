@@ -17,7 +17,30 @@
 {% endif %}
 
 {% if campaign and campaign.campaignId != blank and show_campaign %}
-  <div class="fit11-offer-card" style="margin: 16px 0; width: 100%; min-width: 100%; border-color: {{ accent_color }}; background-color: {{ bg_color }}; cursor: default; flex-direction: column; padding: 16px;">
+  <div id="campaign-banner-{{ campaign.campaignId }}" data-starts-at="{{ campaign.starts_at }}" data-ends-at="{{ campaign.ends_at }}" class="fit11-offer-card" style="margin: 16px 0; width: 100%; min-width: 100%; border-color: {{ accent_color }}; background-color: {{ bg_color }}; cursor: default; flex-direction: column; padding: 16px;">
+    <script>
+      (function() {
+        var checkTime = function() {
+          var banner = document.getElementById('campaign-banner-{{ campaign.campaignId }}');
+          if (!banner) return;
+          var endsAt = banner.getAttribute('data-ends-at');
+          var startsAt = banner.getAttribute('data-starts-at');
+          var now = new Date().getTime();
+          
+          if (startsAt) {
+            var startMs = new Date(startsAt).getTime();
+            if (now < startMs) { banner.style.display = 'none'; return; }
+          }
+          if (endsAt) {
+            var endMs = new Date(endsAt).getTime();
+            if (now > endMs) { banner.style.display = 'none'; return; }
+          }
+          banner.style.display = 'flex';
+        };
+        checkTime();
+        setInterval(checkTime, 60000); // Check every minute
+      })();
+    </script>
     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
       <div class="fit11-offer-code" style="font-size: 14px; font-weight: 600; color: {{ text_color }}; text-transform: uppercase;">
         {{ campaign.campaignName | escape }}

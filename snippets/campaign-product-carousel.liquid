@@ -2,8 +2,44 @@
 {% assign ui = shop.metafields.custom.campaign_ui.value %}
 {% assign text_color = ui.text_color | default: '#1a202c' %}
 {% assign accent_color = ui.accent_color | default: '#d9480f' %}
-{% if campaign and campaign.relatedProducts.size > 1 %}
-  <div class="fit11-campaign-carousel" style="margin-top: 16px; margin-bottom: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
+
+{% assign current_time = 'now' | date: '%s' | plus: 0 %}
+{% assign start_time = campaign.starts_at | date: '%s' | plus: 0 %}
+{% assign end_time = campaign.ends_at | date: '%s' | plus: 0 %}
+
+{% assign show_campaign = true %}
+{% if campaign.starts_at != blank and current_time < start_time %}
+  {% assign show_campaign = false %}
+{% endif %}
+{% if campaign.ends_at != blank and current_time > end_time %}
+  {% assign show_campaign = false %}
+{% endif %}
+
+{% if campaign and campaign.relatedProducts.size > 1 and show_campaign %}
+  <div id="campaign-carousel-{{ campaign.campaignId }}" data-starts-at="{{ campaign.starts_at }}" data-ends-at="{{ campaign.ends_at }}" class="fit11-campaign-carousel" style="margin-top: 16px; margin-bottom: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
+    <script>
+      (function() {
+        var checkTime = function() {
+          var carousel = document.getElementById('campaign-carousel-{{ campaign.campaignId }}');
+          if (!carousel) return;
+          var endsAt = carousel.getAttribute('data-ends-at');
+          var startsAt = carousel.getAttribute('data-starts-at');
+          var now = new Date().getTime();
+          
+          if (startsAt) {
+            var startMs = new Date(startsAt).getTime();
+            if (now < startMs) { carousel.style.display = 'none'; return; }
+          }
+          if (endsAt) {
+            var endMs = new Date(endsAt).getTime();
+            if (now > endMs) { carousel.style.display = 'none'; return; }
+          }
+          carousel.style.display = 'block';
+        };
+        checkTime();
+        setInterval(checkTime, 60000);
+      })();
+    </script>
     <div style="font-size: 13px; font-weight: 700; color: {{ text_color }}; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
       <i class="ti ti-gift" style="color: {{ accent_color }};"></i> Complete Your Combo & Save!
     </div>
