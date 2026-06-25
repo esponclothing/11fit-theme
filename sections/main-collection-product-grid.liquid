@@ -932,11 +932,13 @@
                         <li class="grid__item collection-slider-full-width custom-fade-in-up">
                           
                           <div class="offer-carousel-wrapper">
-                            {%- if camp.heading_1 != blank -%}
-                            <div class="lucrative-offer-box" style="{% if camp.banner_image != blank %}background: transparent; border: none; box-shadow: none; padding: 0 !important; width: 92%; flex: 0 0 92%;{% endif %}">
-                              {%- if camp.banner_image != blank -%}
-                                <img src="{{ camp.banner_image }}" style="width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-radius: 16px; display: block;" alt="{{ camp.heading_1 | escape }}">
-                              {%- else -%}
+                            {%- if camp.banner_image != blank -%}
+                              <div class="lucrative-offer-box" style="background: transparent; border: none; box-shadow: none; padding: 0 !important; width: 92%; flex: 0 0 92%;">
+                                <img src="{{ camp.banner_image }}" style="width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-radius: 16px; display: block;" alt="{{ camp.heading_1 | default: 'Campaign Banner' | escape }}">
+                              </div>
+                            {%- else -%}
+                              {%- if camp.heading_1 != blank -%}
+                              <div class="lucrative-offer-box" style="">
                                 <div class="lucrative-offer-content">
                                   <h3 class="lucrative-offer-heading" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.heading_1 }}</h3>
                                   <p class="lucrative-offer-sub" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.subheading_1 }}</p>
@@ -944,15 +946,11 @@
                                 {%- if camp.coupon_code_1 != blank -%}
                                   <div class="lucrative-offer-coupon" style="color: {{ camp.text_color | default: '#ffffff' }}; cursor: pointer;" onclick="copyCouponCode(this, '{{ camp.coupon_code_1 }}');">Code: <span>{{ camp.coupon_code_1 }}</span></div>
                                 {%- endif -%}
+                              </div>
                               {%- endif -%}
-                            </div>
-                            {%- endif -%}
 
-                            {%- if camp.heading_2 != blank -%}
-                            <div class="lucrative-offer-box" style="{% if camp.banner_image != blank %}background: transparent; border: none; box-shadow: none; padding: 0 !important; width: 92%; flex: 0 0 92%;{% endif %}">
-                              {%- if camp.banner_image != blank -%}
-                                <img src="{{ camp.banner_image }}" style="width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-radius: 16px; display: block;" alt="{{ camp.heading_2 | escape }}">
-                              {%- else -%}
+                              {%- if camp.heading_2 != blank -%}
+                              <div class="lucrative-offer-box" style="">
                                 <div class="lucrative-offer-content">
                                   <h3 class="lucrative-offer-heading" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.heading_2 }}</h3>
                                   <p class="lucrative-offer-sub" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.subheading_2 }}</p>
@@ -960,15 +958,11 @@
                                 {%- if camp.coupon_code_2 != blank -%}
                                   <div class="lucrative-offer-coupon" style="color: {{ camp.text_color | default: '#ffffff' }}; cursor: pointer;" onclick="copyCouponCode(this, '{{ camp.coupon_code_2 }}');">Code: <span>{{ camp.coupon_code_2 }}</span></div>
                                 {%- endif -%}
+                              </div>
                               {%- endif -%}
-                            </div>
-                            {%- endif -%}
 
-                            {%- if camp.heading_3 != blank -%}
-                            <div class="lucrative-offer-box" style="{% if camp.banner_image != blank %}background: transparent; border: none; box-shadow: none; padding: 0 !important; width: 92%; flex: 0 0 92%;{% endif %}">
-                              {%- if camp.banner_image != blank -%}
-                                <img src="{{ camp.banner_image }}" style="width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-radius: 16px; display: block;" alt="{{ camp.heading_3 | escape }}">
-                              {%- else -%}
+                              {%- if camp.heading_3 != blank -%}
+                              <div class="lucrative-offer-box" style="">
                                 <div class="lucrative-offer-content">
                                   <h3 class="lucrative-offer-heading" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.heading_3 }}</h3>
                                   <p class="lucrative-offer-sub" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.subheading_3 }}</p>
@@ -976,8 +970,8 @@
                                 {%- if camp.coupon_code_3 != blank -%}
                                   <div class="lucrative-offer-coupon" style="color: {{ camp.text_color | default: '#ffffff' }}; cursor: pointer;" onclick="copyCouponCode(this, '{{ camp.coupon_code_3 }}');">Code: <span>{{ camp.coupon_code_3 }}</span></div>
                                 {%- endif -%}
+                              </div>
                               {%- endif -%}
-                            </div>
                             {%- endif -%}
                           </div>
 
