@@ -834,6 +834,31 @@
                     slider.addEventListener('touchstart', stopAutoSlide);
                     slider.addEventListener('touchend', startAutoSlide);
                   });
+
+                  // Auto-sliding logic for offer carousels (banners)
+                  const offerCarousels = document.querySelectorAll('.offer-carousel-wrapper');
+                  offerCarousels.forEach(carousel => {
+                    let interval;
+                    function startAuto() {
+                      interval = setInterval(() => {
+                        const itemWidth = carousel.querySelector('.lucrative-offer-box')?.clientWidth || carousel.clientWidth;
+                        const isEnd = carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 15;
+                        if (isEnd) {
+                          snappyScroll(carousel, 'left', carousel.scrollLeft); // smooth scroll back to start
+                        } else {
+                          snappyScroll(carousel, 'right', itemWidth + 8); // scroll by one item width + gap
+                        }
+                      }, 3000); // every 3 seconds
+                    }
+                    function stopAuto() {
+                      clearInterval(interval);
+                    }
+                    startAuto();
+                    carousel.addEventListener('mouseenter', stopAuto);
+                    carousel.addEventListener('mouseleave', startAuto);
+                    carousel.addEventListener('touchstart', stopAuto);
+                    carousel.addEventListener('touchend', startAuto);
+                  });
                 });
               </script>
             {%- else -%}
