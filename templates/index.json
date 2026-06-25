@@ -200,22 +200,15 @@
     "11fit_3d_deal_LLyATX": {
       "type": "11fit-3d-deal",
       "blocks": {
-        "deal_NHLpGF": {
+        "deal_1782371678334": {
           "type": "deal",
           "settings": {
-            "product": "cockroach-janta-party-survivor-t-shirt"
-          }
-        },
-        "deal_44V8Ap": {
-          "type": "deal",
-          "settings": {
-            "product": "cocroach-club-t-shirt-cockroach-janta-party"
+            "product": "11fit-savage-tee"
           }
         }
       },
       "block_order": [
-        "deal_NHLpGF",
-        "deal_44V8Ap"
+        "deal_1782371678334"
       ],
       "name": "11 fit 3D Deal Focus",
       "settings": {
