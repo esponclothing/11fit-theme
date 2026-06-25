@@ -791,7 +791,7 @@
                   const start = slider.scrollLeft;
                   const target = direction === 'left' ? Math.max(0, start - amount) : Math.min(slider.scrollWidth - slider.clientWidth, start + amount);
                   const startTime = performance.now();
-                  const duration = 700; // Increased to 700ms for a visible smooth swipe animation
+                  const duration = 1000; // 1 second (1000ms) swipe transition speed
 
                   function easeInOutQuad(t) {
                     return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
@@ -816,8 +816,8 @@
                   snappyScroll(slider, direction, scrollAmt);
                 }
 
-                // Auto-sliding logic for both category row and custom inline campaign sliders
-                document.addEventListener('DOMContentLoaded', function() {
+                function initCollectionSliders() {
+                  // Auto-sliding logic for both category row and custom inline campaign sliders
                   const sliders = document.querySelectorAll('.category-auto-slider, .custom-inline-slider');
                   sliders.forEach(slider => {
                     let interval;
@@ -831,7 +831,7 @@
                           const itemWidth = firstItem ? firstItem.clientWidth : 240;
                           snappyScroll(slider, 'right', itemWidth + 16); // slide by exactly one item + gap
                         }
-                      }, 2500); // Swiping speed set to 2.5 seconds
+                      }, 1500); // Swiping interval set to 1.5 seconds (gives a 1s swipe + 0.5s pause)
                     }
                     function stopAutoSlide() {
                       clearInterval(interval);
@@ -856,7 +856,7 @@
                         } else {
                           snappyScroll(carousel, 'right', itemWidth + 8); // scroll by one item width + gap
                         }
-                      }, 3000); // every 3 seconds
+                      }, 2000); // every 2 seconds
                     }
                     function stopAuto() {
                       clearInterval(interval);
@@ -867,7 +867,14 @@
                     carousel.addEventListener('touchstart', stopAuto);
                     carousel.addEventListener('touchend', startAuto);
                   });
-                });
+                }
+
+                // Race-condition free DOM initialization
+                if (document.readyState === 'loading') {
+                  document.addEventListener('DOMContentLoaded', initCollectionSliders);
+                } else {
+                  initCollectionSliders();
+                }
               </script>
             {%- else -%}
               {% comment %} --- ORIGINAL PRODUCT GRID LOOP FOR SINGLE COLLECTIONS --- {% endcomment %}
