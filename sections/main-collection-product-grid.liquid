@@ -382,7 +382,10 @@
                 padding: 20px 24px; 
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
+                justify-content: center;
+                text-align: center;
+                flex-direction: column;
+                gap: 8px;
                 box-shadow: 0 10px 35px rgba(0,0,0,0.2);
                 position: relative;
                 overflow: hidden;
@@ -422,6 +425,8 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
+                align-items: center;
+                text-align: center;
               }
               .lucrative-offer-heading {
                 font-size: 1.8rem;
@@ -575,7 +580,8 @@
                 }
                 .lucrative-offer-box {
                   flex-direction: column !important;
-                  align-items: flex-start !important;
+                  align-items: center !important;
+                  text-align: center !important;
                   padding: 16px !important;
                   gap: 12px;
                   min-height: auto !important; 
@@ -785,7 +791,7 @@
                   const start = slider.scrollLeft;
                   const target = direction === 'left' ? Math.max(0, start - amount) : Math.min(slider.scrollWidth - slider.clientWidth, start + amount);
                   const startTime = performance.now();
-                  const duration = 280; // snappier animation time in ms
+                  const duration = 700; // Increased to 700ms for a visible smooth swipe animation
 
                   function easeInOutQuad(t) {
                     return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
@@ -821,9 +827,11 @@
                         if (isEnd) {
                           snappyScroll(slider, 'left', slider.scrollLeft); // return smoothly to start
                         } else {
-                          snappyScroll(slider, 'right', 240); // slightly wider scroll step
+                          const firstItem = slider.querySelector('.slider-item');
+                          const itemWidth = firstItem ? firstItem.clientWidth : 240;
+                          snappyScroll(slider, 'right', itemWidth + 16); // slide by exactly one item + gap
                         }
-                      }, 2200); // Swiping speed boosted to 2.2 seconds
+                      }, 2500); // Swiping speed set to 2.5 seconds
                     }
                     function stopAutoSlide() {
                       clearInterval(interval);
