@@ -205,10 +205,24 @@
           "settings": {
             "product": "11fit-savage-tee"
           }
+        },
+        "deal_1782371686944": {
+          "type": "deal",
+          "settings": {
+            "product": "shark-graphic-tee"
+          }
+        },
+        "deal_1782371692070": {
+          "type": "deal",
+          "settings": {
+            "product": "fearless-lion-tee"
+          }
         }
       },
       "block_order": [
-        "deal_1782371678334"
+        "deal_1782371678334",
+        "deal_1782371686944",
+        "deal_1782371692070"
       ],
       "name": "11 fit 3D Deal Focus",
       "settings": {
