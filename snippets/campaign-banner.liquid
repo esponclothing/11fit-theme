@@ -17,7 +17,7 @@
 {% endif %}
 
 {% if campaign and campaign.campaignId != blank and show_campaign %}
-  <div id="campaign-banner-{{ campaign.campaignId }}" data-starts-at="{{ campaign.starts_at }}" data-ends-at="{{ campaign.ends_at }}" class="fit11-offer-card" style="margin: 16px 0; width: 100%; min-width: 100%; border-color: {{ accent_color }}; background-color: {{ bg_color }}; cursor: default; flex-direction: column; padding: 16px;">
+  <div id="campaign-banner-{{ campaign.campaignId }}" data-starts-at="{{ campaign.starts_at }}" data-ends-at="{{ campaign.ends_at }}" class="fit11-offer-card" style="{% if inline_card %}scroll-snap-align: start;{% else %}margin: 16px 0; width: 100%; min-width: 100%;{% endif %} border-color: {{ accent_color }}; background-color: {{ bg_color }}; cursor: default; flex-direction: column; padding: 16px;">
     <script>
       (function() {
         var checkTime = function() {

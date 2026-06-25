@@ -513,7 +513,6 @@
       </div>
 
       {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form', style: 'width: 100%; flex-direction: column; min-width: 0;' %}
-        {% render 'campaign-banner' %}
 
         <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
         <input type="hidden" name="quantity" value="1" class="qty-input">
@@ -586,8 +585,9 @@
 
           {% comment %} ── NEW OFFERS & DISCOUNTS SECTION (MOVED ABOVE APP BLOCK) ── {% endcomment %}
           {% assign offer_blocks = section.blocks | where: "type", "offer" %}
+          {% assign active_campaign = product.metafields.custom.active_campaign.value %}
 
-          {% if offer_blocks.size > 0 %}
+          {% if offer_blocks.size > 0 or active_campaign != blank %}
             <div class="fit11-offers-wrapper" style="margin-top: 8px; margin-bottom: 20px;">
               <div class="fit11-offers-header">
                 <div class="fit11-offers-title-wrap">
@@ -600,6 +600,9 @@
               </div>
 
               <div class="fit11-offers-scroll">
+                {% if active_campaign != blank %}
+                  {% render 'campaign-banner', inline_card: true %}
+                {% endif %}
                 {% for block in offer_blocks %}
                   <div class="fit11-offer-card" onclick="fit11CopyCoupon(this, '{{ block.settings.offer_code }}')" {{ block.shopify_attributes }}>
                     <div class="fit11-offer-content-wrap">
@@ -800,7 +803,7 @@
 </div>
 
 {% comment %} ── OFFERS MODAL ── {% endcomment %}
-{% if offer_blocks.size > 0 %}
+{% if offer_blocks.size > 0 or active_campaign != blank or combo_active %}
 <div class="fit11-modal-overlay" id="fit11OffersModal" onclick="if(event.target === this) fit11ToggleOffersModal(false);">
   <div class="fit11-modal-content">
     <button type="button" class="fit11-modal-close" onclick="fit11ToggleOffersModal(false);"><i class="ti ti-x"></i></button>
@@ -827,6 +830,9 @@
             <span>No Coupon Needed</span>
           </div>
         </div>
+      {% endif %}
+      {% if active_campaign != blank %}
+        {% render 'campaign-banner', inline_card: true %}
       {% endif %}
       {% for block in offer_blocks %}
         <div class="fit11-offer-card" onclick="fit11CopyCoupon(this, '{{ block.settings.offer_code }}')" style="width: 100%; min-width: 100%; scroll-snap-align: none;">
