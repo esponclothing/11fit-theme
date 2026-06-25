@@ -933,7 +933,7 @@
                           
                           <div class="offer-carousel-wrapper">
                             {%- if camp.heading_1 != blank -%}
-                            <div class="lucrative-offer-box" style="">
+                            <div class="lucrative-offer-box" style="{% if camp.banner_image != blank %}background: url('{{ camp.banner_image }}') no-repeat center center; background-size: cover; animation: none;{% endif %}">
                               <div class="lucrative-offer-content">
                                 <h3 class="lucrative-offer-heading" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.heading_1 }}</h3>
                                 <p class="lucrative-offer-sub" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.subheading_1 }}</p>
@@ -945,7 +945,7 @@
                             {%- endif -%}
 
                             {%- if camp.heading_2 != blank -%}
-                            <div class="lucrative-offer-box" style="">
+                            <div class="lucrative-offer-box" style="{% if camp.banner_image != blank %}background: url('{{ camp.banner_image }}') no-repeat center center; background-size: cover; animation: none;{% endif %}">
                               <div class="lucrative-offer-content">
                                 <h3 class="lucrative-offer-heading" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.heading_2 }}</h3>
                                 <p class="lucrative-offer-sub" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.subheading_2 }}</p>
@@ -957,7 +957,7 @@
                             {%- endif -%}
 
                             {%- if camp.heading_3 != blank -%}
-                            <div class="lucrative-offer-box" style="">
+                            <div class="lucrative-offer-box" style="{% if camp.banner_image != blank %}background: url('{{ camp.banner_image }}') no-repeat center center; background-size: cover; animation: none;{% endif %}">
                               <div class="lucrative-offer-content">
                                 <h3 class="lucrative-offer-heading" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.heading_3 }}</h3>
                                 <p class="lucrative-offer-sub" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.subheading_3 }}</p>
