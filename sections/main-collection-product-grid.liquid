@@ -374,19 +374,32 @@
               }
               .offer-carousel-wrapper::-webkit-scrollbar { display: none; }
               
+              
               .lucrative-offer-box {
                 flex: 0 0 92%; 
                 scroll-snap-align: center;
-                border-radius: 12px;
-                padding: 16px 20px; 
+                border-radius: 16px;
+                padding: 20px 24px; 
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                box-shadow: 0 10px 35px rgba(0,0,0,0.2);
                 position: relative;
                 overflow: hidden;
-                border: 1px solid rgba(255,255,255,0.1);
+                border: 1px solid rgba(255,255,255,0.2);
+                
+                /* DYNAMIC GRADIENT ANIMATION */
+                background: linear-gradient(270deg, #ff512f, #dd2476, #8e2de2, #4a00e0, #ff512f);
+                background-size: 1000% 1000%;
+                animation: dynamicGradientShift 8s ease infinite;
               }
+              
+              @keyframes dynamicGradientShift {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+              }
+
               @media screen and (min-width: 750px) {
                 .lucrative-offer-box { flex: 0 0 100%; }
               }
@@ -880,7 +893,7 @@
                           
                           <div class="offer-carousel-wrapper">
                             {%- if camp.heading_1 != blank -%}
-                            <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ camp.bg_color_1 | default: '#111111' }}, {{ camp.bg_color_2 | default: '#2b2b2b' }}); color: {{ camp.text_color | default: '#ffffff' }}; min-height: {{ camp.offer_box_height | default: 70 }}px;">
+                            <div class="lucrative-offer-box" style="">
                               <div class="lucrative-offer-content">
                                 <h3 class="lucrative-offer-heading" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.heading_1 }}</h3>
                                 <p class="lucrative-offer-sub" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.subheading_1 }}</p>
@@ -892,7 +905,7 @@
                             {%- endif -%}
 
                             {%- if camp.heading_2 != blank -%}
-                            <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ camp.bg_color_1 | default: '#111111' }}, {{ camp.bg_color_2 | default: '#2b2b2b' }}); color: {{ camp.text_color | default: '#ffffff' }}; min-height: {{ camp.offer_box_height | default: 70 }}px;">
+                            <div class="lucrative-offer-box" style="">
                               <div class="lucrative-offer-content">
                                 <h3 class="lucrative-offer-heading" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.heading_2 }}</h3>
                                 <p class="lucrative-offer-sub" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.subheading_2 }}</p>
@@ -904,7 +917,7 @@
                             {%- endif -%}
 
                             {%- if camp.heading_3 != blank -%}
-                            <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ camp.bg_color_1 | default: '#111111' }}, {{ camp.bg_color_2 | default: '#2b2b2b' }}); color: {{ camp.text_color | default: '#ffffff' }}; min-height: {{ camp.offer_box_height | default: 70 }}px;">
+                            <div class="lucrative-offer-box" style="">
                               <div class="lucrative-offer-content">
                                 <h3 class="lucrative-offer-heading" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.heading_3 }}</h3>
                                 <p class="lucrative-offer-sub" style="color: {{ camp.text_color | default: '#ffffff' }};">{{ camp.subheading_3 }}</p>
@@ -976,7 +989,7 @@
                           <li class="grid__item collection-slider-full-width custom-fade-in-up" {{ block.shopify_attributes }}>
                             <div class="offer-carousel-wrapper">
                               {%- if block.settings.heading_1 != blank -%}
-                              <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ block.settings.bg_color_1 }}, {{ block.settings.bg_color_2 }}); color: {{ block.settings.text_color }}; min-height: {{ block.settings.offer_box_height }}px;">
+                              <div class="lucrative-offer-box" style="">
                                 <div class="lucrative-offer-content">
                                   <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_1 }}</h3>
                                   <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_1 }}</p>
@@ -987,7 +1000,7 @@
                               </div>
                               {%- endif -%}
                               {%- if block.settings.heading_2 != blank -%}
-                              <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ block.settings.bg_color_1 }}, {{ block.settings.bg_color_2 }}); color: {{ block.settings.text_color }}; min-height: {{ block.settings.offer_box_height }}px;">
+                              <div class="lucrative-offer-box" style="">
                                 <div class="lucrative-offer-content">
                                   <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_2 }}</h3>
                                   <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_2 }}</p>
@@ -998,7 +1011,7 @@
                               </div>
                               {%- endif -%}
                               {%- if block.settings.heading_3 != blank -%}
-                              <div class="lucrative-offer-box" style="background: linear-gradient(135deg, {{ block.settings.bg_color_1 }}, {{ block.settings.bg_color_2 }}); color: {{ block.settings.text_color }}; min-height: {{ block.settings.offer_box_height }}px;">
+                              <div class="lucrative-offer-box" style="">
                                 <div class="lucrative-offer-content">
                                   <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_3 }}</h3>
                                   <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_3 }}</p>
