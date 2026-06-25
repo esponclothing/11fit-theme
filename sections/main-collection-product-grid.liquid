@@ -692,8 +692,8 @@
                           <div class="custom-inline-slider category-auto-slider" id="slider-{{ cat_handle }}" style="--title-size: 1.25rem; --price-size: 1.5rem; --discount-size: 1.1rem; scroll-behavior: smooth;">
                             {{ slider_items_html }}
                           </div>
-                          <button class="slider-nav-btn prev-btn" onclick="slideCategory('{{ cat_handle }}', 'left')">‹</button>
-                          <button class="slider-nav-btn next-btn" onclick="slideCategory('{{ cat_handle }}', 'right')">›</button>
+                          
+                          
                         </div>
                       {%- endif -%}
                     </div>
@@ -808,7 +808,7 @@
                         if (isEnd) {
                           snappyScroll(slider, 'left', slider.scrollLeft); // return smoothly to start
                         } else {
-                          slider.scrollLeft += 240; // slightly wider scroll step
+                          snappyScroll(slider, 'right', 240); // slightly wider scroll step
                         }
                       }, 2200); // Swiping speed boosted to 2.2 seconds
                     }
@@ -865,6 +865,15 @@
 
                   {%- if collection_campaigns != blank -%}
                     {%- for camp in collection_campaigns -%}
+                      {%- assign current_time = 'now' | date: '%s' | plus: 0 -%}
+                      {%- assign start_time = camp.starts_at | date: '%s' | plus: 0 -%}
+                      {%- assign end_time = camp.ends_at | date: '%s' | plus: 0 -%}
+                      {%- if camp.starts_at != blank and current_time < start_time -%}
+                        {%- continue -%}
+                      {%- endif -%}
+                      {%- if camp.ends_at != blank and current_time > end_time -%}
+                        {%- continue -%}
+                      {%- endif -%}
                       {%- assign insert_after_num = camp.insert_after | plus: 0 -%}
                       {%- if insert_after_num == current_product_index -%}
                         <li class="grid__item collection-slider-full-width custom-fade-in-up">
@@ -948,8 +957,8 @@
                                 </div>
                               {%- endif -%}
                             </div>
-                            <button class="slider-nav-btn prev-btn" onclick="slideCategory('camp-{{ forloop.index }}-{{ current_product_index }}', 'left')">‹</button>
-                            <button class="slider-nav-btn next-btn" onclick="slideCategory('camp-{{ forloop.index }}-{{ current_product_index }}', 'right')">›</button>
+                            
+                            
                           </div>
 
                         </li>
@@ -1056,8 +1065,8 @@
                                   </div>
                                 {%- endif -%}
                               </div>
-                              <button class="slider-nav-btn prev-btn" onclick="slideCategory('block-{{ block.id }}', 'left')">‹</button>
-                              <button class="slider-nav-btn next-btn" onclick="slideCategory('block-{{ block.id }}', 'right')">›</button>
+                              
+                              
                             </div>
                           </li>
                         {%- endif -%}
