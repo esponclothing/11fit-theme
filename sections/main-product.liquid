@@ -213,7 +213,12 @@
   .fit11-offers-wrapper { background: #eef6f0; border-radius: 4px; padding: 16px; width: 100%; margin-top: 8px; }
   .fit11-offers-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
   .fit11-offers-title-wrap { display: flex; align-items: center; gap: 8px; }
-  .fit11-offers-icon { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: #cba86a; border-radius: 50%; color: #fff; font-size: 14px; }
+  @keyframes fit11-icon-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(203, 168, 106, 0.4); transform: scale(1); }
+    70% { box-shadow: 0 0 0 6px rgba(203, 168, 106, 0); transform: scale(1.1); }
+    100% { box-shadow: 0 0 0 0 rgba(203, 168, 106, 0); transform: scale(1); }
+  }
+  .fit11-offers-icon { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: #cba86a; border-radius: 50%; color: #fff; font-size: 14px; animation: fit11-icon-pulse 1.5s infinite; }
   .fit11-offers-title { font-size: 16px; font-weight: 600; color: #1a202c; }
   .fit11-offers-view-all { font-size: 13px; font-weight: 600; color: #b89356; cursor: pointer; }
 

@@ -375,107 +375,109 @@
               .offer-carousel-wrapper::-webkit-scrollbar { display: none; }
               
               /* ── PREMIUM LIGHT OFFER BANNER ── */
+              /* Redesigned to match Product Page Offers & Discounts style */
               .lucrative-offer-box {
                 flex: 0 0 100%;
                 scroll-snap-align: center;
-                border-radius: 12px;
-                padding: 20px 24px;
+                border-radius: 6px;
+                padding: 12px;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                position: relative;
+                overflow: hidden;
+                background: #eef6f0;
+                width: 100%;
+                box-sizing: border-box;
+                border: none;
+                box-shadow: none;
+              }
+              
+              .lucrative-offer-header {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+              }
+
+              @keyframes fit11-icon-pulse {
+                0% { box-shadow: 0 0 0 0 rgba(203, 168, 106, 0.4); transform: scale(1); }
+                70% { box-shadow: 0 0 0 6px rgba(203, 168, 106, 0); transform: scale(1.1); }
+                100% { box-shadow: 0 0 0 0 rgba(203, 168, 106, 0); transform: scale(1); }
+              }
+
+              .lucrative-offer-icon {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                flex-direction: column;
-                gap: 10px;
-                text-align: center;
-                position: relative;
-                overflow: hidden;
-                background: #fff8f0;
-                border: 1px solid #ffe0c2;
-                box-shadow: 0 2px 12px rgba(220, 100, 30, 0.08);
-              }
-
-              /* Soft warm top accent line */
-              .lucrative-offer-box::before {
-                content: '';
-                position: absolute;
-                top: 0; left: 0; right: 0;
-                height: 3px;
-                background: linear-gradient(90deg, #ff6b2b, #ffb347);
-                border-radius: 12px 12px 0 0;
-                pointer-events: none;
-              }
-
-              /* Subtle glow */
-              .lucrative-offer-box::after {
-                content: '';
-                position: absolute;
-                right: -20px; top: -20px;
-                width: 120px; height: 120px;
-                background: radial-gradient(circle, rgba(255,107,43,0.06) 0%, transparent 70%);
+                width: 24px;
+                height: 24px;
+                background: #cba86a;
                 border-radius: 50%;
-                pointer-events: none;
+                color: #fff;
+                font-size: 14px;
+                animation: fit11-icon-pulse 1.5s infinite;
+              }
+              
+              .lucrative-offer-title {
+                font-size: 14px;
+                font-weight: 600;
+                color: #1a202c;
+              }
+
+              .lucrative-offer-card-inner {
+                background: #ffffff;
+                border: 1px dashed #cbd5e0;
+                border-radius: 6px;
+                padding: 12px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                box-sizing: border-box;
+                gap: 8px;
               }
 
               .lucrative-offer-content {
-                z-index: 2;
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                align-items: center;
-                text-align: center;
+                align-items: flex-start;
+                text-align: left;
                 gap: 4px;
-                width: 100%;
-              }
-
-              .lucrative-offer-eyebrow {
-                font-size: 0.9rem;
-                font-weight: 700;
-                letter-spacing: 3px;
-                text-transform: uppercase;
-                color: #ff6b2b;
-                margin: 0;
-                display: flex;
-                align-items: center;
-                gap: 6px;
+                flex: 1;
               }
 
               .lucrative-offer-heading {
-                font-size: 2rem;
-                font-weight: 900;
+                font-size: 1rem;
+                font-weight: 700;
                 margin: 0;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                line-height: 1.15;
                 color: #1a1a1a;
+                line-height: 1.2;
               }
 
               .lucrative-offer-sub {
-                font-size: 1.05rem;
-                font-weight: 400;
+                font-size: 0.75rem;
+                font-weight: 600;
                 margin: 0;
-                color: #666;
+                color: #b89356;
+                display: flex;
+                align-items: center;
+                gap: 4px;
               }
 
               .lucrative-offer-coupon {
-                z-index: 2;
-                flex-shrink: 0;
-                background: linear-gradient(135deg, #ff6b2b, #ff8c42);
+                background: #198754;
                 color: #fff;
-                padding: 10px 22px;
-                border-radius: 8px;
-                font-weight: 800;
-                font-size: 1rem;
-                letter-spacing: 0.5px;
+                padding: 6px 10px;
+                border-radius: 4px;
+                font-weight: 700;
+                font-size: 0.7rem;
                 text-transform: uppercase;
-                white-space: nowrap;
                 cursor: pointer;
-                transition: opacity 0.2s, transform 0.15s;
                 border: none;
-                box-shadow: 0 3px 10px rgba(255,107,43,0.35);
-                margin-top: 4px;
-              }
-              .lucrative-offer-coupon:hover {
-                opacity: 0.92;
-                transform: translateY(-1px);
+                white-space: nowrap;
+                flex-shrink: 0;
               }
 
               @media screen and (max-width: 749px) {
@@ -636,16 +638,22 @@
                   gap: 4px !important; 
                 }
                 .lucrative-offer-box {
-                  flex-direction: column !important;
-                  align-items: center !important;
-                  text-align: center !important;
-                  padding: 16px !important;
-                  gap: 12px;
-                  min-height: auto !important; 
+                  padding: 8px !important;
+                  gap: 8px !important;
+                  flex: 0 0 100% !important;
+                  width: 100% !important;
+                  max-width: 100vw;
+                  box-sizing: border-box;
                 }
-                .lucrative-offer-heading { font-size: 1.5rem !important; }
-                .lucrative-offer-sub { font-size: 1.1rem !important; }
-                .lucrative-offer-coupon { font-size: 1.0rem !important; padding: 4px 8px !important; }
+                .lucrative-offer-card-inner {
+                  flex-direction: column !important;
+                  align-items: flex-start !important;
+                  gap: 6px !important;
+                  padding: 10px !important;
+                }
+                .lucrative-offer-heading { font-size: 0.9rem !important; }
+                .lucrative-offer-sub { font-size: 0.75rem !important; }
+                .lucrative-offer-coupon { font-size: 0.7rem !important; padding: 4px 8px !important; align-self: flex-start; }
               }
 
               @media screen and (min-width: 750px) {
@@ -1039,49 +1047,55 @@
                             {%- else -%}
                               {%- if camp.heading_1 != blank -%}
                               <div class="lucrative-offer-box">
-                                <div style="display: flex; align-items: flex-start;">
-                                  <img src="{{ '11fit-discount-icon.gif' | asset_url }}" alt="Discount" style="width: 24px; height: 24px; object-fit: contain; margin-right: 8px; margin-top: 2px;">
+                                <div class="lucrative-offer-header">
+                                  <div class="lucrative-offer-icon"><i class="ti ti-percentage"></i></div>
+                                  <div class="lucrative-offer-title">Offers & Discounts</div>
+                                </div>
+                                <div class="lucrative-offer-card-inner">
                                   <div class="lucrative-offer-content">
-                                    <div class="lucrative-offer-eyebrow">✦ Limited Offer</div>
                                     <h3 class="lucrative-offer-heading">{{ camp.heading_1 }}</h3>
                                     <p class="lucrative-offer-sub">{{ camp.subheading_1 }}</p>
                                   </div>
+                                  {%- if camp.coupon_code_1 != blank -%}
+                                    <div class="lucrative-offer-coupon" onclick="copyCouponCode(this, '{{ camp.coupon_code_1 }}');">{{ camp.coupon_code_1 }}</div>
+                                  {%- endif -%}
                                 </div>
-                                {%- if camp.coupon_code_1 != blank -%}
-                                  <div class="lucrative-offer-coupon" onclick="copyCouponCode(this, '{{ camp.coupon_code_1 }}');">{{ camp.coupon_code_1 }}</div>
-                                {%- endif -%}
                               </div>
                               {%- endif -%}
 
                               {%- if camp.heading_2 != blank -%}
                               <div class="lucrative-offer-box">
-                                <div style="display: flex; align-items: flex-start;">
-                                  <img src="{{ '11fit-discount-icon.gif' | asset_url }}" alt="Discount" style="width: 24px; height: 24px; object-fit: contain; margin-right: 8px; margin-top: 2px;">
+                                <div class="lucrative-offer-header">
+                                  <div class="lucrative-offer-icon"><i class="ti ti-percentage"></i></div>
+                                  <div class="lucrative-offer-title">Offers & Discounts</div>
+                                </div>
+                                <div class="lucrative-offer-card-inner">
                                   <div class="lucrative-offer-content">
-                                    <div class="lucrative-offer-eyebrow">✦ Limited Offer</div>
                                     <h3 class="lucrative-offer-heading">{{ camp.heading_2 }}</h3>
                                     <p class="lucrative-offer-sub">{{ camp.subheading_2 }}</p>
                                   </div>
+                                  {%- if camp.coupon_code_2 != blank -%}
+                                    <div class="lucrative-offer-coupon" onclick="copyCouponCode(this, '{{ camp.coupon_code_2 }}');">{{ camp.coupon_code_2 }}</div>
+                                  {%- endif -%}
                                 </div>
-                                {%- if camp.coupon_code_2 != blank -%}
-                                  <div class="lucrative-offer-coupon" onclick="copyCouponCode(this, '{{ camp.coupon_code_2 }}');">{{ camp.coupon_code_2 }}</div>
-                                {%- endif -%}
                               </div>
                               {%- endif -%}
 
                               {%- if camp.heading_3 != blank -%}
                               <div class="lucrative-offer-box">
-                                <div style="display: flex; align-items: flex-start;">
-                                  <img src="{{ '11fit-discount-icon.gif' | asset_url }}" alt="Discount" style="width: 24px; height: 24px; object-fit: contain; margin-right: 8px; margin-top: 2px;">
+                                <div class="lucrative-offer-header">
+                                  <div class="lucrative-offer-icon"><i class="ti ti-percentage"></i></div>
+                                  <div class="lucrative-offer-title">Offers & Discounts</div>
+                                </div>
+                                <div class="lucrative-offer-card-inner">
                                   <div class="lucrative-offer-content">
-                                    <div class="lucrative-offer-eyebrow">✦ Limited Offer</div>
                                     <h3 class="lucrative-offer-heading">{{ camp.heading_3 }}</h3>
                                     <p class="lucrative-offer-sub">{{ camp.subheading_3 }}</p>
                                   </div>
+                                  {%- if camp.coupon_code_3 != blank -%}
+                                    <div class="lucrative-offer-coupon" onclick="copyCouponCode(this, '{{ camp.coupon_code_3 }}');">{{ camp.coupon_code_3 }}</div>
+                                  {%- endif -%}
                                 </div>
-                                {%- if camp.coupon_code_3 != blank -%}
-                                  <div class="lucrative-offer-coupon" onclick="copyCouponCode(this, '{{ camp.coupon_code_3 }}');">{{ camp.coupon_code_3 }}</div>
-                                {%- endif -%}
                               </div>
                               {%- endif -%}
                             {%- endif -%}
@@ -1147,44 +1161,53 @@
                             <div class="offer-carousel-wrapper">
                               {%- if block.settings.heading_1 != blank -%}
                               <div class="lucrative-offer-box" style="">
-                                <div style="display: flex; align-items: flex-start;">
-                                  <img src="{{ '11fit-discount-icon.gif' | asset_url }}" alt="Discount" style="width: 24px; height: 24px; object-fit: contain; margin-right: 8px; margin-top: 2px;">
+                                <div class="lucrative-offer-header">
+                                  <div class="lucrative-offer-icon"><i class="ti ti-percentage"></i></div>
+                                  <div class="lucrative-offer-title" style="color: {{ block.settings.text_color }};">Offers & Discounts</div>
+                                </div>
+                                <div class="lucrative-offer-card-inner">
                                   <div class="lucrative-offer-content">
                                     <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_1 }}</h3>
                                     <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_1 }}</p>
                                   </div>
+                                  {%- if block.settings.coupon_code_1 != blank -%}
+                                    <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }};" onclick="copyCouponCode(this, '{{ block.settings.coupon_code_1 }}');">{{ block.settings.coupon_code_1 }}</div>
+                                  {%- endif -%}
                                 </div>
-                                {%- if block.settings.coupon_code_1 != blank -%}
-                                  <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }}; cursor: pointer;" onclick="copyCouponCode(this, '{{ block.settings.coupon_code_1 }}');">Code: <span>{{ block.settings.coupon_code_1 }}</span></div>
-                                {%- endif -%}
                               </div>
                               {%- endif -%}
                               {%- if block.settings.heading_2 != blank -%}
                               <div class="lucrative-offer-box" style="">
-                                <div style="display: flex; align-items: flex-start;">
-                                  <img src="{{ '11fit-discount-icon.gif' | asset_url }}" alt="Discount" style="width: 24px; height: 24px; object-fit: contain; margin-right: 8px; margin-top: 2px;">
+                                <div class="lucrative-offer-header">
+                                  <div class="lucrative-offer-icon"><i class="ti ti-percentage"></i></div>
+                                  <div class="lucrative-offer-title" style="color: {{ block.settings.text_color }};">Offers & Discounts</div>
+                                </div>
+                                <div class="lucrative-offer-card-inner">
                                   <div class="lucrative-offer-content">
                                     <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_2 }}</h3>
                                     <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_2 }}</p>
                                   </div>
+                                  {%- if block.settings.coupon_code_2 != blank -%}
+                                    <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }};" onclick="copyCouponCode(this, '{{ block.settings.coupon_code_2 }}');">{{ block.settings.coupon_code_2 }}</div>
+                                  {%- endif -%}
                                 </div>
-                                {%- if block.settings.coupon_code_2 != blank -%}
-                                  <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }}; cursor: pointer;" onclick="copyCouponCode(this, '{{ block.settings.coupon_code_2 }}');">Code: <span>{{ block.settings.coupon_code_2 }}</span></div>
-                                {%- endif -%}
                               </div>
                               {%- endif -%}
                               {%- if block.settings.heading_3 != blank -%}
                               <div class="lucrative-offer-box" style="">
-                                <div style="display: flex; align-items: flex-start;">
-                                  <img src="{{ '11fit-discount-icon.gif' | asset_url }}" alt="Discount" style="width: 24px; height: 24px; object-fit: contain; margin-right: 8px; margin-top: 2px;">
+                                <div class="lucrative-offer-header">
+                                  <div class="lucrative-offer-icon"><i class="ti ti-percentage"></i></div>
+                                  <div class="lucrative-offer-title" style="color: {{ block.settings.text_color }};">Offers & Discounts</div>
+                                </div>
+                                <div class="lucrative-offer-card-inner">
                                   <div class="lucrative-offer-content">
                                     <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_3 }}</h3>
                                     <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_3 }}</p>
                                   </div>
+                                  {%- if block.settings.coupon_code_3 != blank -%}
+                                    <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }};" onclick="copyCouponCode(this, '{{ block.settings.coupon_code_3 }}');">{{ block.settings.coupon_code_3 }}</div>
+                                  {%- endif -%}
                                 </div>
-                                {%- if block.settings.coupon_code_3 != blank -%}
-                                  <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }}; cursor: pointer;" onclick="copyCouponCode(this, '{{ block.settings.coupon_code_3 }}');">Code: <span>{{ block.settings.coupon_code_3 }}</span></div>
-                                {%- endif -%}
                               </div>
                               {%- endif -%}
                             </div>
