@@ -36,6 +36,23 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+
+  /* Force portrait card ratio (4:5) for t-shirt images in featured collection */
+  #collection-{{ section.id }} .card__inner.ratio {
+    --ratio-percent: 125% !important;
+  }
+  #collection-{{ section.id }} .card.ratio {
+    --ratio-percent: 125% !important;
+  }
+  /* Make image fill the taller card neatly */
+  #collection-{{ section.id }} .card__media .media img,
+  #collection-{{ section.id }} .fit11-card-media-slider img {
+    object-fit: contain !important;
+    object-position: center center !important;
+    background: #f8f8f8 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
 {%- endstyle -%}
 
 {%- liquid
