@@ -323,11 +323,32 @@
           "settings": {
             "product": "espon-e008-air-flex-4-way-lycra-active-shorts"
           }
+        },
+        "product_item_1782450597331": {
+          "type": "product_item",
+          "settings": {
+            "product": "cockroach-janta-takeover-tee"
+          }
+        },
+        "product_item_1782450602453": {
+          "type": "product_item",
+          "settings": {
+            "product": "chai-lovers-tee"
+          }
+        },
+        "product_item_1782450608129": {
+          "type": "product_item",
+          "settings": {
+            "product": "musafir-travel-tee"
+          }
         }
       },
       "block_order": [
         "product_item_aQejpW",
-        "product_item_Dw6QHP"
+        "product_item_Dw6QHP",
+        "product_item_1782450597331",
+        "product_item_1782450602453",
+        "product_item_1782450608129"
       ],
       "name": "11 fit Flash Sale",
       "settings": {
