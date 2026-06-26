@@ -364,63 +364,69 @@
 
               .offer-carousel-wrapper {
                 display: flex;
-                overflow-x: auto;
+                overflow-x: hidden;
                 gap: 8px;
                 scroll-snap-type: x mandatory;
                 scrollbar-width: none; 
                 -ms-overflow-style: none; 
-                margin-bottom: 12px;
-                padding-bottom: 4px;
+                margin-bottom: 8px;
+                padding-bottom: 0;
+                width: 100%;
+                box-sizing: border-box;
               }
               .offer-carousel-wrapper::-webkit-scrollbar { display: none; }
               
-              /* ── PREMIUM LIGHT OFFER BANNER ── */
-              /* Redesigned to match Product Page Offers & Discounts style */
+              /* ── OFFER BANNER (matches Product Page Offers & Discounts) ── */
               .lucrative-offer-box {
                 flex: 0 0 100%;
                 scroll-snap-align: center;
-                border-radius: 6px;
+                border-radius: 4px;
                 padding: 12px;
                 display: flex;
                 flex-direction: column;
-                gap: 12px;
-                position: relative;
-                overflow: hidden;
+                gap: 10px;
                 background: #eef6f0;
                 width: 100%;
                 box-sizing: border-box;
                 border: none;
                 box-shadow: none;
               }
-              
+
               .lucrative-offer-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              }
+
+              .lucrative-offer-header-left {
                 display: flex;
                 align-items: center;
                 gap: 8px;
               }
 
               @keyframes fit11-icon-pulse {
-                0% { box-shadow: 0 0 0 0 rgba(203, 168, 106, 0.4); transform: scale(1); }
-                70% { box-shadow: 0 0 0 6px rgba(203, 168, 106, 0); transform: scale(1.1); }
-                100% { box-shadow: 0 0 0 0 rgba(203, 168, 106, 0); transform: scale(1); }
+                0%   { box-shadow: 0 0 0 0 rgba(203,168,106,0.5); transform: scale(1); }
+                70%  { box-shadow: 0 0 0 6px rgba(203,168,106,0); transform: scale(1.12); }
+                100% { box-shadow: 0 0 0 0 rgba(203,168,106,0); transform: scale(1); }
               }
 
               .lucrative-offer-icon {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                width: 24px;
-                height: 24px;
+                width: 26px;
+                height: 26px;
+                min-width: 26px;
                 background: #cba86a;
                 border-radius: 50%;
                 color: #fff;
                 font-size: 14px;
                 animation: fit11-icon-pulse 1.5s infinite;
               }
-              
+
               .lucrative-offer-title {
-                font-size: 14px;
-                font-weight: 600;
+                font-size: 15px;
+                font-weight: 700;
                 color: #1a202c;
               }
 
@@ -441,15 +447,13 @@
               .lucrative-offer-content {
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
-                align-items: flex-start;
-                text-align: left;
-                gap: 4px;
+                gap: 3px;
                 flex: 1;
+                min-width: 0;
               }
 
               .lucrative-offer-heading {
-                font-size: 1rem;
+                font-size: 0.95rem;
                 font-weight: 700;
                 margin: 0;
                 color: #1a1a1a;
@@ -457,63 +461,28 @@
               }
 
               .lucrative-offer-sub {
-                font-size: 0.75rem;
+                font-size: 0.72rem;
                 font-weight: 600;
                 margin: 0;
                 color: #b89356;
-                display: flex;
-                align-items: center;
-                gap: 4px;
               }
 
               .lucrative-offer-coupon {
                 background: #198754;
                 color: #fff;
-                padding: 6px 10px;
+                padding: 5px 10px;
                 border-radius: 4px;
                 font-weight: 700;
-                font-size: 0.7rem;
+                font-size: 0.68rem;
                 text-transform: uppercase;
                 cursor: pointer;
                 border: none;
                 white-space: nowrap;
                 flex-shrink: 0;
+                letter-spacing: 0.03em;
               }
 
-              @media screen and (max-width: 749px) {
-                .lucrative-offer-box {
-                  flex-direction: row;
-                  justify-content: space-between;
-                  align-items: center;
-                  text-align: left;
-                  padding: 13px 14px;
-                  gap: 10px;
-                }
-                .lucrative-offer-content {
-                  align-items: flex-start;
-                  text-align: left;
-                  flex: 1;
-                  min-width: 0;
-                }
-                .lucrative-offer-heading {
-                  font-size: 1.3rem !important;
-                  white-space: nowrap;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                }
-                .lucrative-offer-sub {
-                  font-size: 0.9rem !important;
-                  white-space: nowrap;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                }
-                .lucrative-offer-coupon {
-                  font-size: 0.88rem !important;
-                  padding: 8px 12px !important;
-                  margin-top: 0;
-                }
-                .lucrative-offer-eyebrow { font-size: 0.68rem !important; letter-spacing: 1.5px !important; }
-              }
+              /* No mobile overrides needed - the column layout already works on all sizes */
 
               /* Custom Slider Products */
               .custom-inline-slider,
@@ -637,23 +606,17 @@
                 .slider-item-price-row {
                   gap: 4px !important; 
                 }
+                /* Offer banner mobile - keep column, just reduce padding */
                 .lucrative-offer-box {
-                  padding: 8px !important;
+                  padding: 10px !important;
                   gap: 8px !important;
-                  flex: 0 0 100% !important;
                   width: 100% !important;
-                  max-width: 100vw;
-                  box-sizing: border-box;
+                  max-width: 100% !important;
+                  box-sizing: border-box !important;
                 }
                 .lucrative-offer-card-inner {
-                  flex-direction: column !important;
-                  align-items: flex-start !important;
-                  gap: 6px !important;
                   padding: 10px !important;
                 }
-                .lucrative-offer-heading { font-size: 0.9rem !important; }
-                .lucrative-offer-sub { font-size: 0.75rem !important; }
-                .lucrative-offer-coupon { font-size: 0.7rem !important; padding: 4px 8px !important; align-self: flex-start; }
               }
 
               @media screen and (min-width: 750px) {
