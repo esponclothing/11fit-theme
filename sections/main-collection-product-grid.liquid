@@ -1039,10 +1039,13 @@
                             {%- else -%}
                               {%- if camp.heading_1 != blank -%}
                               <div class="lucrative-offer-box">
-                                <div class="lucrative-offer-content">
-                                  <div class="lucrative-offer-eyebrow">✦ Limited Offer</div>
-                                  <h3 class="lucrative-offer-heading">{{ camp.heading_1 }}</h3>
-                                  <p class="lucrative-offer-sub">{{ camp.subheading_1 }}</p>
+                                <div style="display: flex; align-items: flex-start;">
+                                  <img src="{{ '11fit-discount-icon.gif' | asset_url }}" alt="Discount" style="width: 24px; height: 24px; object-fit: contain; margin-right: 8px; margin-top: 2px;">
+                                  <div class="lucrative-offer-content">
+                                    <div class="lucrative-offer-eyebrow">✦ Limited Offer</div>
+                                    <h3 class="lucrative-offer-heading">{{ camp.heading_1 }}</h3>
+                                    <p class="lucrative-offer-sub">{{ camp.subheading_1 }}</p>
+                                  </div>
                                 </div>
                                 {%- if camp.coupon_code_1 != blank -%}
                                   <div class="lucrative-offer-coupon" onclick="copyCouponCode(this, '{{ camp.coupon_code_1 }}');">{{ camp.coupon_code_1 }}</div>
@@ -1052,10 +1055,13 @@
 
                               {%- if camp.heading_2 != blank -%}
                               <div class="lucrative-offer-box">
-                                <div class="lucrative-offer-content">
-                                  <div class="lucrative-offer-eyebrow">✦ Limited Offer</div>
-                                  <h3 class="lucrative-offer-heading">{{ camp.heading_2 }}</h3>
-                                  <p class="lucrative-offer-sub">{{ camp.subheading_2 }}</p>
+                                <div style="display: flex; align-items: flex-start;">
+                                  <img src="{{ '11fit-discount-icon.gif' | asset_url }}" alt="Discount" style="width: 24px; height: 24px; object-fit: contain; margin-right: 8px; margin-top: 2px;">
+                                  <div class="lucrative-offer-content">
+                                    <div class="lucrative-offer-eyebrow">✦ Limited Offer</div>
+                                    <h3 class="lucrative-offer-heading">{{ camp.heading_2 }}</h3>
+                                    <p class="lucrative-offer-sub">{{ camp.subheading_2 }}</p>
+                                  </div>
                                 </div>
                                 {%- if camp.coupon_code_2 != blank -%}
                                   <div class="lucrative-offer-coupon" onclick="copyCouponCode(this, '{{ camp.coupon_code_2 }}');">{{ camp.coupon_code_2 }}</div>
