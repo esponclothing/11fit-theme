@@ -708,11 +708,12 @@
 
                       {%- if slider_items_html contains "slider-item" -%}
                         <div class="category-slider-outer-wrapper" style="position: relative; width: 100%;">
-                          <div class="custom-inline-slider category-auto-slider" id="slider-{{ cat_handle }}" style="--title-size: 1.25rem; --price-size: 1.5rem; --discount-size: 1.1rem; scroll-behavior: smooth;">
+                          <button class="slider-nav-btn prev-btn" onclick="slideCategory('{{ cat_handle }}', 'left')" aria-label="Previous">&#8249;</button>
+                          <div class="custom-inline-slider category-swipe-slider" id="slider-{{ cat_handle }}" style="--title-size: 1.25rem; --price-size: 1.5rem; --discount-size: 1.1rem;">
                             {{ slider_items_html }}
                           </div>
-                          
-                          
+                          <button class="slider-nav-btn next-btn" onclick="slideCategory('{{ cat_handle }}', 'right')" aria-label="Next">&#8250;</button>
+                          <div class="slider-dots" id="dots-{{ cat_handle }}"></div>
                         </div>
                       {%- endif -%}
                     </div>
@@ -785,26 +786,67 @@
                 }
               </style>
 
+              <style>
+                /* Dot indicators for swipe sliders */
+                .slider-dots {
+                  display: flex;
+                  justify-content: center;
+                  gap: 6px;
+                  margin-top: 10px;
+                  padding: 4px 0;
+                }
+                .slider-dot {
+                  width: 7px;
+                  height: 7px;
+                  border-radius: 50%;
+                  background: rgba(255,255,255,0.35);
+                  border: none;
+                  padding: 0;
+                  cursor: pointer;
+                  transition: background 0.25s, transform 0.25s;
+                  flex-shrink: 0;
+                }
+                .slider-dot.active {
+                  background: #fff;
+                  transform: scale(1.3);
+                }
+                /* Offer carousel dots */
+                .offer-carousel-dots {
+                  display: flex;
+                  justify-content: center;
+                  gap: 6px;
+                  margin-top: 8px;
+                  padding: 2px 0;
+                }
+                .offer-carousel-dot {
+                  width: 6px;
+                  height: 6px;
+                  border-radius: 50%;
+                  background: rgba(255,255,255,0.4);
+                  border: none;
+                  padding: 0;
+                  cursor: pointer;
+                  transition: background 0.25s, transform 0.25s;
+                }
+                .offer-carousel-dot.active {
+                  background: #fff;
+                  transform: scale(1.3);
+                }
+              </style>
               <script>
-                // Custom snappy horizontal scroll animation
+                /* --- Smooth scroll helper (no auto-play) --- */
                 function snappyScroll(slider, direction, amount) {
                   const start = slider.scrollLeft;
-                  const target = direction === 'left' ? Math.max(0, start - amount) : Math.min(slider.scrollWidth - slider.clientWidth, start + amount);
+                  const target = direction === 'left'
+                    ? Math.max(0, start - amount)
+                    : Math.min(slider.scrollWidth - slider.clientWidth, start + amount);
                   const startTime = performance.now();
-                  const duration = 1000; // 1 second (1000ms) swipe transition speed
-
-                  function easeInOutQuad(t) {
-                    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-                  }
-
+                  const duration = 350;
+                  function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
                   function step(now) {
-                    const elapsed = now - startTime;
-                    const progress = Math.min(elapsed / duration, 1);
-                    const easedProgress = easeInOutQuad(progress);
-                    slider.scrollLeft = start + (target - start) * easedProgress;
-                    if (progress < 1) {
-                      requestAnimationFrame(step);
-                    }
+                    const progress = Math.min((now - startTime) / duration, 1);
+                    slider.scrollLeft = start + (target - start) * easeOut(progress);
+                    if (progress < 1) requestAnimationFrame(step);
                   }
                   requestAnimationFrame(step);
                 }
@@ -812,64 +854,94 @@
                 function slideCategory(handle, direction) {
                   const slider = document.getElementById('slider-' + handle);
                   if (!slider) return;
-                  const scrollAmt = slider.clientWidth * 0.75;
-                  snappyScroll(slider, direction, scrollAmt);
+                  const firstItem = slider.querySelector('.slider-item');
+                  const itemWidth = firstItem ? firstItem.offsetWidth + 8 : slider.clientWidth * 0.7;
+                  snappyScroll(slider, direction, itemWidth);
+                }
+
+                /* --- Build dot indicators for a slider --- */
+                function buildDots(slider, dotsContainer, itemSelector) {
+                  if (!slider || !dotsContainer) return;
+                  const items = slider.querySelectorAll(itemSelector);
+                  if (items.length <= 1) { dotsContainer.style.display = 'none'; return; }
+                  dotsContainer.innerHTML = '';
+                  items.forEach((_, i) => {
+                    const dot = document.createElement('button');
+                    dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
+                    dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+                    dot.addEventListener('click', () => {
+                      const itemW = items[0].offsetWidth + 8;
+                      slider.scrollLeft = i * itemW;
+                    });
+                    dotsContainer.appendChild(dot);
+                  });
+
+                  // Update active dot on scroll
+                  slider.addEventListener('scroll', () => {
+                    const itemW = items[0].offsetWidth + 8;
+                    const idx = Math.round(slider.scrollLeft / itemW);
+                    dotsContainer.querySelectorAll('.slider-dot').forEach((d, i) => {
+                      d.classList.toggle('active', i === idx);
+                    });
+                  }, { passive: true });
+                }
+
+                /* --- Touch drag scroll support --- */
+                function addDragScroll(el) {
+                  let isDown = false, startX, scrollStart;
+                  el.addEventListener('mousedown', e => {
+                    isDown = true; startX = e.pageX; scrollStart = el.scrollLeft;
+                    el.style.cursor = 'grabbing';
+                  });
+                  window.addEventListener('mouseup', () => { isDown = false; el.style.cursor = ''; });
+                  el.addEventListener('mousemove', e => {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    el.scrollLeft = scrollStart - (e.pageX - startX);
+                  });
                 }
 
                 function initCollectionSliders() {
-                  // Auto-sliding logic for both category row and custom inline campaign sliders
-                  const sliders = document.querySelectorAll('.category-auto-slider, .custom-inline-slider');
-                  sliders.forEach(slider => {
-                    let interval;
-                    function startAutoSlide() {
-                      interval = setInterval(() => {
-                        const isEnd = slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 15;
-                        if (isEnd) {
-                          snappyScroll(slider, 'left', slider.scrollLeft); // return smoothly to start
-                        } else {
-                          const firstItem = slider.querySelector('.slider-item');
-                          const itemWidth = firstItem ? firstItem.clientWidth : 240;
-                          snappyScroll(slider, 'right', itemWidth + 16); // slide by exactly one item + gap
-                        }
-                      }, 1500); // Swiping interval set to 1.5 seconds (gives a 1s swipe + 0.5s pause)
-                    }
-                    function stopAutoSlide() {
-                      clearInterval(interval);
-                    }
-                    startAutoSlide();
-                    slider.addEventListener('mouseenter', stopAutoSlide);
-                    slider.addEventListener('mouseleave', startAutoSlide);
-                    slider.addEventListener('touchstart', stopAutoSlide);
-                    slider.addEventListener('touchend', startAutoSlide);
+                  /* Product sliders (category rows) */
+                  document.querySelectorAll('.category-swipe-slider, .custom-inline-slider').forEach(slider => {
+                    addDragScroll(slider);
+                    const dotsEl = document.getElementById('dots-' + slider.id.replace('slider-', ''));
+                    if (dotsEl) buildDots(slider, dotsEl, '.slider-item');
                   });
 
-                  // Auto-sliding logic for offer carousels (banners)
-                  const offerCarousels = document.querySelectorAll('.offer-carousel-wrapper');
-                  offerCarousels.forEach(carousel => {
-                    let interval;
-                    function startAuto() {
-                      interval = setInterval(() => {
-                        const itemWidth = carousel.querySelector('.lucrative-offer-box')?.clientWidth || carousel.clientWidth;
-                        const isEnd = carousel.scrollLeft + carousel.clientWidth >= carousel.scrollWidth - 15;
-                        if (isEnd) {
-                          snappyScroll(carousel, 'left', carousel.scrollLeft); // smooth scroll back to start
-                        } else {
-                          snappyScroll(carousel, 'right', itemWidth + 8); // scroll by one item width + gap
-                        }
-                      }, 2000); // every 2 seconds
+                  /* Offer/banner carousels - dots only, no auto-play */
+                  document.querySelectorAll('.offer-carousel-wrapper').forEach(carousel => {
+                    addDragScroll(carousel);
+                    // Build dots below carousel
+                    let dotsEl = carousel.nextElementSibling;
+                    if (!dotsEl || !dotsEl.classList.contains('offer-carousel-dots')) {
+                      dotsEl = document.createElement('div');
+                      dotsEl.className = 'offer-carousel-dots';
+                      carousel.parentNode.insertBefore(dotsEl, carousel.nextSibling);
                     }
-                    function stopAuto() {
-                      clearInterval(interval);
+                    const boxes = carousel.querySelectorAll('.lucrative-offer-box');
+                    if (boxes.length > 1) {
+                      boxes.forEach((_, i) => {
+                        const dot = document.createElement('button');
+                        dot.className = 'offer-carousel-dot' + (i === 0 ? ' active' : '');
+                        dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+                        dot.addEventListener('click', () => {
+                          const w = boxes[0].offsetWidth + 8;
+                          carousel.scrollLeft = i * w;
+                        });
+                        dotsEl.appendChild(dot);
+                      });
+                      carousel.addEventListener('scroll', () => {
+                        const w = boxes[0].offsetWidth + 8;
+                        const idx = Math.round(carousel.scrollLeft / w);
+                        dotsEl.querySelectorAll('.offer-carousel-dot').forEach((d, i) => {
+                          d.classList.toggle('active', i === idx);
+                        });
+                      }, { passive: true });
                     }
-                    startAuto();
-                    carousel.addEventListener('mouseenter', stopAuto);
-                    carousel.addEventListener('mouseleave', startAuto);
-                    carousel.addEventListener('touchstart', stopAuto);
-                    carousel.addEventListener('touchend', startAuto);
                   });
                 }
 
-                // Race-condition free DOM initialization
                 if (document.readyState === 'loading') {
                   document.addEventListener('DOMContentLoaded', initCollectionSliders);
                 } else {
@@ -981,6 +1053,7 @@
                           </div>
 
                           <div class="category-slider-outer-wrapper" style="position: relative; width: 100%;">
+                            <button class="slider-nav-btn prev-btn" onclick="snappyScroll(document.getElementById('slider-camp-{{ forloop.index }}-{{ current_product_index }}'), 'left', document.getElementById('slider-camp-{{ forloop.index }}-{{ current_product_index }}').querySelector('.slider-item')?.offsetWidth || 200)" aria-label="Previous">&#8249;</button>
                             <div class="custom-inline-slider" id="slider-camp-{{ forloop.index }}-{{ current_product_index }}" style="--title-size: 1.3rem; --price-size: 1.5rem; --discount-size: 1.1rem;">
                               {%- assign has_items = false -%}
                               {%- for item in camp.items -%}
@@ -1021,8 +1094,8 @@
                                 </div>
                               {%- endif -%}
                             </div>
-                            
-                            
+                            <button class="slider-nav-btn next-btn" onclick="snappyScroll(document.getElementById('slider-camp-{{ forloop.index }}-{{ current_product_index }}'), 'right', document.getElementById('slider-camp-{{ forloop.index }}-{{ current_product_index }}').querySelector('.slider-item')?.offsetWidth || 200)" aria-label="Next">&#8250;</button>
+                            <div class="slider-dots" id="dots-camp-{{ forloop.index }}-{{ current_product_index }}"></div>
                           </div>
 
                         </li>
