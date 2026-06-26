@@ -44,15 +44,27 @@
   #collection-{{ section.id }} .card.ratio {
     --ratio-percent: 125% !important;
   }
-  /* Force all media containers to span full width of the card */
-  #collection-{{ section.id }} .card__media,
-  #collection-{{ section.id }} .card__media .media,
-  #collection-{{ section.id }} .fit11-card-media-slider {
+
+  /* Remove padding from card media container */
+  #collection-{{ section.id }} .card__media {
+    padding: 0 !important;
+    margin: 0 !important;
     width: 100% !important;
     height: 100% !important;
+    overflow: hidden !important;
   }
 
-  /* Pin the image to edges and force it to cover the space */
+  /* Fix the media wrapper - remove any internal spacing */
+  #collection-{{ section.id }} .card__media .media {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    position: relative !important;
+    background: transparent !important;
+  }
+
+  /* Force image to fill without any gaps */
   #collection-{{ section.id }} .card__media .media img,
   #collection-{{ section.id }} .fit11-card-media-slider img {
     object-fit: cover !important;
@@ -64,6 +76,20 @@
     left: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+    max-height: none !important;
+  }
+
+  /* Remove any card inner padding that creates gaps */
+  #collection-{{ section.id }} .card__inner {
+    padding: 0 !important;
+  }
+
+  /* Ensure card content doesn't push image */
+  #collection-{{ section.id }} .card-wrapper {
+    gap: 0 !important;
   }
 {%- endstyle -%}
 
