@@ -353,6 +353,12 @@
           "settings": {
             "product": "fearless-lion-tee"
           }
+        },
+        "product_item_1782450625365": {
+          "type": "product_item",
+          "settings": {
+            "product": "shark-graphic-tee"
+          }
         }
       },
       "block_order": [
@@ -362,7 +368,8 @@
         "product_item_1782450602453",
         "product_item_1782450608129",
         "product_item_1782450611265",
-        "product_item_1782450618389"
+        "product_item_1782450618389",
+        "product_item_1782450625365"
       ],
       "name": "11 fit Flash Sale",
       "settings": {
