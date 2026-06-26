@@ -69,6 +69,42 @@
                 .product-card-wrapper .full-unstyled-link::after {
                   pointer-events: none !important;
                 }
+                .fit11-slider-nav-btn {
+                  position: absolute;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  background: rgba(255, 255, 255, 0.9);
+                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+                  border: 1px solid rgba(0, 0, 0, 0.08);
+                  width: 24px;
+                  height: 24px;
+                  border-radius: 50%;
+                  cursor: pointer;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 14px;
+                  font-weight: bold;
+                  color: #c5a059;
+                  z-index: 10;
+                  opacity: 0;
+                  pointer-events: auto;
+                  transition: opacity 0.2s ease, transform 0.15s ease, background-color 0.15s ease;
+                }
+                .fit11-slider-nav-btn:hover {
+                  background-color: #ffffff;
+                  transform: translateY(-50%) scale(1.15);
+                }
+                .product-card-wrapper:hover .fit11-slider-nav-btn {
+                  opacity: 1;
+                }
+                .fit11-slider-prev { left: 6px; }
+                .fit11-slider-next { right: 6px; }
+                @media (hover: none) {
+                  .fit11-slider-nav-btn {
+                    display: none !important;
+                  }
+                }
               </style>
               
               {%- if card_product.media.size > 0 -%}
@@ -93,6 +129,9 @@
             </div>
 
             {%- if card_product.media.size > 1 -%}
+              <button type="button" class="fit11-slider-nav-btn fit11-slider-prev" aria-label="Previous image">‹</button>
+              <button type="button" class="fit11-slider-nav-btn fit11-slider-next" aria-label="Next image">›</button>
+
               <div class="fit11-slider-dots" style="position: absolute; bottom: 8px; right: 8px; display: flex; gap: 4px; z-index: 10; pointer-events: none;">
                 {%- for media in card_product.media limit: 5 -%}
                   <span class="fit11-dot{% if forloop.first %} active{% endif %}" style="width: 6px; height: 6px; border-radius: 50%; background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(0, 0, 0, 0.15); transition: all 0.2s ease; {% if forloop.first %}background: #c5a059; width: 12px; border-radius: 3px;{% endif %}"></span>
@@ -124,6 +163,26 @@
                           dot.style.borderRadius = '50%';
                         }
                       });
+                    }
+                  }, true);
+
+                  // Click listener for desktop next/prev buttons
+                  document.addEventListener('click', function(e) {
+                    var btn = e.target.closest('.fit11-slider-nav-btn');
+                    if (!btn) return;
+                    
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    var cardMedia = btn.parentNode;
+                    var slider = cardMedia.querySelector('.fit11-card-media-slider');
+                    if (!slider) return;
+                    
+                    var cardWidth = slider.clientWidth;
+                    if (btn.classList.contains('fit11-slider-next')) {
+                      slider.scrollBy({ left: cardWidth, behavior: 'smooth' });
+                    } else {
+                      slider.scrollBy({ left: -cardWidth, behavior: 'smooth' });
                     }
                   }, true);
 
