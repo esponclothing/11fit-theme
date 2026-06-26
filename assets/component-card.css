@@ -320,10 +320,9 @@
 
 .card__media .media img {
   height: 100%;
-  object-fit: contain;
-  object-position: center center;
+  object-fit: cover;
+  object-position: center top;
   width: 100%;
-  background: #fff;
 }
 
 .card__inner:not(.ratio) > .card__content {
