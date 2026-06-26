@@ -374,12 +374,12 @@
               }
               .offer-carousel-wrapper::-webkit-scrollbar { display: none; }
               
-              /* ── PREMIUM DARK OFFER BANNER ── */
+              /* ── PREMIUM LIGHT OFFER BANNER ── */
               .lucrative-offer-box {
                 flex: 0 0 100%;
                 scroll-snap-align: center;
                 border-radius: 12px;
-                padding: 18px 20px;
+                padding: 16px 18px;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -387,34 +387,31 @@
                 gap: 12px;
                 position: relative;
                 overflow: hidden;
-                background: #0e0e0e;
-                border: 1px solid rgba(255, 215, 0, 0.25);
-                box-shadow: 0 2px 16px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,215,0,0.08);
+                background: #fff8f0;
+                border: 1px solid #ffe0c2;
+                box-shadow: 0 2px 12px rgba(220, 100, 30, 0.08);
               }
 
-              /* Diagonal gold stripe texture overlay */
+              /* Soft warm top accent line */
               .lucrative-offer-box::before {
                 content: '';
                 position: absolute;
-                inset: 0;
-                background: repeating-linear-gradient(
-                  -55deg,
-                  transparent,
-                  transparent 18px,
-                  rgba(255, 215, 0, 0.025) 18px,
-                  rgba(255, 215, 0, 0.025) 19px
-                );
+                top: 0; left: 0; right: 0;
+                height: 3px;
+                background: linear-gradient(90deg, #ff6b2b, #ffb347);
+                border-radius: 12px 12px 0 0;
                 pointer-events: none;
               }
 
-              /* Gold left accent bar */
+              /* Subtle dot pattern */
               .lucrative-offer-box::after {
                 content: '';
                 position: absolute;
-                left: 0; top: 0; bottom: 0;
-                width: 3px;
-                background: linear-gradient(180deg, #ffd700, #b8860b);
-                border-radius: 12px 0 0 12px;
+                right: -20px; top: -20px;
+                width: 120px; height: 120px;
+                background: radial-gradient(circle, rgba(255,107,43,0.06) 0%, transparent 70%);
+                border-radius: 50%;
+                pointer-events: none;
               }
 
               .lucrative-offer-content {
@@ -424,39 +421,38 @@
                 justify-content: center;
                 align-items: flex-start;
                 text-align: left;
-                gap: 3px;
+                gap: 2px;
                 flex: 1;
                 min-width: 0;
               }
 
               .lucrative-offer-eyebrow {
-                font-size: 0.7rem;
+                font-size: 0.68rem;
                 font-weight: 700;
-                letter-spacing: 2px;
+                letter-spacing: 1.8px;
                 text-transform: uppercase;
-                color: #ffd700;
-                opacity: 0.85;
+                color: #ff6b2b;
                 margin: 0;
               }
 
               .lucrative-offer-heading {
-                font-size: 1.55rem;
+                font-size: 1.5rem;
                 font-weight: 800;
                 margin: 0;
                 text-transform: uppercase;
-                letter-spacing: 0.5px;
-                line-height: 1.15;
-                color: #ffffff;
+                letter-spacing: 0.3px;
+                line-height: 1.2;
+                color: #1a1a1a;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
               }
 
               .lucrative-offer-sub {
-                font-size: 1.1rem;
+                font-size: 1.05rem;
                 font-weight: 400;
                 margin: 0;
-                color: rgba(255,255,255,0.55);
+                color: #666;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -465,30 +461,30 @@
               .lucrative-offer-coupon {
                 z-index: 2;
                 flex-shrink: 0;
-                background: #ffd700;
-                color: #0e0e0e;
-                padding: 8px 14px;
-                border-radius: 6px;
+                background: linear-gradient(135deg, #ff6b2b, #ff8c42);
+                color: #fff;
+                padding: 9px 15px;
+                border-radius: 8px;
                 font-weight: 800;
-                font-size: 1.05rem;
-                letter-spacing: 0.5px;
+                font-size: 1rem;
+                letter-spacing: 0.3px;
                 text-transform: uppercase;
                 white-space: nowrap;
                 cursor: pointer;
-                transition: opacity 0.2s;
+                transition: opacity 0.2s, transform 0.15s;
                 border: none;
-                box-shadow: 0 2px 8px rgba(255,215,0,0.3);
+                box-shadow: 0 3px 10px rgba(255,107,43,0.35);
               }
-              .lucrative-offer-coupon:hover { opacity: 0.85; }
+              .lucrative-offer-coupon:hover {
+                opacity: 0.92;
+                transform: translateY(-1px);
+              }
 
               @media screen and (max-width: 749px) {
-                .lucrative-offer-box {
-                  padding: 14px 16px;
-                  gap: 10px;
-                }
-                .lucrative-offer-heading { font-size: 1.3rem !important; }
-                .lucrative-offer-sub { font-size: 0.95rem !important; }
-                .lucrative-offer-coupon { font-size: 0.9rem !important; padding: 7px 11px !important; }
+                .lucrative-offer-box { padding: 13px 14px; gap: 10px; }
+                .lucrative-offer-heading { font-size: 1.25rem !important; }
+                .lucrative-offer-sub { font-size: 0.9rem !important; }
+                .lucrative-offer-coupon { font-size: 0.88rem !important; padding: 8px 12px !important; }
               }
 
               /* Custom Slider Products */
@@ -743,11 +739,9 @@
 
                       {%- if slider_items_html contains "slider-item" -%}
                         <div class="category-slider-outer-wrapper" style="position: relative; width: 100%;">
-                          <button class="slider-nav-btn prev-btn" onclick="slideCategory('{{ cat_handle }}', 'left')" aria-label="Previous">&#8249;</button>
                           <div class="custom-inline-slider category-swipe-slider" id="slider-{{ cat_handle }}" style="--title-size: 1.25rem; --price-size: 1.5rem; --discount-size: 1.1rem;">
                             {{ slider_items_html }}
                           </div>
-                          <button class="slider-nav-btn next-btn" onclick="slideCategory('{{ cat_handle }}', 'right')" aria-label="Next">&#8250;</button>
                           <div class="slider-dots" id="dots-{{ cat_handle }}"></div>
                         </div>
                       {%- endif -%}
@@ -1059,7 +1053,6 @@
                           </div>
 
                           <div class="category-slider-outer-wrapper" style="position: relative; width: 100%;">
-                            <button class="slider-nav-btn prev-btn" onclick="snappyScroll(document.getElementById('slider-camp-{{ forloop.index }}-{{ current_product_index }}'), 'left', document.getElementById('slider-camp-{{ forloop.index }}-{{ current_product_index }}').querySelector('.slider-item')?.offsetWidth || 200)" aria-label="Previous">&#8249;</button>
                             <div class="custom-inline-slider" id="slider-camp-{{ forloop.index }}-{{ current_product_index }}" style="--title-size: 1.3rem; --price-size: 1.5rem; --discount-size: 1.1rem;">
                               {%- assign has_items = false -%}
                               {%- for item in camp.items -%}
@@ -1100,7 +1093,6 @@
                                 </div>
                               {%- endif -%}
                             </div>
-                            <button class="slider-nav-btn next-btn" onclick="snappyScroll(document.getElementById('slider-camp-{{ forloop.index }}-{{ current_product_index }}'), 'right', document.getElementById('slider-camp-{{ forloop.index }}-{{ current_product_index }}').querySelector('.slider-item')?.offsetWidth || 200)" aria-label="Next">&#8250;</button>
                             <div class="slider-dots" id="dots-camp-{{ forloop.index }}-{{ current_product_index }}"></div>
                           </div>
 
