@@ -1,4 +1,4 @@
-﻿{% comment %}
+{% comment %}
   ============================================================
   FIT11KART â€” main-product-combo.liquid (LAYOUT, COUPON & VARIANTS UPDATED)
   Drop this file into: sections/main-product-combo.liquid
@@ -814,7 +814,10 @@
 <div class="fit11-modal-overlay" id="fit11OffersModal" onclick="if(event.target === this) fit11ToggleOffersModal(false);">
   <div class="fit11-modal-content">
     <button type="button" class="fit11-modal-close" onclick="fit11ToggleOffersModal(false);"><i class="ti ti-x"></i></button>
-    <h3 style="font-family: var(--font-heading); font-size: 24px; font-weight: 400; margin: 0 0 20px 0; border-bottom: 1px solid var(--lux-border); padding-bottom: 12px;">All Offers & Discounts</h3>
+    <h3 style="font-family: var(--font-heading); font-size: 24px; font-weight: 400; margin: 0 0 20px 0; border-bottom: 1px solid var(--lux-border); padding-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+      <img src="{{ '11fit-discount-icon.gif' | asset_url }}" style="width: 28px; height: 28px; object-fit: contain; margin-left: -4px;">
+      All Offers & Discounts
+    </h3>
     <div class="fit11-modal-body" style="display: flex; flex-direction: column; gap: 16px;">
       {% if combo_active %}
         {% assign m_combo_price = product.metafields.price_editor.combo_config.value.comboPrice %}
