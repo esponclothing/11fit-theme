@@ -52,6 +52,7 @@
     width: 100% !important;
     height: 100% !important;
     overflow: hidden !important;
+    background: transparent !important;
   }
 
   /* Fix the media wrapper - remove any internal spacing */
@@ -62,9 +63,11 @@
     height: 100% !important;
     position: relative !important;
     background: transparent !important;
+    border: none !important;
+    overflow: hidden !important;
   }
 
-  /* Force image to fill without any gaps */
+  /* Force image to fill without any gaps - SCALE UP to crop transparent padding */
   #collection-{{ section.id }} .card__media .media img,
   #collection-{{ section.id }} .fit11-card-media-slider img {
     object-fit: cover !important;
@@ -80,11 +83,15 @@
     margin: 0 !important;
     max-width: none !important;
     max-height: none !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
+    transform: scale(1.4) !important;
   }
 
   /* Remove any card inner padding that creates gaps */
   #collection-{{ section.id }} .card__inner {
     padding: 0 !important;
+    background: transparent !important;
   }
 
   /* Ensure card content doesn't push image */
