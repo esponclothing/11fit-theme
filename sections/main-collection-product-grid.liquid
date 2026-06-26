@@ -376,7 +376,7 @@
               }
               .offer-carousel-wrapper::-webkit-scrollbar { display: none; }
               
-              /* ── OFFER BANNER (matches Product Page Offers & Discounts) ── */
+              /* â”€â”€ OFFER BANNER (matches Product Page Offers & Discounts) â”€â”€ */
               .lucrative-offer-box {
                 flex: 0 0 100%;
                 scroll-snap-align: center;
@@ -420,7 +420,10 @@
                 background: #cba86a;
                 border-radius: 50%;
                 color: #fff;
-                font-size: 14px;
+                font-size: 13px;
+                font-weight: 800;
+                font-style: normal;
+                line-height: 1;
                 animation: fit11-icon-pulse 1.5s infinite;
               }
 
@@ -1011,7 +1014,7 @@
                               {%- if camp.heading_1 != blank -%}
                               <div class="lucrative-offer-box">
                                 <div class="lucrative-offer-header">
-                                  <div class="lucrative-offer-icon"><i class="ti ti-percentage"></i></div>
+                                  <div class="lucrative-offer-icon">%</div>
                                   <div class="lucrative-offer-title">Offers & Discounts</div>
                                 </div>
                                 <div class="lucrative-offer-card-inner">
@@ -1029,7 +1032,7 @@
                               {%- if camp.heading_2 != blank -%}
                               <div class="lucrative-offer-box">
                                 <div class="lucrative-offer-header">
-                                  <div class="lucrative-offer-icon"><i class="ti ti-percentage"></i></div>
+                                  <div class="lucrative-offer-icon">%</div>
                                   <div class="lucrative-offer-title">Offers & Discounts</div>
                                 </div>
                                 <div class="lucrative-offer-card-inner">
@@ -1047,7 +1050,7 @@
                               {%- if camp.heading_3 != blank -%}
                               <div class="lucrative-offer-box">
                                 <div class="lucrative-offer-header">
-                                  <div class="lucrative-offer-icon"><i class="ti ti-percentage"></i></div>
+                                  <div class="lucrative-offer-icon">%</div>
                                   <div class="lucrative-offer-title">Offers & Discounts</div>
                                 </div>
                                 <div class="lucrative-offer-card-inner">
@@ -1125,7 +1128,7 @@
                               {%- if block.settings.heading_1 != blank -%}
                               <div class="lucrative-offer-box" style="">
                                 <div class="lucrative-offer-header">
-                                  <div class="lucrative-offer-icon"><i class="ti ti-percentage"></i></div>
+                                  <div class="lucrative-offer-icon">%</div>
                                   <div class="lucrative-offer-title" style="color: {{ block.settings.text_color }};">Offers & Discounts</div>
                                 </div>
                                 <div class="lucrative-offer-card-inner">
@@ -1142,7 +1145,7 @@
                               {%- if block.settings.heading_2 != blank -%}
                               <div class="lucrative-offer-box" style="">
                                 <div class="lucrative-offer-header">
-                                  <div class="lucrative-offer-icon"><i class="ti ti-percentage"></i></div>
+                                  <div class="lucrative-offer-icon">%</div>
                                   <div class="lucrative-offer-title" style="color: {{ block.settings.text_color }};">Offers & Discounts</div>
                                 </div>
                                 <div class="lucrative-offer-card-inner">
@@ -1159,7 +1162,7 @@
                               {%- if block.settings.heading_3 != blank -%}
                               <div class="lucrative-offer-box" style="">
                                 <div class="lucrative-offer-header">
-                                  <div class="lucrative-offer-icon"><i class="ti ti-percentage"></i></div>
+                                  <div class="lucrative-offer-icon">%</div>
                                   <div class="lucrative-offer-title" style="color: {{ block.settings.text_color }};">Offers & Discounts</div>
                                 </div>
                                 <div class="lucrative-offer-card-inner">
@@ -1225,7 +1228,7 @@
                                 {%- endfor -%}
                                 {%- if has_items == false -%}
                                   <div class="slider-item dummy-placeholder">
-                                     <h3 style="margin:0; font-size: 16px;">Banner Ready! ✅</h3>
+                                     <h3 style="margin:0; font-size: 16px;">Banner Ready! âœ…</h3>
                                      <p style="margin: 5px 0 0; font-size: 14px;">Add <strong>Slider Image Items</strong> in the Theme Editor and set their Campaign ID to: <strong>{{ target_campaign_id }}</strong></p>
                                   </div>
                                 {%- endif -%}
@@ -1261,7 +1264,7 @@
         if (!navigator.clipboard) return;
         navigator.clipboard.writeText(code).then(() => {
           const originalHTML = element.innerHTML;
-          element.innerHTML = "Copied! ✓";
+          element.innerHTML = "Copied! âœ“";
           const originalBG = element.style.background;
           const originalBorder = element.style.borderColor;
           element.style.background = "#10B981"; // Emerald green
@@ -1455,7 +1458,7 @@
   "blocks": [
     {
       "type": "slider_campaign",
-      "name": "🛍️ Offer Banner / Group",
+      "name": "ðŸ›ï¸ Offer Banner / Group",
       "settings": [
         {
           "type": "number",
@@ -1606,7 +1609,7 @@
     },
     {
       "type": "slider_item",
-      "name": "🖼️ Slider Image Item",
+      "name": "ðŸ–¼ï¸ Slider Image Item",
       "settings": [
         {
           "type": "text",
