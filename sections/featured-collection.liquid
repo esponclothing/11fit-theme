@@ -37,43 +37,33 @@
     }
   }
 
-  /* Force portrait card ratio (4:5) */
-  #collection-{{ section.id }} .card__inner.ratio,
+  /* Force portrait card ratio (4:5) for t-shirt images in featured collection */
+  #collection-{{ section.id }} .card__inner.ratio {
+    --ratio-percent: 125% !important;
+  }
   #collection-{{ section.id }} .card.ratio {
     --ratio-percent: 125% !important;
   }
-
-  /* OVERRIDE SLIDER JS: Force all wrappers and track elements to fill the space */
+  /* Force all media containers to span full width of the card */
   #collection-{{ section.id }} .card__media,
   #collection-{{ section.id }} .card__media .media,
-  #collection-{{ section.id }} .fit11-card-media-slider,
-  #collection-{{ section.id }} .fit11-card-media-slider .swiper-container,
-  #collection-{{ section.id }} .fit11-card-media-slider .swiper-wrapper,
-  #collection-{{ section.id }} .fit11-card-media-slider .swiper-slide,
-  #collection-{{ section.id }} .fit11-card-media-slider .slick-list,
-  #collection-{{ section.id }} .fit11-card-media-slider .slick-track,
-  #collection-{{ section.id }} .fit11-card-media-slider .slick-slide {
+  #collection-{{ section.id }} .fit11-card-media-slider {
     width: 100% !important;
     height: 100% !important;
-    position: static !important; /* Prevents slider tracks from collapsing */
   }
 
-  /* PIN IMAGES: Ignore JS inline styles and force cover */
-  #collection-{{ section.id }} .card__media img,
+  /* Pin the image to edges and force it to cover the space */
+  #collection-{{ section.id }} .card__media .media img,
   #collection-{{ section.id }} .fit11-card-media-slider img {
     object-fit: cover !important;
-    object-position: center top !important;
+    object-position: center !important;
     width: 100% !important;
     height: 100% !important;
-    min-width: 100% !important;
-    max-width: none !important; /* Kills JS inline max-widths */
     position: absolute !important;
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
-    display: block !important;
-    transform: none !important; /* Prevents JS from shifting the image off-center */
   }
 {%- endstyle -%}
 
