@@ -56,7 +56,20 @@
       {% else %}
         Get
       {% endif %}
-      <span style="color: #198754; font-weight: 700;">
+      <style>
+        @keyframes fit11-pulse-discount {
+          0%, 100% { transform: scale(1); color: #d9480f; text-shadow: none; }
+          50% { transform: scale(1.15); color: #ff0000; text-shadow: 0 0 8px rgba(255,0,0,0.4); }
+        }
+        .fit11-anim-discount {
+          display: inline-block;
+          animation: fit11-pulse-discount 1.2s infinite ease-in-out;
+          font-weight: 800;
+          color: #d9480f;
+          margin-left: 4px;
+        }
+      </style>
+      <span class="fit11-anim-discount">
         {% if campaign.discountType == 'PERCENTAGE' %}
           {{ campaign.discountValue }}% OFF
         {% elsif campaign.discountType == 'FLAT_RATE' %}

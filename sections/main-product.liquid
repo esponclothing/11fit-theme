@@ -92,9 +92,10 @@
 
   /* ── ANIMATED TICKER ── */
   .fit11-info-ticker {
-    position: absolute; bottom: 0; left: 0; width: 100%; height: 34px; overflow: hidden; margin: 0; border-radius: 0;
+    position: relative; width: 100%; height: 34px; overflow: hidden; margin: 12px 0; border-radius: 4px;
     background: linear-gradient(89.98deg, #FFFFFF 0.02%, #F8F8FF 64.12%, #EEEEFE 86.04%, #FFFFFF 98.04%);
     z-index: 10;
+    border: 1px solid var(--lux-border);
   }
   .fit11-shimmer-effect {
     position: absolute; top: 0; left: -150%; width: 50%; height: 100%; pointer-events: none; z-index: 10;
@@ -353,15 +354,6 @@
           {% endfor %}
         </div>
 
-        {% comment %} ── TICKER (LOWEST PRICE / RETURN BANNER) ── {% endcomment %}
-        <div class="fit11-info-ticker">
-          <div class="fit11-shimmer-effect"></div>
-          <div class="fit11-ticker-inner fit11TickerWrapper">
-            <p class="fit11-ticker-item"><span>Lowest price</span> in last 30 days</p>
-            <p class="fit11-ticker-item"><span>7 Days Free Return/Exchange,</span> 11fit guaranteed</p>
-            <p class="fit11-ticker-item"><span>Lowest price</span> in last 30 days</p>
-          </div>
-        </div>
       </div>
 
       {% comment %} ── EXTERNAL DOTS BELOW IMAGE ── {% endcomment %}
@@ -374,6 +366,16 @@
           {% endfor %}
         </div>
       {% endif %}
+
+      {% comment %} ── TICKER (LOWEST PRICE / RETURN BANNER) ── {% endcomment %}
+      <div class="fit11-info-ticker">
+        <div class="fit11-shimmer-effect"></div>
+        <div class="fit11-ticker-inner fit11TickerWrapper">
+          <p class="fit11-ticker-item"><span>Lowest price</span> in last 30 days</p>
+          <p class="fit11-ticker-item"><span>7 Days Free Return/Exchange,</span> 11fit guaranteed</p>
+          <p class="fit11-ticker-item"><span>Lowest price</span> in last 30 days</p>
+        </div>
+      </div>
 
       {% if product.images.size > 1 %}
         <div class="fit11-thumbs" id="fit11Thumbs">
@@ -1069,18 +1071,22 @@
       }
     }
 
-    function stopAutoSwipe() {
+    window.fit11StopAutoSwipe = function() {
       isUserInteracting = true;
       if (autoSlideInterval) clearInterval(autoSlideInterval);
       if (resumeTimeout) clearTimeout(resumeTimeout);
-    }
+    };
 
-    function resetAutoSwipe() {
+    window.fit11ResetAutoSwipe = function(delay) {
       isUserInteracting = false;
+      if (resumeTimeout) clearTimeout(resumeTimeout);
       resumeTimeout = setTimeout(function() {
         startAutoSwipe();
-      }, 2000); // resume 2s after user stops interacting
-    }
+      }, delay || 2000); // resume after delay
+    };
+
+    function stopAutoSwipe() { window.fit11StopAutoSwipe(); }
+    function resetAutoSwipe() { window.fit11ResetAutoSwipe(2000); }
 
     slides.addEventListener('touchstart', stopAutoSwipe, {passive: true});
     slides.addEventListener('touchend', resetAutoSwipe, {passive: true});
@@ -1282,6 +1288,12 @@
 
     variantRadios.forEach(function(radio) {
       radio.addEventListener('change', function(e) {
+        // Pause auto-swipe and give user 6 seconds to view the new variant image
+        if (typeof window.fit11StopAutoSwipe === 'function') {
+          window.fit11StopAutoSwipe();
+          window.fit11ResetAutoSwipe(6000); 
+        }
+
         if (radio.getAttribute('data-is-color') === 'true') {
           var val = radio.value;
           document.querySelectorAll('.fit11-variant-radio[data-is-color="true"]').forEach(function(r) {
