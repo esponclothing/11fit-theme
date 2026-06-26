@@ -44,22 +44,26 @@
   #collection-{{ section.id }} .card.ratio {
     --ratio-percent: 125% !important;
   }
-  /* Make image and its containers fill the taller card neatly */
+  /* Force all media containers to span full width of the card */
+  #collection-{{ section.id }} .card__media,
   #collection-{{ section.id }} .card__media .media,
   #collection-{{ section.id }} .fit11-card-media-slider {
     width: 100% !important;
     height: 100% !important;
-    display: block !important;
   }
+
+  /* Pin the image to edges and force it to cover the space */
   #collection-{{ section.id }} .card__media .media img,
   #collection-{{ section.id }} .fit11-card-media-slider img {
     object-fit: cover !important;
-    object-position: center top !important;
+    object-position: center !important;
     width: 100% !important;
-    min-width: 100% !important;
-    max-width: 100% !important;
     height: 100% !important;
-    display: block !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
   }
 {%- endstyle -%}
 
