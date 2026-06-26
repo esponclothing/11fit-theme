@@ -1051,7 +1051,14 @@
     });
 
     function startAutoSwipe() {
-      // Auto-swipe disabled — gallery is swipe-only
+      if (autoSlideInterval) clearInterval(autoSlideInterval);
+      if (total > 1) {
+        autoSlideInterval = setInterval(function() {
+          if (!isUserInteracting) {
+            goTo((cur + 1) % total);
+          }
+        }, 1000); // 1 second auto-swipe
+      }
     }
 
     function stopAutoSwipe() {
@@ -1061,6 +1068,10 @@
 
     function resetAutoSwipe() {
       stopAutoSwipe();
+      resumeTimeout = setTimeout(function() {
+        isUserInteracting = false;
+        startAutoSwipe();
+      }, 3000); // resume after 3s of no interaction
     }
 
     slides.addEventListener('touchstart', stopAutoSwipe, {passive: true});
@@ -1068,7 +1079,7 @@
     slides.addEventListener('mousedown', stopAutoSwipe, {passive: true});
     slides.addEventListener('mouseup', resetAutoSwipe, {passive: true});
 
-    // startAutoSwipe(); — disabled, gallery is swipe-only
+    startAutoSwipe();
   }
 
   if (document.readyState === 'loading') {
