@@ -217,12 +217,19 @@
           "settings": {
             "product": "fearless-lion-tee"
           }
+        },
+        "deal_1782371698796": {
+          "type": "deal",
+          "settings": {
+            "product": "espon-e008-air-flex-4-way-lycra-active-shorts"
+          }
         }
       },
       "block_order": [
         "deal_1782371678334",
         "deal_1782371686944",
-        "deal_1782371692070"
+        "deal_1782371692070",
+        "deal_1782371698796"
       ],
       "name": "11 fit 3D Deal Focus",
       "settings": {
@@ -305,36 +312,6 @@
     "11fit_flash_sale_L4kxCW": {
       "type": "11fit-flash-sale",
       "blocks": {
-        "product_item_dQgNXd": {
-          "type": "product_item",
-          "settings": {
-            "product": "11fit-no-day-without-gym-graphic-tee"
-          }
-        },
-        "product_item_b8WBX6": {
-          "type": "product_item",
-          "settings": {
-            "product": "11fit-savage-premium-graphic-tee"
-          }
-        },
-        "product_item_LA68h4": {
-          "type": "product_item",
-          "settings": {
-            "product": "11fit-fearless-lion-graphic-tee"
-          }
-        },
-        "product_item_TNmwtD": {
-          "type": "product_item",
-          "settings": {
-            "product": "11fit-game-over-skeleton-graphic-tee"
-          }
-        },
-        "product_item_8xVkir": {
-          "type": "product_item",
-          "settings": {
-            "product": "11fit-premium-statement-graphic-tee"
-          }
-        },
         "product_item_aQejpW": {
           "type": "product_item",
           "settings": {
@@ -349,11 +326,6 @@
         }
       },
       "block_order": [
-        "product_item_dQgNXd",
-        "product_item_b8WBX6",
-        "product_item_LA68h4",
-        "product_item_TNmwtD",
-        "product_item_8xVkir",
         "product_item_aQejpW",
         "product_item_Dw6QHP"
       ],
