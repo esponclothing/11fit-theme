@@ -223,13 +223,20 @@
           "settings": {
             "product": "espon-e008-air-flex-4-way-lycra-active-shorts"
           }
+        },
+        "deal_1782450693979": {
+          "type": "deal",
+          "settings": {
+            "product": "cockroach-janta-takeover-tee"
+          }
         }
       },
       "block_order": [
         "deal_1782371678334",
         "deal_1782371686944",
         "deal_1782371692070",
-        "deal_1782371698796"
+        "deal_1782371698796",
+        "deal_1782450693979"
       ],
       "name": "11 fit 3D Deal Focus",
       "settings": {
@@ -324,12 +331,6 @@
             "product": "chai-lovers-tee"
           }
         },
-        "product_item_Dw6QHP": {
-          "type": "product_item",
-          "settings": {
-            "product": "espon-e008-air-flex-4-way-lycra-active-shorts"
-          }
-        },
         "product_item_1782450608129": {
           "type": "product_item",
           "settings": {
@@ -354,6 +355,12 @@
             "product": "shark-graphic-tee"
           }
         },
+        "product_item_Dw6QHP": {
+          "type": "product_item",
+          "settings": {
+            "product": "espon-e008-air-flex-4-way-lycra-active-shorts"
+          }
+        },
         "product_item_aQejpW": {
           "type": "product_item",
           "settings": {
@@ -364,11 +371,11 @@
       "block_order": [
         "product_item_1782450597331",
         "product_item_1782450602453",
-        "product_item_Dw6QHP",
         "product_item_1782450608129",
         "product_item_1782450611265",
         "product_item_1782450618389",
         "product_item_1782450625365",
+        "product_item_Dw6QHP",
         "product_item_aQejpW"
       ],
       "name": "11 fit Flash Sale",
