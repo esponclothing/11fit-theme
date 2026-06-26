@@ -53,20 +53,20 @@
       <div class="fit11-offer-desc" style="font-size: 13px; color: {{ text_color }}; font-weight: 500;">
         {% if campaign.discountType == 'FLAT_RATE' %}
           Buy {{ campaign.minQuantity }} items for
+          <span style="color: #198754; font-weight: 700;">FLAT ₹{{ campaign.discountValue }}</span>
         {% elsif campaign.minQuantity > 1 %}
-          Buy {{ campaign.minQuantity }} items @
+          Buy {{ campaign.minQuantity }} items for
+          <span style="color: #198754; font-weight: 700;">₹{{ campaign.discountValue }}</span>
         {% else %}
           Get
+          <span style="color: #198754; font-weight: 700;">
+            {% if campaign.discountType == 'PERCENTAGE' %}
+              {{ campaign.discountValue }}% OFF
+            {% else %}
+              ₹{{ campaign.discountValue }} OFF
+            {% endif %}
+          </span>
         {% endif %}
-        <span style="color: #198754; font-weight: 700;">
-          {% if campaign.discountType == 'PERCENTAGE' %}
-            {{ campaign.discountValue }}% OFF
-          {% elsif campaign.discountType == 'FLAT_RATE' %}
-            FLAT ₹{{ campaign.discountValue }}
-          {% else %}
-            ₹{{ campaign.discountValue }} Each
-          {% endif %}
-        </span>
       </div>
     </div>
     
