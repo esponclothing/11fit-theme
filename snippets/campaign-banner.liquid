@@ -52,9 +52,9 @@
       <img src="{{ '11fit-discount-icon.gif' | asset_url }}" alt="Discount" style="width: 24px; height: 24px; object-fit: contain;">
       <div class="fit11-offer-desc" style="font-size: 13px; color: {{ text_color }}; font-weight: 500;">
         {% if campaign.discountType == 'FLAT_RATE' %}
-          Buy {{ campaign.minQuantity }} items for a
+          Buy {{ campaign.minQuantity }} items for
         {% elsif campaign.minQuantity > 1 %}
-          Buy {{ campaign.minQuantity }} or more items and get
+          Buy {{ campaign.minQuantity }} items @
         {% else %}
           Get
         {% endif %}
@@ -64,14 +64,14 @@
           {% elsif campaign.discountType == 'FLAT_RATE' %}
             FLAT ₹{{ campaign.discountValue }}
           {% else %}
-            ₹{{ campaign.discountValue }} OFF Each Item
+            ₹{{ campaign.discountValue }} Each
           {% endif %}
         </span>
       </div>
     </div>
     
     <div class="fit11-offer-desc" style="font-weight: 600; color: {{ accent_color }}; margin-top: 6px; font-size: 13px;">
-      <i class="ti ti-flame"></i> Limited Time Deal!
+      🔥 Limited Time Deal!
     </div>
     {% if campaign.ends_at != blank %}
       <div style="font-size: 11px; color: {{ accent_color }}; margin-top: 4px; font-weight: 500;">
@@ -89,7 +89,7 @@
     {% endif %}
     
     <div style="border-top: 1px dashed #cbd5e0; margin-top: 12px; padding-top: 10px; display: flex; justify-content: space-between; font-size: 11px; font-weight: 500; color: #718096;">
-      <span style="color: #198754; display: flex; align-items: center; gap: 4px;"><i class="ti ti-truck"></i> Free Delivery Eligible</span>
+      <span style="color: #198754; display: flex; align-items: center; gap: 4px;">&#x1F69A; Free Delivery Eligible</span>
       <span>No Coupon Needed</span>
     </div>
   </div>

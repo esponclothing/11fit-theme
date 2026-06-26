@@ -1117,7 +1117,7 @@
                   {%- else -%}
                     {% comment %} --- ORIGINAL INLINE SLIDER INJECTION (DYNAMIC BY CAMPAIGN BLOCKS) --- {% endcomment %}
                     {%- for block in section.blocks -%}
-                      {%- if block.type == 'slider_campaign' and block.settings.insert_after == current_product_index -%}
+                      {%- if block.type == 'slide_camp' and block.settings.insert_after == current_product_index -%}
                         {%- assign show_campaign = true -%}
                         {%- if block.settings.target_collection != blank and block.settings.target_collection.handle != collection.handle -%}
                           {%- assign show_campaign = false -%}
@@ -1457,8 +1457,8 @@
   ],
   "blocks": [
     {
-      "type": "slider_campaign",
-      "name": "ðŸ›ï¸ Offer Banner / Group",
+      "type": "slide_camp",
+      "name": "Offer Banner / Group",
       "settings": [
         {
           "type": "number",
