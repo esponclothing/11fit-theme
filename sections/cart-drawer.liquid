@@ -22,6 +22,29 @@
       "label": "VIP Auto-Discount Code",
       "info": "This code auto-applies when the VIP threshold is reached."
     }
+  ],
+  "blocks": [
+    {
+      "type": "coupon",
+      "name": "Coupon",
+      "settings": [
+        {
+          "type": "text",
+          "id": "code",
+          "label": "Coupon Code"
+        },
+        {
+          "type": "number",
+          "id": "min_spend",
+          "label": "Minimum Spend"
+        },
+        {
+          "type": "text",
+          "id": "desc",
+          "label": "Description"
+        }
+      ]
+    }
   ]
 }
 {% endschema %}

@@ -58,23 +58,123 @@
         style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
       >
         {%- if card_product.featured_media -%}
-          <div class="card__media{% if image_shape and image_shape != 'default' %} shape--{{ image_shape }} color-{{ settings.card_color_scheme }} gradient{% endif %}">
+          <div class="card__media{% if image_shape and image_shape != 'default' %} shape--{{ image_shape }} color-{{ settings.card_color_scheme }} gradient{% endif %}" style="position: relative; z-index: 5; pointer-events: auto;">
 
-            <!-- Standard Static Image -->
-            <div class="media media--transparent">
-              {%- if card_product.featured_media -%}
-                <img
-                  src="{{ card_product.featured_media | image_url: width: 533 }}"
-                  alt="{{ card_product.featured_media.alt | escape }}"
-                  class="motion-reduce"
-                  {% unless lazy_load == false %}
-                    loading="lazy"
-                  {% endunless %}
-                  width="{{ card_product.featured_media.width }}"
-                  height="{{ card_product.featured_media.height }}"
-                >
+            <!-- Swipeable Image Slider with Dots Indicators -->
+            <div class="media media--transparent fit11-card-media-slider" style="display: flex !important; overflow-x: auto !important; overflow-y: hidden !important; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; width: 100%; height: 100%; cursor: grab;">
+              <style>
+                .fit11-card-media-slider::-webkit-scrollbar {
+                  display: none;
+                }
+                .product-card-wrapper .full-unstyled-link::after {
+                  pointer-events: none !important;
+                }
+              </style>
+              
+              {%- if card_product.media.size > 0 -%}
+                {%- for media in card_product.media limit: 5 -%}
+                  <div style="flex: 0 0 100%; scroll-snap-align: start; width: 100%; height: 100%; position: relative;">
+                    <a href="{{ card_product.url }}" style="display: block; width: 100%; height: 100%;">
+                      <img
+                        src="{{ media | image_url: width: 533 }}"
+                        alt="{{ media.alt | escape }}"
+                        class="motion-reduce"
+                        {% unless lazy_load == false and forloop.first %}
+                          loading="lazy"
+                        {% endunless %}
+                        width="{{ media.width }}"
+                        height="{{ media.height }}"
+                        style="width: 100%; height: 100%; object-fit: cover; display: block;"
+                      >
+                    </a>
+                  </div>
+                {%- endfor -%}
               {%- endif -%}
             </div>
+
+            {%- if card_product.media.size > 1 -%}
+              <div class="fit11-slider-dots" style="position: absolute; bottom: 8px; right: 8px; display: flex; gap: 4px; z-index: 10; pointer-events: none;">
+                {%- for media in card_product.media limit: 5 -%}
+                  <span class="fit11-dot{% if forloop.first %} active{% endif %}" style="width: 6px; height: 6px; border-radius: 50%; background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(0, 0, 0, 0.15); transition: all 0.2s ease; {% if forloop.first %}background: #c5a059; width: 12px; border-radius: 3px;{% endif %}"></span>
+                {%- endfor -%}
+              </div>
+
+              <script>
+                if (!window.fit11SliderInitialized) {
+                  window.fit11SliderInitialized = true;
+                  
+                  // Capture scroll events to update dot indicators
+                  document.addEventListener('scroll', function(e) {
+                    var slider = e.target;
+                    if (!slider.classList || !slider.classList.contains('fit11-card-media-slider')) return;
+                    
+                    var index = Math.round(slider.scrollLeft / slider.clientWidth);
+                    var cardMedia = slider.parentNode;
+                    var dotsContainer = cardMedia.querySelector('.fit11-slider-dots');
+                    if (dotsContainer) {
+                      var dots = dotsContainer.querySelectorAll('.fit11-dot');
+                      dots.forEach(function(dot, idx) {
+                        if (idx === index) {
+                          dot.style.background = '#c5a059';
+                          dot.style.width = '12px';
+                          dot.style.borderRadius = '3px';
+                        } else {
+                          dot.style.background = 'rgba(255, 255, 255, 0.5)';
+                          dot.style.width = '6px';
+                          dot.style.borderRadius = '50%';
+                        }
+                      });
+                    }
+                  }, true);
+
+                  // Desktop drag-to-scroll implementation
+                  var isDragging = false;
+                  var startX = 0;
+                  var scrollLeft = 0;
+                  var activeSlider = null;
+                  
+                  document.addEventListener('mousedown', function(e) {
+                    var slider = e.target.closest('.fit11-card-media-slider');
+                    if (!slider) return;
+                    activeSlider = slider;
+                    isDragging = false;
+                    startX = e.clientX;
+                    scrollLeft = slider.scrollLeft;
+                    slider.style.cursor = 'grabbing';
+                    slider.style.scrollBehavior = 'auto'; // Disable smooth scroll while dragging
+                  }, true);
+                  
+                  document.addEventListener('mousemove', function(e) {
+                    if (!activeSlider) return;
+                    var deltaX = e.clientX - startX;
+                    if (Math.abs(deltaX) > 5) {
+                      isDragging = true;
+                      activeSlider.scrollLeft = scrollLeft - deltaX;
+                    }
+                  }, true);
+                  
+                  document.addEventListener('mouseup', function(e) {
+                    if (activeSlider) {
+                      activeSlider.style.cursor = 'grab';
+                      activeSlider.style.scrollBehavior = 'smooth'; // Re-enable smooth scroll
+                      activeSlider = null;
+                    }
+                  }, true);
+                  
+                  // Intercept clicks on links if user was dragging
+                  document.addEventListener('click', function(e) {
+                    if (isDragging) {
+                      var slider = e.target.closest('.fit11-card-media-slider');
+                      if (slider) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }
+                      isDragging = false;
+                    }
+                  }, true);
+                }
+              </script>
+            {%- endif -%}
 
           </div>
         {%- endif -%}
