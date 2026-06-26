@@ -984,9 +984,17 @@
 
       cur = n;
 
-      var slideWidth = slides.clientWidth || (slides.firstElementChild ? slides.firstElementChild.clientWidth : 0);
+      var slideWidth = slides.offsetWidth;
       if (slideWidth > 0) {
-        slides.scrollTo({ left: cur * slideWidth, behavior: 'smooth' });
+        // Temporarily disable scroll-snap so programmatic scroll works
+        slides.style.scrollSnapType = 'none';
+        slides.style.scrollBehavior = 'smooth';
+        slides.scrollLeft = cur * slideWidth;
+        // Re-enable snap after animation completes
+        setTimeout(function() {
+          slides.style.scrollSnapType = '';
+          slides.style.scrollBehavior = '';
+        }, 400);
       }
 
       if (dots[cur]) dots[cur].classList.add('on');
@@ -1057,21 +1065,21 @@
           if (!isUserInteracting) {
             goTo((cur + 1) % total);
           }
-        }, 1000); // 1 second auto-swipe
+        }, 1500); // 1.5s: gives 300ms for smooth scroll + 1.2s pause
       }
     }
 
     function stopAutoSwipe() {
       isUserInteracting = true;
+      if (autoSlideInterval) clearInterval(autoSlideInterval);
       if (resumeTimeout) clearTimeout(resumeTimeout);
     }
 
     function resetAutoSwipe() {
-      stopAutoSwipe();
+      isUserInteracting = false;
       resumeTimeout = setTimeout(function() {
-        isUserInteracting = false;
         startAutoSwipe();
-      }, 3000); // resume after 3s of no interaction
+      }, 2000); // resume 2s after user stops interacting
     }
 
     slides.addEventListener('touchstart', stopAutoSwipe, {passive: true});
