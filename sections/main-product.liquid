@@ -1071,22 +1071,28 @@
       }
     }
 
-    window.fit11StopAutoSwipe = function() {
+    function stopAutoSwipe() {
       isUserInteracting = true;
       if (autoSlideInterval) clearInterval(autoSlideInterval);
       if (resumeTimeout) clearTimeout(resumeTimeout);
-    };
+    }
 
-    window.fit11ResetAutoSwipe = function(delay) {
+    function resetAutoSwipe(delay) {
       isUserInteracting = false;
       if (resumeTimeout) clearTimeout(resumeTimeout);
       resumeTimeout = setTimeout(function() {
         startAutoSwipe();
       }, delay || 2000); // resume after delay
-    };
+    }
 
-    function stopAutoSwipe() { window.fit11StopAutoSwipe(); }
-    function resetAutoSwipe() { window.fit11ResetAutoSwipe(2000); }
+    // Pause auto-swipe and give user 6 seconds to view the new variant image
+    var localVariantRadios = sectionContainer.querySelectorAll('.fit11-variant-radio');
+    localVariantRadios.forEach(function(radio) {
+      radio.addEventListener('change', function() {
+        stopAutoSwipe();
+        resetAutoSwipe(6000);
+      });
+    });
 
     slides.addEventListener('touchstart', stopAutoSwipe, {passive: true});
     slides.addEventListener('touchend', resetAutoSwipe, {passive: true});
@@ -1288,11 +1294,6 @@
 
     variantRadios.forEach(function(radio) {
       radio.addEventListener('change', function(e) {
-        // Pause auto-swipe and give user 6 seconds to view the new variant image
-        if (typeof window.fit11StopAutoSwipe === 'function') {
-          window.fit11StopAutoSwipe();
-          window.fit11ResetAutoSwipe(6000); 
-        }
 
         if (radio.getAttribute('data-is-color') === 'true') {
           var val = radio.value;

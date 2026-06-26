@@ -48,36 +48,26 @@
       <div style="background: #198754; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase;">Auto Applied</div>
     </div>
     
-    <div class="fit11-offer-desc" style="font-size: 13px; color: {{ text_color }}; font-weight: 500; margin-top: 4px;">
-      {% if campaign.discountType == 'FLAT_RATE' %}
-        Buy {{ campaign.minQuantity }} items for a
-      {% elsif campaign.minQuantity > 1 %}
-        Buy {{ campaign.minQuantity }} or more items and get
-      {% else %}
-        Get
-      {% endif %}
-      <style>
-        @keyframes fit11-pulse-discount {
-          0%, 100% { transform: scale(1); color: #d9480f; text-shadow: none; }
-          50% { transform: scale(1.15); color: #ff0000; text-shadow: 0 0 8px rgba(255,0,0,0.4); }
-        }
-        .fit11-anim-discount {
-          display: inline-block;
-          animation: fit11-pulse-discount 1.2s infinite ease-in-out;
-          font-weight: 800;
-          color: #d9480f;
-          margin-left: 4px;
-        }
-      </style>
-      <span class="fit11-anim-discount">
-        {% if campaign.discountType == 'PERCENTAGE' %}
-          {{ campaign.discountValue }}% OFF
-        {% elsif campaign.discountType == 'FLAT_RATE' %}
-          FLAT ₹{{ campaign.discountValue }}
+    <div style="display: flex; gap: 8px; align-items: flex-start; margin-top: 4px;">
+      <img src="{{ '11fit-discount-icon.gif' | asset_url }}" alt="Discount" style="width: 24px; height: 24px; object-fit: contain;">
+      <div class="fit11-offer-desc" style="font-size: 13px; color: {{ text_color }}; font-weight: 500;">
+        {% if campaign.discountType == 'FLAT_RATE' %}
+          Buy {{ campaign.minQuantity }} items for a
+        {% elsif campaign.minQuantity > 1 %}
+          Buy {{ campaign.minQuantity }} or more items and get
         {% else %}
-          ₹{{ campaign.discountValue }} OFF Each Item
+          Get
         {% endif %}
-      </span>
+        <span style="color: #198754; font-weight: 700;">
+          {% if campaign.discountType == 'PERCENTAGE' %}
+            {{ campaign.discountValue }}% OFF
+          {% elsif campaign.discountType == 'FLAT_RATE' %}
+            FLAT ₹{{ campaign.discountValue }}
+          {% else %}
+            ₹{{ campaign.discountValue }} OFF Each Item
+          {% endif %}
+        </span>
+      </div>
     </div>
     
     <div class="fit11-offer-desc" style="font-weight: 600; color: {{ accent_color }}; margin-top: 6px; font-size: 13px;">

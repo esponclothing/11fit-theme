@@ -1065,10 +1065,13 @@
 
                               {%- if camp.heading_3 != blank -%}
                               <div class="lucrative-offer-box">
-                                <div class="lucrative-offer-content">
-                                  <div class="lucrative-offer-eyebrow">✦ Limited Offer</div>
-                                  <h3 class="lucrative-offer-heading">{{ camp.heading_3 }}</h3>
-                                  <p class="lucrative-offer-sub">{{ camp.subheading_3 }}</p>
+                                <div style="display: flex; align-items: flex-start;">
+                                  <img src="{{ '11fit-discount-icon.gif' | asset_url }}" alt="Discount" style="width: 24px; height: 24px; object-fit: contain; margin-right: 8px; margin-top: 2px;">
+                                  <div class="lucrative-offer-content">
+                                    <div class="lucrative-offer-eyebrow">✦ Limited Offer</div>
+                                    <h3 class="lucrative-offer-heading">{{ camp.heading_3 }}</h3>
+                                    <p class="lucrative-offer-sub">{{ camp.subheading_3 }}</p>
+                                  </div>
                                 </div>
                                 {%- if camp.coupon_code_3 != blank -%}
                                   <div class="lucrative-offer-coupon" onclick="copyCouponCode(this, '{{ camp.coupon_code_3 }}');">{{ camp.coupon_code_3 }}</div>
@@ -1138,9 +1141,12 @@
                             <div class="offer-carousel-wrapper">
                               {%- if block.settings.heading_1 != blank -%}
                               <div class="lucrative-offer-box" style="">
-                                <div class="lucrative-offer-content">
-                                  <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_1 }}</h3>
-                                  <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_1 }}</p>
+                                <div style="display: flex; align-items: flex-start;">
+                                  <img src="{{ '11fit-discount-icon.gif' | asset_url }}" alt="Discount" style="width: 24px; height: 24px; object-fit: contain; margin-right: 8px; margin-top: 2px;">
+                                  <div class="lucrative-offer-content">
+                                    <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_1 }}</h3>
+                                    <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_1 }}</p>
+                                  </div>
                                 </div>
                                 {%- if block.settings.coupon_code_1 != blank -%}
                                   <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }}; cursor: pointer;" onclick="copyCouponCode(this, '{{ block.settings.coupon_code_1 }}');">Code: <span>{{ block.settings.coupon_code_1 }}</span></div>
@@ -1149,9 +1155,12 @@
                               {%- endif -%}
                               {%- if block.settings.heading_2 != blank -%}
                               <div class="lucrative-offer-box" style="">
-                                <div class="lucrative-offer-content">
-                                  <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_2 }}</h3>
-                                  <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_2 }}</p>
+                                <div style="display: flex; align-items: flex-start;">
+                                  <img src="{{ '11fit-discount-icon.gif' | asset_url }}" alt="Discount" style="width: 24px; height: 24px; object-fit: contain; margin-right: 8px; margin-top: 2px;">
+                                  <div class="lucrative-offer-content">
+                                    <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_2 }}</h3>
+                                    <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_2 }}</p>
+                                  </div>
                                 </div>
                                 {%- if block.settings.coupon_code_2 != blank -%}
                                   <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }}; cursor: pointer;" onclick="copyCouponCode(this, '{{ block.settings.coupon_code_2 }}');">Code: <span>{{ block.settings.coupon_code_2 }}</span></div>
@@ -1160,9 +1169,12 @@
                               {%- endif -%}
                               {%- if block.settings.heading_3 != blank -%}
                               <div class="lucrative-offer-box" style="">
-                                <div class="lucrative-offer-content">
-                                  <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_3 }}</h3>
-                                  <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_3 }}</p>
+                                <div style="display: flex; align-items: flex-start;">
+                                  <img src="{{ '11fit-discount-icon.gif' | asset_url }}" alt="Discount" style="width: 24px; height: 24px; object-fit: contain; margin-right: 8px; margin-top: 2px;">
+                                  <div class="lucrative-offer-content">
+                                    <h3 class="lucrative-offer-heading" style="color: {{ block.settings.text_color }};">{{ block.settings.heading_3 }}</h3>
+                                    <p class="lucrative-offer-sub" style="color: {{ block.settings.text_color }};">{{ block.settings.subheading_3 }}</p>
+                                  </div>
                                 </div>
                                 {%- if block.settings.coupon_code_3 != blank -%}
                                   <div class="lucrative-offer-coupon" style="color: {{ block.settings.text_color }}; cursor: pointer;" onclick="copyCouponCode(this, '{{ block.settings.coupon_code_3 }}');">Code: <span>{{ block.settings.coupon_code_3 }}</span></div>
