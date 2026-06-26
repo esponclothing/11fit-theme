@@ -67,10 +67,10 @@
     overflow: hidden !important;
   }
 
-  /* Force image to fill without any gaps - SCALE UP to crop transparent padding */
+  /* Force image to fit completely inside frame - NO overflow, NO cropping of design */
   #collection-{{ section.id }} .card__media .media img,
   #collection-{{ section.id }} .fit11-card-media-slider img {
-    object-fit: cover !important;
+    object-fit: contain !important;
     object-position: center !important;
     width: 100% !important;
     height: 100% !important;
@@ -81,11 +81,9 @@
     bottom: 0 !important;
     padding: 0 !important;
     margin: 0 !important;
-    max-width: none !important;
-    max-height: none !important;
-    min-width: 100% !important;
-    min-height: 100% !important;
-    transform: scale(1.4) !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    transform: none !important;
   }
 
   /* Remove any card inner padding that creates gaps */
