@@ -934,7 +934,12 @@
                           <div class="offer-carousel-wrapper">
                             {%- if camp.banner_image != blank -%}
                               <div class="lucrative-offer-box" style="background: transparent; border: none; box-shadow: none; padding: 0 !important; width: 92%; flex: 0 0 92%;">
-                                <img src="{{ camp.banner_image }}" style="width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-radius: 16px; display: block;" alt="{{ camp.heading_1 | default: 'Campaign Banner' | escape }}">
+                                <picture style="display: block; width: 100%;">
+                                  {%- if camp.banner_image_mobile != blank -%}
+                                    <source media="(max-width: 749px)" srcset="{{ camp.banner_image_mobile }}">
+                                  {%- endif -%}
+                                  <img src="{{ camp.banner_image }}" style="width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-radius: 16px; display: block;" alt="{{ camp.heading_1 | default: 'Campaign Banner' | escape }}">
+                                </picture>
                               </div>
                             {%- else -%}
                               {%- if camp.heading_1 != blank -%}
