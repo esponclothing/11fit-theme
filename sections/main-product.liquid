@@ -1,6 +1,6 @@
-{% comment %}
+﻿{% comment %}
   ============================================================
-  FIT11KART — main-product-combo.liquid (LAYOUT, COUPON & VARIANTS UPDATED)
+  FIT11KART â€” main-product-combo.liquid (LAYOUT, COUPON & VARIANTS UPDATED)
   Drop this file into: sections/main-product-combo.liquid
   ============================================================
 {% endcomment %}
@@ -21,12 +21,12 @@
     --font-body: {{ section.settings.font_body }};
   }
 
-  /* ── GLOBAL STRICT CONSTRAINTS ── */
+  /* â”€â”€ GLOBAL STRICT CONSTRAINTS â”€â”€ */
   .fit11-page, .fit11-page * { box-sizing: border-box !important; }
   .fit11-page { max-width: 1300px; margin: 0 auto; padding-top: 40px; padding-bottom: 140px; color: var(--lux-text); background: var(--lux-bg); font-family: var(--font-body); width: 100%; overflow: visible; }
   .fit11-grid { display: grid; grid-template-columns: 11fr 9fr; gap: 40px; align-items: start; padding: 0 20px; width: 100%; min-width: 0; }
 
-  /* ── GALLERY ── */
+  /* â”€â”€ GALLERY â”€â”€ */
   .fit11-gallery-wrap { position: sticky; top: 40px; display: flex; flex-direction: column; gap: 12px; width: 100%; min-width: 0; }
   .fit11-gallery-box { width: 100%; aspect-ratio: 3/4; background: var(--lux-surface); overflow: hidden; position: relative; border-radius: 8px; border: 1px solid var(--lux-border); }
   .fit11-slides { display: flex; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch;  }
@@ -34,7 +34,7 @@
   .fit11-slide { flex: 0 0 100%; display: flex; align-items: center; justify-content: center; scroll-snap-align: start; width: 100%; height: 100%; }
   .fit11-slide img { width: 100%; height: 100%; object-fit: contain; }
 
-  /* ── EXTERNAL SWIPE DOTS (below image, like Beyoung) ── */
+  /* â”€â”€ EXTERNAL SWIPE DOTS (below image, like Beyoung) â”€â”€ */
   .fit11-ext-dots {
     display: flex;
     justify-content: center;
@@ -90,7 +90,7 @@
   .fit11-thumb.on { opacity: 1; border-color: var(--lux-text); }
   .fit11-thumb img { width: 100%; height: 100%; object-fit: contain; }
 
-  /* ── ANIMATED TICKER ── */
+  /* â”€â”€ ANIMATED TICKER â”€â”€ */
   .fit11-info-ticker {
     position: relative; width: 100%; height: 34px; overflow: hidden; margin: 12px 0; border-radius: 4px;
     background: linear-gradient(89.98deg, #FFFFFF 0.02%, #F8F8FF 64.12%, #EEEEFE 86.04%, #FFFFFF 98.04%);
@@ -116,18 +116,18 @@
   .fit11-ticker-item span { font-weight: 700; color: #0C10E9; }
 
 
-  /* ── DETAILS PANEL ── */
+  /* â”€â”€ DETAILS PANEL â”€â”€ */
   .fit11-info { display: flex; flex-direction: column; gap: 8px; width: 100%; padding-top: 0px; min-width: 0; }
 
   .fit11-header-group { display: flex; flex-direction: column; gap: 4px; border-bottom: none; padding-bottom: 0px; width: 100%; }
   .fit11-title { font-size: 28px; font-weight: 400; line-height: 1.2; color: var(--lux-text); font-family: var(--font-heading); word-wrap: break-word; margin-bottom: 4px; }
 
-  /* ── RATINGS ROW & SIZE CHART LINK (MOVED BELOW PRICE) ── */
+  /* â”€â”€ RATINGS ROW & SIZE CHART LINK (MOVED BELOW PRICE) â”€â”€ */
   .fit11-rating-row { display: flex; justify-content: flex-start; align-items: center; width: 100%; margin-top: 8px; gap: 12px; }
   .fit11-size-chart-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; color: var(--lux-accent); cursor: pointer; text-decoration: underline; text-underline-offset: 4px; transition: color 0.3s ease; }
   .fit11-size-chart-link:hover { color: var(--lux-text); }
 
-  /* ── PRICE ── */
+  /* â”€â”€ PRICE â”€â”€ */
   .fit11-price-wrapper { display: flex; flex-direction: column; width: 100%; margin-top: 4px; }
   .fit11-price-top { display: flex; align-items: baseline; gap: 8px; margin-bottom: 2px; }
   .fit11-price-main { font-size: 22px; font-weight: 700; color: #111111; font-family: var(--font-body); }
@@ -137,7 +137,7 @@
   .fit11-price-taxes { font-size: 11px; }
   .fit11-price-lowest { font-size: 12px; font-weight: 500; color: #8A2BE2; font-family: var(--font-body); margin-bottom: 8px; }
 
-  /* ── MAIN DESKTOP BUTTON & APP BLOCKS ── */
+  /* â”€â”€ MAIN DESKTOP BUTTON & APP BLOCKS â”€â”€ */
   .fit11-main-action-btns { background: transparent; padding: 0; margin: 0; width: 100%; border-radius: 0; }
   .fit11-combo-title { font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
   .fit11-combo-title::before { content: ''; width: 4px; height: 14px; background: var(--lux-accent); display: block; }
@@ -158,7 +158,7 @@
   }
   .fit11-sticky-bar.fit11-is-visible { bottom: 0; }
 
-  /* ── VARIANT SELECTORS (LUXURY ADAPTATION) ── */
+  /* â”€â”€ VARIANT SELECTORS (LUXURY ADAPTATION) â”€â”€ */
   .fit11-variant-selectors { display: flex; flex-direction: column; gap: 20px; margin-bottom: 8px; width: 100%; min-width: 0; }
   .fit11-option-fieldset { border: none; padding: 0; margin: 0; }
   .fit11-option-name { font-size: 12px; font-weight: 500; color: var(--lux-text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-family: var(--font-body); white-space: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; }
@@ -209,7 +209,7 @@
   }
   .fit11-color-name { font-size: 10px; font-weight: 500; color: var(--lux-text); text-transform: capitalize; letter-spacing: 0.05em; text-align: center; max-width: 72px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
 
-  /* ── OFFERS & DISCOUNTS SECTION (SIMPLIFIED) ── */
+  /* â”€â”€ OFFERS & DISCOUNTS SECTION (SIMPLIFIED) â”€â”€ */
   .fit11-offers-wrapper { background: #eef6f0; border-radius: 4px; padding: 16px; width: 100%; margin-top: 8px; }
   .fit11-offers-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
   .fit11-offers-title-wrap { display: flex; align-items: center; gap: 8px; }
@@ -241,7 +241,7 @@
   .fit11-offer-timer { position: absolute; bottom: -10px; right: 16px; background: #ed8936; color: #ffffff; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; z-index: 2; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: background 0.3s; }
   .fit11-offer-card.expired .fit11-offer-timer { background: #a0aec0; }
 
-  /* ── FASHION BAG FLY ANIMATION ── */
+  /* â”€â”€ FASHION BAG FLY ANIMATION â”€â”€ */
   .fit11-fly-bag {
     position: fixed !important;
     z-index: 9999999 !important;
@@ -254,13 +254,13 @@
   }
   .fit11-fly-bag svg { width: 55%; height: 55%; stroke: currentColor; fill: none; }
 
-  /* ── TRUST BADGES ── */
+  /* â”€â”€ TRUST BADGES â”€â”€ */
   .fit11-trust-badges { display: flex; justify-content: space-between; text-align: center; border-top: 1px solid var(--lux-border); border-bottom: 1px solid var(--lux-border); padding: 16px 0; margin-top: 16px; background: transparent; }
   .fit11-trust-item { flex: 1; font-size: 11px; font-weight: 600; color: var(--lux-text-muted); line-height: 1.4; display: flex; flex-direction: column; align-items: center; gap: 8px; border-right: 1px solid var(--lux-border); }
   .fit11-trust-item:last-child { border-right: none; }
   .fit11-trust-item i { font-size: 24px; color: var(--lux-text); }
 
-  /* ── ACCORDIONS & HIGHLIGHTS ── */
+  /* â”€â”€ ACCORDIONS & HIGHLIGHTS â”€â”€ */
   .fit11-accord-group { border-top: none; margin-top: 0; width: 100%; }
   .fit11-accord { border-bottom: 1px solid var(--lux-border); width: 100%; }
   .fit11-accord summary { display: flex; align-items: center; padding: 16px 0; cursor: pointer; list-style: none; font-size: 14px; font-weight: 600; color: var(--lux-text); user-select: none; }
@@ -284,7 +284,7 @@
   .fit11-size-table td { color: var(--lux-text); font-weight: 400; }
   .fit11-size-table th:first-child, .fit11-size-table td:first-child { text-align: left; width: 25%; font-weight: 600; color: var(--lux-accent); }
 
-  /* ── STICKY BAR ── */
+  /* â”€â”€ STICKY BAR â”€â”€ */
   .fit11-sticky { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--lux-border); z-index: 99999; transform: translateY(0); transition: none; }
   .fit11-sticky.show { transform: translateY(0); }
   .fit11-sticky-inner { max-width: 1300px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 14px 20px !important; }
@@ -295,14 +295,14 @@
   .fit11-sticky-btns { width: 280px; flex-shrink: 0; }
   .fit11-sticky-btns .fit11-btn-cart { margin: 0 !important; height: 48px !important; }
 
-  /* ── MODALS ── */
+  /* â”€â”€ MODALS â”€â”€ */
   .fit11-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 100000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
   .fit11-modal-overlay.open { opacity: 1; pointer-events: auto; }
   .fit11-modal-content { background: var(--lux-surface); padding: 32px; border-radius: 12px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; transform: translateY(20px); transition: transform 0.3s ease; }
   .fit11-modal-overlay.open .fit11-modal-content { transform: translateY(0); }
   .fit11-modal-close { position: absolute; top: 16px; right: 16px; background: transparent; border: none; font-size: 22px; cursor: pointer; color: var(--lux-text-muted); }
 
-  /* ── FULL MOBILE OVERRIDES ── */
+  /* â”€â”€ FULL MOBILE OVERRIDES â”€â”€ */
   @media(max-width:1024px){
     .fit11-grid { grid-template-columns: 1fr; gap: 0; padding: 0; }
     .fit11-gallery-wrap { position: relative; top: 0; }
@@ -350,7 +350,7 @@
 <div class="fit11-page" id="fit11-page-{{ section.id }}">
   <div class="fit11-grid">
 
-    {% comment %} ── LEFT: EDITORIAL GALLERY ── {% endcomment %}
+    {% comment %} â”€â”€ LEFT: EDITORIAL GALLERY â”€â”€ {% endcomment %}
     <div class="fit11-gallery-wrap">
       <div class="fit11-gallery-box">
         <div class="fit11-slides" id="fit11Slides">
@@ -361,7 +361,7 @@
 
       </div>
 
-      {% comment %} ── EXTERNAL DOTS BELOW IMAGE ── {% endcomment %}
+      {% comment %} â”€â”€ EXTERNAL DOTS BELOW IMAGE â”€â”€ {% endcomment %}
       {% if product.images.size > 1 %}
         <div class="fit11-ext-dots" id="fit11Dots">
           {% for image in product.images %}
@@ -372,7 +372,7 @@
         </div>
       {% endif %}
 
-      {% comment %} ── TICKER (LOWEST PRICE / RETURN BANNER) ── {% endcomment %}
+      {% comment %} â”€â”€ TICKER (LOWEST PRICE / RETURN BANNER) â”€â”€ {% endcomment %}
       <div class="fit11-info-ticker">
         <div class="fit11-shimmer-effect"></div>
         <div class="fit11-ticker-inner fit11TickerWrapper">
@@ -392,7 +392,7 @@
         </div>
       {% endif %}
 
-      {% comment %} ── COLOR VARIANTS AS THUMBNAILS (MOBILE) ── {% endcomment %}
+      {% comment %} â”€â”€ COLOR VARIANTS AS THUMBNAILS (MOBILE) â”€â”€ {% endcomment %}
       {% unless product.has_only_default_variant %}
         {% for option in product.options_with_values %}
           {% assign option_name_lower = option.name | downcase %}
@@ -457,7 +457,7 @@
 
     </div>
 
-    {% comment %} ── RIGHT: DETAILS ── {% endcomment %}
+    {% comment %} â”€â”€ RIGHT: DETAILS â”€â”€ {% endcomment %}
     <div class="fit11-info">
 
 {% assign combo_active = false %}
@@ -524,7 +524,7 @@
         <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
         <input type="hidden" name="quantity" value="1" class="qty-input">
 
-        {% comment %} ── COLOR VARIANTS AS THUMBNAILS (DESKTOP) ── {% endcomment %}
+        {% comment %} â”€â”€ COLOR VARIANTS AS THUMBNAILS (DESKTOP) â”€â”€ {% endcomment %}
         {% unless product.has_only_default_variant %}
           {% for option in product.options_with_values %}
             {% assign option_name_lower = option.name | downcase %}
@@ -587,10 +587,10 @@
           {% endfor %}
         {% endunless %}
 
-        {% comment %} ── HIGHLIGHTED COMBO SELECTION AREA (APP + VARIANTS) ── {% endcomment %}
+        {% comment %} â”€â”€ HIGHLIGHTED COMBO SELECTION AREA (APP + VARIANTS) â”€â”€ {% endcomment %}
         <div class="fit11-main-action-btns" id="fit11MainBtnContainer">
 
-          {% comment %} ── NEW OFFERS & DISCOUNTS SECTION (MOVED ABOVE APP BLOCK) ── {% endcomment %}
+          {% comment %} â”€â”€ NEW OFFERS & DISCOUNTS SECTION (MOVED ABOVE APP BLOCK) â”€â”€ {% endcomment %}
           {% assign offer_blocks = section.blocks | where: "type", "offer" %}
           {% assign active_campaign = product.metafields.custom.active_campaign.value %}
 
@@ -598,7 +598,7 @@
             <div class="fit11-offers-wrapper" style="margin-top: 8px; margin-bottom: 20px;">
               <div class="fit11-offers-header">
                 <div class="fit11-offers-title-wrap">
-                  <div class="fit11-offers-icon">%</div>
+                  <img src="{{ '11fit-discount-icon.gif' | asset_url }}" style="width: 28px; height: 28px; object-fit: contain; margin-left: -4px;">
                   <span class="fit11-offers-title">{{ section.settings.offers_heading | default: "Offers & Discounts" }}</span>
                 </div>
                 {% if section.settings.show_view_all %}
@@ -636,7 +636,7 @@
             {%- endif -%}
           {%- endfor -%}
 
-          {% comment %} ── VARIANT SELECTOR (OTHER THAN COLOR) ── {% endcomment %}
+          {% comment %} â”€â”€ VARIANT SELECTOR (OTHER THAN COLOR) â”€â”€ {% endcomment %}
 {% if combo_active %}
   {% render '11fit-combo', product: product, combo_count: combo_count, combo_price: combo_price %}
   <script type="application/json" id="ProductVariantsData">
@@ -732,14 +732,14 @@
 {% endunless %}
       {% endform %}
 
-      {% comment %} ── TRUST BADGES ── {% endcomment %}
+      {% comment %} â”€â”€ TRUST BADGES â”€â”€ {% endcomment %}
       <div class="fit11-trust-badges">
         <div class="fit11-trust-item"><i class="ti ti-cash"></i>CASH ON<br>DELIVERY</div>
         <div class="fit11-trust-item"><i class="ti ti-refresh"></i>RETURN &amp;<br>EXCHANGE</div>
         <div class="fit11-trust-item"><i class="ti ti-rotate-clockwise"></i>EASY<br>RETURNS</div>
       </div>
 
-      {% comment %} ── KEY HIGHLIGHTS ── {% endcomment %}
+      {% comment %} â”€â”€ KEY HIGHLIGHTS â”€â”€ {% endcomment %}
       <div class="fit11-highlights-wrapper">
         <h3 class="fit11-highlights-title">Key Highlights</h3>
         <div class="fit11-highlights-grid">
@@ -765,7 +765,7 @@
         </div>
       </div>
 
-      {% comment %} ── ACCORDIONS ── {% endcomment %}
+      {% comment %} â”€â”€ ACCORDIONS â”€â”€ {% endcomment %}
       <div class="fit11-accord-group">
         {% if product.description != blank %}
           <details class="fit11-accord">
@@ -809,7 +809,7 @@
   </div>
 </div>
 
-{% comment %} ── OFFERS MODAL ── {% endcomment %}
+{% comment %} â”€â”€ OFFERS MODAL â”€â”€ {% endcomment %}
 {% if offer_blocks.size > 0 or active_campaign != blank or combo_active %}
 <div class="fit11-modal-overlay" id="fit11OffersModal" onclick="if(event.target === this) fit11ToggleOffersModal(false);">
   <div class="fit11-modal-content">
@@ -830,7 +830,7 @@
             {{ combo_count }} {{ product.title | escape }} at <span style="color: #198754; font-weight: 700;">Rs.{{ m_price_per_item | round }} Each</span>
           </div>
           <div class="fit11-offer-desc" style="font-weight: 600; color: #d9480f; margin-top: 6px; font-size: 13px;">
-            <i class="ti ti-flame"></i> You Saved ₹{{ m_total_saved | round }} Instantly!
+            <i class="ti ti-flame"></i> You Saved â‚¹{{ m_total_saved | round }} Instantly!
           </div>
           <div style="border-top: 1px dashed #cbd5e0; margin-top: 12px; padding-top: 10px; display: flex; justify-content: space-between; font-size: 11px; font-weight: 500; color: #718096;">
             <span style="color: #198754; display: flex; align-items: center; gap: 4px;"><i class="ti ti-truck"></i> Free Delivery</span>
@@ -860,7 +860,7 @@
 </div>
 {% endif %}
 
-{% comment %} ── SIZE CHART MODAL ── {% endcomment %}
+{% comment %} â”€â”€ SIZE CHART MODAL â”€â”€ {% endcomment %}
 <div class="fit11-modal-overlay" id="fit11SizeModal" onclick="if(event.target === this) fit11ToggleModal(false);">
   <div class="fit11-modal-content">
     <button type="button" class="fit11-modal-close" onclick="fit11ToggleModal(false);"><i class="ti ti-x"></i></button>
@@ -1217,7 +1217,7 @@
     }
   });
 
-  /* ── VARIANT SELECTION LOGIC ── */
+  /* â”€â”€ VARIANT SELECTION LOGIC â”€â”€ */
   var sectionContainer = document.getElementById('fit11-page-{{ section.id }}') || document;
   var variantRadios = sectionContainer.querySelectorAll('.fit11-variant-radio');
   var variantIdInput = sectionContainer.querySelector('#fit11-variant-id') || document.getElementById('fit11-variant-id');
@@ -1603,7 +1603,7 @@ document.addEventListener('DOMContentLoaded', function() {
       "type": "richtext",
       "id": "delivery_text",
       "label": "Delivery & returns text",
-      "default": "<p>Complimentary shipping on orders above ₹4,999. Delivered in bespoke packaging within 2-4 business days. Returns accepted within 14 days of receipt, provided the item is unworn and tags remain attached.</p>"
+      "default": "<p>Complimentary shipping on orders above â‚¹4,999. Delivered in bespoke packaging within 2-4 business days. Returns accepted within 14 days of receipt, provided the item is unworn and tags remain attached.</p>"
     }
   ],
   "blocks": [
