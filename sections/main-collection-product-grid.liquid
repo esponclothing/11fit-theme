@@ -379,12 +379,13 @@
                 flex: 0 0 100%;
                 scroll-snap-align: center;
                 border-radius: 12px;
-                padding: 16px 18px;
+                padding: 20px 24px;
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
-                flex-direction: row;
-                gap: 12px;
+                justify-content: center;
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
                 position: relative;
                 overflow: hidden;
                 background: #fff8f0;
@@ -403,7 +404,7 @@
                 pointer-events: none;
               }
 
-              /* Subtle dot pattern */
+              /* Subtle glow */
               .lucrative-offer-box::after {
                 content: '';
                 position: absolute;
@@ -419,33 +420,32 @@
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                align-items: flex-start;
-                text-align: left;
-                gap: 2px;
-                flex: 1;
-                min-width: 0;
+                align-items: center;
+                text-align: center;
+                gap: 4px;
+                width: 100%;
               }
 
               .lucrative-offer-eyebrow {
-                font-size: 0.68rem;
+                font-size: 0.9rem;
                 font-weight: 700;
-                letter-spacing: 1.8px;
+                letter-spacing: 3px;
                 text-transform: uppercase;
                 color: #ff6b2b;
                 margin: 0;
+                display: flex;
+                align-items: center;
+                gap: 6px;
               }
 
               .lucrative-offer-heading {
-                font-size: 1.5rem;
-                font-weight: 800;
+                font-size: 2rem;
+                font-weight: 900;
                 margin: 0;
                 text-transform: uppercase;
-                letter-spacing: 0.3px;
-                line-height: 1.2;
+                letter-spacing: 0.5px;
+                line-height: 1.15;
                 color: #1a1a1a;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
               }
 
               .lucrative-offer-sub {
@@ -453,9 +453,6 @@
                 font-weight: 400;
                 margin: 0;
                 color: #666;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
               }
 
               .lucrative-offer-coupon {
@@ -463,17 +460,18 @@
                 flex-shrink: 0;
                 background: linear-gradient(135deg, #ff6b2b, #ff8c42);
                 color: #fff;
-                padding: 9px 15px;
+                padding: 10px 22px;
                 border-radius: 8px;
                 font-weight: 800;
                 font-size: 1rem;
-                letter-spacing: 0.3px;
+                letter-spacing: 0.5px;
                 text-transform: uppercase;
                 white-space: nowrap;
                 cursor: pointer;
                 transition: opacity 0.2s, transform 0.15s;
                 border: none;
                 box-shadow: 0 3px 10px rgba(255,107,43,0.35);
+                margin-top: 4px;
               }
               .lucrative-offer-coupon:hover {
                 opacity: 0.92;
@@ -481,10 +479,38 @@
               }
 
               @media screen and (max-width: 749px) {
-                .lucrative-offer-box { padding: 13px 14px; gap: 10px; }
-                .lucrative-offer-heading { font-size: 1.25rem !important; }
-                .lucrative-offer-sub { font-size: 0.9rem !important; }
-                .lucrative-offer-coupon { font-size: 0.88rem !important; padding: 8px 12px !important; }
+                .lucrative-offer-box {
+                  flex-direction: row;
+                  justify-content: space-between;
+                  align-items: center;
+                  text-align: left;
+                  padding: 13px 14px;
+                  gap: 10px;
+                }
+                .lucrative-offer-content {
+                  align-items: flex-start;
+                  text-align: left;
+                  flex: 1;
+                  min-width: 0;
+                }
+                .lucrative-offer-heading {
+                  font-size: 1.3rem !important;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                }
+                .lucrative-offer-sub {
+                  font-size: 0.9rem !important;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                }
+                .lucrative-offer-coupon {
+                  font-size: 0.88rem !important;
+                  padding: 8px 12px !important;
+                  margin-top: 0;
+                }
+                .lucrative-offer-eyebrow { font-size: 0.68rem !important; letter-spacing: 1.5px !important; }
               }
 
               /* Custom Slider Products */
