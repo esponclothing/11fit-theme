@@ -44,7 +44,7 @@
         "color_accent": "#9a7b4f",
         "offers_heading": "Offers & Discounts",
         "show_view_all": true,
-        "auto_swipe_speed": 3000,
+        "auto_swipe_speed": 9000,
         "size_chart_page": "",
         "delivery_text": "<p>Ships within 1-2 business days. Free standard delivery on orders above ₹499. 10-day hassle-free returns on unused, undamaged items in original packaging.</p>"
       }
