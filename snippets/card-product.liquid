@@ -76,7 +76,7 @@
         style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
       >
         {%- if card_combo_active -%}
-          <span class="fit11-combo-badge" style="position: absolute; top: 12px; left: 12px; background: #c5a059; color: #fff; font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 4px; z-index: 10; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 2px 4px rgba(0,0,0,0.15);">Combo</span>
+          <span class="fit11-combo-badge" style="position: absolute; top: 12px; left: 12px; background: #c5a059; color: #fff; font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 4px; z-index: 10; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 2px 4px rgba(0,0,0,0.15);">Pack of {{ card_combo_count }}</span>
         {%- endif -%}
         {%- if card_product.featured_media -%}
           <div class="card__media{% if image_shape and image_shape != 'default' %} shape--{{ image_shape }} color-{{ settings.card_color_scheme }} gradient{% endif %}" style="position: relative; z-index: 5; pointer-events: auto;">
