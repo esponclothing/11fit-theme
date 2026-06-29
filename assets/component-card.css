@@ -976,7 +976,7 @@
   display: inline-flex;
   flex-direction: column;
   position: relative;
-  height: 33px;
+  height: 11px;
   animation: fit11BadgeRotateGrid 9s infinite ease-in-out;
 }
 
@@ -984,6 +984,6 @@
   display: inline-flex;
   flex-direction: column;
   position: relative;
-  height: 27px;
+  height: 9px;
   animation: fit11BadgeRotateSlider 9s infinite ease-in-out;
 }
