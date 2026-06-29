@@ -739,7 +739,9 @@
                               <a href="{{ prod.url }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
                                 <div class="slider-item-img-wrapper" style="position: relative;">
                                   {%- if s_combo_active -%}
-                                    <span class="fit11-combo-badge" style="position: absolute; top: 8px; left: 8px; background: #c5a059; color: #fff; font-size: 8px; font-weight: bold; padding: 2px 6px; border-radius: 3px; z-index: 10; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">Pack of {{ s_combo_count }}</span>
+                                    <span class="fit11-combo-badge" style="position: absolute; top: 8px; left: 8px; background: linear-gradient(135deg, #111827 30%, #c5a059 100%); color: #fff; font-size: 8px; font-weight: 800; padding: 4px 8px; border-radius: 20px; z-index: 10; text-transform: uppercase; letter-spacing: 0.06em; box-shadow: 0 3px 8px rgba(197, 160, 89, 0.25); border: 1px solid #c5a059; display: inline-flex; align-items: center; gap: 3px; font-family: inherit; line-height: 1;">
+                                      <span style="color: #c5a059; font-size: 8px; line-height: 1;">★</span> PACK OF {{ s_combo_count }}
+                                    </span>
                                   {%- endif -%}
                                   {%- if prod.featured_media != blank -%}
                                     {{ prod.featured_media | image_url: width: 600 | image_tag: loading: 'lazy' }}
@@ -1134,7 +1136,9 @@
                                     <a href="{{ slider_product.url }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
                                       <div class="slider-item-img-wrapper" style="position: relative;">
                                         {%- if s_combo_active -%}
-                                          <span class="fit11-combo-badge" style="position: absolute; top: 8px; left: 8px; background: #c5a059; color: #fff; font-size: 8px; font-weight: bold; padding: 2px 6px; border-radius: 3px; z-index: 10; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">Pack of {{ s_combo_count }}</span>
+                                          <span class="fit11-combo-badge" style="position: absolute; top: 8px; left: 8px; background: linear-gradient(135deg, #111827 30%, #c5a059 100%); color: #fff; font-size: 8px; font-weight: 800; padding: 4px 8px; border-radius: 20px; z-index: 10; text-transform: uppercase; letter-spacing: 0.06em; box-shadow: 0 3px 8px rgba(197, 160, 89, 0.25); border: 1px solid #c5a059; display: inline-flex; align-items: center; gap: 3px; font-family: inherit; line-height: 1;">
+                                            <span style="color: #c5a059; font-size: 8px; line-height: 1;">★</span> PACK OF {{ s_combo_count }}
+                                          </span>
                                         {%- endif -%}
                                         {%- if slider_product.featured_image != blank -%}
                                           <img src="{{ slider_product.featured_image | img_url: '400x' }}" loading="lazy" />
