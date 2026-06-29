@@ -956,3 +956,34 @@
       font-size: 12px !important;
     }
   }
+
+/* ---- FIT11 BADGE ROTATOR KEYFRAMES & RULES ---- */
+@keyframes fit11BadgeRotateGrid {
+  0%, 28% { transform: translateY(0); }
+  33%, 61% { transform: translateY(-11px); }
+  66%, 94% { transform: translateY(-22px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes fit11BadgeRotateSlider {
+  0%, 28% { transform: translateY(0); }
+  33%, 61% { transform: translateY(-9px); }
+  66%, 94% { transform: translateY(-18px); }
+  100% { transform: translateY(0); }
+}
+
+.fit11-badge-rotator-grid {
+  display: inline-flex;
+  flex-direction: column;
+  position: relative;
+  height: 33px;
+  animation: fit11BadgeRotateGrid 9s infinite ease-in-out;
+}
+
+.fit11-badge-rotator-slider {
+  display: inline-flex;
+  flex-direction: column;
+  position: relative;
+  height: 27px;
+  animation: fit11BadgeRotateSlider 9s infinite ease-in-out;
+}
