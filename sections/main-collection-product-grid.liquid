@@ -718,9 +718,29 @@
                         {%- for prod in cat_collection.products -%}
                           {%- assign handle_check_comma = prod.handle | append: "," -%}
                           {%- unless shown_handles_str contains handle_check_comma -%}
+                            {%- assign s_combo_active = false -%}
+                            {%- assign s_combo_count = 0 -%}
+                            {%- if prod.metafields.price_editor.combo_config != blank -%}
+                              {%- assign s_c_val = prod.metafields.price_editor.combo_config.value -%}
+                              {%- if s_c_val == blank -%}
+                                {%- assign s_c_val = prod.metafields.price_editor.combo_config -%}
+                              {%- endif -%}
+                              {%- assign s_c_count = s_c_val.count | plus: 0 -%}
+                              {%- assign s_c_price = s_c_val.price | plus: 0 -%}
+                              {%- if s_c_count > 0 -%}
+                                {%- assign s_combo_active = true -%}
+                                {%- assign s_combo_count = s_c_count -%}
+                                {%- assign s_combo_price_cents = s_c_price | times: 100 -%}
+                                {%- assign s_compare_at_base = prod.compare_at_price | default: prod.price -%}
+                                {%- assign s_final_compare_at_cents = s_compare_at_base | times: s_c_count -%}
+                              {%- endif -%}
+                            {%- endif -%}
                             <div class="slider-item">
                               <a href="{{ prod.url }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%;">
-                                <div class="slider-item-img-wrapper">
+                                <div class="slider-item-img-wrapper" style="position: relative;">
+                                  {%- if s_combo_active -%}
+                                    <span class="fit11-combo-badge" style="position: absolute; top: 8px; left: 8px; background: #c5a059; color: #fff; font-size: 8px; font-weight: bold; padding: 2px 6px; border-radius: 3px; z-index: 10; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 1px 3px rgba(0,0,0,0.15);">Pack of {{ s_combo_count }}</span>
+                                  {%- endif -%}
                                   {%- if prod.featured_media != blank -%}
                                     {{ prod.featured_media | image_url: width: 600 | image_tag: loading: 'lazy' }}
                                   {%- else -%}
@@ -728,16 +748,24 @@
                                   {%- endif -%}
                                 </div>
                                 <div class="slider-item-details">
-                                  <div class="slider-item-title">{{ prod.title }}</div>
+                                  <div class="slider-item-title">{{ prod.title }}{% if s_combo_active %} - Pack of {{ s_combo_count }}{% endif %}</div>
                                   <div class="slider-item-price-row">
-                                    <span class="slider-item-price">{{ prod.price | money }}</span>
-                                    {%- if prod.compare_at_price > prod.price -%}
-                                      <span class="slider-item-compare">{{ prod.compare_at_price | money }}</span>
-                                      <span class="slider-item-discount">
-                                        {%- if prod.compare_at_price_max > 0 -%}
-                                          {{ prod.compare_at_price | minus: prod.price | times: 100 | divided_by: prod.compare_at_price }}% OFF
-                                        {%- endif -%}
-                                      </span>
+                                    {%- if s_combo_active -%}
+                                      {%- assign s_discount_amount = s_final_compare_at_cents | minus: s_combo_price_cents -%}
+                                      {%- assign s_discount_percentage = s_discount_amount | times: 100.0 | divided_by: s_final_compare_at_cents | round -%}
+                                      <span class="slider-item-price">{{ s_combo_price_cents | money_without_trailing_zeros }}</span>
+                                      <span class="slider-item-compare">{{ s_final_compare_at_cents | money_without_trailing_zeros }}</span>
+                                      <span class="slider-item-discount">{{ s_discount_percentage }}% OFF</span>
+                                    {%- else -%}
+                                      <span class="slider-item-price">{{ prod.price | money }}</span>
+                                      {%- if prod.compare_at_price > prod.price -%}
+                                        <span class="slider-item-compare">{{ prod.compare_at_price | money }}</span>
+                                        <span class="slider-item-discount">
+                                          {%- if prod.compare_at_price_max > 0 -%}
+                                            {{ prod.compare_at_price | minus: prod.price | times: 100 | divided_by: prod.compare_at_price }}% OFF
+                                          {%- endif -%}
+                                        </span>
+                                      {%- endif -%}
                                     {%- endif -%}
                                   </div>
                                   <div class="lowest-price-text">Lowest price in last 30 days</div>
