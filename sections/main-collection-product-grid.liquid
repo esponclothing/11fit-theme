@@ -654,7 +654,16 @@
                       <ul class="grid product-grid fit-premium-grid" style="margin-bottom: 24px !important;">
                         {%- if featured_p_array != blank -%}
                           {%- for p_handle in featured_p_array -%}
-                            {%- assign prod = all_products[p_handle] -%}
+                            {%- assign prod = blank -%}
+                            {%- for p in cat_collection.products -%}
+                              {%- if p.handle == p_handle -%}
+                                {%- assign prod = p -%}
+                                {%- break -%}
+                              {%- endif -%}
+                            {%- endfor -%}
+                            {%- if prod == blank -%}
+                              {%- assign prod = all_products[p_handle] -%}
+                            {%- endif -%}
                             {%- if prod != blank -%}
                               {%- assign handle_check_comma = prod.handle | append: "," -%}
                               {%- assign shown_handles_str = shown_handles_str | append: handle_check_comma -%}
