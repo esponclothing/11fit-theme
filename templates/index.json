@@ -111,48 +111,51 @@
         "category_k7wwaT": {
           "type": "category",
           "settings": {
-            "title": "T-shirts",
             "image": "shopify://shop_images/Front_1_c_2_1000x1250_b27a1689-e4f4-4dc2-b95c-d95f2bf6be7c.webp",
+            "title": "T-shirts",
             "link": "shopify://collections/t-shirts"
           }
         },
         "category_D6qQPw": {
           "type": "category",
+          "disabled": true,
           "settings": {
-            "title": "Swimwear",
             "image": "shopify://shop_images/Untitleddesign_48.jpg",
+            "title": "Swimwear",
             "link": "shopify://collections/swimwear"
           }
         },
         "category_QgxK7J": {
           "type": "category",
           "settings": {
-            "title": "Trackpants",
             "image": "shopify://shop_images/Untitleddesign_50.jpg",
+            "title": "Trackpants",
             "link": "shopify://collections/trackpants"
           }
         },
         "category_cLGiAM": {
           "type": "category",
           "settings": {
-            "title": "Shorts",
             "image": "shopify://shop_images/4.png",
+            "title": "Shorts",
             "link": "shopify://collections/shorts"
           }
         },
         "category_JzGtHK": {
           "type": "category",
+          "disabled": true,
           "settings": {
-            "title": "Joggers",
             "image": "shopify://shop_images/Joggers.png",
+            "title": "Joggers",
             "link": "shopify://collections/joggers"
           }
         },
         "category_WKnXtX": {
           "type": "category",
+          "disabled": true,
           "settings": {
-            "title": "Accessories",
             "image": "shopify://shop_images/Accesories.png",
+            "title": "Accessories",
             "link": "shopify://collections/accessories"
           }
         }
