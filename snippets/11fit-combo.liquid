@@ -191,16 +191,7 @@
         if (isBuyNow) {
           window.location.href = '/checkout';
         } else {
-          if (isBuyNow) buyBtn.querySelector('.fit11-btn-text').innerText = origText;
-          else addBtn.querySelector('.fit11-btn-text').innerText = origText;
-          addBtn.disabled = false;
-          buyBtn.disabled = false;
-          if (typeof playBagAnimation === 'function' && !isBuyNow) {
-            playBagAnimation(addBtn);
-          }
-          fetch('/cart.js').then(res=>res.json()).then(cart => {
-            if(window.fit11UpdateCartCount) window.fit11UpdateCartCount(cart.item_count);
-          });
+          window.location.href = '/cart';
         }
       })
       .catch((error) => {
