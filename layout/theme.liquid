@@ -499,9 +499,7 @@
       {{ 'accessibility.skip_to_text' | t }}
     </a>
 
-    {%- if settings.cart_type == 'drawer' -%}
-      {%- section 'cart-drawer' -%}
-    {%- endif -%}
+    {%- comment -%} Removed cart-drawer section {%- endcomment -%}
 
     {% sections 'header-group' %}
 
@@ -565,9 +563,7 @@
       <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
-    {%- if settings.cart_type == 'drawer' -%}
-      <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
-    {%- endif -%}
+    {%- comment -%} Removed cart-drawer.js script {%- endcomment -%}
 
 <style>
   /* Global Scroll Animations */
