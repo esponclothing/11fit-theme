@@ -188,10 +188,11 @@
       })
       .then(response => response.json())
       .then(data => {
+        const discountCode = '11FIT-COMBO-{{ product.id }}-{{ combo_count }}';
         if (isBuyNow) {
-          window.location.href = '/checkout?discount={{ "11FIT-COMBO-" | append: product.id | append: "-" | append: combo_count }}';
+          window.location.href = '/discount/' + discountCode + '?return_to=/checkout';
         } else {
-          window.location.href = '/cart?discount={{ "11FIT-COMBO-" | append: product.id | append: "-" | append: combo_count }}';
+          window.location.href = '/discount/' + discountCode + '?return_to=/cart';
         }
       })
       .catch((error) => {
