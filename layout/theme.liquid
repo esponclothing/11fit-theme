@@ -793,13 +793,19 @@
         document.body.style.overflow = 'hidden';
       });
   };
-
   function lxRenderOptions(p) {
     var optHtml = '';
     p.options.forEach(function(opt, oi) {
-      var vals = p.variants.map(function(v) { return v.options[oi]; }).filter(function(v,i,a){ return a.indexOf(v)===i; });
+      // Recommendations API returns opt as an object {name: 'Color', values: [...]}, while other endpoints might return strings
+      var optName = typeof opt === 'object' && opt.name ? opt.name : opt;
+      
+      // Recommendations API variants use option1, option2, option3 instead of an options[] array
+      var vals = p.variants.map(function(v) { 
+        return v.options ? v.options[oi] : v['option' + (oi + 1)]; 
+      }).filter(function(v,i,a){ return v != null && a.indexOf(v)===i; });
+
       optHtml += '<div style="margin-bottom:14px;">';
-      optHtml += '<p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#6B7280;margin:0 0 8px;">' + opt + '</p>';
+      optHtml += '<p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#6B7280;margin:0 0 8px;">' + optName + '</p>';
       optHtml += '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
       vals.forEach(function(val) {
         optHtml += '<button type="button" class="lx-vm-opt-btn" data-option-index="' + oi + '" data-value="' + val + '" onclick="lxSelectOpt(this,' + oi + ',\'' + val.replace(/'/g,"\\'") + '\')" style="border:1.5px solid #E5E7EB;border-radius:6px;padding:6px 12px;font-size:13px;font-weight:500;background:#fff;cursor:pointer;transition:all 0.2s;">' + val + '</button>';
