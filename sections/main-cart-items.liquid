@@ -350,6 +350,20 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
           window._lxProducts = window._lxProducts || {};
           var html = '';
           products.forEach(function(p) {
+            // Normalize products.json format to match recommendations API format for the modal
+            if (!p.featured_image && p.images && p.images.length > 0) {
+              p.featured_image = typeof p.images[0] === 'object' ? p.images[0].src : p.images[0];
+            }
+            if (p.price === undefined && p.variants && p.variants.length > 0) {
+              p.price = parseFloat(p.variants[0].price) * 100; // Convert string "999.00" to integer cents 99900
+            }
+            if (p.options && p.options.length > 0 && typeof p.options[0] === 'object') {
+               // options are already objects like {name: 'Color'}
+            } else if (p.options) {
+               // map string array to object array
+               p.options = p.options.map(function(optName) { return { name: optName }; });
+            }
+
             window._lxProducts[p.id] = p;
             var imgSrc = '';
             if (p.featured_image) {
