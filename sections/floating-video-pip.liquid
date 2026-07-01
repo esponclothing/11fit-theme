@@ -257,28 +257,6 @@
     <video autoplay muted loop playsinline id="fitPopupVideo">
       <source src="{{ video_url }}" type="video/mp4">
     </video>
-
-    <div class="fit-video-popup-controls">
-      <div class="fit-video-qty-row">
-        {% if product.variants.size > 1 %}
-          <select id="fitPopupVariant">
-            {% for variant in product.variants %}
-              <option value="{{ variant.id }}" {% unless variant.available %}disabled{% endunless %}>
-                {{ variant.title }}{% unless variant.available %} - Sold Out{% endunless %}
-              </option>
-            {% endfor %}
-          </select>
-        {% else %}
-          <input type="hidden" id="fitPopupVariant" value="{{ product.selected_or_first_available_variant.id }}">
-        {% endif %}
-
-        <input type="number" id="fitPopupQty" value="1" min="1" aria-label="Quantity">
-      </div>
-
-      <div class="fit-video-popup-atc">
-        <button id="fitPopupAddToCart">Add to Bag</button>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -288,9 +266,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const popup = document.getElementById('fitVideoPopup');
   const popupVideo = document.getElementById('fitPopupVideo');
   const closeBtn = document.getElementById('fitClosePopup');
-  const addToCartBtn = document.getElementById('fitPopupAddToCart');
-  const variantSelect = document.getElementById('fitPopupVariant');
-  const qtyInput = document.getElementById('fitPopupQty');
 
   if (!floatingVideo || !popup) return;
 
@@ -318,53 +293,6 @@ document.addEventListener('DOMContentLoaded', function () {
   closeBtn.addEventListener('click', closePopup);
   popup.addEventListener('click', function (e) {
     if (e.target === popup) closePopup();
-  });
-
-  // Add to cart via AJAX without page reload
-  addToCartBtn.addEventListener('click', function () {
-    const variantId = variantSelect ? variantSelect.value : document.getElementById('fitPopupVariant').value;
-    const qty = parseInt(qtyInput.value, 10) || 1;
-    
-    addToCartBtn.classList.add('loading');
-    addToCartBtn.disabled = true;
-
-    const cart = document.querySelector('cart-notification') || document.querySelector('cart-drawer');
-    const sections = cart ? cart.getSectionsToRender().map((s) => s.id) : [];
-
-    fetch('/cart/add.js', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
-      },
-      body: JSON.stringify({
-        id: variantId,
-        quantity: qty,
-        sections: sections,
-        sections_url: window.location.pathname
-      })
-    })
-    .then(response => response.json())
-    .then(parsedState => {
-      if (parsedState.status) {
-        alert(parsedState.description || parsedState.message);
-        return;
-      }
-      closePopup();
-      if (cart) {
-        if (cart.classList.contains('is-empty')) cart.classList.remove('is-empty');
-        cart.renderContents(parsedState);
-      } else {
-        window.location = '/cart';
-      }
-    })
-    .catch(err => {
-      console.error('Error adding to cart from video player:', err);
-    })
-    .finally(() => {
-      addToCartBtn.classList.remove('loading');
-      addToCartBtn.disabled = false;
-    });
   });
 });
 </script>

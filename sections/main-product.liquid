@@ -690,46 +690,16 @@
 
 {% unless combo_active %}
         <div class="fit11-main-buttons-container">
-          <button type="submit" name="add" class="fit11-btn-cart product-form__submit" style="flex: 1; margin: 0 !important; background: #222 !important; color: #fff !important; border-radius: 6px; border: none; font-weight: 600; font-size: 14px; height: 50px !important; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <button type="submit" name="add" class="fit11-btn-cart product-form__submit" style="width: 100%; margin: 0 !important; background: #222 !important; color: #fff !important; border-radius: 6px; border: none; font-weight: 600; font-size: 14px; height: 50px !important; display: flex; align-items: center; justify-content: center; gap: 8px;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
             <span class="fit11-btn-text">ADD TO CART</span>
             <div class="loading__spinner hidden" style="width:20px; height:20px; margin-left:8px;">
               <svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg" style="animation: rotator 1.4s linear infinite;"><circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30" style="stroke: currentColor; stroke-dasharray: 187; stroke-dashoffset: 0; transform-origin: center; animation: dash 1.4s ease-in-out infinite;"></circle></svg>
             </div>
           </button>
-          <button type="button" class="fit11-btn-cart" style="flex: 1; margin: 0 !important; background: #ffdf00 !important; color: #000 !important; border-radius: 6px; border: none; font-weight: 700; font-size: 14px; height: 50px !important; display: flex; align-items: center; justify-content: center;" onclick="window.fit11BuyNowRegular(this)">
-            <span class="fit11-btn-text">BUY NOW</span>
-          </button>
         </div>
         {% render 'campaign-product-carousel' %}
         <div class="fit11-original-buttons-anchor"></div>
-        
-        <script>
-          window.fit11BuyNowRegular = function(buyBtn) {
-            var vid = document.getElementById('fit11-variant-id');
-            if(vid && vid.value) {
-              buyBtn.innerHTML = '<span class="fit11-btn-text">PROCESSING...</span>';
-              buyBtn.disabled = true;
-              fetch(window.Shopify.routes.root + 'cart/add.js', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ items: [{ id: vid.value, quantity: 1 }] })
-              })
-              .then(response => response.json())
-              .then(data => { window.location.href = '/checkout'; })
-              .catch(err => { 
-                console.error('Error:', err); 
-                buyBtn.innerHTML = '<span class="fit11-btn-text">ERROR</span>';
-                setTimeout(function() {
-                   buyBtn.innerHTML = '<span class="fit11-btn-text">BUY NOW</span>';
-                   buyBtn.disabled = false;
-                }, 2000);
-              });
-            } else {
-               alert("Please select a variant first.");
-            }
-          };
-        </script>
 {% endunless %}
       {% endform %}
       </product-form>
