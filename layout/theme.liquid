@@ -895,6 +895,26 @@
     });
   };
 
+  // Remove a single cart line item by its 1-based line index
+  window.lxRemoveCartItem = function(lineIndex, btn) {
+    btn.textContent = '...';
+    btn.disabled = true;
+    var item = btn.closest('.lx-cart-item');
+    fetch(window.Shopify.routes.root + 'cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ line: lineIndex, quantity: 0 })
+    })
+    .then(function(res) { return res.json(); })
+    .then(function() {
+      location.reload();
+    })
+    .catch(function() {
+      btn.textContent = 'Remove';
+      btn.disabled = false;
+    });
+  };
+
   window.lxDirectChangeVariant = function(selectEl) {
     var picker = selectEl.closest('.lx-direct-picker');
     var lineIndex = parseInt(picker.getAttribute('data-line-index'), 10);
