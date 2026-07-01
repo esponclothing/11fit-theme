@@ -210,8 +210,26 @@
     }
   }
   
-  // Validate combo initially to set buttons to disabled since no options are selected by default.
-  document.addEventListener('DOMContentLoaded', function() {
+  // On page load, read any pre-filled dropdown values (e.g. browser back navigation)
+  // and populate comboSelections so buttons enable correctly.
+  function initComboSelectionsFromDOM() {
+    document.querySelectorAll('.combo-select').forEach(function(sel) {
+      const itemIndex = parseInt(sel.dataset.item);
+      const optionType = sel.dataset.option;
+      if (sel.value && sel.value !== '') {
+        if (!comboSelections[itemIndex]) comboSelections[itemIndex] = {};
+        comboSelections[itemIndex][optionType] = sel.value;
+      }
+    });
     validateCombo();
+  }
+
+  document.addEventListener('DOMContentLoaded', initComboSelectionsFromDOM);
+
+  // Also handle bfcache (browser back/forward) which doesn't re-fire DOMContentLoaded
+  window.addEventListener('pageshow', function(event) {
+    // Reset and re-read from DOM on every page show
+    comboSelections = {};
+    initComboSelectionsFromDOM();
   });
 </script>
