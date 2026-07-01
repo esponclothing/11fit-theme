@@ -189,9 +189,9 @@
       .then(response => response.json())
       .then(data => {
         if (isBuyNow) {
-          window.location.href = '/checkout';
+          window.location.href = '/checkout?discount={{ "11FIT-COMBO-" | append: product.id | append: "-" | append: combo_count }}';
         } else {
-          window.location.href = '/cart';
+          window.location.href = '/cart?discount={{ "11FIT-COMBO-" | append: product.id | append: "-" | append: combo_count }}';
         }
       })
       .catch((error) => {
