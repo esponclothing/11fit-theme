@@ -751,7 +751,12 @@
     _vmLineIndex = null;
     _vmQty = null;
 
-    document.getElementById('lx-vm-img').src = p.featured_image || '';
+    // featured_image can be an object {src:...} or a plain URL string
+    var imgSrc = '';
+    if (p.featured_image) {
+      imgSrc = typeof p.featured_image === 'object' ? (p.featured_image.src || '') : p.featured_image;
+    }
+    document.getElementById('lx-vm-img').src = imgSrc;
     document.getElementById('lx-vm-title').textContent = p.title;
     document.getElementById('lx-vm-price').textContent = (p.price / 100).toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 });
 
