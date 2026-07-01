@@ -351,7 +351,14 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
           var html = '';
           products.forEach(function(p) {
             window._lxProducts[p.id] = p;
-            var img = p.featured_image || (p.images && p.images[0] ? p.images[0].src : p.image || '');
+            var imgSrc = '';
+            if (p.featured_image) {
+              imgSrc = typeof p.featured_image === 'object' ? (p.featured_image.src || '') : p.featured_image;
+            } else if (p.images && p.images[0]) {
+              imgSrc = p.images[0].src || '';
+            }
+            if (imgSrc && imgSrc.indexOf('?') === -1) imgSrc += '?width=400';
+            var productUrl = p.url || ('/products/' + p.handle);
             var firstVariant = p.variants && p.variants[0];
             var priceVal = firstVariant ? parseFloat(firstVariant.price) : 0;
             var comparePriceVal = firstVariant && firstVariant.compare_at_price ? parseFloat(firstVariant.compare_at_price) : 0;
@@ -365,15 +372,15 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
             var variantId = p.variants && p.variants[0] ? p.variants[0].id : '';
             
             html += '<div style="min-width:140px;max-width:140px;flex-shrink:0;text-align:left;">';
-            html += '<a href="'+p.url+'" style="display:block;height:170px;border-radius:10px;overflow:hidden;margin-bottom:8px;background:#F3F2EF;">';
-            if(img) html += '<img src="'+img+'" alt="'+p.title+'" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">';
+            html += '<a href="'+productUrl+'" style="display:block;height:170px;border-radius:10px;overflow:hidden;margin-bottom:8px;background:#F3F2EF;">';
+            if(imgSrc) html += '<img src="'+imgSrc+'" alt="'+p.title+'" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">';
             html += '</a>';
-            html += '<a href="'+p.url+'" style="font-size:11.5px;font-weight:500;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#1A202C;text-decoration:none;margin-bottom:3px;">'+p.title+'</a>';
+            html += '<a href="'+productUrl+'" style="font-size:11.5px;font-weight:500;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#1A202C;text-decoration:none;margin-bottom:3px;">'+p.title+'</a>';
             html += '<p style="font-size:12px;font-weight:700;margin:0 0 7px;color:#1A202C;">'+price+comparePrice+'</p>';
             if(hasOnlyDefault){
               html += '<button type="button" onclick="lxDirectAdd(this,\''+variantId+'\')" style="width:100%;background:#F3F2EF;border:1px solid #E5E7EB;color:#1A202C;border-radius:5px;padding:5px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;">+ Quick Add</button>';
             } else {
-              html += '<button type="button" onclick="lxOpenVariantModal(\''+p.id+'\')" style="width:100%;background:#F3F2EF;border:1px solid #E5E7EB;color:#1A202C;border-radius:5px;padding:5px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;">+ Quick Add</button>';
+              html += '<a href="'+productUrl+'" style="display:block;width:100%;background:#F3F2EF;border:1px solid #E5E7EB;color:#1A202C;border-radius:5px;padding:5px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;text-align:center;text-decoration:none;">+ Quick Add</a>';
             }
             html += '</div>';
           });
@@ -864,7 +871,12 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                 var html = '';
                 products.forEach(function(p) {
                   window._lxProducts[p.id] = p;
-                  var img = p.featured_image || '';
+                  var imgSrc = '';
+                  if (p.featured_image) {
+                    imgSrc = typeof p.featured_image === 'object' ? (p.featured_image.src || '') : p.featured_image;
+                  }
+                  if (imgSrc && imgSrc.indexOf('?') === -1) imgSrc += '?width=400';
+                  var productUrl = p.url || ('/products/' + p.handle);
                   var price = (p.price/100).toLocaleString('en-IN',{style:'currency',currency:'INR',minimumFractionDigits:0});
                   var comparePrice = '';
                   if(p.compare_at_price && p.compare_at_price > p.price){
@@ -873,15 +885,15 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                   var hasOnlyDefault = p.variants && p.variants.length === 1 && p.variants[0].title === 'Default Title';
                   var variantId = p.variants && p.variants[0] ? p.variants[0].id : '';
                   html += '<div style="min-width:130px;max-width:130px;flex-shrink:0;">';
-                  html += '<a href="'+p.url+'" style="display:block;height:160px;border-radius:10px;overflow:hidden;margin-bottom:8px;background:#F3F2EF;">';
-                  if(img) html += '<img src="'+img+'" alt="'+p.title+'" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">';
+                  html += '<a href="'+productUrl+'" style="display:block;height:160px;border-radius:10px;overflow:hidden;margin-bottom:8px;background:#F3F2EF;">';
+                  if(imgSrc) html += '<img src="'+imgSrc+'" alt="'+p.title+'" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">';
                   html += '</a>';
-                  html += '<a href="'+p.url+'" style="font-size:11.5px;font-weight:500;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#1A202C;text-decoration:none;margin-bottom:3px;">'+p.title+'</a>';
+                  html += '<a href="'+productUrl+'" style="font-size:11.5px;font-weight:500;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#1A202C;text-decoration:none;margin-bottom:3px;">'+p.title+'</a>';
                   html += '<p style="font-size:12px;font-weight:700;margin:0 0 7px;color:#1A202C;">'+price+comparePrice+'</p>';
                   if(hasOnlyDefault){
                     html += '<button type="button" onclick="lxDirectAdd(this,\''+variantId+'\')" style="width:100%;background:#F3F2EF;border:1px solid #E5E7EB;color:#1A202C;border-radius:5px;padding:5px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;">+ Quick Add</button>';
                   } else {
-                    html += '<button type="button" onclick="lxOpenVariantModal(\''+p.id+'\')" style="width:100%;background:#F3F2EF;border:1px solid #E5E7EB;color:#1A202C;border-radius:5px;padding:5px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;">+ Quick Add</button>';
+                    html += '<a href="'+productUrl+'" style="display:block;width:100%;background:#F3F2EF;border:1px solid #E5E7EB;color:#1A202C;border-radius:5px;padding:5px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;text-align:center;text-decoration:none;">+ Quick Add</a>';
                   }
                   html += '</div>';
                 });
