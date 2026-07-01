@@ -1342,7 +1342,7 @@ class CartPerformance {
     isUpdatingCart = true;
 
     try {
-      const response = await fetch(window.Shopify.routes.root + 'cart.js');
+      const response = await fetch(window.Shopify.routes.root + 'cart.js?v=' + Date.now(), { cache: 'no-store' });
       const cart = await response.json();
       
       const comboGroups = {};
