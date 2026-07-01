@@ -13,7 +13,6 @@
   "sections": {
     "whatsapp_floating_button_TVMFb9": {
       "type": "whatsapp-floating-button",
-      "disabled": true,
       "name": "WhatsApp Button",
       "settings": {
         "phone_number": "917206066678",
@@ -24,7 +23,7 @@
         "offset_x": 30,
         "offset_y": 36,
         "offset_x_mobile": 16,
-        "offset_y_mobile": 96
+        "offset_y_mobile": 60
       }
     },
     "11fit_footer_6AeTLz": {
