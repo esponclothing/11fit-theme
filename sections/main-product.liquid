@@ -81,10 +81,10 @@
   }
   @media (max-width: 767px) {
     .fit11-ext-dots {
-      padding: 4px 0 0;
+      padding: 0 0 2px 0 !important;
     }
     .fit11-info-ticker {
-      margin: 2px 0;
+      margin: 0 !important;
     }
   }
 
@@ -401,7 +401,7 @@
         {% for option in product.options_with_values %}
           {% assign option_name_lower = option.name | downcase %}
           {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
-            <div class="fit11-variant-selectors top-color-selector mobile-only-color" style="padding: 0 16px; margin-bottom: 0px; margin-top: 8px;">
+            <div class="fit11-variant-selectors top-color-selector mobile-only-color" style="padding: 0 16px; margin-bottom: 0px; margin-top: 0px;">
               <div class="fit11-option-fieldset" role="group" style="border:none; padding:0; margin:0; min-width: 0; width: 100%;">
                 <div class="fit11-option-name-row" style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 12px;">
                   <span class="fit11-option-name-label" style="font-weight: 500; font-size: 13px; text-transform: none; letter-spacing: normal; white-space: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; padding-bottom: 4px;">Selected Color - <span class="fit11-selected-color-label" style="font-weight: 700; color: var(--lux-text); text-transform: capitalize;">{{ option.selected_value }}</span></span>
