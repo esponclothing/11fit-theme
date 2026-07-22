@@ -818,6 +818,8 @@ window._shopifyCustomer = {
       document.getElementById('wa-step-1').style.display = 'none';
       document.getElementById('wa-step-2').style.display = 'none';
       document.getElementById('wa-step-3').style.display = 'block';
+      const cachedEmail = sessionStorage.getItem('fit11_verified_email');
+      if (cachedEmail) document.getElementById('wa-email').value = cachedEmail;
       waSetStep(3);
       loadAddresses();
       calculateCheckoutTotals();
@@ -960,6 +962,10 @@ window._shopifyCustomer = {
       
       // Save to session so they don't have to re-verify if they navigate away and come back
       sessionStorage.setItem('fit11_verified_phone', waPhone);
+      if (data.profile && data.profile.email) {
+        sessionStorage.setItem('fit11_verified_email', data.profile.email);
+        document.getElementById('wa-email').value = data.profile.email;
+      }
       
       document.getElementById('wa-step-2').style.display = 'none';
       document.getElementById('wa-step-3').style.display = 'block';
