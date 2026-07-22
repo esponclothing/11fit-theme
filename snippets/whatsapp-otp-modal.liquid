@@ -968,30 +968,67 @@ window._shopifyCustomer = {
     if (waAddresses.length === 0) {
       waShowAddressForm();
       document.getElementById('wa-cod-btn').disabled = true;
-      document.getElementById('wa-add-addr-btn').style.display = 'none';
       return;
     }
-    waAddresses.forEach((a, idx) => {
-      const isSelected = waSelectedAddress === a.id || (idx === 0 && !waSelectedAddress);
-      if (isSelected) waSelectedAddress = a.id;
-      list.innerHTML += `
-        <div class="wa-address-card ${isSelected ? 'selected' : ''}" style="padding:12px;margin-bottom:10px;border:1px solid ${isSelected ? '#0f172a' : '#e2e8f0'};border-radius:8px;position:relative;">
+    document.getElementById('wa-add-addr-btn').style.display = 'block';
+    document.getElementById('wa-new-address-form').style.display = 'none';
+
+    if (!waSelectedAddress) waSelectedAddress = waAddresses[0].id;
+
+    // Find the selected address, fallback to first if not found
+    let primary = waAddresses.find(a => a.id == waSelectedAddress) || waAddresses[0];
+    const otherAddresses = waAddresses.filter(a => a.id != primary.id);
+
+    let html = `
+        <div class="wa-address-card selected">
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-            <div style="cursor:pointer; flex:1;" onclick="waSelectAddress('${a.id}')">
-              <div style="font-weight:600;font-size:14px;">${a.first_name} ${a.last_name}</div>
-              <div style="margin:4px 0 0;font-size:13px;color:#64748b;">${a.address1}, ${a.city} - ${a.zip}</div>
-              ${a.company ? `<div style="margin:2px 0 0;font-size:12px;color:#94a3b8;">${a.company}</div>` : ''}
+            <div style="cursor:pointer; flex:1;" onclick="waSelectAddress('${primary.id}')">
+              <div style="font-weight:600;font-size:14px;">${primary.first_name} ${primary.last_name}</div>
+              <div style="margin:4px 0 0;font-size:13px;color:#64748b;">${primary.address1}, ${primary.city} - ${primary.zip}</div>
+              ${primary.company ? `<div style="margin:2px 0 0;font-size:12px;color:#94a3b8;">${primary.company}</div>` : ''}
             </div>
             <div style="display:flex; flex-direction:column; align-items:flex-end;">
-              ${isSelected ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="#0f172a" style="margin-bottom:8px;"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-2 15l-5-5 1.41-1.41L10 12.17l7.59-7.59L19 6l-9 9z" fill="#0f172a"/></svg>` : ''}
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#0f172a" style="margin-bottom:8px;"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-2 15l-5-5 1.41-1.41L10 12.17l7.59-7.59L19 6l-9 9z" fill="#0f172a"/></svg>
               <div style="display:flex;gap:12px;">
-                ${!a.id.toString().startsWith('shopify_') ? `<button onclick="waEditAddress('${a.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:500;cursor:pointer;padding:0;text-decoration:underline;">Edit</button>` : ''}
-                <button onclick="waDeleteAddress('${a.id}')" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:500;cursor:pointer;padding:0;text-decoration:underline;">Delete</button>
+                ${!primary.id.toString().startsWith('shopify_') ? `<button onclick="waEditAddress('${primary.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:500;cursor:pointer;padding:0;text-decoration:underline;">Edit</button>` : ''}
+                <button onclick="waDeleteAddress('${primary.id}')" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:500;cursor:pointer;padding:0;text-decoration:underline;">Delete</button>
               </div>
             </div>
           </div>
-        </div>`;
-    });
+        </div>
+    `;
+
+    // Render the rest in an accordion if there are more
+    if (otherAddresses.length > 0) {
+      html += `
+        <button type="button" onclick="document.getElementById('wa-other-addresses').style.display = document.getElementById('wa-other-addresses').style.display === 'none' ? 'block' : 'none';" style="width:100%;text-align:center;background:none;border:none;color:#64748b;font-size:13px;font-weight:600;cursor:pointer;margin: 8px 0 16px;">
+          View ${otherAddresses.length} Other Addresses ▼
+        </button>
+        <div id="wa-other-addresses" style="display:none; margin-bottom: 16px;">
+      `;
+      otherAddresses.forEach(a => {
+        html += `
+          <div class="wa-address-card">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+              <div style="cursor:pointer; flex:1;" onclick="waSelectAddress('${a.id}')">
+                <div style="font-weight:600;font-size:14px;">${a.first_name} ${a.last_name}</div>
+                <div style="margin:4px 0 0;font-size:13px;color:#64748b;">${a.address1}, ${a.city} - ${a.zip}</div>
+                ${a.company ? `<div style="margin:2px 0 0;font-size:12px;color:#94a3b8;">${a.company}</div>` : ''}
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:flex-end;">
+                <div style="display:flex;gap:12px;">
+                  ${!a.id.toString().startsWith('shopify_') ? `<button onclick="waEditAddress('${a.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:500;cursor:pointer;padding:0;text-decoration:underline;">Edit</button>` : ''}
+                  <button onclick="waDeleteAddress('${a.id}')" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:500;cursor:pointer;padding:0;text-decoration:underline;">Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+    }
+
+    list.innerHTML = html;
     document.getElementById('wa-cod-btn').disabled = false;
   }
 
@@ -1063,8 +1100,9 @@ window._shopifyCustomer = {
           address_data: { id: id } 
         })
       });
-      // reload
-      await loadAddresses();
+      // Remove from memory and re-render instantly without reloading from server
+      waAddresses = waAddresses.filter(a => String(a.id) !== String(id));
+      renderAddresses();
     } catch (e) {
       alert('Failed to delete address.');
     } finally {
