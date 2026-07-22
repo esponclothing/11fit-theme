@@ -631,10 +631,35 @@ window._shopifyCustomer = {
             </div>
           </div>
 
-          <button type="button" class="wa-pay-online-btn" onclick="waRedirectToShopify(event)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-            Pay via UPI / Debit / Credit Card
-          </button>
+          <div style="margin-top:20px;">
+            <button type="button" class="wa-btn-primary" id="wa-proceed-payment-btn" onclick="waProceedToPayment()">
+              Proceed to Payment
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 4: PAYMENT -->
+        <div id="wa-step-4">
+          <div class="wa-section-eyebrow">Step 4 of 4</div>
+          <h2 class="wa-section-title">Payment Method</h2>
+          <p class="wa-section-desc">Choose how you'd like to pay for your order.</p>
+
+          <div id="wa-payment-methods-container">
+            <!-- Rendered dynamically -->
+          </div>
+          
+          <div style="margin-top:24px;">
+            <button type="button" class="wa-btn-primary" id="wa-cod-btn" onclick="waPayNow()">
+              <span id="wa-pay-btn-text">Pay Now</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+          <div style="margin-top:12px; text-align:center;">
+            <button type="button" class="wa-btn-secondary" onclick="waBackToAddress()">
+              Back to Address
+            </button>
+          </div>
         </div>
 
         <!-- SUCCESS SCREEN -->
