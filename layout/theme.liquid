@@ -1092,6 +1092,12 @@
     try {
       const cartRes = await fetch('/cart.js');
       const cart = await cartRes.json();
+      
+      const cartHash = cart.items ? cart.items.map(i => i.id + '-' + i.quantity).join('|') : '';
+      const lastHash = sessionStorage.getItem('last_tracked_cart');
+      if (lastHash === cartHash) return; // Do not send if exactly same
+      sessionStorage.setItem('last_tracked_cart', cartHash);
+
       await fetch(`${WA_API_BASE}/checkout/track-cart`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
