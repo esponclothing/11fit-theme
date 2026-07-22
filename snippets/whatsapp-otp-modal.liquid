@@ -330,6 +330,41 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+<!-- Inject logged-in Shopify customer data for pre-fill -->
+<script>
+window._shopifyCustomer = {
+  {% if customer %}
+  logged_in: true,
+  first_name: {{ customer.first_name | json }},
+  last_name: {{ customer.last_name | json }},
+  email: {{ customer.email | json }},
+  phone: {{ customer.phone | default: '' | json }},
+  addresses: [
+    {% for addr in customer.addresses %}
+    {
+      id: {{ addr.id | json }},
+      first_name: {{ addr.first_name | json }},
+      last_name: {{ addr.last_name | json }},
+      address1: {{ addr.address1 | json }},
+      city: {{ addr.city | json }},
+      zip: {{ addr.zip | json }},
+      province: {{ addr.province | json }},
+      country: {{ addr.country | json }},
+      phone: {{ addr.phone | default: '' | json }}
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+  {% else %}
+  logged_in: false,
+  first_name: '',
+  last_name: '',
+  email: '',
+  phone: '',
+  addresses: []
+  {% endif %}
+};
+</script>
+
 <div id="wa-otp-overlay">
   <div class="wa-checkout-wrapper">
     
@@ -420,6 +455,12 @@
             <a href="#" onclick="waSwitchAccount(event)" style="font-size:13px; color:#3b82f6; text-decoration:none; font-weight:500;">Use a different number →</a>
           </div>
 
+          <!-- Email field -->
+          <div class="wa-field-group" style="margin-top:4px;">
+            <label class="wa-field-label">Email Address</label>
+            <input type="email" id="wa-email" class="wa-input" placeholder="you@example.com">
+          </div>
+
           <div class="wa-wa-note">
             <span style="font-size:18px;">💬</span>
             <span>OTP will be sent on your <strong>WhatsApp</strong></span>
@@ -475,7 +516,18 @@
 
           <!-- New Address Form -->
           <div id="wa-new-address-form">
-            <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:16px;">New Address</div>
+            <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px;">New Address</div>
+            <div style="font-size:12px; color:#64748b; margin-bottom:12px;">Enter PIN code to auto-fill — or search by location</div>
+
+            <!-- Map / Location Search -->
+            <div style="position:relative; margin-bottom:16px;">
+              <input type="text" id="wa-map-search" class="wa-input" placeholder="🔍 Search area, locality or city..."
+                oninput="waSearchAddress(this.value)" autocomplete="off"
+                style="padding-right:44px;">
+              <button type="button" onclick="waUseMyLocation()" title="Use my current location"
+                style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:20px;padding:0;">📍</button>
+              <div id="wa-map-suggestions" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;z-index:1000;max-height:200px;overflow-y:auto;box-shadow:0 4px 20px rgba(0,0,0,0.1);"></div>
+            </div>
             <div class="wa-addr-grid">
               <div class="wa-field-group">
                 <label class="wa-field-label">First Name</label>
@@ -489,15 +541,79 @@
                 <label class="wa-field-label">Street Address</label>
                 <input type="text" id="wa-addr-street" class="wa-input" placeholder="House No, Street, Locality">
               </div>
-              <div class="wa-field-group">
-                <label class="wa-field-label">City</label>
-                <input type="text" id="wa-addr-city" class="wa-input" placeholder="Mumbai">
-              </div>
+
+              <!-- PIN CODE with auto-fill -->
               <div class="wa-field-group">
                 <label class="wa-field-label">PIN Code</label>
-                <input type="tel" id="wa-addr-zip" class="wa-input" placeholder="400001">
+                <div style="position:relative;">
+                  <input type="tel" id="wa-addr-zip" class="wa-input" placeholder="400001" maxlength="6"
+                    oninput="this.value=this.value.replace(/\D/g,''); if(this.value.length===6) waLookupPincode(this.value)">
+                  <span id="wa-pin-spinner" style="display:none;position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;color:#64748b;">⟳ Loading...</span>
+                </div>
+              </div>
+              <div class="wa-field-group" id="wa-pin-status-wrap" style="display:flex;align-items:flex-end;">
+                <span id="wa-pin-status" style="font-size:12px;"></span>
+              </div>
+
+              <!-- City (auto-filled) -->
+              <div class="wa-field-group">
+                <label class="wa-field-label">City / Post Office</label>
+                <input type="text" id="wa-addr-city" class="wa-input" placeholder="Mumbai">
+              </div>
+
+              <!-- District (auto-filled or dropdown) -->
+              <div class="wa-field-group" id="wa-district-field">
+                <label class="wa-field-label">District</label>
+                <input type="text" id="wa-addr-district" class="wa-input" placeholder="District">
+              </div>
+
+              <!-- State (auto-filled or dropdown) -->
+              <div class="wa-field-group full" id="wa-state-field">
+                <label class="wa-field-label">State</label>
+                <select id="wa-addr-state" class="wa-input" style="cursor:pointer;">
+                  <option value="">Select State</option>
+                  <option>Andaman and Nicobar Islands</option>
+                  <option>Andhra Pradesh</option>
+                  <option>Arunachal Pradesh</option>
+                  <option>Assam</option>
+                  <option>Bihar</option>
+                  <option>Chandigarh</option>
+                  <option>Chhattisgarh</option>
+                  <option>Dadra and Nagar Haveli and Daman and Diu</option>
+                  <option>Delhi</option>
+                  <option>Goa</option>
+                  <option>Gujarat</option>
+                  <option>Haryana</option>
+                  <option>Himachal Pradesh</option>
+                  <option>Jammu and Kashmir</option>
+                  <option>Jharkhand</option>
+                  <option>Karnataka</option>
+                  <option>Kerala</option>
+                  <option>Ladakh</option>
+                  <option>Lakshadweep</option>
+                  <option>Madhya Pradesh</option>
+                  <option>Maharashtra</option>
+                  <option>Manipur</option>
+                  <option>Meghalaya</option>
+                  <option>Mizoram</option>
+                  <option>Nagaland</option>
+                  <option>Odisha</option>
+                  <option>Puducherry</option>
+                  <option>Punjab</option>
+                  <option>Rajasthan</option>
+                  <option>Sikkim</option>
+                  <option>Tamil Nadu</option>
+                  <option>Telangana</option>
+                  <option>Tripura</option>
+                  <option>Uttar Pradesh</option>
+                  <option>Uttarakhand</option>
+                  <option>West Bengal</option>
+                </select>
               </div>
             </div>
+
+            <div id="wa-pin-error" style="display:none;font-size:12px;color:#dc2626;margin:-8px 0 12px;padding:8px 12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca;"></div>
+
             <button type="button" class="wa-btn-primary" onclick="waSaveNewAddress()" style="margin-bottom:20px;">
               Save Address
             </button>
@@ -561,6 +677,9 @@
   let waAddresses = [];
   let waSelectedAddress = null;
   let waDraftOrderId = null;
+  let waEmail = '';
+  let waShopifyAddressesLoaded = false;
+  let waMapSearchTimer = null;
 
   document.addEventListener('DOMContentLoaded', () => {
     if (!localStorage.getItem('fit11_device_id')) {
@@ -568,18 +687,131 @@
     }
   });
 
+  // ── MAP / LOCATION SEARCH (OpenStreetMap Nominatim - FREE, no API key) ──
+  function waSearchAddress(query) {
+    clearTimeout(waMapSearchTimer);
+    const sugBox = document.getElementById('wa-map-suggestions');
+    if (!query || query.length < 3) { sugBox.style.display = 'none'; return; }
+    waMapSearchTimer = setTimeout(async () => {
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&countrycodes=in&addressdetails=1&limit=6&q=${encodeURIComponent(query)}`, {
+          headers: { 'Accept-Language': 'en' }
+        });
+        const results = await res.json();
+        sugBox.innerHTML = '';
+        if (!results.length) {
+          sugBox.innerHTML = '<div style="padding:12px;font-size:13px;color:#94a3b8;">No results found</div>';
+        } else {
+          results.forEach(r => {
+            const div = document.createElement('div');
+            div.style.cssText = 'padding:10px 14px;cursor:pointer;font-size:13px;border-bottom:1px solid #f1f5f9;color:#374151;';
+            div.innerText = r.display_name;
+            div.onmouseenter = () => div.style.background = '#f8fafc';
+            div.onmouseleave = () => div.style.background = '';
+            div.onclick = () => waFillFromNominatim(r);
+            sugBox.appendChild(div);
+          });
+        }
+        sugBox.style.display = 'block';
+      } catch(e) { sugBox.style.display = 'none'; }
+    }, 400);
+  }
+
+  function waFillFromNominatim(r) {
+    const a = r.address || {};
+    // Fill fields
+    const city = a.city || a.town || a.village || a.suburb || a.neighbourhood || '';
+    const district = a.county || a.state_district || '';
+    const state = a.state || '';
+    const postcode = a.postcode || '';
+    const road = [a.house_number, a.road, a.suburb].filter(Boolean).join(', ');
+
+    if (road) document.getElementById('wa-addr-street').value = road;
+    if (city) document.getElementById('wa-addr-city').value = city;
+    if (district) document.getElementById('wa-addr-district').value = district;
+    if (postcode) document.getElementById('wa-addr-zip').value = postcode;
+
+    // Set state dropdown
+    if (state) {
+      const sel = document.getElementById('wa-addr-state');
+      for (let opt of sel.options) {
+        if (opt.value.toLowerCase().includes(state.toLowerCase()) || state.toLowerCase().includes(opt.value.toLowerCase())) {
+          opt.selected = true; break;
+        }
+      }
+    }
+
+    // Clear search
+    document.getElementById('wa-map-search').value = city || state || '';
+    document.getElementById('wa-map-suggestions').style.display = 'none';
+  }
+
+  function waUseMyLocation() {
+    if (!navigator.geolocation) return alert('Geolocation not supported on this device.');
+    const btn = event.target;
+    btn.innerHTML = '⏳';
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      try {
+        const { latitude, longitude } = pos.coords;
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`, {
+          headers: { 'Accept-Language': 'en' }
+        });
+        const r = await res.json();
+        waFillFromNominatim(r);
+        document.getElementById('wa-map-search').value = '📍 Location detected';
+      } catch(e) {
+        alert('Could not detect location. Please search manually.');
+      } finally { btn.innerHTML = '📍'; }
+    }, () => { alert('Location access denied. Please search manually.'); btn.innerHTML = '📍'; });
+  }
+
+  // Close suggestions when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest || !e.target.closest('#wa-new-address-form')) {
+      const sugBox = document.getElementById('wa-map-suggestions');
+      if (sugBox) sugBox.style.display = 'none';
+    }
+  });
+
   async function openWaModal() {
     const overlay = document.getElementById('wa-otp-overlay');
     if (!overlay) return;
-    // Always rip the modal out to body level to escape any CSS clipping
     if (overlay.parentNode !== document.body) {
       document.body.appendChild(overlay);
     }
     overlay.style.cssText = 'position:fixed!important;top:0!important;left:0!important;width:100vw!important;height:100vh!important;z-index:2147483647!important;display:flex!important;align-items:flex-start!important;justify-content:center!important;overflow-y:auto!important;padding:0!important;background:rgba(15,23,42,0.6)!important;backdrop-filter:blur(6px)!important;-webkit-backdrop-filter:blur(6px)!important;';
     document.body.style.overflow = 'hidden';
-    // Reset to step 1
     waResetModal();
-    // Check identity
+
+    // Pre-fill from Shopify logged-in customer data
+    const sc = window._shopifyCustomer;
+    if (sc && sc.logged_in) {
+      // Pre-fill phone if available
+      if (sc.phone) {
+        const cleanPhone = sc.phone.replace(/\D/g, '').replace(/^91/, '');
+        document.getElementById('wa-phone').value = cleanPhone;
+      }
+      // Pre-fill email
+      if (sc.email) {
+        document.getElementById('wa-email').value = sc.email;
+      }
+      // Pre-load Shopify addresses (merge with network_addresses later)
+      if (sc.addresses && sc.addresses.length > 0) {
+        waAddresses = sc.addresses.map(a => ({
+          id: 'shopify_' + a.id,
+          first_name: a.first_name || '',
+          last_name: a.last_name || '',
+          address1: a.address1 || '',
+          city: a.city || '',
+          zip: a.zip || '',
+          province: a.province || '',
+          country: a.country || 'India'
+        }));
+        waShopifyAddressesLoaded = true;
+      }
+    }
+
+    // Check identity via device
     try {
       const device_id = localStorage.getItem('fit11_device_id');
       const res = await fetch(`${WA_API_BASE}/identify`, {
@@ -731,7 +963,15 @@
         body: JSON.stringify({ merchant_key: MERCHANT_KEY, phone: waPhone, action: 'FETCH' })
       });
       const data = await res.json();
-      waAddresses = data.addresses || [];
+      const networkAddrs = data.addresses || [];
+      
+      // Merge: start with Shopify addresses (already pre-loaded), then add network ones
+      const existingIds = new Set(waAddresses.map(a => a.address1 + a.zip));
+      networkAddrs.forEach(a => {
+        const key = (a.address1 || '') + (a.zip || '');
+        if (!existingIds.has(key)) waAddresses.push(a);
+      });
+      
       renderAddresses();
     } catch (e) { renderAddresses(); }
   }
@@ -766,17 +1006,77 @@
     document.getElementById('wa-new-address-form').style.display = 'block';
   }
 
-  async function waSaveNewAddress() {
-    const addr = {
-      first_name: document.getElementById('wa-addr-fname').value.trim(),
-      last_name: document.getElementById('wa-addr-lname').value.trim(),
-      address1: document.getElementById('wa-addr-street').value.trim(),
-      city: document.getElementById('wa-addr-city').value.trim(),
-      zip: document.getElementById('wa-addr-zip').value.trim()
-    };
-    if (!addr.first_name || !addr.address1 || !addr.city || !addr.zip) {
-      return alert('Please fill all address fields');
+  // ── PINCODE LOOKUP ──
+  async function waLookupPincode(pin) {
+    const spinner = document.getElementById('wa-pin-spinner');
+    const statusEl = document.getElementById('wa-pin-status');
+    const errEl = document.getElementById('wa-pin-error');
+    spinner.style.display = 'inline';
+    statusEl.innerText = '';
+    errEl.style.display = 'none';
+    try {
+      const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+      const data = await res.json();
+      if (data && data[0] && data[0].Status === 'Success') {
+        const po = data[0].PostOffice[0];
+        // Auto-fill fields
+        document.getElementById('wa-addr-city').value = po.Name || '';
+        document.getElementById('wa-addr-district').value = po.District || '';
+        // Set state dropdown
+        const stateSelect = document.getElementById('wa-addr-state');
+        const stateName = po.State || '';
+        let matched = false;
+        for (let opt of stateSelect.options) {
+          if (opt.value.toLowerCase() === stateName.toLowerCase()) {
+            opt.selected = true; matched = true; break;
+          }
+        }
+        if (!matched && stateName) {
+          // Add as custom option if not in list
+          const opt = document.createElement('option');
+          opt.value = stateName; opt.text = stateName; opt.selected = true;
+          stateSelect.appendChild(opt);
+        }
+        statusEl.innerHTML = '<span style="color:#16a34a;font-weight:600;">✓ Location found</span>';
+      } else {
+        throw new Error('PIN not found');
+      }
+    } catch(e) {
+      errEl.innerText = 'Could not auto-fill from PIN. Please select State and fill City manually.';
+      errEl.style.display = 'block';
+      statusEl.innerHTML = '<span style="color:#f59e0b;">Enter manually below</span>';
+    } finally {
+      spinner.style.display = 'none';
     }
+  }
+
+  async function waSaveNewAddress() {
+    const fname = document.getElementById('wa-addr-fname').value.trim();
+    const lname = document.getElementById('wa-addr-lname').value.trim();
+    const street = document.getElementById('wa-addr-street').value.trim();
+    const city = document.getElementById('wa-addr-city').value.trim();
+    const zip = document.getElementById('wa-addr-zip').value.trim();
+    const district = document.getElementById('wa-addr-district').value.trim();
+    const state = document.getElementById('wa-addr-state').value.trim();
+
+    if (!fname || !street || !city || !zip || !state) {
+      const errEl = document.getElementById('wa-pin-error');
+      errEl.innerText = 'Please fill First Name, Street, City, PIN Code and State.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    const addr = {
+      first_name: fname,
+      last_name: lname,
+      address1: street,
+      city: city,
+      zip: zip,
+      province: state,
+      country: 'India',
+      company: district ? `District: ${district}` : ''
+    };
+
     try {
       await fetch(`${WA_API_BASE}/addresses`, {
         method: 'POST',
@@ -785,8 +1085,9 @@
       });
       document.getElementById('wa-new-address-form').style.display = 'none';
       document.getElementById('wa-add-addr-btn').style.display = 'block';
+      document.getElementById('wa-pin-error').style.display = 'none';
       await loadAddresses();
-    } catch (e) { alert('Failed to save address'); }
+    } catch (e) { alert('Failed to save address. Please try again.'); }
   }
 
   async function calculateCheckoutTotals(discountCode = null) {
