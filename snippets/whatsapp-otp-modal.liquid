@@ -324,11 +324,42 @@
     .wa-otp-boxes { gap: 10px; }
   }
 
-  #wa-step-2, #wa-step-3, .wa-success-screen, #wa-new-address-form { display: none; }
+  #wa-step-2, #wa-step-3, #wa-step-4, .wa-success-screen, #wa-new-address-form { display: none; }
+  
+  .wa-payment-option {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .wa-payment-option:hover { border-color: #94a3b8; }
+  .wa-payment-option.selected {
+    border-color: #0f172a;
+    background: #f8fafc;
+    box-shadow: 0 0 0 1px #0f172a;
+  }
+  .wa-payment-radio {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2px solid #cbd5e1;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .wa-payment-option.selected .wa-payment-radio {
+    border-color: #0f172a;
+  }
+  .wa-payment-option.selected .wa-payment-radio::after {
+    content: ''; width: 10px; height: 10px; border-radius: 50%;
+    background: #0f172a;
+  }
 {% endstyle %}
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
 
 <!-- Inject logged-in Shopify customer data for pre-fill -->
 <script>
@@ -435,6 +466,8 @@ window._shopifyCustomer = {
           <div class="wa-step-dot" id="wa-dot-2">2</div>
           <div class="wa-step-line" id="wa-line-2"></div>
           <div class="wa-step-dot" id="wa-dot-3">3</div>
+          <div class="wa-step-line" id="wa-line-3"></div>
+          <div class="wa-step-dot" id="wa-dot-4">4</div>
         </div>
 
         <!-- STEP 1: PHONE -->
@@ -496,8 +529,9 @@ window._shopifyCustomer = {
             </button>
           </div>
 
-          <div class="wa-resend">
-            <a href="#" onclick="sendWaOtp(); return false;">Didn't receive? Resend OTP</a>
+          <div class="wa-resend" id="wa-resend-container">
+            <a href="#" id="wa-resend-link" onclick="sendWaOtp(); return false;">Didn't receive? Resend OTP</a>
+            <span id="wa-resend-timer" style="display:none; color:#64748b; font-size:13px;"></span>
           </div>
         </div>
 
@@ -597,13 +631,6 @@ window._shopifyCustomer = {
             </div>
           </div>
 
-          <!-- COD Button -->
-          <button type="button" class="wa-btn-primary" id="wa-cod-btn" onclick="placeCodOrder()" disabled style="font-size:16px; padding:17px; margin-top:4px;">
-            🎯 Place Order (Cash on Delivery)
-          </button>
-
-          <!-- Pay Online -->
-          <div class="wa-pay-divider"><span>OR PAY ONLINE</span></div>
           <button type="button" class="wa-pay-online-btn" onclick="waRedirectToShopify(event)">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
             Pay via UPI / Debit / Credit Card
@@ -629,13 +656,17 @@ window._shopifyCustomer = {
 
   let waPhone = null;
   let waSignature = null;
+  let waOtpSendCount = 0;
+  let waResendInterval = null;
   let waEditingAddressId = null;
   let waSelectedAddress = null;
+  let waAddresses = [];
   let waDraftOrderId = null;
   let waEmail = '';
   let waAppliedDiscountCode = null;
   let waShopifyAddressesLoaded = false;
   let waMapSearchTimer = null;
+  let waPaymentSettings = {};
 
   document.addEventListener('DOMContentLoaded', () => {
     if (!localStorage.getItem('fit11_device_id')) {
@@ -884,6 +915,10 @@ window._shopifyCustomer = {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
+      
+      waOtpSendCount++;
+      startResendTimer();
+      
       waSignature = data.signature;
       if (data.real_phone) waPhone = data.real_phone;
       document.getElementById('wa-otp-desc').innerText = `Enter the OTP sent to +91 ${waPhone}`;
@@ -899,6 +934,29 @@ window._shopifyCustomer = {
       btn.disabled = false;
       btn.innerHTML = 'Continue <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
     }
+  }
+
+  function startResendTimer() {
+    clearInterval(waResendInterval);
+    let timeLeft = waOtpSendCount === 1 ? 60 : 300;
+    const link = document.getElementById('wa-resend-link');
+    const timerText = document.getElementById('wa-resend-timer');
+    
+    link.style.display = 'none';
+    timerText.style.display = 'inline-block';
+    
+    waResendInterval = setInterval(() => {
+      timeLeft--;
+      if (timeLeft <= 0) {
+        clearInterval(waResendInterval);
+        link.style.display = 'inline-block';
+        timerText.style.display = 'none';
+      } else {
+        const m = Math.floor(timeLeft / 60);
+        const s = timeLeft % 60;
+        timerText.innerText = `Resend OTP in ${m}:${s.toString().padStart(2, '0')}`;
+      }
+    }, 1000);
   }
 
   async function verifyWaOtp() {
@@ -1248,7 +1306,9 @@ window._shopifyCustomer = {
           items, 
           discount_code: discountCode,
           cart_discount: cart.total_discount || 0,
-          cart_subtotal: cart.original_total_price || 0
+          cart_subtotal: cart.original_total_price || 0,
+          phone: waEmail || null, // Assuming waEmail holds the phone when they enter it? Wait, let's check.
+          device_id: localStorage.getItem('wa_device_id') || null
         })
       });
       const data = await res.json();
@@ -1290,6 +1350,8 @@ window._shopifyCustomer = {
           <span id="wa-total">₹${parseFloat(data.total_price).toFixed(2)}</span>
         </div>
       `;
+      
+      waPaymentSettings = data.payment_settings || {};
 
     } catch (e) {
       if (discountCode && String(e.message) === 'invalid_discount') {
@@ -1340,27 +1402,212 @@ window._shopifyCustomer = {
     await calculateCheckoutTotals();
   }
 
-  async function placeCodOrder() {
+  function waProceedToPayment() {
+    if (!waSelectedAddress) {
+      alert('Please select a delivery address first.');
+      return;
+    }
+    
+    document.getElementById('wa-step-3').style.display = 'none';
+    document.getElementById('wa-step-4').style.display = 'block';
+    document.getElementById('wa-dot-3').classList.add('done');
+    document.getElementById('wa-line-3').classList.add('done');
+    document.getElementById('wa-dot-4').classList.add('active');
+
+    renderPaymentMethods();
+  }
+  
+  function waBackToAddress() {
+    document.getElementById('wa-step-4').style.display = 'none';
+    document.getElementById('wa-step-3').style.display = 'block';
+    document.getElementById('wa-dot-4').classList.remove('active');
+    document.getElementById('wa-dot-3').classList.remove('done');
+    document.getElementById('wa-line-3').classList.remove('done');
+  }
+  
+  let waSelectedPayment = null;
+  let cashfreeObj = null;
+
+  function renderPaymentMethods() {
+    const container = document.getElementById('wa-payment-methods-container');
+    container.innerHTML = '';
+    
+    let methods = [];
+    
+    // If no settings exist, default to COD only
+    if (!waPaymentSettings || Object.keys(waPaymentSettings).length === 0) {
+      methods.push({ id: 'cod', title: 'Cash on Delivery', desc: 'Pay when your order arrives.' });
+    } else {
+      if (waPaymentSettings.prepaid_enabled) {
+        let offerStr = '';
+        if (waPaymentSettings.prepaid_offer_enabled) {
+           offerStr = waPaymentSettings.prepaid_offer_type === 'percent' 
+             ? ` <span style="color:#16a34a; font-weight:bold; font-size:12px; background:#f0fdf4; padding:2px 6px; border-radius:4px; margin-left:6px;">Extra ${waPaymentSettings.prepaid_offer_value}% OFF</span>`
+             : ` <span style="color:#16a34a; font-weight:bold; font-size:12px; background:#f0fdf4; padding:2px 6px; border-radius:4px; margin-left:6px;">Extra ₹${waPaymentSettings.prepaid_offer_value} OFF</span>`;
+        }
+        methods.push({ id: 'prepaid', title: `Pay Online (UPI, Cards)${offerStr}`, desc: 'Secure online payment.' });
+      }
+      if (waPaymentSettings.partial_cod_enabled) {
+        let valStr = waPaymentSettings.partial_cod_type === 'percent' ? `${waPaymentSettings.partial_cod_value}%` : `₹${waPaymentSettings.partial_cod_value}`;
+        methods.push({ id: 'partial_cod', title: 'Partial COD', desc: `Pay ${valStr} now, rest on delivery.` });
+      }
+      if (waPaymentSettings.cod_enabled) {
+        let feeStr = waPaymentSettings.cod_fee > 0 ? ` (Extra ₹${waPaymentSettings.cod_fee} fee)` : '';
+        methods.push({ id: 'cod', title: `Cash on Delivery${feeStr}`, desc: 'Pay when your order arrives.' });
+      }
+    }
+    
+    if (methods.length === 0) {
+      container.innerHTML = '<p style="color:#ef4444;">No payment methods available.</p>';
+      return;
+    }
+    
+    if (!waSelectedPayment) waSelectedPayment = methods[0].id; // default to first
+
+    methods.forEach(m => {
+      const opt = document.createElement('div');
+      opt.className = `wa-payment-option ${waSelectedPayment === m.id ? 'selected' : ''}`;
+      opt.onclick = () => {
+        waSelectedPayment = m.id;
+        renderPaymentMethods(); // Re-render to update UI classes and Total
+      };
+      
+      opt.innerHTML = `
+        <div class="wa-payment-radio"></div>
+        <div>
+          <div style="font-weight:700; color:#0f172a; font-size:15px; display:flex; align-items:center;">${m.title}</div>
+          <div style="font-size:12px; color:#64748b; margin-top:2px;">${m.desc}</div>
+        </div>
+      `;
+      container.appendChild(opt);
+    });
+    
+    document.getElementById('wa-pay-btn-text').innerText = waSelectedPayment === 'cod' ? 'Place Order' : 'Pay Now';
+    
+    // Visually update the Total based on selected payment method
+    updateVisualTotalForPaymentMethod();
+
+    // Initialize Cashfree
+    if (waPaymentSettings && waPaymentSettings.cashfree_env && !cashfreeObj) {
+      try {
+        cashfreeObj = Cashfree({ mode: waPaymentSettings.cashfree_env });
+      } catch(e) { console.error('Cashfree init error', e); }
+    }
+  }
+
+  function updateVisualTotalForPaymentMethod() {
+    let subtotalEl = document.getElementById('wa-subtotal');
+    if (!subtotalEl || !waPaymentSettings) return;
+    
+    // Get the base total from the DOM (before payment fees are applied)
+    // Actually, wa-total is updated in calculateCheckoutTotals. We can read that base value or re-calculate it.
+    // Let's use the subtotal minus cart discounts to get the base total.
+    let baseTotalText = document.getElementById('wa-total').getAttribute('data-base-total');
+    if (!baseTotalText) {
+      baseTotalText = document.getElementById('wa-total').innerText.replace('₹', '');
+      document.getElementById('wa-total').setAttribute('data-base-total', baseTotalText);
+    }
+    
+    let baseTotal = parseFloat(baseTotalText);
+    if (isNaN(baseTotal)) return;
+
+    let displayTotal = baseTotal;
+
+    if (waSelectedPayment === 'cod' && waPaymentSettings.cod_enabled && waPaymentSettings.cod_fee > 0) {
+      displayTotal += waPaymentSettings.cod_fee;
+    } else if (waSelectedPayment === 'prepaid' && waPaymentSettings.prepaid_offer_enabled) {
+      let discount = waPaymentSettings.prepaid_offer_type === 'percent' 
+        ? (baseTotal * waPaymentSettings.prepaid_offer_value) / 100 
+        : waPaymentSettings.prepaid_offer_value;
+      discount = Math.min(discount, baseTotal);
+      displayTotal -= discount;
+    }
+
+    document.getElementById('wa-total').innerText = `₹${displayTotal.toFixed(2)}`;
+  }
+
+  async function waPayNow() {
     const btn = document.getElementById('wa-cod-btn');
     btn.disabled = true;
-    btn.innerHTML = '⏳ Processing your order...';
+    btn.innerHTML = '⏳ Processing...';
+    
     const addr = waAddresses.find(a => a.id === waSelectedAddress);
+    
+    if (waSelectedPayment === 'cod') {
+      // Direct complete
+      await finishOrderBackend({ payment_method: 'cod', shipping_address: addr });
+    } else {
+      // Cashfree flow
+      try {
+        const res = await fetch(`${WA_API_BASE}/checkout/create-payment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            merchant_key: MERCHANT_KEY, 
+            draft_order_id: waDraftOrderId,
+            payment_method: waSelectedPayment,
+            customer_phone: waPhone,
+            customer_email: waEmail,
+            customer_name: addr.first_name + ' ' + (addr.last_name || '')
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        
+        // Open Cashfree Modal
+        let checkoutOptions = {
+          paymentSessionId: data.payment_session_id,
+          redirectTarget: "_modal"
+        };
+        
+        cashfreeObj.checkout(checkoutOptions).then(async (result) => {
+          if (result.error) {
+            alert('Payment failed or cancelled.');
+            btn.disabled = false;
+            btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+          } else {
+            // Success
+            if (result.paymentDetails && result.paymentDetails.paymentMessage) {
+              await finishOrderBackend({ payment_method: waSelectedPayment, shipping_address: addr, cashfree_order_id: data.order_id });
+            }
+          }
+        });
+
+      } catch(e) {
+        alert('Failed to initialize payment: ' + e.message);
+        btn.disabled = false;
+        btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+      }
+    }
+  }
+
+  async function finishOrderBackend(payload) {
     try {
       const res = await fetch(`${WA_API_BASE}/checkout/complete`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ merchant_key: MERCHANT_KEY, draft_order_id: waDraftOrderId, shipping_address: addr, email: waEmail, phone: waPhone })
+        body: JSON.stringify({ 
+          merchant_key: MERCHANT_KEY, 
+          draft_order_id: waDraftOrderId, 
+          shipping_address: payload.shipping_address, 
+          email: waEmail, 
+          phone: waPhone,
+          payment_method: payload.payment_method,
+          cashfree_order_id: payload.cashfree_order_id
+        })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      document.getElementById('wa-step-3').style.display = 'none';
+      
+      document.getElementById('wa-step-4').style.display = 'none';
       document.getElementById('wa-steps-indicator').style.display = 'none';
       const sc = document.getElementById('wa-success-screen');
       sc.style.display = 'flex';
     } catch (e) {
-      alert('Failed to place order. Please try again.');
+      alert('Order placed but failed to confirm natively. Support will contact you. ' + e.message);
+      const btn = document.getElementById('wa-cod-btn');
       btn.disabled = false;
-      btn.innerHTML = '🎯 Place Order (Cash on Delivery)';
+      btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span>';
     }
   }
 
