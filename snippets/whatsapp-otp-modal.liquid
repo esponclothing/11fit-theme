@@ -1582,6 +1582,7 @@ window._shopifyCustomer = {
       btn.innerHTML = '⏳ Processing...';
       errEl.style.display = 'none';
       
+      waEmail = document.getElementById('wa-email').value.trim();
       const addr = waAddresses.find(a => a.id === waSelectedAddress);
       
       if (waSelectedPayment === 'cod') {
