@@ -558,57 +558,22 @@ window._shopifyCustomer = {
               <!-- City (auto-filled) -->
               <div class="wa-field-group">
                 <label class="wa-field-label">City / Post Office</label>
-                <input type="text" id="wa-addr-city" class="wa-input" placeholder="Mumbai">
+                <div id="wa-city-select-wrapper" style="display:none;">
+                  <select id="wa-addr-city-select" class="wa-input" style="cursor:pointer;" onchange="document.getElementById('wa-addr-city-input').value = this.value;"></select>
+                </div>
+                <input type="text" id="wa-addr-city-input" class="wa-input" placeholder="City">
               </div>
 
-              <!-- District (auto-filled or dropdown) -->
+              <!-- District (auto-filled) -->
               <div class="wa-field-group" id="wa-district-field">
                 <label class="wa-field-label">District</label>
-                <input type="text" id="wa-addr-district" class="wa-input" placeholder="District">
+                <input type="text" id="wa-addr-district" class="wa-input" placeholder="District" readonly style="background:#f8fafc; cursor:not-allowed;">
               </div>
 
-              <!-- State (auto-filled or dropdown) -->
+              <!-- State (auto-filled) -->
               <div class="wa-field-group full" id="wa-state-field">
                 <label class="wa-field-label">State</label>
-                <select id="wa-addr-state" class="wa-input" style="cursor:pointer;">
-                  <option value="">Select State</option>
-                  <option>Andaman and Nicobar Islands</option>
-                  <option>Andhra Pradesh</option>
-                  <option>Arunachal Pradesh</option>
-                  <option>Assam</option>
-                  <option>Bihar</option>
-                  <option>Chandigarh</option>
-                  <option>Chhattisgarh</option>
-                  <option>Dadra and Nagar Haveli and Daman and Diu</option>
-                  <option>Delhi</option>
-                  <option>Goa</option>
-                  <option>Gujarat</option>
-                  <option>Haryana</option>
-                  <option>Himachal Pradesh</option>
-                  <option>Jammu and Kashmir</option>
-                  <option>Jharkhand</option>
-                  <option>Karnataka</option>
-                  <option>Kerala</option>
-                  <option>Ladakh</option>
-                  <option>Lakshadweep</option>
-                  <option>Madhya Pradesh</option>
-                  <option>Maharashtra</option>
-                  <option>Manipur</option>
-                  <option>Meghalaya</option>
-                  <option>Mizoram</option>
-                  <option>Nagaland</option>
-                  <option>Odisha</option>
-                  <option>Puducherry</option>
-                  <option>Punjab</option>
-                  <option>Rajasthan</option>
-                  <option>Sikkim</option>
-                  <option>Tamil Nadu</option>
-                  <option>Telangana</option>
-                  <option>Tripura</option>
-                  <option>Uttar Pradesh</option>
-                  <option>Uttarakhand</option>
-                  <option>West Bengal</option>
-                </select>
+                <input type="text" id="wa-addr-state" class="wa-input" placeholder="State" readonly style="background:#f8fafc; cursor:not-allowed;">
               </div>
             </div>
 
@@ -1029,12 +994,92 @@ window._shopifyCustomer = {
             </div>
             <div style="display:flex; flex-direction:column; align-items:flex-end;">
               ${isSelected ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="#0f172a" style="margin-bottom:8px;"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-2 15l-5-5 1.41-1.41L10 12.17l7.59-7.59L19 6l-9 9z" fill="#0f172a"/></svg>` : ''}
-              ${!a.id.toString().startsWith('shopify_') ? `<button onclick="waEditAddress('${a.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:500;cursor:pointer;padding:0;text-decoration:underline;">Edit</button>` : ''}
+              <div style="display:flex;gap:12px;">
+                ${!a.id.toString().startsWith('shopify_') ? `<button onclick="waEditAddress('${a.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:500;cursor:pointer;padding:0;text-decoration:underline;">Edit</button>` : ''}
+                ${!a.id.toString().startsWith('shopify_') ? `<button onclick="waDeleteAddress('${a.id}')" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:500;cursor:pointer;padding:0;text-decoration:underline;">Delete</button>` : ''}
+              </div>
             </div>
           </div>
         </div>`;
     });
     document.getElementById('wa-cod-btn').disabled = false;
+  }
+
+  function waShowAddressForm() {
+    waEditingAddressId = null;
+    document.getElementById('wa-add-addr-btn').style.display = 'none';
+    document.getElementById('wa-new-address-form').style.display = 'block';
+    document.getElementById('wa-save-addr-btn').innerText = 'Save Address';
+    // Clear fields
+    ['wa-addr-fname','wa-addr-lname','wa-addr-street','wa-addr-city-input','wa-addr-zip','wa-addr-state','wa-addr-district'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('wa-city-select-wrapper').style.display = 'none';
+    document.getElementById('wa-addr-city-input').style.display = 'block';
+    document.getElementById('wa-addr-state').readOnly = false;
+    document.getElementById('wa-addr-district').readOnly = false;
+    document.getElementById('wa-addr-state').style.cursor = 'text';
+    document.getElementById('wa-addr-district').style.cursor = 'text';
+    document.getElementById('wa-addr-state').style.background = '#fff';
+    document.getElementById('wa-addr-district').style.background = '#fff';
+    document.getElementById('wa-pin-error').style.display = 'none';
+    document.getElementById('wa-pin-status').innerText = '';
+  }
+
+  function waEditAddress(id) {
+    const addr = waAddresses.find(a => a.id === id || a.id === parseInt(id));
+    if (!addr) return;
+    waEditingAddressId = id;
+    document.getElementById('wa-add-addr-btn').style.display = 'none';
+    document.getElementById('wa-new-address-form').style.display = 'block';
+    document.getElementById('wa-save-addr-btn').innerText = 'Update Address';
+    
+    document.getElementById('wa-addr-fname').value = addr.first_name || '';
+    document.getElementById('wa-addr-lname').value = addr.last_name || '';
+    document.getElementById('wa-addr-street').value = addr.address1 || '';
+    document.getElementById('wa-addr-city-input').value = addr.city || '';
+    document.getElementById('wa-city-select-wrapper').style.display = 'none';
+    document.getElementById('wa-addr-city-input').style.display = 'block';
+    
+    document.getElementById('wa-addr-zip').value = addr.zip || '';
+    document.getElementById('wa-addr-state').value = addr.province || '';
+    document.getElementById('wa-addr-district').value = addr.company ? addr.company.replace('District: ', '') : '';
+    
+    // Unlock them for editing just in case
+    document.getElementById('wa-addr-state').readOnly = false;
+    document.getElementById('wa-addr-district').readOnly = false;
+    document.getElementById('wa-addr-state').style.cursor = 'text';
+    document.getElementById('wa-addr-district').style.cursor = 'text';
+    document.getElementById('wa-addr-state').style.background = '#fff';
+    document.getElementById('wa-addr-district').style.background = '#fff';
+    
+    document.getElementById('wa-pin-error').style.display = 'none';
+    document.getElementById('wa-pin-status').innerText = '';
+  }
+
+  async function waDeleteAddress(id) {
+    if (!confirm('Are you sure you want to delete this address?')) return;
+    
+    // Optimistically hide it
+    const list = document.getElementById('wa-address-list');
+    list.style.opacity = '0.5';
+
+    try {
+      await fetch(`${WA_API_BASE}/addresses`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          merchant_key: MERCHANT_KEY, 
+          phone: waPhone, 
+          action: 'DELETE', 
+          address_data: { id: id } 
+        })
+      });
+      // reload
+      await loadAddresses();
+    } catch (e) {
+      alert('Failed to delete address.');
+    } finally {
+      list.style.opacity = '1';
+    }
   }
 
   function waSelectAddress(id) {
@@ -1054,35 +1099,61 @@ window._shopifyCustomer = {
     spinner.style.display = 'inline';
     statusEl.innerText = '';
     errEl.style.display = 'none';
+    
+    const stateEl = document.getElementById('wa-addr-state');
+    const districtEl = document.getElementById('wa-addr-district');
+    const cityInputEl = document.getElementById('wa-addr-city-input');
+    const citySelectWrap = document.getElementById('wa-city-select-wrapper');
+    const citySelect = document.getElementById('wa-addr-city-select');
+
     try {
       const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
       const data = await res.json();
       if (data && data[0] && data[0].Status === 'Success') {
-        const po = data[0].PostOffice[0];
-        // Auto-fill fields
-        document.getElementById('wa-addr-city').value = po.Name || '';
-        document.getElementById('wa-addr-district').value = po.District || '';
-        // Set state dropdown
-        const stateSelect = document.getElementById('wa-addr-state');
-        const stateName = po.State || '';
-        let matched = false;
-        for (let opt of stateSelect.options) {
-          if (opt.value.toLowerCase() === stateName.toLowerCase()) {
-            opt.selected = true; matched = true; break;
-          }
-        }
-        if (!matched && stateName) {
-          // Add as custom option if not in list
+        const postOffices = data[0].PostOffice;
+        const firstPo = postOffices[0];
+        
+        // Lock district & state
+        districtEl.value = firstPo.District || '';
+        stateEl.value = firstPo.State || '';
+        districtEl.readOnly = true;
+        stateEl.readOnly = true;
+        districtEl.style.background = '#f8fafc';
+        stateEl.style.background = '#f8fafc';
+        districtEl.style.cursor = 'not-allowed';
+        stateEl.style.cursor = 'not-allowed';
+
+        // Populate city dropdown
+        citySelect.innerHTML = '';
+        const uniqueCities = [...new Set(postOffices.map(po => po.Name))];
+        uniqueCities.forEach(city => {
           const opt = document.createElement('option');
-          opt.value = stateName; opt.text = stateName; opt.selected = true;
-          stateSelect.appendChild(opt);
-        }
+          opt.value = city;
+          opt.text = city;
+          citySelect.appendChild(opt);
+        });
+
+        cityInputEl.value = uniqueCities[0];
+        cityInputEl.style.display = 'none';
+        citySelectWrap.style.display = 'block';
+
         statusEl.innerHTML = '<span style="color:#16a34a;font-weight:600;">✓ Location found</span>';
       } else {
         throw new Error('PIN not found');
       }
     } catch(e) {
-      errEl.innerText = 'Could not auto-fill from PIN. Please select State and fill City manually.';
+      // Unlock on failure
+      districtEl.readOnly = false;
+      stateEl.readOnly = false;
+      districtEl.style.background = '#fff';
+      stateEl.style.background = '#fff';
+      districtEl.style.cursor = 'text';
+      stateEl.style.cursor = 'text';
+      
+      citySelectWrap.style.display = 'none';
+      cityInputEl.style.display = 'block';
+
+      errEl.innerText = 'Could not auto-fill from PIN. Please fill manually.';
       errEl.style.display = 'block';
       statusEl.innerHTML = '<span style="color:#f59e0b;">Enter manually below</span>';
     } finally {
@@ -1094,7 +1165,7 @@ window._shopifyCustomer = {
     const fname = document.getElementById('wa-addr-fname').value.trim();
     const lname = document.getElementById('wa-addr-lname').value.trim();
     const street = document.getElementById('wa-addr-street').value.trim();
-    const city = document.getElementById('wa-addr-city').value.trim();
+    const city = document.getElementById('wa-addr-city-input').value.trim();
     const zip = document.getElementById('wa-addr-zip').value.trim();
     const district = document.getElementById('wa-addr-district').value.trim();
     const state = document.getElementById('wa-addr-state').value.trim();
