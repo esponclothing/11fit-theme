@@ -374,6 +374,17 @@
   }
 
   window.triggerFullCheckout = function(button) {
+    if (button && button.preventDefault) button.preventDefault();
     openWaModal();
   };
+
+  // Aggressively intercept all checkout clicks!
+  document.addEventListener('click', function(e) {
+    const target = e.target.closest('button[name="checkout"], a[href="/checkout"], form[action="/cart"] button[type="submit"], #checkout, .checkout-btn');
+    if (target) {
+      e.preventDefault();
+      e.stopPropagation();
+      openWaModal();
+    }
+  }, true);
 </script>
