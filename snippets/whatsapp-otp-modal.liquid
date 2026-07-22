@@ -517,17 +517,7 @@ window._shopifyCustomer = {
           <!-- New Address Form -->
           <div id="wa-new-address-form">
             <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:4px;">New Address</div>
-            <div style="font-size:12px; color:#64748b; margin-bottom:12px;">Enter PIN code to auto-fill — or search by location</div>
-
-            <!-- Map / Location Search -->
-            <div style="position:relative; margin-bottom:16px;">
-              <input type="text" id="wa-map-search" class="wa-input" placeholder="🔍 Search area, locality or city..."
-                oninput="waSearchAddress(this.value)" autocomplete="off"
-                style="padding-right:44px;">
-              <button type="button" onclick="waUseMyLocation()" title="Use my current location"
-                style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:20px;padding:0;">📍</button>
-              <div id="wa-map-suggestions" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;z-index:1000;max-height:200px;overflow-y:auto;box-shadow:0 4px 20px rgba(0,0,0,0.1);"></div>
-            </div>
+            <div style="font-size:12px; color:#64748b; margin-bottom:12px;">Enter PIN code to auto-fill location details</div>
             <div class="wa-addr-grid">
               <div class="wa-field-group">
                 <label class="wa-field-label">First Name</label>
@@ -996,7 +986,7 @@ window._shopifyCustomer = {
               ${isSelected ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="#0f172a" style="margin-bottom:8px;"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-2 15l-5-5 1.41-1.41L10 12.17l7.59-7.59L19 6l-9 9z" fill="#0f172a"/></svg>` : ''}
               <div style="display:flex;gap:12px;">
                 ${!a.id.toString().startsWith('shopify_') ? `<button onclick="waEditAddress('${a.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:500;cursor:pointer;padding:0;text-decoration:underline;">Edit</button>` : ''}
-                ${!a.id.toString().startsWith('shopify_') ? `<button onclick="waDeleteAddress('${a.id}')" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:500;cursor:pointer;padding:0;text-decoration:underline;">Delete</button>` : ''}
+                <button onclick="waDeleteAddress('${a.id}')" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:500;cursor:pointer;padding:0;text-decoration:underline;">Delete</button>
               </div>
             </div>
           </div>
