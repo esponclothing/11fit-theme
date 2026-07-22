@@ -811,7 +811,20 @@ window._shopifyCustomer = {
       }
     }
 
-    // Check identity via device
+    // Check if they already verified in this tab session
+    const cachedPhone = sessionStorage.getItem('fit11_verified_phone');
+    if (cachedPhone) {
+      waPhone = cachedPhone;
+      document.getElementById('wa-step-1').style.display = 'none';
+      document.getElementById('wa-step-2').style.display = 'none';
+      document.getElementById('wa-step-3').style.display = 'block';
+      waSetStep(3);
+      loadAddresses();
+      calculateCheckoutTotals();
+      return; // Skip identify check completely!
+    }
+
+    // Check identity via device (for "Welcome Back" flow if no session cache)
     try {
       const device_id = localStorage.getItem('fit11_device_id');
       const res = await fetch(`${WA_API_BASE}/identify`, {
@@ -944,6 +957,10 @@ window._shopifyCustomer = {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Invalid OTP');
+      
+      // Save to session so they don't have to re-verify if they navigate away and come back
+      sessionStorage.setItem('fit11_verified_phone', waPhone);
+      
       document.getElementById('wa-step-2').style.display = 'none';
       document.getElementById('wa-step-3').style.display = 'block';
       waSetStep(3);
@@ -985,18 +1002,27 @@ window._shopifyCustomer = {
     const list = document.getElementById('wa-address-list');
     list.innerHTML = '';
     if (waAddresses.length === 0) {
-      waShowNewAddressForm();
+      waShowAddressForm();
       document.getElementById('wa-cod-btn').disabled = true;
       document.getElementById('wa-add-addr-btn').style.display = 'none';
       return;
     }
-    waAddresses.forEach((addr, idx) => {
-      const isSelected = waSelectedAddress === addr.id || (idx === 0 && !waSelectedAddress);
-      if (isSelected) waSelectedAddress = addr.id;
+    waAddresses.forEach((a, idx) => {
+      const isSelected = waSelectedAddress === a.id || (idx === 0 && !waSelectedAddress);
+      if (isSelected) waSelectedAddress = a.id;
       list.innerHTML += `
-        <div class="wa-address-card ${isSelected ? 'selected' : ''}" onclick="waSelectAddress('${addr.id}')">
-          <div class="wa-addr-name">${addr.first_name} ${addr.last_name}</div>
-          <div class="wa-addr-text">${addr.address1}, ${addr.city} - ${addr.zip}</div>
+        <div class="wa-address-card ${isSelected ? 'selected' : ''}" style="padding:12px;margin-bottom:10px;border:1px solid ${isSelected ? '#0f172a' : '#e2e8f0'};border-radius:8px;position:relative;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div style="cursor:pointer; flex:1;" onclick="waSelectAddress('${a.id}')">
+              <div style="font-weight:600;font-size:14px;">${a.first_name} ${a.last_name}</div>
+              <div style="margin:4px 0 0;font-size:13px;color:#64748b;">${a.address1}, ${a.city} - ${a.zip}</div>
+              ${a.company ? `<div style="margin:2px 0 0;font-size:12px;color:#94a3b8;">${a.company}</div>` : ''}
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:flex-end;">
+              ${isSelected ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="#0f172a" style="margin-bottom:8px;"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-2 15l-5-5 1.41-1.41L10 12.17l7.59-7.59L19 6l-9 9z" fill="#0f172a"/></svg>` : ''}
+              ${!a.id.toString().startsWith('shopify_') ? `<button onclick="waEditAddress('${a.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:500;cursor:pointer;padding:0;text-decoration:underline;">Edit</button>` : ''}
+            </div>
+          </div>
         </div>`;
     });
     document.getElementById('wa-cod-btn').disabled = false;
@@ -1086,11 +1112,17 @@ window._shopifyCustomer = {
       await fetch(`${WA_API_BASE}/addresses`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ merchant_key: MERCHANT_KEY, phone: waPhone, action: 'ADD', address_data: addr })
+        body: JSON.stringify({ 
+          merchant_key: MERCHANT_KEY, 
+          phone: waPhone, 
+          action: waEditingAddressId ? 'EDIT' : 'ADD', 
+          address_data: waEditingAddressId ? { id: waEditingAddressId, ...addr } : addr 
+        })
       });
       document.getElementById('wa-new-address-form').style.display = 'none';
       document.getElementById('wa-add-addr-btn').style.display = 'block';
       document.getElementById('wa-pin-error').style.display = 'none';
+      waEditingAddressId = null;
       await loadAddresses();
     } catch (e) { alert('Failed to save address. Please try again.'); }
   }
