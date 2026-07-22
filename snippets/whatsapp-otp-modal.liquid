@@ -876,6 +876,9 @@ window._shopifyCustomer = {
       const boxes = document.querySelectorAll('.wa-otp-box');
       if (idx < 3) boxes[idx + 1].focus();
     }
+    if (waGetOtp().length === 4) {
+      verifyWaOtp();
+    }
   }
   function waOtpKey(e, idx) {
     if (e.key === 'Backspace') {
@@ -925,9 +928,10 @@ window._shopifyCustomer = {
   }
 
   async function verifyWaOtp() {
+    const btn = document.getElementById('wa-verify-btn');
+    if (btn.disabled) return; // Prevent double-submit
     const otp = waGetOtp();
     if (otp.length < 4) return;
-    const btn = document.getElementById('wa-verify-btn');
     const errEl = document.getElementById('wa-otp-error');
     btn.disabled = true;
     btn.innerHTML = 'Verifying...';
