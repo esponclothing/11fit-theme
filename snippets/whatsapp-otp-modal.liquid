@@ -1596,7 +1596,10 @@ window._shopifyCustomer = {
             body: JSON.stringify({ 
               merchant_key: MERCHANT_KEY, 
               draft_order_id: waDraftOrderId,
-              payment_method: waSelectedPayment
+              payment_method: waSelectedPayment,
+              customer_email: waEmail,
+              customer_phone: waPhone,
+              shipping_address: addr
             })
           });
           const data = await res.json();
