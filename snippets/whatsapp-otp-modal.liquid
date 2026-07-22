@@ -443,7 +443,7 @@ window._shopifyCustomer = {
           <h2 class="wa-section-title" id="wa-title-1">Swift Checkout</h2>
           <p class="wa-section-desc" id="wa-desc-1">Enter your WhatsApp number to receive an OTP and complete your order.</p>
           
-          <div class="wa-field-group">
+          <div class="wa-field-group" id="wa-phone-container">
             <label class="wa-field-label">Mobile Number</label>
             <div class="wa-phone-row">
               <div class="wa-phone-prefix">🇮🇳 +91</div>
@@ -457,8 +457,8 @@ window._shopifyCustomer = {
 
           <!-- Email field -->
           <div class="wa-field-group" style="margin-top:4px;">
-            <label class="wa-field-label">Email Address</label>
-            <input type="email" id="wa-email" class="wa-input" placeholder="you@example.com">
+            <label class="wa-field-label">Email Address <span style="font-weight:400;color:#94a3b8;font-size:12px;">(Optional)</span></label>
+            <input type="email" id="wa-email" class="wa-input" placeholder="you@example.com (Optional)">
           </div>
 
           <div class="wa-wa-note">
@@ -823,7 +823,7 @@ window._shopifyCustomer = {
       if (data.identified && data.masked_phone) {
         document.getElementById('wa-title-1').innerText = 'Welcome Back!';
         document.getElementById('wa-desc-1').innerText = `Continue as ${data.masked_phone}?`;
-        document.getElementById('wa-phone').style.display = 'none';
+        document.getElementById('wa-phone-container').style.display = 'none';
         document.getElementById('wa-switch-account').style.display = 'block';
         waPhone = 'MASKED';
       }
@@ -860,13 +860,13 @@ window._shopifyCustomer = {
   }
 
   function waSwitchAccount(e) {
-    e.preventDefault();
+    if (e) e.preventDefault();
     document.getElementById('wa-title-1').innerText = 'Swift Checkout';
-    document.getElementById('wa-desc-1').innerText = 'Enter your WhatsApp number to receive an OTP.';
-    document.getElementById('wa-phone').style.display = 'block';
-    document.getElementById('wa-phone').value = '';
+    document.getElementById('wa-desc-1').innerText = 'Enter your WhatsApp number to receive an OTP and complete your order.';
+    document.getElementById('wa-phone-container').style.display = 'block';
     document.getElementById('wa-switch-account').style.display = 'none';
     waPhone = null;
+    document.getElementById('wa-phone').value = '';
   }
 
   // OTP box navigation
@@ -893,6 +893,7 @@ window._shopifyCustomer = {
       if (phoneInput.length < 10) return alert('Please enter a valid 10-digit mobile number');
       waPhone = phoneInput;
     }
+    waEmail = document.getElementById('wa-email').value.trim();
     const btn = document.getElementById('wa-send-btn');
     btn.disabled = true; btn.innerHTML = 'Sending OTP...';
     try {
@@ -1136,7 +1137,7 @@ window._shopifyCustomer = {
       const res = await fetch(`${WA_API_BASE}/checkout/complete`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ merchant_key: MERCHANT_KEY, draft_order_id: waDraftOrderId, shipping_address: addr })
+        body: JSON.stringify({ merchant_key: MERCHANT_KEY, draft_order_id: waDraftOrderId, shipping_address: addr, email: waEmail, phone: waPhone })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
