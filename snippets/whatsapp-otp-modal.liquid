@@ -1,133 +1,558 @@
-  .wa-otp-overlay {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: #f8fafc;
-    z-index: 2147483647 !important; display: none; justify-content: center; align-items: flex-start;
-    overflow-y: auto; padding: 20px 0;
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  #wa-otp-overlay * { box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+
+  #wa-otp-overlay {
+    position: fixed !important; top: 0 !important; left: 0 !important;
+    width: 100vw !important; height: 100vh !important;
+    z-index: 2147483647 !important; display: none;
+    overflow-y: auto !important;
+    background: rgba(15, 23, 42, 0.6) !important;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    padding: 0 !important;
   }
-  .wa-otp-overlay.active { display: flex; }
-  .wa-otp-modal {
-    background: #ffffff; width: 100%; max-width: 480px; border-radius: 16px;
-    padding: 30px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    font-family: var(--font-body-family, 'Outfit', sans-serif); text-align: left;
-    position: relative; margin: 20px auto; border: 1px solid #e2e8f0;
+
+  /* ── MAIN WRAPPER ── */
+  .wa-checkout-wrapper {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: stretch;
   }
-  .wa-header { text-align: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9; }
-  .wa-header img { max-height: 40px; margin-bottom: 10px; }
-  .wa-otp-close {
-    position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 28px; color: #94a3b8; line-height: 1;
+
+  /* ── LEFT PANEL (desktop only) ── */
+  .wa-left-panel {
+    display: none;
+    width: 380px;
+    min-width: 380px;
+    background: linear-gradient(145deg, #0f172a 0%, #1e293b 50%, #0f4c75 100%);
+    padding: 50px 40px;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
   }
-  .wa-otp-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; color: #0f172a; text-align: center; }
-  .wa-otp-desc { font-size: 14px; color: #64748b; margin-bottom: 25px; line-height: 1.5; text-align: center; }
-  .wa-otp-input {
-    width: 100%; padding: 14px 16px; border: 1.5px solid #cbd5e1;
-    border-radius: 8px; font-size: 15px; box-sizing: border-box; background: #fff; margin-bottom: 15px;
-    transition: border-color 0.2s; outline: none;
+  .wa-left-panel::before {
+    content: '';
+    position: absolute; top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
   }
-  .wa-otp-input:focus { border-color: #0f172a; }
-  .wa-otp-btn {
-    width: 100%; padding: 16px; background: #0f172a; color: #fff;
-    border: none; border-radius: 8px; font-size: 16px; font-weight: 600;
-    cursor: pointer; transition: background 0.2s; margin-top: 5px;
+  .wa-left-panel::after {
+    content: '';
+    position: absolute; bottom: -60px; left: -60px;
+    width: 250px; height: 250px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
   }
-  .wa-otp-btn:hover { background: #1e293b; }
-  .wa-otp-btn:disabled { background: #94a3b8; cursor: not-allowed; }
+  .wa-brand-name {
+    font-size: 32px; font-weight: 800; color: #fff;
+    letter-spacing: -1px; margin-bottom: 6px;
+  }
+  .wa-brand-tagline {
+    font-size: 14px; color: rgba(255,255,255,0.5); font-weight: 400;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .wa-brand-tagline svg { width: 14px; height: 14px; }
+  .wa-trust-badges { margin-top: 60px; display: flex; flex-direction: column; gap: 20px; }
+  .wa-trust-item {
+    display: flex; align-items: center; gap: 14px;
+    color: rgba(255,255,255,0.8); font-size: 14px; font-weight: 500;
+  }
+  .wa-trust-icon {
+    width: 42px; height: 42px; border-radius: 10px;
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .wa-left-footer { font-size: 12px; color: rgba(255,255,255,0.3); }
+
+  /* ── RIGHT PANEL ── */
+  .wa-right-panel {
+    flex: 1;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    max-width: 100%;
+  }
+
+  /* ── HEADER ── */
+  .wa-modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 28px;
+    border-bottom: 1px solid #f1f5f9;
+    position: sticky; top: 0; background: #fff; z-index: 10;
+  }
+  .wa-mobile-brand { display: flex; align-items: center; gap: 10px; }
+  .wa-mobile-logo-text {
+    font-size: 20px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;
+  }
+  .wa-secure-badge {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; color: #64748b; font-weight: 500;
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    padding: 4px 10px; border-radius: 20px;
+  }
+  .wa-secure-badge svg { width: 11px; height: 11px; color: #16a34a; }
+  .wa-close-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #f1f5f9; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: #64748b;
+    transition: all 0.2s; flex-shrink: 0;
+  }
+  .wa-close-btn:hover { background: #e2e8f0; color: #0f172a; }
+
+  /* ── CONTENT AREA ── */
+  .wa-content-area {
+    flex: 1; padding: 36px 28px;
+    max-width: 520px; width: 100%; margin: 0 auto;
+  }
+
+  /* ── STEP INDICATOR ── */
+  .wa-steps {
+    display: flex; align-items: center; gap: 0;
+    margin-bottom: 36px;
+  }
+  .wa-step-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    background: #f1f5f9; color: #94a3b8;
+    flex-shrink: 0; transition: all 0.3s;
+  }
+  .wa-step-dot.active { background: #0f172a; color: #fff; }
+  .wa-step-dot.done { background: #16a34a; color: #fff; }
+  .wa-step-line {
+    flex: 1; height: 2px; background: #e2e8f0; transition: background 0.3s;
+  }
+  .wa-step-line.done { background: #16a34a; }
+
+  /* ── SECTION TITLE ── */
+  .wa-section-eyebrow {
+    font-size: 11px; font-weight: 600; color: #3b82f6;
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
+  }
+  .wa-section-title {
+    font-size: 24px; font-weight: 800; color: #0f172a;
+    margin: 0 0 6px 0; letter-spacing: -0.5px; line-height: 1.2;
+  }
+  .wa-section-desc {
+    font-size: 14px; color: #64748b; margin: 0 0 28px 0; line-height: 1.5;
+  }
+
+  /* ── FORM ── */
+  .wa-field-group { margin-bottom: 16px; }
+  .wa-field-label {
+    font-size: 12px; font-weight: 600; color: #374151;
+    display: block; margin-bottom: 6px; letter-spacing: 0.3px;
+  }
+  .wa-input {
+    width: 100%; padding: 13px 16px;
+    border: 1.5px solid #e2e8f0; border-radius: 10px;
+    font-size: 15px; background: #fff; color: #0f172a;
+    transition: all 0.2s; outline: none;
+  }
+  .wa-input:focus { border-color: #0f172a; box-shadow: 0 0 0 3px rgba(15,23,42,0.06); }
+  .wa-input::placeholder { color: #cbd5e1; }
+
+  /* Phone row with +91 */
+  .wa-phone-row { display: flex; gap: 0; }
+  .wa-phone-prefix {
+    padding: 13px 14px; background: #f8fafc;
+    border: 1.5px solid #e2e8f0; border-right: none;
+    border-radius: 10px 0 0 10px;
+    font-size: 14px; font-weight: 600; color: #374151;
+    white-space: nowrap; display: flex; align-items: center; gap: 6px;
+  }
+  .wa-phone-row .wa-input { border-radius: 0 10px 10px 0; }
+
+  /* OTP input boxes */
+  .wa-otp-boxes { display: flex; gap: 12px; justify-content: center; margin: 8px 0; }
+  .wa-otp-box {
+    width: 64px; height: 64px; border: 1.5px solid #e2e8f0;
+    border-radius: 12px; text-align: center; font-size: 24px; font-weight: 700;
+    color: #0f172a; outline: none; transition: all 0.2s;
+  }
+  .wa-otp-box:focus { border-color: #0f172a; box-shadow: 0 0 0 3px rgba(15,23,42,0.06); }
+
+  /* ── BUTTON ── */
+  .wa-btn-primary {
+    width: 100%; padding: 15px;
+    background: #0f172a; color: #fff;
+    border: none; border-radius: 10px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: all 0.2s; display: flex; align-items: center;
+    justify-content: center; gap: 8px; letter-spacing: 0.2px;
+  }
+  .wa-btn-primary:hover { background: #1e293b; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(15,23,42,0.2); }
+  .wa-btn-primary:active { transform: translateY(0); }
+  .wa-btn-primary:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; box-shadow: none; }
+  .wa-btn-primary.loading { pointer-events: none; }
+
+  .wa-btn-secondary {
+    width: 100%; padding: 14px;
+    background: transparent; color: #475569;
+    border: 1.5px solid #e2e8f0; border-radius: 10px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: all 0.2s; margin-top: 10px;
+  }
+  .wa-btn-secondary:hover { border-color: #cbd5e1; background: #f8fafc; }
+
+  /* ── ADDRESS ── */
+  .wa-addr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .wa-addr-grid .wa-field-group.full { grid-column: 1 / -1; }
   .wa-address-card {
-    border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 16px; text-align: left;
-    margin-bottom: 12px; cursor: pointer; transition: all 0.2s; position: relative; background: #fff;
+    border: 1.5px solid #e2e8f0; border-radius: 12px;
+    padding: 16px; cursor: pointer;
+    transition: all 0.2s; margin-bottom: 10px;
+    position: relative;
   }
-  .wa-address-card:hover { border-color: #cbd5e1; }
-  .wa-address-card.selected { border-color: #0f172a; background: #f8fafc; border-width: 2px; }
-  .wa-address-name { font-weight: 700; color: #0f172a; font-size: 15px; margin-bottom: 4px; }
-  .wa-address-details { font-size: 14px; color: #475569; line-height: 1.4; }
-  
-  .wa-coupon-section { display: flex; gap: 10px; margin-top: 25px; }
-  .wa-coupon-input { flex: 1; padding: 12px 16px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 14px; text-transform: uppercase;}
-  .wa-coupon-btn { padding: 12px 20px; background: #e2e8f0; color: #0f172a; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;}
-  
-  .wa-summary { margin-top: 25px; font-size: 15px; background: #f8fafc; padding: 20px; border-radius: 10px; }
-  .wa-summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; color: #475569; }
-  .wa-summary-total { display: flex; justify-content: space-between; margin-top: 15px; font-weight: 700; font-size: 18px; color: #0f172a; border-top: 1px solid #e2e8f0; padding-top: 15px;}
+  .wa-address-card:hover { border-color: #94a3b8; }
+  .wa-address-card.selected { border-color: #0f172a; background: #f8fafc; }
+  .wa-address-card.selected::after {
+    content: '✓';
+    position: absolute; top: 12px; right: 14px;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #0f172a; color: #fff;
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .wa-addr-name { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+  .wa-addr-text { font-size: 13px; color: #64748b; line-height: 1.5; }
 
-  #wa-step-2, #wa-step-3, #wa-new-address-form, #wa-success-screen { display: none; }</style>
+  /* ── ORDER SUMMARY ── */
+  .wa-order-summary {
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 14px; padding: 20px; margin: 20px 0;
+  }
+  .wa-summary-title { font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .wa-summary-row {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 14px; color: #64748b; padding: 7px 0;
+  }
+  .wa-summary-row:not(:last-child) { border-bottom: 1px solid #f1f5f9; }
+  .wa-summary-row.total {
+    font-size: 16px; font-weight: 800; color: #0f172a;
+    padding-top: 14px; margin-top: 4px;
+    border-top: 2px solid #e2e8f0 !important;
+  }
+  .wa-free-label { color: #16a34a; font-weight: 600; }
 
-<div class="wa-otp-overlay" id="wa-otp-overlay">
-  <div class="wa-otp-modal">
-    <div class="wa-otp-close" onclick="closeWaModal()">&times;</div>
+  /* ── COUPON ── */
+  .wa-coupon-row { display: flex; gap: 10px; margin-bottom: 16px; }
+  .wa-coupon-row .wa-input { flex: 1; font-size: 14px; text-transform: uppercase; }
+  .wa-coupon-apply {
+    padding: 0 20px; background: #f1f5f9;
+    border: 1.5px solid #e2e8f0; border-radius: 10px;
+    font-size: 14px; font-weight: 700; color: #374151;
+    cursor: pointer; white-space: nowrap; transition: all 0.2s;
+  }
+  .wa-coupon-apply:hover { background: #e2e8f0; }
+
+  /* ── PAYMENT PILLS ── */
+  .wa-pay-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0 16px; }
+  .wa-pay-divider::before, .wa-pay-divider::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+  .wa-pay-divider span { font-size: 12px; color: #94a3b8; font-weight: 500; white-space: nowrap; }
+  .wa-pay-online-btn {
+    width: 100%; padding: 13px;
+    background: #fff; color: #374151;
+    border: 1.5px solid #e2e8f0; border-radius: 10px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: all 0.2s; display: flex; align-items: center;
+    justify-content: center; gap: 8px;
+  }
+  .wa-pay-online-btn:hover { border-color: #94a3b8; background: #f8fafc; }
+
+  /* ── SUCCESS ── */
+  .wa-success-screen {
+    display: none; text-align: center; padding: 60px 20px;
+    flex-direction: column; align-items: center;
+  }
+  .wa-success-checkmark {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px; margin: 0 auto 24px;
+    box-shadow: 0 8px 30px rgba(22, 163, 74, 0.3);
+    animation: wa-pop 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.28) forwards;
+  }
+  @keyframes wa-pop { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+  /* ── ERROR ── */
+  .wa-error-msg {
+    font-size: 13px; color: #dc2626; font-weight: 500;
+    background: #fef2f2; border: 1px solid #fecaca;
+    border-radius: 8px; padding: 10px 14px;
+    margin-top: 12px; display: none;
+  }
+
+  /* ── RESEND LINK ── */
+  .wa-resend { text-align: center; margin-top: 20px; }
+  .wa-resend a { font-size: 13px; color: #3b82f6; text-decoration: none; font-weight: 500; }
+  .wa-resend a:hover { text-decoration: underline; }
+
+  /* ── WHATSAPP NOTE ── */
+  .wa-wa-note {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: #64748b; margin-top: 16px;
+    padding: 10px 14px; background: #f0fdf4;
+    border-radius: 8px; border: 1px solid #bbf7d0;
+  }
+
+  /* ── DESKTOP LAYOUT ── */
+  @media (min-width: 768px) {
+    .wa-left-panel { display: flex; }
+    .wa-checkout-wrapper { min-height: 100vh; }
+    .wa-content-area { padding: 48px 44px; }
+    .wa-modal-header { padding: 24px 44px; }
+    .wa-otp-boxes { gap: 16px; }
+    .wa-otp-box { width: 72px; height: 72px; font-size: 28px; }
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 767px) {
+    .wa-content-area { padding: 24px 20px; }
+    .wa-modal-header { padding: 16px 20px; }
+    .wa-section-title { font-size: 20px; }
+    .wa-addr-grid { grid-template-columns: 1fr; }
+    .wa-otp-box { width: 56px; height: 56px; font-size: 22px; }
+    .wa-otp-boxes { gap: 10px; }
+  }
+
+  #wa-step-2, #wa-step-3, .wa-success-screen, #wa-new-address-form { display: none; }
+</style>
+
+<div id="wa-otp-overlay">
+  <div class="wa-checkout-wrapper">
     
-    <div class="wa-header">
-      <h2 style="margin:0; font-size: 24px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">11FIT</h2>
-      <div style="font-size: 13px; color: #64748b; font-weight: 500;">Secure Checkout</div>
-    </div>
-    
-    <!-- STEP 1: PHONE -->
-    <div id="wa-step-1">
-      <div class="wa-otp-title" id="wa-title-1">Swift Checkout</div>
-      <div class="wa-otp-desc" id="wa-desc-1">Enter your phone number to continue.</div>
-      <input type="tel" id="wa-phone" class="wa-otp-input" placeholder="e.g. 9876543210">
-      <div id="wa-switch-account" style="display:none; text-align:center; margin-top:-5px; margin-bottom:15px;">
-        <a href="#" onclick="waSwitchAccount(event)" style="font-size:13px; color:#3b82f6; text-decoration:underline;">Not you? Log in with another number</a>
+    <!-- LEFT PANEL (desktop) -->
+    <div class="wa-left-panel">
+      <div>
+        <div class="wa-brand-name">11FIT</div>
+        <div class="wa-brand-tagline">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          100% Secure Checkout
+        </div>
+        <div class="wa-trust-badges">
+          <div class="wa-trust-item">
+            <div class="wa-trust-icon">🔐</div>
+            <div>
+              <div style="font-weight:600;">OTP Verified</div>
+              <div style="font-size:12px; color:rgba(255,255,255,0.5);">Your phone number is verified securely</div>
+            </div>
+          </div>
+          <div class="wa-trust-item">
+            <div class="wa-trust-icon">🚚</div>
+            <div>
+              <div style="font-weight:600;">Free Delivery</div>
+              <div style="font-size:12px; color:rgba(255,255,255,0.5);">Pan-India delivery at no extra cost</div>
+            </div>
+          </div>
+          <div class="wa-trust-item">
+            <div class="wa-trust-icon">💳</div>
+            <div>
+              <div style="font-weight:600;">Pay COD or Online</div>
+              <div style="font-size:12px; color:rgba(255,255,255,0.5);">Pay on delivery or UPI/Card</div>
+            </div>
+          </div>
+          <div class="wa-trust-item">
+            <div class="wa-trust-icon">↩️</div>
+            <div>
+              <div style="font-weight:600;">Easy Returns</div>
+              <div style="font-size:12px; color:rgba(255,255,255,0.5);">Hassle-free 7 day return policy</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <button type="button" class="wa-otp-btn" id="wa-send-btn" onclick="sendWaOtp()">Continue</button>
-    </div>
-    
-    <!-- STEP 2: OTP -->
-    <div id="wa-step-2">
-      <div class="wa-otp-title">Verify Phone</div>
-      <div class="wa-otp-desc">Enter the OTP sent to your WhatsApp.</div>
-      <input type="number" id="wa-otp-code" class="wa-otp-input" placeholder="XXXX" maxlength="4" style="text-align:center; font-size: 24px; letter-spacing: 8px; font-weight: 700;">
-      <button type="button" class="wa-otp-btn" id="wa-verify-btn" onclick="verifyWaOtp()">Verify</button>
+      <div class="wa-left-footer">© 2025 11FIT. All rights reserved.</div>
     </div>
 
-    <!-- STEP 3: HEADLESS CHECKOUT (ADDRESS & PAYMENT) -->
-    <div id="wa-step-3">
-      <div class="wa-otp-title">Complete Order</div>
+    <!-- RIGHT PANEL -->
+    <div class="wa-right-panel">
       
-      <div style="font-weight: 700; margin-bottom: 12px; font-size: 15px; margin-top: 15px;">Delivery Address</div>
-      <div id="wa-address-list"></div>
-      <button type="button" onclick="waShowNewAddressForm()" style="width:100%; padding: 12px; border: 1.5px dashed #cbd5e1; background: transparent; border-radius: 8px; font-weight: 600; color: #475569; cursor: pointer; margin-bottom: 20px; transition: 0.2s;">+ Add New Address</button>
-      
-      <div id="wa-new-address-form">
-        <input type="text" id="wa-addr-fname" class="wa-otp-input" placeholder="First Name">
-        <input type="text" id="wa-addr-lname" class="wa-otp-input" placeholder="Last Name">
-        <input type="text" id="wa-addr-street" class="wa-otp-input" placeholder="Street Address">
-        <input type="text" id="wa-addr-city" class="wa-otp-input" placeholder="City">
-        <input type="text" id="wa-addr-zip" class="wa-otp-input" placeholder="PIN Code">
-        <button type="button" class="wa-otp-btn" style="margin-bottom: 20px;" onclick="waSaveNewAddress()">Save Address</button>
+      <!-- HEADER -->
+      <div class="wa-modal-header">
+        <div class="wa-mobile-brand">
+          <div class="wa-mobile-logo-text">11FIT</div>
+          <div class="wa-secure-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:#16a34a"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Secure
+          </div>
+        </div>
+        <button class="wa-close-btn" onclick="closeWaModal()">×</button>
       </div>
 
-      <div class="wa-coupon-section">
-        <input type="text" id="wa-coupon-code" class="wa-coupon-input" placeholder="Discount Code">
-        <button type="button" class="wa-coupon-btn" onclick="waApplyCoupon()">Apply</button>
-      </div>
+      <!-- CONTENT -->
+      <div class="wa-content-area">
+        
+        <!-- Step Indicator -->
+        <div class="wa-steps" id="wa-steps-indicator">
+          <div class="wa-step-dot active" id="wa-dot-1">1</div>
+          <div class="wa-step-line" id="wa-line-1"></div>
+          <div class="wa-step-dot" id="wa-dot-2">2</div>
+          <div class="wa-step-line" id="wa-line-2"></div>
+          <div class="wa-step-dot" id="wa-dot-3">3</div>
+        </div>
 
-      <div class="wa-summary">
-        <div class="wa-summary-row"><span>Subtotal</span> <span id="wa-subtotal">Calculating...</span></div>
-        <div class="wa-summary-row"><span>Shipping</span> <span style="color:#16a34a; font-weight: 600;">Free</span></div>
-        <div class="wa-summary-total"><span>Total (COD)</span> <span id="wa-total">---</span></div>
-      </div>
+        <!-- STEP 1: PHONE -->
+        <div id="wa-step-1">
+          <div class="wa-section-eyebrow">Step 1 of 3</div>
+          <h2 class="wa-section-title" id="wa-title-1">Swift Checkout</h2>
+          <p class="wa-section-desc" id="wa-desc-1">Enter your WhatsApp number to receive an OTP and complete your order.</p>
+          
+          <div class="wa-field-group">
+            <label class="wa-field-label">Mobile Number</label>
+            <div class="wa-phone-row">
+              <div class="wa-phone-prefix">🇮🇳 +91</div>
+              <input type="tel" id="wa-phone" class="wa-input" placeholder="98765 43210" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'')">
+            </div>
+          </div>
 
-      <button type="button" class="wa-otp-btn" id="wa-cod-btn" onclick="placeCodOrder()" disabled style="margin-top:20px; font-size:18px; padding: 18px;">
-        Place Order (Cash on Delivery)
-      </button>
-      
-      <div style="text-align:center; margin-top:20px;">
-        <a href="#" onclick="waRedirectToShopify(event)" style="font-size:14px; color:#64748b; text-decoration:underline;">Pay online via UPI / Card</a>
+          <div id="wa-switch-account" style="display:none; margin-bottom:16px;">
+            <a href="#" onclick="waSwitchAccount(event)" style="font-size:13px; color:#3b82f6; text-decoration:none; font-weight:500;">Use a different number →</a>
+          </div>
+
+          <div class="wa-wa-note">
+            <span style="font-size:18px;">💬</span>
+            <span>OTP will be sent on your <strong>WhatsApp</strong></span>
+          </div>
+
+          <div style="margin-top:20px;">
+            <button type="button" class="wa-btn-primary" id="wa-send-btn" onclick="sendWaOtp()">
+              Continue
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: OTP -->
+        <div id="wa-step-2">
+          <div class="wa-section-eyebrow">Step 2 of 3</div>
+          <h2 class="wa-section-title">Verify OTP</h2>
+          <p class="wa-section-desc" id="wa-otp-desc">Enter the 4-digit OTP sent to your WhatsApp.</p>
+          
+          <div class="wa-otp-boxes">
+            <input type="tel" class="wa-otp-box" maxlength="1" oninput="waOtpInput(this,0)" onkeydown="waOtpKey(event,0)">
+            <input type="tel" class="wa-otp-box" maxlength="1" oninput="waOtpInput(this,1)" onkeydown="waOtpKey(event,1)">
+            <input type="tel" class="wa-otp-box" maxlength="1" oninput="waOtpInput(this,2)" onkeydown="waOtpKey(event,2)">
+            <input type="tel" class="wa-otp-box" maxlength="1" oninput="waOtpInput(this,3)" onkeydown="waOtpKey(event,3)">
+          </div>
+          
+          <div class="wa-error-msg" id="wa-otp-error"></div>
+
+          <div style="margin-top:24px;">
+            <button type="button" class="wa-btn-primary" id="wa-verify-btn" onclick="verifyWaOtp()">
+              Verify & Continue
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+
+          <div class="wa-resend">
+            <a href="#" onclick="sendWaOtp(); return false;">Didn't receive? Resend OTP</a>
+          </div>
+        </div>
+
+        <!-- STEP 3: ADDRESS & PAYMENT -->
+        <div id="wa-step-3">
+          <div class="wa-section-eyebrow">Step 3 of 3</div>
+          <h2 class="wa-section-title">Delivery & Payment</h2>
+          <p class="wa-section-desc">Choose a delivery address and place your order.</p>
+
+          <!-- Address List -->
+          <div id="wa-address-list"></div>
+          
+          <button type="button" onclick="waShowNewAddressForm()" id="wa-add-addr-btn" style="width:100%;padding:13px;border:1.5px dashed #cbd5e1;background:transparent;border-radius:10px;font-size:14px;font-weight:600;color:#64748b;cursor:pointer;margin-bottom:20px;transition:0.2s;">
+            + Add New Address
+          </button>
+
+          <!-- New Address Form -->
+          <div id="wa-new-address-form">
+            <div style="font-size:15px; font-weight:700; color:#0f172a; margin-bottom:16px;">New Address</div>
+            <div class="wa-addr-grid">
+              <div class="wa-field-group">
+                <label class="wa-field-label">First Name</label>
+                <input type="text" id="wa-addr-fname" class="wa-input" placeholder="Rahul">
+              </div>
+              <div class="wa-field-group">
+                <label class="wa-field-label">Last Name</label>
+                <input type="text" id="wa-addr-lname" class="wa-input" placeholder="Sharma">
+              </div>
+              <div class="wa-field-group full">
+                <label class="wa-field-label">Street Address</label>
+                <input type="text" id="wa-addr-street" class="wa-input" placeholder="House No, Street, Locality">
+              </div>
+              <div class="wa-field-group">
+                <label class="wa-field-label">City</label>
+                <input type="text" id="wa-addr-city" class="wa-input" placeholder="Mumbai">
+              </div>
+              <div class="wa-field-group">
+                <label class="wa-field-label">PIN Code</label>
+                <input type="tel" id="wa-addr-zip" class="wa-input" placeholder="400001">
+              </div>
+            </div>
+            <button type="button" class="wa-btn-primary" onclick="waSaveNewAddress()" style="margin-bottom:20px;">
+              Save Address
+            </button>
+          </div>
+
+          <!-- Coupon -->
+          <div class="wa-coupon-row">
+            <input type="text" id="wa-coupon-code" class="wa-input" placeholder="DISCOUNT CODE" style="text-transform:uppercase;">
+            <button type="button" class="wa-coupon-apply" onclick="waApplyCoupon()">Apply</button>
+          </div>
+
+          <!-- Order Summary -->
+          <div class="wa-order-summary">
+            <div class="wa-summary-title">Order Summary</div>
+            <div class="wa-summary-row">
+              <span>Subtotal</span>
+              <span id="wa-subtotal" style="font-weight:600; color:#0f172a;">Calculating...</span>
+            </div>
+            <div class="wa-summary-row">
+              <span>Shipping</span>
+              <span class="wa-free-label">FREE</span>
+            </div>
+            <div class="wa-summary-row total">
+              <span>Total</span>
+              <span id="wa-total">---</span>
+            </div>
+          </div>
+
+          <!-- COD Button -->
+          <button type="button" class="wa-btn-primary" id="wa-cod-btn" onclick="placeCodOrder()" disabled style="font-size:16px; padding:17px; margin-top:4px;">
+            🎯 Place Order (Cash on Delivery)
+          </button>
+
+          <!-- Pay Online -->
+          <div class="wa-pay-divider"><span>OR PAY ONLINE</span></div>
+          <button type="button" class="wa-pay-online-btn" onclick="waRedirectToShopify(event)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Pay via UPI / Debit / Credit Card
+          </button>
+        </div>
+
+        <!-- SUCCESS SCREEN -->
+        <div class="wa-success-screen" id="wa-success-screen">
+          <div class="wa-success-checkmark">✓</div>
+          <h2 class="wa-section-title">Order Placed!</h2>
+          <p class="wa-section-desc" style="max-width:320px; margin:0 auto 32px;">Your COD order has been successfully placed. You will receive a confirmation on WhatsApp shortly.</p>
+          <button type="button" class="wa-btn-primary" style="max-width:280px;" onclick="window.location='/'">Continue Shopping</button>
+        </div>
+
       </div>
     </div>
-
-    <!-- SUCCESS SCREEN -->
-    <div id="wa-success-screen" style="text-align: center; padding: 40px 0;">
-      <div style="font-size: 60px; margin-bottom: 20px;">🎉</div>
-      <div class="wa-otp-title">Order Confirmed!</div>
-      <div class="wa-otp-desc" style="font-size:16px;">Your COD order has been successfully placed.</div>
-      <button class="wa-otp-btn" onclick="window.location='/'">Continue Shopping</button>
-    </div>
-
   </div>
 </div>
 
 <script>
-  const WA_API_BASE = 'https://checkout-app-one-lilac.vercel.app/api'; 
+  const WA_API_BASE = 'https://checkout-app-one-lilac.vercel.app/api';
   const MERCHANT_KEY = 'sk_live_11fit_106b31bb8dd7a7';
 
   let waPhone = null;
@@ -135,37 +560,25 @@
   let waAddresses = [];
   let waSelectedAddress = null;
   let waDraftOrderId = null;
-  let waCartItems = [];
 
   document.addEventListener('DOMContentLoaded', () => {
     if (!localStorage.getItem('fit11_device_id')) {
       localStorage.setItem('fit11_device_id', 'dev_' + Math.random().toString(36).substr(2, 9));
     }
-    
-    // Ensure modal is always appended to the body to avoid CSS transform bounding box clipping
-    const overlay = document.getElementById('wa-otp-overlay');
-    if (overlay && overlay.parentNode !== document.body) {
-      document.body.appendChild(overlay);
-    }
   });
 
-  function getShopifyCartItems() {
-    // This is a rough estimation assuming we are on the cart page or calling from a cart drawer.
-    // In a real production theme, you pass the Liquid cart object into a JS array.
-    // For this POC, we will send a mock item to the Draft Order API to demonstrate calculation.
-    return [{ variant_id: 123456789, quantity: 1 }];
-  }
-
   async function openWaModal() {
-    // Always move modal to document.body to escape any CSS clipping/overflow
     const overlay = document.getElementById('wa-otp-overlay');
     if (!overlay) return;
+    // Always rip the modal out to body level to escape any CSS clipping
     if (overlay.parentNode !== document.body) {
       document.body.appendChild(overlay);
     }
-    overlay.style.cssText = 'position:fixed!important;top:0!important;left:0!important;width:100vw!important;height:100vh!important;z-index:2147483647!important;display:flex!important;justify-content:center!important;align-items:flex-start!important;overflow-y:auto!important;padding:20px 0!important;background:#f8fafc!important;';
-    
-    // Check Identity
+    overlay.style.cssText = 'position:fixed!important;top:0!important;left:0!important;width:100vw!important;height:100vh!important;z-index:2147483647!important;display:flex!important;align-items:flex-start!important;justify-content:center!important;overflow-y:auto!important;padding:0!important;background:rgba(15,23,42,0.6)!important;backdrop-filter:blur(6px)!important;-webkit-backdrop-filter:blur(6px)!important;';
+    document.body.style.overflow = 'hidden';
+    // Reset to step 1
+    waResetModal();
+    // Check identity
     try {
       const device_id = localStorage.getItem('fit11_device_id');
       const res = await fetch(`${WA_API_BASE}/identify`, {
@@ -174,48 +587,85 @@
         body: JSON.stringify({ device_id, merchant_key: MERCHANT_KEY })
       });
       const data = await res.json();
-      
       if (data.identified && data.masked_phone) {
         document.getElementById('wa-title-1').innerText = 'Welcome Back!';
         document.getElementById('wa-desc-1').innerText = `Continue as ${data.masked_phone}?`;
         document.getElementById('wa-phone').style.display = 'none';
         document.getElementById('wa-switch-account').style.display = 'block';
-        waPhone = 'MASKED'; // We will send device_id instead of phone
+        waPhone = 'MASKED';
       }
-    } catch (e) {
-      console.log('Identity fetch failed');
-    }
+    } catch (e) { /* Silent fail */ }
+  }
+
+  function waResetModal() {
+    document.getElementById('wa-step-1').style.display = 'block';
+    document.getElementById('wa-step-2').style.display = 'none';
+    document.getElementById('wa-step-3').style.display = 'none';
+    document.getElementById('wa-success-screen').style.display = 'none';
+    document.getElementById('wa-steps-indicator').style.display = 'flex';
+    waSetStep(1);
+  }
+
+  function waSetStep(step) {
+    [1,2,3].forEach(i => {
+      const dot = document.getElementById('wa-dot-' + i);
+      if (dot) {
+        dot.className = 'wa-step-dot' + (i < step ? ' done' : i === step ? ' active' : '');
+        dot.textContent = i < step ? '✓' : i;
+      }
+    });
+    [1,2].forEach(i => {
+      const line = document.getElementById('wa-line-' + i);
+      if (line) line.className = 'wa-step-line' + (i < step ? ' done' : '');
+    });
+  }
+
+  function closeWaModal() {
+    const overlay = document.getElementById('wa-otp-overlay');
+    overlay.style.display = 'none';
+    document.body.style.overflow = '';
   }
 
   function waSwitchAccount(e) {
     e.preventDefault();
     document.getElementById('wa-title-1').innerText = 'Swift Checkout';
-    document.getElementById('wa-desc-1').innerText = 'Enter your phone number to continue.';
+    document.getElementById('wa-desc-1').innerText = 'Enter your WhatsApp number to receive an OTP.';
     document.getElementById('wa-phone').style.display = 'block';
     document.getElementById('wa-phone').value = '';
     document.getElementById('wa-switch-account').style.display = 'none';
     waPhone = null;
   }
 
-  function closeWaModal() {
-    document.getElementById('wa-otp-overlay').classList.remove('active');
+  // OTP box navigation
+  function waOtpInput(el, idx) {
+    el.value = el.value.replace(/\D/g, '');
+    if (el.value.length === 1) {
+      const boxes = document.querySelectorAll('.wa-otp-box');
+      if (idx < 3) boxes[idx + 1].focus();
+    }
+  }
+  function waOtpKey(e, idx) {
+    if (e.key === 'Backspace') {
+      const boxes = document.querySelectorAll('.wa-otp-box');
+      if (!boxes[idx].value && idx > 0) boxes[idx - 1].focus();
+    }
+  }
+  function waGetOtp() {
+    return [...document.querySelectorAll('.wa-otp-box')].map(b => b.value).join('');
   }
 
   async function sendWaOtp() {
     let phoneInput = document.getElementById('wa-phone').value.trim();
     if (waPhone !== 'MASKED') {
-      if (phoneInput.length < 10) return alert('Invalid phone');
+      if (phoneInput.length < 10) return alert('Please enter a valid 10-digit mobile number');
       waPhone = phoneInput;
     }
-    
     const btn = document.getElementById('wa-send-btn');
-    btn.disabled = true; btn.innerText = 'Sending...';
-
+    btn.disabled = true; btn.innerHTML = 'Sending OTP...';
     try {
       const payload = { merchant_key: MERCHANT_KEY };
       if (waPhone === 'MASKED') payload.device_id = localStorage.getItem('fit11_device_id');
       else payload.phone = waPhone;
-
       const res = await fetch(`${WA_API_BASE}/send-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -223,41 +673,50 @@
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-
       waSignature = data.signature;
-      // If masked, the backend should return the real phone number so we can verify it
-      if (data.real_phone) waPhone = data.real_phone; 
-
+      if (data.real_phone) waPhone = data.real_phone;
+      document.getElementById('wa-otp-desc').innerText = `Enter the OTP sent to +91 ${waPhone}`;
       document.getElementById('wa-step-1').style.display = 'none';
       document.getElementById('wa-step-2').style.display = 'block';
+      waSetStep(2);
+      setTimeout(() => document.querySelectorAll('.wa-otp-box')[0].focus(), 100);
     } catch (err) {
-      alert(err.message);
+      alert(err.message || 'Failed to send OTP. Please try again.');
     } finally {
-      btn.disabled = false; btn.innerText = 'Continue';
+      btn.disabled = false;
+      btn.innerHTML = 'Continue <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
     }
   }
 
   async function verifyWaOtp() {
-    const otp = document.getElementById('wa-otp-code').value.trim();
+    const otp = waGetOtp();
     if (otp.length < 4) return;
-    
     const btn = document.getElementById('wa-verify-btn');
-    btn.disabled = true; btn.innerText = 'Verifying...';
-
+    const errEl = document.getElementById('wa-otp-error');
+    btn.disabled = true;
+    btn.innerHTML = 'Verifying...';
+    errEl.style.display = 'none';
     try {
-      // Mocking verification for demo
-      // const res = await fetch(...)
-      
+      const res = await fetch(`${WA_API_BASE}/verify-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ merchant_key: MERCHANT_KEY, phone: waPhone, otp, signature: waSignature })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Invalid OTP');
       document.getElementById('wa-step-2').style.display = 'none';
       document.getElementById('wa-step-3').style.display = 'block';
-      
+      waSetStep(3);
       await loadAddresses();
       await calculateCheckoutTotals();
-      
     } catch (err) {
-      alert(err.message);
+      errEl.innerText = err.message || 'Invalid OTP. Please try again.';
+      errEl.style.display = 'block';
+      document.querySelectorAll('.wa-otp-box').forEach(b => b.value = '');
+      document.querySelectorAll('.wa-otp-box')[0].focus();
     } finally {
-      btn.disabled = false; btn.innerText = 'Verify';
+      btn.disabled = false;
+      btn.innerHTML = 'Verify & Continue <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
     }
   }
 
@@ -271,33 +730,27 @@
       const data = await res.json();
       waAddresses = data.addresses || [];
       renderAddresses();
-    } catch (e) {}
+    } catch (e) { renderAddresses(); }
   }
 
   function renderAddresses() {
     const list = document.getElementById('wa-address-list');
     list.innerHTML = '';
-    
     if (waAddresses.length === 0) {
       waShowNewAddressForm();
       document.getElementById('wa-cod-btn').disabled = true;
+      document.getElementById('wa-add-addr-btn').style.display = 'none';
       return;
     }
-
     waAddresses.forEach((addr, idx) => {
       const isSelected = waSelectedAddress === addr.id || (idx === 0 && !waSelectedAddress);
       if (isSelected) waSelectedAddress = addr.id;
-
       list.innerHTML += `
         <div class="wa-address-card ${isSelected ? 'selected' : ''}" onclick="waSelectAddress('${addr.id}')">
-          <div class="wa-address-name">${addr.first_name} ${addr.last_name}</div>
-          <div class="wa-address-details">
-            ${addr.address1}, ${addr.city}, ${addr.zip}
-          </div>
-        </div>
-      `;
+          <div class="wa-addr-name">${addr.first_name} ${addr.last_name}</div>
+          <div class="wa-addr-text">${addr.address1}, ${addr.city} - ${addr.zip}</div>
+        </div>`;
     });
-    
     document.getElementById('wa-cod-btn').disabled = false;
   }
 
@@ -312,15 +765,15 @@
 
   async function waSaveNewAddress() {
     const addr = {
-      first_name: document.getElementById('wa-addr-fname').value,
-      last_name: document.getElementById('wa-addr-lname').value,
-      address1: document.getElementById('wa-addr-street').value,
-      city: document.getElementById('wa-addr-city').value,
-      zip: document.getElementById('wa-addr-zip').value
+      first_name: document.getElementById('wa-addr-fname').value.trim(),
+      last_name: document.getElementById('wa-addr-lname').value.trim(),
+      address1: document.getElementById('wa-addr-street').value.trim(),
+      city: document.getElementById('wa-addr-city').value.trim(),
+      zip: document.getElementById('wa-addr-zip').value.trim()
     };
-
-    if (!addr.first_name || !addr.address1) return alert("Please fill details");
-
+    if (!addr.first_name || !addr.address1 || !addr.city || !addr.zip) {
+      return alert('Please fill all address fields');
+    }
     try {
       await fetch(`${WA_API_BASE}/addresses`, {
         method: 'POST',
@@ -328,29 +781,39 @@
         body: JSON.stringify({ merchant_key: MERCHANT_KEY, phone: waPhone, action: 'ADD', address_data: addr })
       });
       document.getElementById('wa-new-address-form').style.display = 'none';
+      document.getElementById('wa-add-addr-btn').style.display = 'block';
       await loadAddresses();
-    } catch (e) { alert("Failed to save"); }
+    } catch (e) { alert('Failed to save address'); }
   }
 
   async function calculateCheckoutTotals(discountCode = null) {
+    document.getElementById('wa-subtotal').innerText = 'Calculating...';
+    document.getElementById('wa-total').innerText = '...';
     try {
+      const cartRes = await fetch('/cart.js');
+      const cart = await cartRes.json();
+      const items = cart.items.map(i => ({ variant_id: i.variant_id, quantity: i.quantity }));
       const res = await fetch(`${WA_API_BASE}/checkout/calculate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          merchant_key: MERCHANT_KEY, 
-          items: getShopifyCartItems(),
-          discount_code: discountCode
-        })
+        body: JSON.stringify({ merchant_key: MERCHANT_KEY, items, discount_code: discountCode })
       });
       const data = await res.json();
-      
       waDraftOrderId = data.draft_order_id;
       document.getElementById('wa-subtotal').innerText = `₹${data.subtotal}`;
       document.getElementById('wa-total').innerText = `₹${data.total_price}`;
-      
     } catch (e) {
-      console.log("Calculation error");
+      // Fallback: read from cart
+      try {
+        const cartRes = await fetch('/cart.js');
+        const cart = await cartRes.json();
+        const total = (cart.total_price / 100).toFixed(0);
+        document.getElementById('wa-subtotal').innerText = `₹${total}`;
+        document.getElementById('wa-total').innerText = `₹${total}`;
+      } catch(e2) {
+        document.getElementById('wa-subtotal').innerText = 'See cart';
+        document.getElementById('wa-total').innerText = 'See cart';
+      }
     }
   }
 
@@ -358,85 +821,60 @@
     const code = document.getElementById('wa-coupon-code').value.trim();
     if (!code) return;
     await calculateCheckoutTotals(code);
-    alert(`Applied code: ${code}`);
   }
 
   async function placeCodOrder() {
     const btn = document.getElementById('wa-cod-btn');
-    btn.disabled = true; btn.innerText = 'Processing natively...';
-
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Processing your order...';
     const addr = waAddresses.find(a => a.id === waSelectedAddress);
-    
     try {
       const res = await fetch(`${WA_API_BASE}/checkout/complete`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          merchant_key: MERCHANT_KEY, 
-          draft_order_id: waDraftOrderId,
-          shipping_address: addr
-        })
+        body: JSON.stringify({ merchant_key: MERCHANT_KEY, draft_order_id: waDraftOrderId, shipping_address: addr })
       });
       const data = await res.json();
-      
+      if (!res.ok) throw new Error(data.error);
       document.getElementById('wa-step-3').style.display = 'none';
-      document.getElementById('wa-success-screen').style.display = 'block';
-      
+      document.getElementById('wa-steps-indicator').style.display = 'none';
+      const sc = document.getElementById('wa-success-screen');
+      sc.style.display = 'flex';
     } catch (e) {
-      alert("Failed to create native Shopify order");
-      btn.disabled = false; btn.innerText = 'Place Order (Cash on Delivery)';
+      alert('Failed to place order. Please try again.');
+      btn.disabled = false;
+      btn.innerHTML = '🎯 Place Order (Cash on Delivery)';
     }
   }
 
   function waRedirectToShopify(e) {
-    e.preventDefault();
+    if (e) e.preventDefault();
+    closeWaModal();
     window.location = '/checkout';
   }
 
-  window.triggerFullCheckout = function(button) {
-    openWaModal();
-  };
-
-  // Expose openWaModal globally so inline onclick can reach it
+  window.triggerFullCheckout = function() { openWaModal(); };
   window.openWaModal = openWaModal;
 
-  // Block native form submissions when modal is opening
+  // Block form submissions while modal is open
   document.addEventListener('submit', function(e) {
-    if (document.getElementById('wa-otp-overlay').classList.contains('active')) {
-      e.preventDefault();
-      e.stopPropagation();
+    if (document.getElementById('wa-otp-overlay') && document.getElementById('wa-otp-overlay').style.display !== 'none') {
+      e.preventDefault(); e.stopPropagation();
     }
   }, true);
-
-  // Block programmatic form.submit() calls by third-party apps
-  const originalSubmit = HTMLFormElement.prototype.submit;
+  const _origSubmit = HTMLFormElement.prototype.submit;
   HTMLFormElement.prototype.submit = function() {
-    if (document.getElementById('wa-otp-overlay').classList.contains('active')) {
-      return; // Block it!
-    }
-    originalSubmit.apply(this, arguments);
+    const ov = document.getElementById('wa-otp-overlay');
+    if (ov && ov.style.display !== 'none') return;
+    _origSubmit.apply(this, arguments);
   };
 
+  // Global click interceptor for any checkout button
   document.addEventListener('click', function(e) {
     if (!e.target || !e.target.closest) return;
-    
-    // 1. Check if what was clicked was a standard checkout button
-    let target = e.target.closest('button[name="checkout"], a[href^="/checkout"], input[name="checkout"], #checkout, .checkout-btn, .cart__checkout-button');
-    
-    // 2. Fallback: If an app injected a custom button, match by text
-    if (!target) {
-      const btn = e.target.closest('button, a, div[role="button"]');
-      if (btn && btn.innerText) {
-        const text = btn.innerText.toLowerCase().replace(/\s/g, '');
-        if (text.includes('checkout') || text.includes('placeorder')) {
-          target = btn;
-        }
-      }
-    }
-    
+    let target = e.target.closest('button[name="checkout"], a[href^="/checkout"], input[name="checkout"], #checkout, .cart__checkout-button');
     if (target) {
-      e.preventDefault();
-      e.stopPropagation();
+      e.preventDefault(); e.stopPropagation();
       openWaModal();
     }
   }, true);
