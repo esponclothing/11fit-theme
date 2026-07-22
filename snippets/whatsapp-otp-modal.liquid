@@ -1161,7 +1161,13 @@ window._shopifyCustomer = {
   async function waApplyCoupon() {
     const code = document.getElementById('wa-coupon-code').value.trim();
     if (!code) return;
+    const btn = document.querySelector('.wa-coupon-apply');
+    btn.innerText = '...';
     await calculateCheckoutTotals(code);
+    btn.innerText = 'Applied ✓';
+    btn.style.backgroundColor = '#16a34a';
+    btn.style.color = '#fff';
+    btn.style.borderColor = '#16a34a';
   }
 
   async function placeCodOrder() {
