@@ -980,18 +980,16 @@ window._shopifyCustomer = {
     const otherAddresses = waAddresses.filter(a => a.id != primary.id);
 
     let html = `
-        <div class="wa-address-card selected">
+        <div class="wa-address-card selected" style="padding:16px;">
           <div style="display:flex; justify-content:space-between; align-items:flex-start;">
             <div style="cursor:pointer; flex:1;" onclick="waSelectAddress('${primary.id}')">
-              <div style="font-weight:600;font-size:14px;">${primary.first_name} ${primary.last_name}</div>
-              <div style="margin:4px 0 0;font-size:13px;color:#64748b;">${primary.address1}, ${primary.city} - ${primary.zip}</div>
-              ${primary.company ? `<div style="margin:2px 0 0;font-size:12px;color:#94a3b8;">${primary.company}</div>` : ''}
-            </div>
-            <div style="display:flex; flex-direction:column; align-items:flex-end;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="#0f172a" style="margin-bottom:8px;"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-2 15l-5-5 1.41-1.41L10 12.17l7.59-7.59L19 6l-9 9z" fill="#0f172a"/></svg>
-              <div style="display:flex;gap:12px;">
-                ${!primary.id.toString().startsWith('shopify_') ? `<button onclick="waEditAddress('${primary.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:500;cursor:pointer;padding:0;text-decoration:underline;">Edit</button>` : ''}
-                <button onclick="waDeleteAddress('${primary.id}')" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:500;cursor:pointer;padding:0;text-decoration:underline;">Delete</button>
+              <div class="wa-addr-name">${primary.first_name} ${primary.last_name}</div>
+              <div class="wa-addr-text">${primary.address1}<br/>${primary.city} - ${primary.zip}</div>
+              ${primary.company ? `<div class="wa-addr-text" style="color:#94a3b8;">${primary.company}</div>` : ''}
+              
+              <div style="display:flex;gap:12px;margin-top:10px;">
+                ${!primary.id.toString().startsWith('shopify_') ? `<button onclick="waEditAddress('${primary.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:600;cursor:pointer;padding:0;text-decoration:none;">Edit</button>` : ''}
+                <button onclick="waDeleteAddress('${primary.id}')" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:600;cursor:pointer;padding:0;text-decoration:none;">Delete</button>
               </div>
             </div>
           </div>
@@ -1008,17 +1006,16 @@ window._shopifyCustomer = {
       `;
       otherAddresses.forEach(a => {
         html += `
-          <div class="wa-address-card">
+          <div class="wa-address-card" style="padding:16px;">
             <div style="display:flex; justify-content:space-between; align-items:flex-start;">
               <div style="cursor:pointer; flex:1;" onclick="waSelectAddress('${a.id}')">
-                <div style="font-weight:600;font-size:14px;">${a.first_name} ${a.last_name}</div>
-                <div style="margin:4px 0 0;font-size:13px;color:#64748b;">${a.address1}, ${a.city} - ${a.zip}</div>
-                ${a.company ? `<div style="margin:2px 0 0;font-size:12px;color:#94a3b8;">${a.company}</div>` : ''}
-              </div>
-              <div style="display:flex; flex-direction:column; align-items:flex-end;">
-                <div style="display:flex;gap:12px;">
-                  ${!a.id.toString().startsWith('shopify_') ? `<button onclick="waEditAddress('${a.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:500;cursor:pointer;padding:0;text-decoration:underline;">Edit</button>` : ''}
-                  <button onclick="waDeleteAddress('${a.id}')" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:500;cursor:pointer;padding:0;text-decoration:underline;">Delete</button>
+                <div class="wa-addr-name">${a.first_name} ${a.last_name}</div>
+                <div class="wa-addr-text">${a.address1}<br/>${a.city} - ${a.zip}</div>
+                ${a.company ? `<div class="wa-addr-text" style="color:#94a3b8;">${a.company}</div>` : ''}
+                
+                <div style="display:flex;gap:12px;margin-top:10px;">
+                  ${!a.id.toString().startsWith('shopify_') ? `<button onclick="waEditAddress('${a.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:600;cursor:pointer;padding:0;text-decoration:none;">Edit</button>` : ''}
+                  <button onclick="waDeleteAddress('${a.id}')" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:600;cursor:pointer;padding:0;text-decoration:none;">Delete</button>
                 </div>
               </div>
             </div>
@@ -1245,7 +1242,12 @@ window._shopifyCustomer = {
       const res = await fetch(`${WA_API_BASE}/checkout/calculate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ merchant_key: MERCHANT_KEY, items, discount_code: discountCode })
+        body: JSON.stringify({ 
+          merchant_key: MERCHANT_KEY, 
+          items, 
+          discount_code: discountCode,
+          cart_discount: cart.total_discount || 0
+        })
       });
       const data = await res.json();
       waDraftOrderId = data.draft_order_id;
