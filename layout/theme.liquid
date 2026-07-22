@@ -563,7 +563,9 @@
       <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
-    {%- comment -%} Removed cart-drawer.js script {%- endcomment -%}
+    {% render 'whatsapp-otp-modal' %}
+  </body>
+</html>
 
 <style>
   /* Global Scroll Animations */

@@ -447,7 +447,7 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                     {%- if tag_down == 'limited edition'   -%}{%- assign show_limited = true -%}{%- endif -%}
                   {%- endfor -%}
 
-                  {%- assign line_index = item.index | plus: 1 -%}
+                  {%- assign line_index = item.index -%}
 
                   <div class="lx-cart-item cart-item" id="CartItem-{{ line_index }}">
 

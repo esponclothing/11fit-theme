@@ -1,0 +1,379 @@
+<style>
+  .wa-otp-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px);
+    z-index: 2147483647; display: none; justify-content: center; align-items: center;
+  }
+  .wa-otp-overlay.active { display: flex; }
+  .wa-otp-modal {
+    background: #ffffff; width: 92%; max-width: 450px; border-radius: 20px;
+    padding: 30px 25px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+    font-family: var(--font-body-family, 'Outfit', sans-serif); text-align: left;
+    position: relative; max-height: 90vh; overflow-y: auto;
+  }
+  .wa-otp-close {
+    position: absolute; top: 15px; right: 18px; cursor: pointer; font-size: 24px; color: #94a3b8;
+  }
+  .wa-otp-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; color: #0f172a; text-align: center; }
+  .wa-otp-desc { font-size: 14px; color: #64748b; margin-bottom: 25px; line-height: 1.5; text-align: center; }
+  .wa-otp-input {
+    width: 100%; padding: 12px 14px; border: 1.5px solid #cbd5e1;
+    border-radius: 10px; font-size: 15px; box-sizing: border-box; background: #f8fafc; margin-bottom: 15px;
+  }
+  .wa-otp-btn {
+    width: 100%; padding: 14px; background: #000; color: #fff;
+    border: none; border-radius: 10px; font-size: 16px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; margin-top: 10px;
+  }
+  .wa-otp-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
+  .wa-address-card {
+    border: 2px solid #e2e8f0; border-radius: 12px; padding: 15px; text-align: left;
+    margin-bottom: 12px; cursor: pointer; transition: all 0.2s; position: relative;
+  }
+  .wa-address-card.selected { border-color: #000; background: #f8fafc; }
+  .wa-address-name { font-weight: 700; color: #0f172a; font-size: 15px; }
+  .wa-address-details { font-size: 13px; color: #64748b; margin-top: 4px; }
+  
+  .wa-coupon-section {
+    display: flex; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0;
+  }
+  .wa-coupon-input { flex: 1; padding: 10px 14px; border: 1.5px dashed #cbd5e1; border-radius: 8px; font-size: 14px; text-transform: uppercase;}
+  .wa-coupon-btn { padding: 10px 16px; background: #1e293b; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;}
+  
+  .wa-summary { margin-top: 20px; font-size: 14px; border-top: 1px solid #e2e8f0; padding-top: 15px; }
+  .wa-summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; color: #475569; }
+  .wa-summary-total { display: flex; justify-content: space-between; margin-top: 10px; font-weight: 800; font-size: 18px; color: #0f172a; }
+
+  #wa-step-2, #wa-step-3, #wa-new-address-form, #wa-success-screen { display: none; }
+</style>
+
+<div class="wa-otp-overlay" id="wa-otp-overlay">
+  <div class="wa-otp-modal">
+    <div class="wa-otp-close" onclick="closeWaModal()">&times;</div>
+    
+    <!-- STEP 1: PHONE -->
+    <div id="wa-step-1">
+      <div class="wa-otp-title" id="wa-title-1">Swift Checkout</div>
+      <div class="wa-otp-desc" id="wa-desc-1">Enter your phone number to continue.</div>
+      <input type="tel" id="wa-phone" class="wa-otp-input" placeholder="e.g. 9876543210">
+      <div id="wa-switch-account" style="display:none; text-align:center; margin-top:-5px; margin-bottom:15px;">
+        <a href="#" onclick="waSwitchAccount(event)" style="font-size:13px; color:#3b82f6; text-decoration:underline;">Not you? Log in with another number</a>
+      </div>
+      <button type="button" class="wa-otp-btn" id="wa-send-btn" onclick="sendWaOtp()">Continue</button>
+    </div>
+    
+    <!-- STEP 2: OTP -->
+    <div id="wa-step-2">
+      <div class="wa-otp-title">Verify Phone</div>
+      <div class="wa-otp-desc">Enter the OTP sent to your WhatsApp.</div>
+      <input type="number" id="wa-otp-code" class="wa-otp-input" placeholder="XXXX" maxlength="4" style="text-align:center; font-size: 24px; letter-spacing: 8px; font-weight: 700;">
+      <button type="button" class="wa-otp-btn" id="wa-verify-btn" onclick="verifyWaOtp()">Verify</button>
+    </div>
+
+    <!-- STEP 3: HEADLESS CHECKOUT (ADDRESS & PAYMENT) -->
+    <div id="wa-step-3">
+      <div class="wa-otp-title">Complete Order</div>
+      
+      <div style="font-weight: 700; margin-bottom: 10px; font-size: 15px;">Delivery Address</div>
+      <div id="wa-address-list"></div>
+      <button type="button" onclick="waShowNewAddressForm()" style="width:100%; padding: 10px; border: 1.5px dashed #cbd5e1; background: transparent; border-radius: 10px; font-weight: 600; color: #475569; cursor: pointer; margin-bottom: 20px;">+ Add New Address</button>
+      
+      <div id="wa-new-address-form">
+        <input type="text" id="wa-addr-fname" class="wa-otp-input" placeholder="First Name">
+        <input type="text" id="wa-addr-lname" class="wa-otp-input" placeholder="Last Name">
+        <input type="text" id="wa-addr-street" class="wa-otp-input" placeholder="Street Address">
+        <input type="text" id="wa-addr-city" class="wa-otp-input" placeholder="City">
+        <input type="text" id="wa-addr-zip" class="wa-otp-input" placeholder="PIN Code">
+        <button type="button" class="wa-otp-btn" style="background:#1e293b; margin-bottom: 20px;" onclick="waSaveNewAddress()">Save Address</button>
+      </div>
+
+      <div class="wa-coupon-section">
+        <input type="text" id="wa-coupon-code" class="wa-coupon-input" placeholder="Discount Code">
+        <button type="button" class="wa-coupon-btn" onclick="waApplyCoupon()">Apply</button>
+      </div>
+
+      <div class="wa-summary">
+        <div class="wa-summary-row"><span>Subtotal</span> <span id="wa-subtotal">Calculating...</span></div>
+        <div class="wa-summary-row"><span>Shipping</span> <span>Free</span></div>
+        <div class="wa-summary-total"><span>Total (COD)</span> <span id="wa-total">---</span></div>
+      </div>
+
+      <button type="button" class="wa-otp-btn" id="wa-cod-btn" onclick="placeCodOrder()" disabled>
+        Place Order (Cash on Delivery)
+      </button>
+      
+      <div style="text-align:center; margin-top:15px;">
+        <a href="#" onclick="waRedirectToShopify(event)" style="font-size:13px; color:#64748b; text-decoration:underline;">Pay online via UPI / Card</a>
+      </div>
+    </div>
+
+    <!-- SUCCESS SCREEN -->
+    <div id="wa-success-screen" style="text-align: center; padding: 40px 0;">
+      <div style="font-size: 60px; margin-bottom: 20px;">🎉</div>
+      <div class="wa-otp-title">Order Confirmed!</div>
+      <div class="wa-otp-desc">Your COD order has been successfully placed natively.</div>
+      <button class="wa-otp-btn" onclick="window.location='/'">Continue Shopping</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const WA_API_BASE = 'https://checkout-app-one-lilac.vercel.app/api'; 
+  const MERCHANT_KEY = 'sk_live_11fit_dummykey';
+
+  let waPhone = null;
+  let waSignature = null;
+  let waAddresses = [];
+  let waSelectedAddress = null;
+  let waDraftOrderId = null;
+  let waCartItems = [];
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!localStorage.getItem('fit11_device_id')) {
+      localStorage.setItem('fit11_device_id', 'dev_' + Math.random().toString(36).substr(2, 9));
+    }
+  });
+
+  function getShopifyCartItems() {
+    // This is a rough estimation assuming we are on the cart page or calling from a cart drawer.
+    // In a real production theme, you pass the Liquid cart object into a JS array.
+    // For this POC, we will send a mock item to the Draft Order API to demonstrate calculation.
+    return [{ variant_id: 123456789, quantity: 1 }];
+  }
+
+  async function openWaModal() {
+    document.getElementById('wa-otp-overlay').classList.add('active');
+    
+    // Check Identity
+    try {
+      const device_id = localStorage.getItem('fit11_device_id');
+      const res = await fetch(`${WA_API_BASE}/identify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ device_id, merchant_key: MERCHANT_KEY })
+      });
+      const data = await res.json();
+      
+      if (data.identified && data.masked_phone) {
+        document.getElementById('wa-title-1').innerText = 'Welcome Back!';
+        document.getElementById('wa-desc-1').innerText = `Continue as ${data.masked_phone}?`;
+        document.getElementById('wa-phone').style.display = 'none';
+        document.getElementById('wa-switch-account').style.display = 'block';
+        waPhone = 'MASKED'; // We will send device_id instead of phone
+      }
+    } catch (e) {
+      console.log('Identity fetch failed');
+    }
+  }
+
+  function waSwitchAccount(e) {
+    e.preventDefault();
+    document.getElementById('wa-title-1').innerText = 'Swift Checkout';
+    document.getElementById('wa-desc-1').innerText = 'Enter your phone number to continue.';
+    document.getElementById('wa-phone').style.display = 'block';
+    document.getElementById('wa-phone').value = '';
+    document.getElementById('wa-switch-account').style.display = 'none';
+    waPhone = null;
+  }
+
+  function closeWaModal() {
+    document.getElementById('wa-otp-overlay').classList.remove('active');
+  }
+
+  async function sendWaOtp() {
+    let phoneInput = document.getElementById('wa-phone').value.trim();
+    if (waPhone !== 'MASKED') {
+      if (phoneInput.length < 10) return alert('Invalid phone');
+      waPhone = phoneInput;
+    }
+    
+    const btn = document.getElementById('wa-send-btn');
+    btn.disabled = true; btn.innerText = 'Sending...';
+
+    try {
+      const payload = { merchant_key: MERCHANT_KEY };
+      if (waPhone === 'MASKED') payload.device_id = localStorage.getItem('fit11_device_id');
+      else payload.phone = waPhone;
+
+      const res = await fetch(`${WA_API_BASE}/send-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      waSignature = data.signature;
+      // If masked, the backend should return the real phone number so we can verify it
+      if (data.real_phone) waPhone = data.real_phone; 
+
+      document.getElementById('wa-step-1').style.display = 'none';
+      document.getElementById('wa-step-2').style.display = 'block';
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      btn.disabled = false; btn.innerText = 'Continue';
+    }
+  }
+
+  async function verifyWaOtp() {
+    const otp = document.getElementById('wa-otp-code').value.trim();
+    if (otp.length < 4) return;
+    
+    const btn = document.getElementById('wa-verify-btn');
+    btn.disabled = true; btn.innerText = 'Verifying...';
+
+    try {
+      // Mocking verification for demo
+      // const res = await fetch(...)
+      
+      document.getElementById('wa-step-2').style.display = 'none';
+      document.getElementById('wa-step-3').style.display = 'block';
+      
+      await loadAddresses();
+      await calculateCheckoutTotals();
+      
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      btn.disabled = false; btn.innerText = 'Verify';
+    }
+  }
+
+  async function loadAddresses() {
+    try {
+      const res = await fetch(`${WA_API_BASE}/addresses`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ merchant_key: MERCHANT_KEY, phone: waPhone, action: 'FETCH' })
+      });
+      const data = await res.json();
+      waAddresses = data.addresses || [];
+      renderAddresses();
+    } catch (e) {}
+  }
+
+  function renderAddresses() {
+    const list = document.getElementById('wa-address-list');
+    list.innerHTML = '';
+    
+    if (waAddresses.length === 0) {
+      waShowNewAddressForm();
+      document.getElementById('wa-cod-btn').disabled = true;
+      return;
+    }
+
+    waAddresses.forEach((addr, idx) => {
+      const isSelected = waSelectedAddress === addr.id || (idx === 0 && !waSelectedAddress);
+      if (isSelected) waSelectedAddress = addr.id;
+
+      list.innerHTML += `
+        <div class="wa-address-card ${isSelected ? 'selected' : ''}" onclick="waSelectAddress('${addr.id}')">
+          <div class="wa-address-name">${addr.first_name} ${addr.last_name}</div>
+          <div class="wa-address-details">
+            ${addr.address1}, ${addr.city}, ${addr.zip}
+          </div>
+        </div>
+      `;
+    });
+    
+    document.getElementById('wa-cod-btn').disabled = false;
+  }
+
+  function waSelectAddress(id) {
+    waSelectedAddress = id;
+    renderAddresses();
+  }
+
+  function waShowNewAddressForm() {
+    document.getElementById('wa-new-address-form').style.display = 'block';
+  }
+
+  async function waSaveNewAddress() {
+    const addr = {
+      first_name: document.getElementById('wa-addr-fname').value,
+      last_name: document.getElementById('wa-addr-lname').value,
+      address1: document.getElementById('wa-addr-street').value,
+      city: document.getElementById('wa-addr-city').value,
+      zip: document.getElementById('wa-addr-zip').value
+    };
+
+    if (!addr.first_name || !addr.address1) return alert("Please fill details");
+
+    try {
+      await fetch(`${WA_API_BASE}/addresses`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ merchant_key: MERCHANT_KEY, phone: waPhone, action: 'ADD', address_data: addr })
+      });
+      document.getElementById('wa-new-address-form').style.display = 'none';
+      await loadAddresses();
+    } catch (e) { alert("Failed to save"); }
+  }
+
+  async function calculateCheckoutTotals(discountCode = null) {
+    try {
+      const res = await fetch(`${WA_API_BASE}/checkout/calculate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          merchant_key: MERCHANT_KEY, 
+          items: getShopifyCartItems(),
+          discount_code: discountCode
+        })
+      });
+      const data = await res.json();
+      
+      waDraftOrderId = data.draft_order_id;
+      document.getElementById('wa-subtotal').innerText = `₹${data.subtotal}`;
+      document.getElementById('wa-total').innerText = `₹${data.total_price}`;
+      
+    } catch (e) {
+      console.log("Calculation error");
+    }
+  }
+
+  async function waApplyCoupon() {
+    const code = document.getElementById('wa-coupon-code').value.trim();
+    if (!code) return;
+    await calculateCheckoutTotals(code);
+    alert(`Applied code: ${code}`);
+  }
+
+  async function placeCodOrder() {
+    const btn = document.getElementById('wa-cod-btn');
+    btn.disabled = true; btn.innerText = 'Processing natively...';
+
+    const addr = waAddresses.find(a => a.id === waSelectedAddress);
+    
+    try {
+      const res = await fetch(`${WA_API_BASE}/checkout/complete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          merchant_key: MERCHANT_KEY, 
+          draft_order_id: waDraftOrderId,
+          shipping_address: addr
+        })
+      });
+      const data = await res.json();
+      
+      document.getElementById('wa-step-3').style.display = 'none';
+      document.getElementById('wa-success-screen').style.display = 'block';
+      
+    } catch (e) {
+      alert("Failed to create native Shopify order");
+      btn.disabled = false; btn.innerText = 'Place Order (Cash on Delivery)';
+    }
+  }
+
+  function waRedirectToShopify(e) {
+    e.preventDefault();
+    window.location = '/checkout';
+  }
+
+  window.triggerFullCheckout = function(button) {
+    openWaModal();
+  };
+</script>

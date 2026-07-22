@@ -126,18 +126,27 @@
             {%- else -%}
               <div class="cart__ctas" {{ block.shopify_attributes }}>
                 <button
-                  type="submit"
+                  type="button"
                   id="checkout"
                   class="cart__checkout-button button"
                   name="checkout"
                   {% if cart == empty %}
                     disabled
                   {% endif %}
-                  form="cart"
+                  onclick="handleCheckoutClick(this)"
                 >
                   {{ 'sections.cart.checkout' | t }}
                 </button>
               </div>
+              <script>
+                function handleCheckoutClick(btn) {
+                  if (typeof window.triggerFullCheckout === 'function') {
+                    window.triggerFullCheckout(btn);
+                  } else {
+                    btn.closest('form').submit();
+                  }
+                }
+              </script>
 
               {%- if additional_checkout_buttons -%}
                 <div class="cart__dynamic-checkout-buttons additional-checkout-buttons">
