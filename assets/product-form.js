@@ -44,7 +44,7 @@ if (!customElements.get('product-form')) {
         }
         config.body = formData;
 
-        fetch(window.Shopify.routes.root + 'cart/add.js', config)
+        fetch(`${routes.cart_add_url}`, config)
           .then((response) => response.json())
           .then((response) => {
             if (response.status) {
