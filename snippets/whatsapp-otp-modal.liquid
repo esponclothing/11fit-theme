@@ -386,12 +386,22 @@
     openWaModal();
   };
 
-  // Bulletproof global interceptor
   document.addEventListener('click', function(e) {
     if (!e.target || !e.target.closest) return;
     
-    // Check if what was clicked was a checkout button (or inside one)
-    const target = e.target.closest('button[name="checkout"], a[href^="/checkout"], input[name="checkout"], #checkout, .checkout-btn, .cart__checkout-button');
+    // 1. Check if what was clicked was a standard checkout button
+    let target = e.target.closest('button[name="checkout"], a[href^="/checkout"], input[name="checkout"], #checkout, .checkout-btn, .cart__checkout-button');
+    
+    // 2. Fallback: If an app injected a custom button, match by text
+    if (!target) {
+      const btn = e.target.closest('button, a, div[role="button"]');
+      if (btn && btn.innerText) {
+        const text = btn.innerText.toLowerCase().replace(/\s/g, '');
+        if (text.includes('checkout') || text.includes('placeorder')) {
+          target = btn;
+        }
+      }
+    }
     
     if (target) {
       e.preventDefault();
