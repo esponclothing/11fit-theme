@@ -55,7 +55,7 @@
     <div class="wa-otp-close" onclick="closeWaModal()">&times;</div>
     
     <div class="wa-header">
-      <img src="{{ '11FIT-LOGO-02.png' | asset_url }}" alt="11fit" onerror="this.style.display='none'">
+      <h2 style="margin:0; font-size: 24px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px;">11FIT</h2>
       <div style="font-size: 13px; color: #64748b; font-weight: 500;">Secure Checkout</div>
     </div>
     
@@ -386,9 +386,13 @@
     openWaModal();
   };
 
-  // Aggressively intercept all checkout clicks!
+  // Bulletproof global interceptor
   document.addEventListener('click', function(e) {
-    const target = e.target.closest('button[name="checkout"], a[href="/checkout"], form[action="/cart"] button[type="submit"], #checkout, .checkout-btn');
+    if (!e.target || !e.target.closest) return;
+    
+    // Check if what was clicked was a checkout button (or inside one)
+    const target = e.target.closest('button[name="checkout"], a[href^="/checkout"], input[name="checkout"], #checkout, .checkout-btn, .cart__checkout-button');
+    
     if (target) {
       e.preventDefault();
       e.stopPropagation();
