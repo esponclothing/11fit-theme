@@ -1,6 +1,4 @@
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
+{% style %}
   #wa-otp-overlay * { box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
 
   #wa-otp-overlay {
@@ -327,7 +325,10 @@
   }
 
   #wa-step-2, #wa-step-3, .wa-success-screen, #wa-new-address-form { display: none; }
-</style>
+{% endstyle %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <div id="wa-otp-overlay">
   <div class="wa-checkout-wrapper">
@@ -681,7 +682,9 @@
       waSetStep(2);
       setTimeout(() => document.querySelectorAll('.wa-otp-box')[0].focus(), 100);
     } catch (err) {
-      alert(err.message || 'Failed to send OTP. Please try again.');
+      const errMsg = err.message || 'Failed to send OTP. Please try again.';
+      console.error('OTP Error:', errMsg);
+      alert(errMsg);
     } finally {
       btn.disabled = false;
       btn.innerHTML = 'Continue <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
