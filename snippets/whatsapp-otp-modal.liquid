@@ -629,10 +629,11 @@ window._shopifyCustomer = {
 
   let waPhone = null;
   let waSignature = null;
-  let waAddresses = [];
+  let waEditingAddressId = null;
   let waSelectedAddress = null;
   let waDraftOrderId = null;
   let waEmail = '';
+  let waAppliedDiscountCode = null;
   let waShopifyAddressesLoaded = false;
   let waMapSearchTimer = null;
 
@@ -1250,20 +1251,62 @@ window._shopifyCustomer = {
         })
       });
       const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to calculate');
+
       waDraftOrderId = data.draft_order_id;
-      document.getElementById('wa-subtotal').innerText = `₹${data.subtotal}`;
-      document.getElementById('wa-total').innerText = `₹${data.total_price}`;
+      waAppliedDiscountCode = discountCode;
+      
+      document.getElementById('wa-subtotal').innerText = `₹${parseFloat(data.subtotal).toFixed(2)}`;
+      document.getElementById('wa-total').innerText = `₹${parseFloat(data.total_price).toFixed(2)}`;
+
+      const summaryContainer = document.querySelector('.wa-order-summary');
+      
+      // Rebuild summary to include discount row if present
+      let discountHtml = '';
+      if (data.discount_amount && parseFloat(data.discount_amount) > 0) {
+        let discountTitle = data.discount_title || 'Discount';
+        discountHtml = `
+          <div class="wa-summary-row" style="color:#16a34a; align-items:center;">
+            <span>${discountTitle} ${discountCode ? `<button onclick="waRemoveCoupon()" style="background:none;border:none;color:#ef4444;font-size:11px;font-weight:600;margin-left:6px;cursor:pointer;">✕ Remove</button>` : ''}</span>
+            <span>-₹${parseFloat(data.discount_amount).toFixed(2)}</span>
+          </div>
+        `;
+      }
+      
+      summaryContainer.innerHTML = `
+        <div class="wa-summary-title">Order Summary</div>
+        <div class="wa-summary-row">
+          <span>Subtotal (MRP)</span>
+          <span id="wa-subtotal" style="font-weight:600; color:#0f172a;">₹${(parseFloat(data.subtotal) + (data.discount_amount ? parseFloat(data.discount_amount) : 0)).toFixed(2)}</span>
+        </div>
+        ${discountHtml}
+        <div class="wa-summary-row">
+          <span>Shipping</span>
+          <span class="wa-free-label">FREE</span>
+        </div>
+        <div class="wa-summary-row total">
+          <span>Total</span>
+          <span id="wa-total">₹${parseFloat(data.total_price).toFixed(2)}</span>
+        </div>
+      `;
+
     } catch (e) {
-      // Fallback: read from cart
-      try {
-        const cartRes = await fetch('/cart.js');
-        const cart = await cartRes.json();
-        const total = (cart.total_price / 100).toFixed(0);
-        document.getElementById('wa-subtotal').innerText = `₹${total}`;
-        document.getElementById('wa-total').innerText = `₹${total}`;
-      } catch(e2) {
-        document.getElementById('wa-subtotal').innerText = 'See cart';
-        document.getElementById('wa-total').innerText = 'See cart';
+      if (discountCode && String(e.message) === 'invalid_discount') {
+        alert('The discount code entered is invalid or expired.');
+        waAppliedDiscountCode = null;
+        calculateCheckoutTotals(); // Recalculate without code
+      } else {
+        // Fallback: read from cart
+        try {
+          const cartRes = await fetch('/cart.js');
+          const cart = await cartRes.json();
+          const total = (cart.total_price / 100).toFixed(0);
+          document.getElementById('wa-subtotal').innerText = `₹${total}`;
+          document.getElementById('wa-total').innerText = `₹${total}`;
+        } catch(e2) {
+          document.getElementById('wa-subtotal').innerText = 'See cart';
+          document.getElementById('wa-total').innerText = 'See cart';
+        }
       }
     }
   }
@@ -1272,12 +1315,28 @@ window._shopifyCustomer = {
     const code = document.getElementById('wa-coupon-code').value.trim();
     if (!code) return;
     const btn = document.querySelector('.wa-coupon-apply');
+    const originalText = btn.innerText;
     btn.innerText = '...';
     await calculateCheckoutTotals(code);
-    btn.innerText = 'Applied ✓';
-    btn.style.backgroundColor = '#16a34a';
-    btn.style.color = '#fff';
-    btn.style.borderColor = '#16a34a';
+    if (waAppliedDiscountCode === code) {
+      btn.innerText = 'Applied ✓';
+      btn.style.backgroundColor = '#16a34a';
+      btn.style.color = '#fff';
+      btn.style.borderColor = '#16a34a';
+    } else {
+      btn.innerText = originalText;
+    }
+  }
+
+  async function waRemoveCoupon() {
+    waAppliedDiscountCode = null;
+    document.getElementById('wa-coupon-code').value = '';
+    const btn = document.querySelector('.wa-coupon-apply');
+    btn.innerText = 'Apply';
+    btn.style.backgroundColor = '#f1f5f9';
+    btn.style.color = '#0f172a';
+    btn.style.borderColor = '#e2e8f0';
+    await calculateCheckoutTotals();
   }
 
   async function placeCodOrder() {
