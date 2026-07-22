@@ -157,8 +157,13 @@
   }
 
   async function openWaModal() {
-    document.getElementById('wa-otp-overlay').classList.add('active');
-    document.getElementById('wa-otp-overlay').style.display = 'flex'; // Hardcode just in case
+    // Always move modal to document.body to escape any CSS clipping/overflow
+    const overlay = document.getElementById('wa-otp-overlay');
+    if (!overlay) return;
+    if (overlay.parentNode !== document.body) {
+      document.body.appendChild(overlay);
+    }
+    overlay.style.cssText = 'position:fixed!important;top:0!important;left:0!important;width:100vw!important;height:100vh!important;z-index:2147483647!important;display:flex!important;justify-content:center!important;align-items:flex-start!important;overflow-y:auto!important;padding:20px 0!important;background:#f8fafc!important;';
     
     // Check Identity
     try {
@@ -389,9 +394,11 @@
   }
 
   window.triggerFullCheckout = function(button) {
-    if (button && button.preventDefault) button.preventDefault();
     openWaModal();
   };
+
+  // Expose openWaModal globally so inline onclick can reach it
+  window.openWaModal = openWaModal;
 
   // Block native form submissions when modal is opening
   document.addEventListener('submit', function(e) {
