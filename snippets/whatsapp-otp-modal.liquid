@@ -1247,7 +1247,8 @@ window._shopifyCustomer = {
           merchant_key: MERCHANT_KEY, 
           items, 
           discount_code: discountCode,
-          cart_discount: cart.total_discount || 0
+          cart_discount: cart.total_discount || 0,
+          cart_subtotal: cart.original_total_price || 0
         })
       });
       const data = await res.json();
