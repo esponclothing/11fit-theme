@@ -829,7 +829,7 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                 </p>
 
                 <div class="lx-checkout-wrap lx-desktop">
-                  <button type="submit" id="checkout" class="lx-checkout-btn cart__checkout-button button" name="checkout" form="cart">
+                  <button type="button" id="checkout" class="lx-checkout-btn cart__checkout-button button" name="checkout" form="cart" onclick="window.triggerFullCheckout ? window.triggerFullCheckout(this) : null; return false;">
                     <i class="ti ti-lock" style="font-size:16px;"></i>
                     {{ 'sections.cart.checkout' | t }}
                     <i class="ti ti-arrow-right" style="font-size:16px;"></i>
@@ -928,7 +928,7 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                 <span class="lx-mob-savings">Saving {{ total_cart_savings | money }}</span>
               {%- endif -%}
             </div>
-            <button type="submit" class="lx-checkout-btn cart__checkout-button button" name="checkout" form="cart">
+            <button type="button" class="lx-checkout-btn cart__checkout-button button" name="checkout" form="cart" onclick="window.triggerFullCheckout ? window.triggerFullCheckout(this) : null; return false;">
               Checkout <i class="ti ti-arrow-right"></i>
             </button>
           </div>
