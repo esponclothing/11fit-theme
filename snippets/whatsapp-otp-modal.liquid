@@ -1333,8 +1333,9 @@ window._shopifyCustomer = {
           discount_code: discountCode,
           cart_discount: cart.total_discount || 0,
           cart_subtotal: cart.original_total_price || 0,
-          phone: waEmail || null, // Assuming waEmail holds the phone when they enter it? Wait, let's check.
-          device_id: localStorage.getItem('wa_device_id') || null
+          phone: waPhone || null,
+          device_id: localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id') || null,
+          raw_cart: cart
         })
       });
       const data = await res.json();
