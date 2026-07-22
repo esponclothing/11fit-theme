@@ -1077,10 +1077,10 @@
   // WA CART TRACKING PREP
   const WA_API_BASE = 'https://checkout-app-one-lilac.vercel.app/api';
   const MERCHANT_KEY = 'sk_live_11fit_106b31bb8dd7a7';
-  let waDeviceId = localStorage.getItem('wa_device_id');
+  let waDeviceId = localStorage.getItem('fit11_device_id');
   if (!waDeviceId) {
     waDeviceId = 'dev_' + Math.random().toString(36).substr(2, 9) + Date.now();
-    localStorage.setItem('wa_device_id', waDeviceId);
+    localStorage.setItem('fit11_device_id', waDeviceId);
   }
   fetch(`${WA_API_BASE}/identify`, {
     method: 'POST',

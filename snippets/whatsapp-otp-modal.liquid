@@ -1624,6 +1624,12 @@ window._shopifyCustomer = {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       
+      // Clear Shopify Cart
+      try {
+        await fetch('/cart/clear.js', { method: 'POST' });
+        if (window.lxRefreshCartUI) window.lxRefreshCartUI();
+      } catch(e) {}
+
       document.getElementById('wa-step-4').style.display = 'none';
       document.getElementById('wa-steps-indicator').style.display = 'none';
       const sc = document.getElementById('wa-success-screen');
