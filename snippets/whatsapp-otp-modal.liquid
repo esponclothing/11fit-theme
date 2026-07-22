@@ -402,7 +402,7 @@ window._shopifyCustomer = {
     <!-- LEFT PANEL (desktop) -->
     <div class="wa-left-panel">
       <div>
-        <div class="wa-brand-name">11FIT</div>
+        <div class="wa-brand-name" style="text-transform: uppercase;">{{ shop.domain | remove: '.myshopify.com' }}</div>
         <div class="wa-brand-tagline">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           100% Secure Checkout
@@ -438,7 +438,7 @@ window._shopifyCustomer = {
           </div>
         </div>
       </div>
-      <div class="wa-left-footer">© 2025 11FIT. All rights reserved.</div>
+      <div class="wa-left-footer">&copy; {{ 'now' | date: "%Y" }} {{ shop.domain | remove: '.myshopify.com' }}. All rights reserved.</div>
     </div>
 
     <!-- RIGHT PANEL -->
@@ -447,7 +447,7 @@ window._shopifyCustomer = {
       <!-- HEADER -->
       <div class="wa-modal-header">
         <div class="wa-mobile-brand">
-          <div class="wa-mobile-logo-text">11FIT</div>
+          <div class="wa-mobile-logo-text" style="text-transform: uppercase;">{{ shop.domain | remove: '.myshopify.com' }}</div>
           <div class="wa-secure-badge">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:#16a34a"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             Secure
@@ -645,6 +645,7 @@ window._shopifyCustomer = {
           <h2 class="wa-section-title">Payment Method</h2>
           <p class="wa-section-desc">Choose how you'd like to pay for your order.</p>
 
+          <div id="wa-payment-error" style="color: #ef4444; font-size: 13px; font-weight: 500; margin-bottom: 12px; display: none;"></div>
           <div id="wa-payment-methods-container">
             <!-- Rendered dynamically -->
           </div>
@@ -1344,6 +1345,7 @@ window._shopifyCustomer = {
       
       document.getElementById('wa-subtotal').innerText = `₹${parseFloat(data.subtotal).toFixed(2)}`;
       document.getElementById('wa-total').innerText = `₹${parseFloat(data.total_price).toFixed(2)}`;
+      document.getElementById('wa-total').setAttribute('data-base-total', parseFloat(data.total_price).toFixed(2));
 
       const summaryContainer = document.querySelector('.wa-order-summary');
       
@@ -1372,11 +1374,14 @@ window._shopifyCustomer = {
         </div>
         <div class="wa-summary-row total">
           <span>Total</span>
-          <span id="wa-total">₹${parseFloat(data.total_price).toFixed(2)}</span>
+          <span id="wa-total" data-base-total="${parseFloat(data.total_price).toFixed(2)}">₹${parseFloat(data.total_price).toFixed(2)}</span>
         </div>
       `;
       
       waPaymentSettings = data.payment_settings || {};
+      if (document.getElementById('wa-step-4').style.display === 'block') {
+          renderPaymentMethods();
+      }
 
     } catch (e) {
       if (discountCode && String(e.message) === 'invalid_discount') {
@@ -1391,6 +1396,7 @@ window._shopifyCustomer = {
           const total = (cart.total_price / 100).toFixed(0);
           document.getElementById('wa-subtotal').innerText = `₹${total}`;
           document.getElementById('wa-total').innerText = `₹${total}`;
+          document.getElementById('wa-total').setAttribute('data-base-total', total);
         } catch(e2) {
           document.getElementById('wa-subtotal').innerText = 'See cart';
           document.getElementById('wa-total').innerText = 'See cart';
@@ -1454,79 +1460,94 @@ window._shopifyCustomer = {
   let cashfreeObj = null;
 
   function renderPaymentMethods() {
-    const container = document.getElementById('wa-payment-methods-container');
-    container.innerHTML = '';
-    
-    let methods = [];
-    
-    // If no settings exist, default to COD only
-    if (!waPaymentSettings || Object.keys(waPaymentSettings).length === 0) {
-      methods.push({ id: 'cod', title: 'Cash on Delivery', desc: 'Pay when your order arrives.' });
-    } else {
-      if (waPaymentSettings.prepaid_enabled) {
-        let offerStr = '';
-        if (waPaymentSettings.prepaid_offer_enabled) {
-           offerStr = waPaymentSettings.prepaid_offer_type === 'percent' 
-             ? ` <span style="color:#16a34a; font-weight:bold; font-size:12px; background:#f0fdf4; padding:2px 6px; border-radius:4px; margin-left:6px;">Extra ${waPaymentSettings.prepaid_offer_value}% OFF</span>`
-             : ` <span style="color:#16a34a; font-weight:bold; font-size:12px; background:#f0fdf4; padding:2px 6px; border-radius:4px; margin-left:6px;">Extra ₹${waPaymentSettings.prepaid_offer_value} OFF</span>`;
-        }
-        methods.push({ id: 'prepaid', title: `Pay Online (UPI, Cards)${offerStr}`, desc: 'Secure online payment.' });
-      }
-      if (waPaymentSettings.partial_cod_enabled) {
-        let valStr = waPaymentSettings.partial_cod_type === 'percent' ? `${waPaymentSettings.partial_cod_value}%` : `₹${waPaymentSettings.partial_cod_value}`;
-        methods.push({ id: 'partial_cod', title: 'Partial COD', desc: `Pay ${valStr} now, rest on delivery.` });
-      }
-      if (waPaymentSettings.cod_enabled) {
-        let feeStr = waPaymentSettings.cod_fee > 0 ? ` (Extra ₹${waPaymentSettings.cod_fee} fee)` : '';
-        methods.push({ id: 'cod', title: `Cash on Delivery${feeStr}`, desc: 'Pay when your order arrives.' });
-      }
-    }
-    
-    if (methods.length === 0) {
-      container.innerHTML = '<p style="color:#ef4444;">No payment methods available.</p>';
-      return;
-    }
-    
-    if (!waSelectedPayment) waSelectedPayment = methods[0].id; // default to first
-
-    methods.forEach(m => {
-      const opt = document.createElement('div');
-      opt.className = `wa-payment-option ${waSelectedPayment === m.id ? 'selected' : ''}`;
-      opt.onclick = () => {
-        waSelectedPayment = m.id;
-        renderPaymentMethods(); // Re-render to update UI classes and Total
-      };
+      const container = document.getElementById('wa-payment-methods-container');
+      container.innerHTML = '';
       
-      opt.innerHTML = `
-        <div class="wa-payment-radio"></div>
-        <div>
-          <div style="font-weight:700; color:#0f172a; font-size:15px; display:flex; align-items:center;">${m.title}</div>
-          <div style="font-size:12px; color:#64748b; margin-top:2px;">${m.desc}</div>
-        </div>
-      `;
-      container.appendChild(opt);
-    });
-    
-    document.getElementById('wa-pay-btn-text').innerText = waSelectedPayment === 'cod' ? 'Place Order' : 'Pay Now';
-    
-    // Visually update the Total based on selected payment method
-    updateVisualTotalForPaymentMethod();
-
-    // Initialize Cashfree
-    if (waPaymentSettings && waPaymentSettings.cashfree_env && !cashfreeObj) {
-      try {
-        cashfreeObj = Cashfree({ mode: waPaymentSettings.cashfree_env });
-      } catch(e) { console.error('Cashfree init error', e); }
+      let baseTotalText = document.getElementById('wa-total').getAttribute('data-base-total');
+      if (!baseTotalText) {
+        baseTotalText = document.getElementById('wa-total').innerText.replace('₹', '');
+        if (baseTotalText && baseTotalText !== '...') {
+          document.getElementById('wa-total').setAttribute('data-base-total', baseTotalText);
+        }
+      }
+      let baseTotal = parseFloat(baseTotalText) || 0;
+      
+      let methods = [];
+      
+      // If no settings exist, default to COD only
+      if (!waPaymentSettings || Object.keys(waPaymentSettings).length === 0) {
+        methods.push({ id: 'cod', title: 'Cash on Delivery', desc: 'Pay when your order arrives.', payAmount: baseTotal });
+      } else {
+        if (waPaymentSettings.prepaid_enabled) {
+          let offerStr = '';
+          let payAmt = baseTotal;
+          if (waPaymentSettings.prepaid_offer_enabled) {
+             let disc = waPaymentSettings.prepaid_offer_type === 'percent' ? (baseTotal * waPaymentSettings.prepaid_offer_value) / 100 : waPaymentSettings.prepaid_offer_value;
+             payAmt = baseTotal - Math.min(disc, baseTotal);
+             offerStr = waPaymentSettings.prepaid_offer_type === 'percent' 
+               ? ` <span style="color:#16a34a; font-weight:bold; font-size:12px; background:#f0fdf4; padding:2px 6px; border-radius:4px; margin-left:6px;">Extra ${waPaymentSettings.prepaid_offer_value}% OFF</span>`
+               : ` <span style="color:#16a34a; font-weight:bold; font-size:12px; background:#f0fdf4; padding:2px 6px; border-radius:4px; margin-left:6px;">Extra ₹${waPaymentSettings.prepaid_offer_value} OFF</span>`;
+          }
+          methods.push({ id: 'prepaid', title: `Pay Online (UPI, Cards)${offerStr}`, desc: 'Secure online payment.', payAmount: payAmt });
+        }
+        if (waPaymentSettings.partial_cod_enabled) {
+          let valStr = waPaymentSettings.partial_cod_type === 'percent' ? `${waPaymentSettings.partial_cod_value}%` : `₹${waPaymentSettings.partial_cod_value}`;
+          let payAmt = waPaymentSettings.partial_cod_type === 'percent' ? (baseTotal * waPaymentSettings.partial_cod_value) / 100 : waPaymentSettings.partial_cod_value;
+          methods.push({ id: 'partial_cod', title: 'Partial COD', desc: `Pay ${valStr} now, rest on delivery.`, payAmount: payAmt });
+        }
+        if (waPaymentSettings.cod_enabled) {
+          let feeStr = waPaymentSettings.cod_fee > 0 ? ` (Extra ₹${waPaymentSettings.cod_fee} fee)` : '';
+          methods.push({ id: 'cod', title: `Cash on Delivery${feeStr}`, desc: 'Pay when your order arrives.', payAmount: baseTotal + (waPaymentSettings.cod_fee || 0) });
+        }
+      }
+      
+      if (methods.length === 0) {
+        container.innerHTML = '<p style="color:#ef4444;">No payment methods available.</p>';
+        return;
+      }
+      
+      if (!waSelectedPayment) waSelectedPayment = methods[0].id; // default to first
+  
+      methods.forEach(m => {
+        const opt = document.createElement('div');
+        opt.className = `wa-payment-option ${waSelectedPayment === m.id ? 'selected' : ''}`;
+        opt.onclick = () => {
+          waSelectedPayment = m.id;
+          renderPaymentMethods(); // Re-render to update UI classes and Total
+        };
+        
+        opt.innerHTML = `
+          <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div class="wa-payment-radio"></div>
+              <div>
+                <div style="font-weight:700; color:#0f172a; font-size:15px; display:flex; align-items:center;">${m.title}</div>
+                <div style="font-size:12px; color:#64748b; margin-top:2px;">${m.desc}</div>
+              </div>
+            </div>
+            <div style="font-weight:700; color:#0f172a; font-size:16px;">
+              ₹${m.payAmount.toFixed(2)}
+            </div>
+          </div>
+        `;
+        container.appendChild(opt);
+      });
+      
+      updateVisualTotalForPaymentMethod();
+  
+      // Initialize Cashfree
+      if (waPaymentSettings && waPaymentSettings.cashfree_env && !cashfreeObj) {
+        try {
+          cashfreeObj = Cashfree({ mode: waPaymentSettings.cashfree_env });
+        } catch(e) { console.error('Cashfree init error', e); }
+      }
     }
-  }
 
   function updateVisualTotalForPaymentMethod() {
     let subtotalEl = document.getElementById('wa-subtotal');
     if (!subtotalEl || !waPaymentSettings) return;
     
     // Get the base total from the DOM (before payment fees are applied)
-    // Actually, wa-total is updated in calculateCheckoutTotals. We can read that base value or re-calculate it.
-    // Let's use the subtotal minus cart discounts to get the base total.
     let baseTotalText = document.getElementById('wa-total').getAttribute('data-base-total');
     if (!baseTotalText) {
       baseTotalText = document.getElementById('wa-total').innerText.replace('₹', '');
@@ -1552,59 +1573,65 @@ window._shopifyCustomer = {
   }
 
   async function waPayNow() {
-    const btn = document.getElementById('wa-cod-btn');
-    btn.disabled = true;
-    btn.innerHTML = '⏳ Processing...';
-    
-    const addr = waAddresses.find(a => a.id === waSelectedAddress);
-    
-    if (waSelectedPayment === 'cod') {
-      // Direct complete
-      await finishOrderBackend({ payment_method: 'cod', shipping_address: addr });
-    } else {
-      // Cashfree flow
-      try {
-        const res = await fetch(`${WA_API_BASE}/checkout/create-payment`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            merchant_key: MERCHANT_KEY, 
-            draft_order_id: waDraftOrderId,
-            payment_method: waSelectedPayment,
-            customer_phone: waPhone,
-            customer_email: waEmail,
-            customer_name: addr.first_name + ' ' + (addr.last_name || '')
-          })
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error);
-        
-        // Open Cashfree Modal
-        let checkoutOptions = {
-          paymentSessionId: data.payment_session_id,
-          redirectTarget: "_modal"
-        };
-        
-        cashfreeObj.checkout(checkoutOptions).then(async (result) => {
-          if (result.error) {
-            alert('Payment failed or cancelled.');
-            btn.disabled = false;
-            btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
-          } else {
-            // Success
-            if (result.paymentDetails && result.paymentDetails.paymentMessage) {
-              await finishOrderBackend({ payment_method: waSelectedPayment, shipping_address: addr, cashfree_order_id: data.order_id });
-            }
-          }
-        });
+      const btn = document.getElementById('wa-cod-btn');
+      const errEl = document.getElementById('wa-payment-error');
+      btn.disabled = true;
+      btn.innerHTML = '⏳ Processing...';
+      errEl.style.display = 'none';
+      
+      const addr = waAddresses.find(a => a.id === waSelectedAddress);
+      
+      if (waSelectedPayment === 'cod') {
+        // Direct complete
+        await finishOrderBackend({ payment_method: 'cod', shipping_address: addr });
+      } else {
+        // Cashfree flow
+        try {
+          const res = await fetch(`${WA_API_BASE}/checkout/create-payment`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              merchant_key: MERCHANT_KEY, 
+              draft_order_id: waDraftOrderId,
+              payment_method: waSelectedPayment,
+              customer_phone: waPhone,
+              customer_email: waEmail,
+              customer_name: addr.first_name + ' ' + (addr.last_name || '')
+            })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error);
+          
+          if (!cashfreeObj) throw new Error('Payment gateway failed to load.');
 
-      } catch(e) {
-        alert('Failed to initialize payment: ' + e.message);
-        btn.disabled = false;
-        btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+          // Open Cashfree Modal
+          let checkoutOptions = {
+            paymentSessionId: data.payment_session_id,
+            redirectTarget: "_modal"
+          };
+          
+          cashfreeObj.checkout(checkoutOptions).then(async (result) => {
+            if (result.error) {
+              errEl.innerText = result.error.message || 'Payment failed or cancelled by user.';
+              errEl.style.display = 'block';
+              btn.disabled = false;
+              btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+            } else {
+              // Success
+              if (result.paymentDetails && result.paymentDetails.paymentMessage) {
+                await finishOrderBackend({ payment_method: waSelectedPayment, shipping_address: addr, cashfree_order_id: data.order_id });
+              }
+            }
+          });
+  
+        } catch(e) {
+          errEl.innerText = 'Error: ' + e.message;
+          errEl.style.display = 'block';
+          btn.disabled = false;
+          btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+        }
       }
     }
-  }
 
   async function finishOrderBackend(payload) {
     try {
