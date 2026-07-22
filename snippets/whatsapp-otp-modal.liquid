@@ -1597,7 +1597,7 @@ window._shopifyCustomer = {
               payment_method: waSelectedPayment,
               customer_phone: waPhone,
               customer_email: waEmail,
-              customer_name: addr.first_name + ' ' + (addr.last_name || '')
+              customer_name: (addr?.first_name || '') + ' ' + (addr?.last_name || '')
             })
           });
           const data = await res.json();
@@ -1611,7 +1611,16 @@ window._shopifyCustomer = {
             redirectTarget: "_modal"
           };
           
+          // CRITICAL FIX: Hide our custom modal overlay so the Cashfree modal is visible!
+          // Cashfree's injected iframe modal might have a lower z-index than our 9999999 overlay.
+          const overlay = document.getElementById('wa-modal-overlay');
+          const originalDisplay = overlay.style.display;
+          overlay.style.display = 'none';
+          
           cashfreeObj.checkout(checkoutOptions).then(async (result) => {
+            // Bring our modal back
+            overlay.style.display = originalDisplay;
+            
             if (result.error) {
               errEl.innerText = result.error.message || 'Payment failed or cancelled by user.';
               errEl.style.display = 'block';
@@ -1626,6 +1635,10 @@ window._shopifyCustomer = {
           });
   
         } catch(e) {
+          // If we hid the overlay, make sure it's back
+          const overlay = document.getElementById('wa-modal-overlay');
+          if (overlay && overlay.style.display === 'none') overlay.style.display = 'flex';
+          
           errEl.innerText = 'Error: ' + e.message;
           errEl.style.display = 'block';
           btn.disabled = false;
