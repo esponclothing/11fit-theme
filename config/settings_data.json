@@ -11,6 +11,7 @@
   "current": {
     "logo": "shopify://shop_images/ChatGPT_Image_May_29__2026__11_26_22_AM-removebg-preview.png",
     "logo_width": 50,
+    "favicon": "shopify://shop_images/11FIT_LOGO.png",
     "type_header_font": "work_sans_n4",
     "heading_scale": 100,
     "type_body_font": "work_sans_n4",
@@ -170,16 +171,6 @@
     },
     "content_for_index": [],
     "blocks": {
-      "8232719769135528861": {
-        "type": "shopify://apps/qikify-volume-discount/blocks/app-embed/f0592105-7af5-4bc5-afd2-d674b4b2de92",
-        "disabled": false,
-        "settings": {}
-      },
-      "5372619419243459078": {
-        "type": "shopify://apps/avada-seo-suite/blocks/avada-seo/15507c6e-1aa3-45d3-b698-7e175e033440",
-        "disabled": false,
-        "settings": {}
-      },
       "9805538440657070816": {
         "type": "shopify://apps/avada-order-tracking/blocks/app-embed/019a28a2-c3f8-77df-87cc-235ec40f9a58",
         "disabled": false,
@@ -201,16 +192,6 @@
         "type": "shopify://apps/microsoft-clarity/blocks/brandAgents_js/31c3d126-8116-4b4a-8ba1-baeda7c4aeea",
         "disabled": false,
         "settings": {}
-      },
-      "1626193551103621034": {
-        "type": "shopify://apps/cod-king/blocks/app-embed/99553eb5-bf07-4ce0-9263-7e5f10cab22c",
-        "disabled": false,
-        "settings": {}
-      },
-      "4677960180053092021": {
-        "type": "shopify://apps/shipmozo-edd/blocks/edd/01998493-e151-79a2-a79f-15a2e22e60bb",
-        "disabled": false,
-        "settings": {}
       }
     },
     "color_schemes": {
@@ -220,9 +201,9 @@
           "background_gradient": "",
           "text": "#c5a059",
           "button": "#c5a059",
-          "button_label": "#FFFFFF",
-          "secondary_button_label": "#FFFFFF",
-          "shadow": "#FFFFFF"
+          "button_label": "#ffffff",
+          "secondary_button_label": "#ffffff",
+          "shadow": "#ffffff"
         }
       },
       "scheme-2": {
