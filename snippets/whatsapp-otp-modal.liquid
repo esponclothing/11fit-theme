@@ -1613,7 +1613,7 @@ window._shopifyCustomer = {
           
           // CRITICAL FIX: Hide our custom modal overlay so the Cashfree modal is visible!
           // Cashfree's injected iframe modal might have a lower z-index than our 9999999 overlay.
-          const overlay = document.getElementById('wa-modal-overlay');
+          const overlay = document.getElementById('wa-otp-overlay');
           const originalDisplay = overlay.style.display;
           overlay.style.display = 'none';
           
@@ -1636,7 +1636,7 @@ window._shopifyCustomer = {
   
         } catch(e) {
           // If we hid the overlay, make sure it's back
-          const overlay = document.getElementById('wa-modal-overlay');
+          const overlay = document.getElementById('wa-otp-overlay');
           if (overlay && overlay.style.display === 'none') overlay.style.display = 'flex';
           
           errEl.innerText = 'Error: ' + e.message;
