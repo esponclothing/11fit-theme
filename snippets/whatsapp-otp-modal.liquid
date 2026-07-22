@@ -688,6 +688,7 @@ window._shopifyCustomer = {
   let waSelectedAddress = null;
   let waAddresses = [];
   let waDraftOrderId = null;
+  let waInvoiceUrl = null;
   let waEmail = '';
   let waAppliedDiscountCode = null;
   let waShopifyAddressesLoaded = false;
@@ -1342,6 +1343,7 @@ window._shopifyCustomer = {
       if (!res.ok) throw new Error(data.error || 'Failed to calculate');
 
       waDraftOrderId = data.draft_order_id;
+      waInvoiceUrl = data.invoice_url;
       waAppliedDiscountCode = discountCode;
       
       document.getElementById('wa-subtotal').innerText = `₹${parseFloat(data.subtotal).toFixed(2)}`;
@@ -1585,8 +1587,11 @@ window._shopifyCustomer = {
       if (waSelectedPayment === 'cod') {
         // Direct complete
         await finishOrderBackend({ payment_method: 'cod', shipping_address: addr });
+      } else if (waSelectedPayment === 'prepaid' && waPaymentSettings.use_shopify_checkout_prepaid && waInvoiceUrl) {
+        // Redirect to Native Shopify Checkout
+        window.location.href = waInvoiceUrl;
       } else {
-        // Cashfree flow
+        // Cashfree flow (Partial COD or standard Prepaid)
         try {
           const res = await fetch(`${WA_API_BASE}/checkout/create-payment`, {
             method: 'POST',
