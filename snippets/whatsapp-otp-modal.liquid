@@ -1587,63 +1587,27 @@ window._shopifyCustomer = {
       if (waSelectedPayment === 'cod') {
         // Direct complete
         await finishOrderBackend({ payment_method: 'cod', shipping_address: addr });
-      } else if (waSelectedPayment === 'prepaid' && waPaymentSettings.use_shopify_checkout_prepaid && waInvoiceUrl) {
-        // Redirect to Native Shopify Checkout
-        window.location.href = waInvoiceUrl;
       } else {
-        // Cashfree flow (Partial COD or standard Prepaid)
+        // Shopify Native Checkout flow for Prepaid and Partial COD
         try {
-          const res = await fetch(`${WA_API_BASE}/checkout/create-payment`, {
+          const res = await fetch(`${WA_API_BASE}/checkout/update-draft`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
               merchant_key: MERCHANT_KEY, 
               draft_order_id: waDraftOrderId,
-              payment_method: waSelectedPayment,
-              customer_phone: waPhone,
-              customer_email: waEmail,
-              customer_name: (addr?.first_name || '') + ' ' + (addr?.last_name || '')
+              payment_method: waSelectedPayment
             })
           });
           const data = await res.json();
-          if (!res.ok) throw new Error(data.error);
+          if (!res.ok) throw new Error(data.error || 'Failed to update draft order');
           
-          if (!cashfreeObj) throw new Error('Payment gateway failed to load.');
-
-          // Open Cashfree Modal
-          let checkoutOptions = {
-            paymentSessionId: data.payment_session_id,
-            redirectTarget: "_modal"
-          };
-          
-          // CRITICAL FIX: Hide our custom modal overlay so the Cashfree modal is visible!
-          // Cashfree's injected iframe modal might have a lower z-index than our 9999999 overlay.
-          const overlay = document.getElementById('wa-otp-overlay');
-          const originalDisplay = overlay.style.display;
-          overlay.style.display = 'none';
-          
-          cashfreeObj.checkout(checkoutOptions).then(async (result) => {
-            // Bring our modal back
-            overlay.style.display = originalDisplay;
-            
-            if (result.error) {
-              errEl.innerText = result.error.message || 'Payment failed or cancelled by user.';
-              errEl.style.display = 'block';
-              btn.disabled = false;
-              btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
-            } else {
-              // Success
-              if (result.paymentDetails && result.paymentDetails.paymentMessage) {
-                await finishOrderBackend({ payment_method: waSelectedPayment, shipping_address: addr, cashfree_order_id: data.order_id });
-              }
-            }
-          });
-  
+          if (data.invoice_url) {
+             window.location.href = data.invoice_url;
+          } else {
+             throw new Error('No checkout URL returned from Shopify.');
+          }
         } catch(e) {
-          // If we hid the overlay, make sure it's back
-          const overlay = document.getElementById('wa-otp-overlay');
-          if (overlay && overlay.style.display === 'none') overlay.style.display = 'flex';
-          
           errEl.innerText = 'Error: ' + e.message;
           errEl.style.display = 'block';
           btn.disabled = false;
