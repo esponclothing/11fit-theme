@@ -569,7 +569,7 @@ window._shopifyCustomer = {
 
             <div id="wa-pin-error" style="display:none;font-size:12px;color:#dc2626;margin:-8px 0 12px;padding:8px 12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca;"></div>
 
-            <button type="button" class="wa-btn-primary" onclick="waSaveNewAddress()" style="margin-bottom:20px;">
+            <button type="button" id="wa-save-addr-btn" class="wa-btn-primary" onclick="waSaveNewAddress()" style="margin-bottom:20px;">
               Save Address
             </button>
           </div>
@@ -1049,7 +1049,7 @@ window._shopifyCustomer = {
   }
 
   function waEditAddress(id) {
-    const addr = waAddresses.find(a => a.id === id || a.id === parseInt(id));
+    const addr = waAddresses.find(a => String(a.id) === String(id));
     if (!addr) return;
     waEditingAddressId = id;
     document.getElementById('wa-add-addr-btn').style.display = 'none';
