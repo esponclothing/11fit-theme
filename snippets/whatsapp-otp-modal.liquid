@@ -859,9 +859,12 @@
   window.triggerFullCheckout = function() { openWaModal(); };
   window.openWaModal = openWaModal;
 
-  // Block form submissions while modal is open
+  // Block ONLY the cart form from submitting while modal is open (not forms inside modal)
   document.addEventListener('submit', function(e) {
-    if (document.getElementById('wa-otp-overlay') && document.getElementById('wa-otp-overlay').style.display !== 'none') {
+    // Skip if the form being submitted is inside the modal
+    if (e.target.closest && e.target.closest('#wa-otp-overlay')) return;
+    const ov = document.getElementById('wa-otp-overlay');
+    if (ov && ov.style.display !== 'none') {
       e.preventDefault(); e.stopPropagation();
     }
   }, true);
@@ -872,9 +875,11 @@
     _origSubmit.apply(this, arguments);
   };
 
-  // Global click interceptor for any checkout button
+  // Global click interceptor for the checkout button ONLY
   document.addEventListener('click', function(e) {
     if (!e.target || !e.target.closest) return;
+    // CRITICAL: Never intercept clicks inside the modal itself
+    if (e.target.closest('#wa-otp-overlay')) return;
     let target = e.target.closest('button[name="checkout"], a[href^="/checkout"], input[name="checkout"], #checkout, .cart__checkout-button');
     if (target) {
       e.preventDefault(); e.stopPropagation();
