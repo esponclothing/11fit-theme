@@ -389,6 +389,23 @@
     openWaModal();
   };
 
+  // Block native form submissions when modal is opening
+  document.addEventListener('submit', function(e) {
+    if (document.getElementById('wa-otp-overlay').classList.contains('active')) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+
+  // Block programmatic form.submit() calls by third-party apps
+  const originalSubmit = HTMLFormElement.prototype.submit;
+  HTMLFormElement.prototype.submit = function() {
+    if (document.getElementById('wa-otp-overlay').classList.contains('active')) {
+      return; // Block it!
+    }
+    originalSubmit.apply(this, arguments);
+  };
+
   document.addEventListener('click', function(e) {
     if (!e.target || !e.target.closest) return;
     
