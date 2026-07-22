@@ -141,6 +141,12 @@
     if (!localStorage.getItem('fit11_device_id')) {
       localStorage.setItem('fit11_device_id', 'dev_' + Math.random().toString(36).substr(2, 9));
     }
+    
+    // Ensure modal is always appended to the body to avoid CSS transform bounding box clipping
+    const overlay = document.getElementById('wa-otp-overlay');
+    if (overlay && overlay.parentNode !== document.body) {
+      document.body.appendChild(overlay);
+    }
   });
 
   function getShopifyCartItems() {
@@ -151,8 +157,6 @@
   }
 
   async function openWaModal() {
-    alert("Checkout button clicked! Opening modal...");
-    console.log("Adding active class to overlay");
     document.getElementById('wa-otp-overlay').classList.add('active');
     document.getElementById('wa-otp-overlay').style.display = 'flex'; // Hardcode just in case
     
