@@ -841,6 +841,9 @@ window._shopifyCustomer = {
         document.getElementById('wa-phone-container').style.display = 'none';
         document.getElementById('wa-switch-account').style.display = 'block';
         waPhone = 'MASKED';
+        if (data.email) {
+          document.getElementById('wa-email').value = data.email;
+        }
       }
     } catch (e) { /* Silent fail */ }
   }
