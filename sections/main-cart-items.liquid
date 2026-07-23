@@ -338,18 +338,29 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
     
     <script>
     (function() {
-      var url = window.Shopify.routes.root + 'products.json?limit=6';
-      fetch(url)
-        .then(function(r){ return r.json(); })
-        .then(function(data){
-          var container = document.getElementById('lx-empty-cs-products');
-          if (!container) return;
-          var products = data.products;
-          if (!products || products.length === 0) return;
-          
-          window._lxProducts = window._lxProducts || {};
-          var html = '';
-          products.forEach(function(p) {
+      var products = [
+        {%- assign empty_col = section.settings.empty_cart_collection | default: collections.all -%}
+        {%- assign count = 0 -%}
+        {%- for p in empty_col.products -%}
+          {%- if p.featured_image != blank -%}
+            {%- if count > 0 -%},{%- endif -%}
+            {{ p | json }}
+            {%- assign count = count | plus: 1 -%}
+            {%- if count >= 6 -%}{%- break -%}{%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      ];
+
+      var container = document.getElementById('lx-empty-cs-products');
+      if (!container) return;
+      if (!products || products.length === 0) {
+        document.querySelector('.lx-empty-cross-sell').style.display = 'none';
+        return;
+      }
+      
+      window._lxProducts = window._lxProducts || {};
+      var html = '';
+      products.forEach(function(p) {
             // Normalize products.json format to match recommendations API format for the modal
             if (!p.featured_image && p.images && p.images.length > 0) {
               p.featured_image = typeof p.images[0] === 'object' ? p.images[0].src : p.images[0];
@@ -402,10 +413,6 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
           if (products.length > 2) {
             container.style.justifyContent = 'flex-start';
           }
-        })
-        .catch(function(err){
-          console.error("Empty cart suggestions error:", err);
-        });
     })();
     </script>
   </div>
@@ -1126,6 +1133,16 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
       "unit": "px",
       "label": "Padding Bottom",
       "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Empty Cart"
+    },
+    {
+      "type": "collection",
+      "id": "empty_cart_collection",
+      "label": "Empty Cart Cross-sell Collection",
+      "info": "Products to show when the cart is empty. Defaults to all products."
     },
     {
       "type": "header",
