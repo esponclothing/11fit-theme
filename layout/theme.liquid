@@ -909,14 +909,14 @@
   };
 
   // Remove a single cart line item by its 1-based line index
-  window.lxRemoveCartItem = function(lineIndex, btn) {
+  window.lxRemoveCartItem = function(itemKey, btn) {
     btn.textContent = '...';
     btn.disabled = true;
     var item = btn.closest('.lx-cart-item');
     fetch(window.Shopify.routes.root + 'cart/change.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ line: lineIndex, quantity: 0 })
+      body: JSON.stringify({ id: itemKey, quantity: 0 })
     })
     .then(function(res) { return res.json(); })
     .then(function() {
@@ -930,7 +930,7 @@
 
   window.lxDirectChangeVariant = function(selectEl) {
     var picker = selectEl.closest('.lx-direct-picker');
-    var lineIndex = parseInt(picker.getAttribute('data-line-index'), 10);
+    var itemKey = picker.getAttribute('data-item-key');
     var qty = parseInt(picker.getAttribute('data-qty'), 10);
     var selects = picker.querySelectorAll('.lx-direct-option-select');
     
@@ -960,7 +960,7 @@
     fetch(window.Shopify.routes.root + 'cart/change.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ line: lineIndex, quantity: 0 })
+      body: JSON.stringify({ id: itemKey, quantity: 0 })
     }).then(function() {
       return fetch(window.Shopify.routes.root + 'cart/add.js', {
         method: 'POST',

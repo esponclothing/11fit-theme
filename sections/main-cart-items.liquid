@@ -456,7 +456,7 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
 
                   {%- assign line_index = item.index -%}
 
-                  <div class="lx-cart-item cart-item" id="CartItem-{{ line_index }}">
+                  <div class="lx-cart-item cart-item" id="CartItem-{{ item.key }}">
 
                     <div class="lx-item-img">
                       {%- if show_sale or show_new or show_best or show_limited -%}
@@ -480,7 +480,7 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                         <a href="{{ item.url }}" class="lx-item-title">{{ item.product.title | escape }}</a>
 
                         {%- if item.product.has_only_default_variant == false -%}
-                          <div class="lx-direct-picker" data-line-index="{{ line_index }}" data-qty="{{ item.quantity }}" data-product-id="{{ item.product.id }}" style="margin-top: 8px; font-family: inherit;">
+                          <div class="lx-direct-picker" data-item-key="{{ item.key }}" data-qty="{{ item.quantity }}" data-product-id="{{ item.product.id }}" style="margin-top: 8px; font-family: inherit;">
                             {%- for option in item.product.options_with_values -%}
                               {%- assign option_index = forloop.index0 -%}
                               {%- assign selected_value = item.variant.options[option_index] -%}
@@ -520,15 +520,15 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                                  value="{{ item.quantity }}"
                                  min="0"
                                  step="1"
-                                 data-index="{{ line_index }}"
+                                 data-index="{{ item.key }}"
                                  data-quantity-variant-id="{{ item.variant.id }}"
-                                 id="Quantity-{{ line_index }}">
+                                 id="Quantity-{{ item.key }}">
                           <button class="lx-qty-btn quantity__button" name="plus" type="button" aria-label="Increase quantity">
                             <i class="ti ti-plus" style="font-size:13px;"></i>
                           </button>
                         </quantity-input>
 
-                        <button type="button" class="lx-remove-btn" aria-label="Remove {{ item.product.title | escape }}" onclick="lxRemoveCartItem({{ line_index }}, this)">
+                        <button type="button" class="lx-remove-btn" aria-label="Remove {{ item.product.title | escape }}" onclick="lxRemoveCartItem('{{ item.key }}', this)">
                           <i class="ti ti-trash" style="font-size:14px;"></i> Remove
                         </button>
                       </div>
