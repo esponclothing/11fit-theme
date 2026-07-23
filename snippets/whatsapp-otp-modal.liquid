@@ -48,27 +48,59 @@
     border-radius: 50%;
     background: rgba(255,255,255,0.04);
   }
+  /* ── LEFT PANEL BRANDING ── */
+  .wa-brand-logo-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-bottom: 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 36px;
+  }
   .wa-brand-name {
-    font-size: 32px; font-weight: 800; color: #fff;
-    letter-spacing: -1px; margin-bottom: 6px;
+    font-size: 28px; font-weight: 800; color: #fff;
+    letter-spacing: -0.5px; margin-bottom: 8px;
+    text-align: center;
+  }
+  #wa-brand-name-left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 48px;
+    margin-bottom: 8px;
+  }
+  #wa-brand-name-left img {
+    max-height: 56px !important;
+    max-width: 180px !important;
+    object-fit: contain !important;
+    filter: brightness(0) invert(1);
   }
   .wa-brand-tagline {
-    font-size: 14px; color: rgba(255,255,255,0.5); font-weight: 400;
-    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; color: rgba(255,255,255,0.45); font-weight: 400;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    margin-top: 4px;
   }
-  .wa-brand-tagline svg { width: 14px; height: 14px; }
-  .wa-trust-badges { margin-top: 60px; display: flex; flex-direction: column; gap: 20px; }
+  .wa-brand-tagline svg { width: 12px; height: 12px; }
+  .wa-trust-badges { display: flex; flex-direction: column; gap: 16px; }
   .wa-trust-item {
     display: flex; align-items: center; gap: 14px;
-    color: rgba(255,255,255,0.8); font-size: 14px; font-weight: 500;
+    color: rgba(255,255,255,0.8); font-size: 13px; font-weight: 500;
   }
   .wa-trust-icon {
-    width: 42px; height: 42px; border-radius: 10px;
+    width: 40px; height: 40px; border-radius: 10px;
     background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.06);
     display: flex; align-items: center; justify-content: center;
-    font-size: 18px; flex-shrink: 0;
+    font-size: 17px; flex-shrink: 0;
   }
-  .wa-left-footer { font-size: 12px; color: rgba(255,255,255,0.3); }
+  .wa-left-footer {
+    font-size: 11px; color: rgba(255,255,255,0.25);
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 20px;
+    margin-top: 36px;
+  }
 
   /* ── RIGHT PANEL ── */
   .wa-right-panel {
@@ -83,18 +115,29 @@
   /* ── HEADER ── */
   .wa-modal-header {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 20px 28px;
+    padding: 18px 28px;
     border-bottom: 1px solid #f1f5f9;
     position: sticky; top: 0; background: var(--wa-card-bg, #fff); z-index: 10;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
   }
   .wa-mobile-brand { display: flex; align-items: center; gap: 10px; }
+  #wa-brand-name-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #wa-brand-name-mobile img {
+    max-height: 36px !important;
+    max-width: 120px !important;
+    object-fit: contain !important;
+  }
   .wa-mobile-logo-text {
-    font-size: 20px; font-weight: 800; color: var(--wa-theme, #0f172a); letter-spacing: -0.5px;
+    font-size: 18px; font-weight: 800; color: var(--wa-theme, #0f172a); letter-spacing: -0.5px;
   }
   .wa-secure-badge {
     display: flex; align-items: center; gap: 5px;
-    font-size: 11px; color: #64748b; font-weight: 500;
-    background: #f8fafc; border: 1px solid #e2e8f0;
+    font-size: 11px; color: #16a34a; font-weight: 600;
+    background: #f0fdf4; border: 1px solid #bbf7d0;
     padding: 4px 10px; border-radius: 20px;
   }
   .wa-secure-badge svg { width: 11px; height: 11px; color: #16a34a; }
@@ -205,8 +248,15 @@
   .wa-btn-secondary:hover { border-color: #cbd5e1; background: #f8fafc; }
 
   /* ── ADDRESS ── */
-  .wa-addr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .wa-addr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 4px; }
+  .wa-addr-grid .wa-field-group { margin-bottom: 0; }
   .wa-addr-grid .wa-field-group.full { grid-column: 1 / -1; }
+  
+  @keyframes wa-pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.4); }
+    70% { transform: scale(1.02); box-shadow: 0 0 0 4px rgba(22, 163, 74, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+  }
   .wa-address-card {
     border: 1.5px solid #e2e8f0; border-radius: 12px;
     padding: 16px; cursor: pointer;
@@ -567,24 +617,29 @@ window._shopifyCustomer = {
                 <input type="text" id="wa-addr-street" class="wa-input" placeholder="House No, Street, Locality">
               </div>
 
-              <!-- PIN CODE with auto-fill -->
-              <div class="wa-field-group">
+              <!-- PIN CODE & STATE row -->
+              <div class="wa-field-group" style="position:relative;">
                 <label class="wa-field-label">PIN Code</label>
                 <div style="position:relative;">
                   <input type="tel" id="wa-addr-zip" class="wa-input" placeholder="400001" maxlength="6"
                     oninput="this.value=this.value.replace(/\D/g,''); if(this.value.length===6) waLookupPincode(this.value)">
-                  <span id="wa-pin-spinner" style="display:none;position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;color:#64748b;">⟳ Loading...</span>
+                  <span id="wa-pin-spinner" style="display:none;position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;color:#64748b;">⟳</span>
                 </div>
-              </div>
-              <div class="wa-field-group" id="wa-pin-status-wrap" style="display:flex;align-items:flex-end;">
-                <span id="wa-pin-status" style="font-size:12px;"></span>
+                <span id="wa-pin-status" style="font-size:11px;position:absolute;bottom:-16px;left:4px;white-space:nowrap;"></span>
               </div>
 
-              <!-- City (auto-filled) -->
+              <!-- State (auto-filled) -->
+              <div class="wa-field-group" id="wa-state-field">
+                <label class="wa-field-label">State</label>
+                <input type="text" id="wa-addr-state" class="wa-input" placeholder="State" readonly style="background:#f8fafc; cursor:not-allowed;">
+              </div>
+
+              <!-- City & District row -->
               <div class="wa-field-group">
                 <label class="wa-field-label">City / Post Office</label>
-                <div id="wa-city-select-wrapper" style="display:none;">
-                  <select id="wa-addr-city-select" class="wa-input" style="cursor:pointer;" onchange="document.getElementById('wa-addr-city-input').value = this.value;"></select>
+                <div id="wa-city-select-wrapper" style="display:none;position:relative;">
+                  <select id="wa-addr-city-select" class="wa-input" style="cursor:pointer;appearance:none;-webkit-appearance:none;padding-right:30px;font-size:14px;background:#fff;" onchange="document.getElementById('wa-addr-city-input').value = this.value;"></select>
+                  <div style="position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;font-size:10px;color:#64748b;">▼</div>
                 </div>
                 <input type="text" id="wa-addr-city-input" class="wa-input" placeholder="City">
               </div>
@@ -593,12 +648,6 @@ window._shopifyCustomer = {
               <div class="wa-field-group" id="wa-district-field">
                 <label class="wa-field-label">District</label>
                 <input type="text" id="wa-addr-district" class="wa-input" placeholder="District" readonly style="background:#f8fafc; cursor:not-allowed;">
-              </div>
-
-              <!-- State (auto-filled) -->
-              <div class="wa-field-group full" id="wa-state-field">
-                <label class="wa-field-label">State</label>
-                <input type="text" id="wa-addr-state" class="wa-input" placeholder="State" readonly style="background:#f8fafc; cursor:not-allowed;">
               </div>
             </div>
 
@@ -1127,9 +1176,9 @@ window._shopifyCustomer = {
               <div class="wa-addr-text">${primary.address1}<br/>${primary.city} - ${primary.zip}</div>
               ${primary.company ? `<div class="wa-addr-text" style="color:#94a3b8;">${primary.company}</div>` : ''}
               
-              <div style="display:flex;gap:12px;margin-top:10px;">
-                ${!primary.id.toString().startsWith('shopify_') ? `<button onclick="waEditAddress('${primary.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:600;cursor:pointer;padding:0;text-decoration:none;">Edit</button>` : ''}
-                <button onclick="waDeleteAddress('${primary.id}')" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:600;cursor:pointer;padding:0;text-decoration:none;">Delete</button>
+              <div style="display:flex;gap:12px;margin-top:10px;position:relative;z-index:2;">
+                ${!primary.id.toString().startsWith('shopify_') ? `<button onclick="event.stopPropagation(); waEditAddress('${primary.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;margin-left:-8px;text-decoration:none;">Edit</button>` : ''}
+                <button onclick="event.stopPropagation(); waDeleteAddress('${primary.id}')" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;text-decoration:none;">Delete</button>
               </div>
             </div>
           </div>
@@ -1153,9 +1202,9 @@ window._shopifyCustomer = {
                 <div class="wa-addr-text">${a.address1}<br/>${a.city} - ${a.zip}</div>
                 ${a.company ? `<div class="wa-addr-text" style="color:#94a3b8;">${a.company}</div>` : ''}
                 
-                <div style="display:flex;gap:12px;margin-top:10px;">
-                  ${!a.id.toString().startsWith('shopify_') ? `<button onclick="waEditAddress('${a.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:600;cursor:pointer;padding:0;text-decoration:none;">Edit</button>` : ''}
-                  <button onclick="waDeleteAddress('${a.id}')" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:600;cursor:pointer;padding:0;text-decoration:none;">Delete</button>
+                <div style="display:flex;gap:12px;margin-top:10px;position:relative;z-index:2;">
+                  ${!a.id.toString().startsWith('shopify_') ? `<button onclick="event.stopPropagation(); waEditAddress('${a.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;margin-left:-8px;text-decoration:none;">Edit</button>` : ''}
+                  <button onclick="event.stopPropagation(); waDeleteAddress('${a.id}')" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;text-decoration:none;">Delete</button>
                 </div>
               </div>
             </div>
@@ -1575,7 +1624,7 @@ window._shopifyCustomer = {
               <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg" alt="PhonePe" style="height:14px; object-fit:contain;" />
               <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Paytm_Logo_%28standalone%29.svg" alt="Paytm" style="height:10px; object-fit:contain;" />
               <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="GPay" style="height:12px; object-fit:contain;" />
-              <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" style="height:10px; object-fit:contain;" />
+              <img src="https://cdn.shopify.com/s/assets/payment_icons/visa-319d545c6fd255c9aad5eeaad21fd6f7f7b4fdbdb1a35ce83b89cca12a187f00.svg" alt="Visa" style="height:11px; object-fit:contain;" />
             </div>
           `;
 
@@ -1583,10 +1632,10 @@ window._shopifyCustomer = {
           let offerStr = '';
           let payAmt = baseTotal;
           if (waPaymentSettings.prepaid_offer_enabled) {
-             let disc = waPaymentSettings.prepaid_offer_type === 'percent' ? (baseTotal * waPaymentSettings.prepaid_offer_value) / 100 : waPaymentSettings.prepaid_offer_value;
+              let disc = waPaymentSettings.prepaid_offer_type === 'percent' ? (baseTotal * waPaymentSettings.prepaid_offer_value) / 100 : waPaymentSettings.prepaid_offer_value;
              disc = Math.min(disc, baseTotal);
              payAmt = baseTotal - disc;
-             offerStr = ` <span style="color:#16a34a; font-weight:bold; font-size:12px; background:#f0fdf4; padding:2px 6px; border-radius:4px; margin-left:6px;">Save ₹${Math.round(disc)}</span>`;
+             offerStr = ` <span style="display:inline-flex; align-items:center; animation: wa-pulse 2s infinite; color:#fff; font-weight:800; font-size:11px; background: linear-gradient(135deg, #22c55e, #16a34a); padding:3px 8px; border-radius:20px; margin-left:8px; box-shadow: 0 2px 8px rgba(34,197,94,0.3); border:1px solid rgba(255,255,255,0.3); letter-spacing:0.5px; text-transform:uppercase;">🔥 SAVE ₹${Math.round(disc)}</span>`;
           }
           methods.push({ id: 'prepaid', title: `Pay Online (UPI, Cards)${offerStr}`, desc: 'Secure online payment.' + paymentIconsHtml, payAmount: payAmt });
         }
