@@ -489,9 +489,9 @@ window._shopifyCustomer = {
             <a href="#" onclick="waSwitchAccount(event)" style="font-size:13px; color:#3b82f6; text-decoration:none; font-weight:500;">Use a different number →</a>
           </div>
 
-          <!-- Email field -->
-          <div class="wa-field-group" style="margin-top:4px;">
-            <label class="wa-field-label">Email Address <span style="font-weight:400;color:#94a3b8;font-size:12px;">(Optional)</span></label>
+          <!-- Email field (required/optional controlled by admin) -->
+          <div class="wa-field-group" style="margin-top:4px;" id="wa-email-field-wrap">
+            <label class="wa-field-label" id="wa-email-label">Email Address <span id="wa-email-badge" style="font-weight:400;color:#94a3b8;font-size:12px;">(Optional)</span></label>
             <input type="email" id="wa-email" class="wa-input" placeholder="you@example.com (Optional)">
           </div>
 
@@ -930,6 +930,15 @@ window._shopifyCustomer = {
       waPhone = phoneInput;
     }
     waEmail = document.getElementById('wa-email').value.trim();
+
+    // Enforce email required setting
+    if (waPaymentSettings?.email_required === true && !waEmail) {
+      return alert('Please enter your email address to continue.');
+    }
+    if (waEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(waEmail)) {
+      return alert('Please enter a valid email address.');
+    }
+
     const btn = document.getElementById('wa-send-btn');
     btn.disabled = true; btn.innerHTML = 'Sending OTP...';
     try {
@@ -1404,6 +1413,17 @@ window._shopifyCustomer = {
         if (brandLogoEl) {
           brandLogoEl.innerHTML = `<img src="${_ps.logo_url}" alt="Store Logo" style="max-height: 40px; max-width: 150px; object-fit: contain;" />`;
         }
+      }
+
+      // Apply email required/optional setting from admin
+      const _emailInput = document.getElementById('wa-email');
+      const _emailBadge = document.getElementById('wa-email-badge');
+      if (_ps.email_required === true) {
+        if (_emailInput) { _emailInput.required = true; _emailInput.placeholder = 'you@example.com'; }
+        if (_emailBadge) { _emailBadge.textContent = '(Required)'; _emailBadge.style.color = '#f59e0b'; }
+      } else {
+        if (_emailInput) { _emailInput.required = false; _emailInput.placeholder = 'you@example.com (Optional)'; }
+        if (_emailBadge) { _emailBadge.textContent = '(Optional)'; _emailBadge.style.color = '#94a3b8'; }
       }
 
       if (document.getElementById('wa-step-4').style.display === 'block') {
