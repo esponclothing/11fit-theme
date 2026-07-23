@@ -541,10 +541,6 @@ window._shopifyCustomer = {
           </div>
 
           <!-- Email field (required/optional controlled by admin) -->
-          <div class="wa-field-group" style="margin-top:4px;" id="wa-email-field-wrap">
-            <label class="wa-field-label" id="wa-email-label">Email Address <span id="wa-email-badge" style="font-weight:400;color:#94a3b8;font-size:12px;">(Optional)</span></label>
-            <input type="email" id="wa-email" class="wa-input" placeholder="you@example.com (Optional)">
-          </div>
 
           <div class="wa-wa-note">
             <span style="font-size:18px;">💬</span>
@@ -605,6 +601,11 @@ window._shopifyCustomer = {
             <div style="font-size:15px; font-weight:700; color:var(--wa-theme, #0f172a); margin-bottom:4px;">New Address</div>
             <div style="font-size:12px; color:#64748b; margin-bottom:12px;">Enter PIN code to auto-fill location details</div>
             <div class="wa-addr-grid">
+              <div class="wa-field-group full" id="wa-email-field-wrap">
+                <label class="wa-field-label" id="wa-email-label">Email Address <span id="wa-email-badge" style="font-weight:400;color:#94a3b8;font-size:12px;">(Optional)</span></label>
+                <input type="email" id="wa-email" class="wa-input" placeholder="you@example.com (Optional)">
+              </div>
+
               <div class="wa-field-group">
                 <label class="wa-field-label">First Name</label>
                 <input type="text" id="wa-addr-fname" class="wa-input" placeholder="Rahul">
@@ -1016,16 +1017,7 @@ window._shopifyCustomer = {
       if (phoneInput.length < 10) return alert('Please enter a valid 10-digit mobile number');
       waPhone = phoneInput;
     }
-    waEmail = document.getElementById('wa-email').value.trim();
-
-    // Enforce email required setting
-    if (waPaymentSettings?.email_required === true && !waEmail) {
-      return alert('Please enter your email address to continue.');
-    }
-    if (waEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(waEmail)) {
-      return alert('Please enter a valid email address.');
-    }
-
+    // Validation moved to final checkout / address save
     const btn = document.getElementById('wa-send-btn');
     btn.disabled = true; btn.innerHTML = 'Sending OTP...';
     try {
@@ -1744,6 +1736,22 @@ window._shopifyCustomer = {
       errEl.style.display = 'none';
       
       waEmail = document.getElementById('wa-email').value.trim();
+      
+      // Email validation
+      if (waPaymentSettings?.email_required === true && !waEmail) {
+        errEl.innerText = 'Please enter your email address in the address section to continue.';
+        errEl.style.display = 'block';
+        btn.disabled = false;
+        btn.innerHTML = 'Pay Now <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+        return;
+      }
+      if (waEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(waEmail)) {
+        errEl.innerText = 'Please enter a valid email address.';
+        errEl.style.display = 'block';
+        btn.disabled = false;
+        btn.innerHTML = 'Pay Now <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+        return;
+      }
       const addr = waAddresses.find(a => a.id === waSelectedAddress);
       
       if (waSelectedPayment === 'cod') {
@@ -1761,6 +1769,7 @@ window._shopifyCustomer = {
               payment_method: waSelectedPayment,
               customer_email: waEmail,
               customer_phone: waPhone,
+              device_id: localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id'),
               shipping_address: addr
             })
           });
@@ -1789,6 +1798,7 @@ window._shopifyCustomer = {
               draft_order_id: waDraftOrderId,
               payment_method: waSelectedPayment,
               customer_phone: waPhone,
+              device_id: localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id'),
               customer_email: waEmail,
               customer_name: (addr?.first_name || '') + ' ' + (addr?.last_name || '')
             })
@@ -1854,6 +1864,7 @@ window._shopifyCustomer = {
           shipping_address: payload.shipping_address, 
           email: waEmail, 
           phone: waPhone,
+          device_id: localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id'),
           payment_method: payload.payment_method,
           cashfree_order_id: payload.cashfree_order_id
         })
