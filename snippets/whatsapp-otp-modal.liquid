@@ -1009,7 +1009,14 @@ window._shopifyCustomer = {
       const res = await fetch(`${WA_API_BASE}/verify-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ merchant_key: MERCHANT_KEY, phone: waPhone, otp, signature: waSignature, device_id: localStorage.getItem('fit11_device_id') })
+        body: JSON.stringify({
+          merchant_key: MERCHANT_KEY,
+          phone: waPhone,
+          otp,
+          signature: waSignature,
+          device_id: localStorage.getItem('fit11_device_id'),
+          email: waEmail || undefined
+        })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Invalid OTP');
