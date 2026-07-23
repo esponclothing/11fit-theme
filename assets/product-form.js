@@ -44,7 +44,7 @@ if (!customElements.get('product-form')) {
         }
         config.body = formData;
 
-        fetch(`${routes.cart_add_url}`, config)
+        fetch(window.Shopify.routes.root + 'cart/add.js', config)
           .then((response) => response.json())
           .then((response) => {
             if (response.status) {
@@ -63,39 +63,53 @@ if (!customElements.get('product-form')) {
               soldOutMessage.classList.remove('hidden');
               this.error = true;
               return;
-            } else if (!this.cart) {
-              window.location = window.routes.cart_url;
-              return;
             }
 
-            const startMarker = CartPerformance.createStartingMarker('add:wait-for-subscribers');
-            if (!this.error)
-              publish(PUB_SUB_EVENTS.cartUpdate, {
-                source: 'product-form',
-                productVariantId: formData.get('id'),
-                cartData: response,
-              }).then(() => {
-                CartPerformance.measureFromMarker('add:wait-for-subscribers', startMarker);
-              });
-            this.error = false;
-            const quickAddModal = this.closest('quick-add-modal');
-            if (quickAddModal) {
-              document.body.addEventListener(
-                'modalClosed',
-                () => {
-                  setTimeout(() => {
-                    CartPerformance.measure("add:paint-updated-sections", () => {
-                      this.cart.renderContents(response);
+            const afterAdded = (finalResponse) => {
+              const startMarker = CartPerformance.createStartingMarker('add:wait-for-subscribers');
+              if (!this.error)
+                publish(PUB_SUB_EVENTS.cartUpdate, {
+                  source: 'product-form',
+                  productVariantId: formData.get('id'),
+                  cartData: finalResponse,
+                }).then(() => {
+                  CartPerformance.measureFromMarker('add:wait-for-subscribers', startMarker);
+                });
+              this.error = false;
+              const quickAddModal = this.closest('quick-add-modal');
+              if (quickAddModal) {
+                document.body.addEventListener(
+                  'modalClosed',
+                  () => {
+                    setTimeout(() => {
+                      CartPerformance.measure("add:paint-updated-sections", () => {
+                        this.cart.renderContents(finalResponse);
+                      });
                     });
-                  });
-                },
-                { once: true }
-              );
-              quickAddModal.hide(true);
+                  },
+                  { once: true }
+                );
+                quickAddModal.hide(true);
+              } else {
+                CartPerformance.measure("add:paint-updated-sections", () => {
+                  this.cart.renderContents(finalResponse);
+                });
+              }
+            };
+
+            if (this.cart) {
+              const sectionIds = this.cart.getSectionsToRender().map((s) => s.id).join(',');
+              fetch(window.location.pathname + '?sections=' + sectionIds)
+                .then(r => r.json())
+                .then(sectionsResponse => {
+                  response.sections = sectionsResponse;
+                  afterAdded(response);
+                })
+                .catch(() => {
+                   window.location = window.routes.cart_url;
+                });
             } else {
-              CartPerformance.measure("add:paint-updated-sections", () => {
-                this.cart.renderContents(response);
-              });
+              window.location = window.routes.cart_url;
             }
           })
           .catch((e) => {
