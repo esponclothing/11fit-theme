@@ -366,7 +366,6 @@
     .wa-content-area { padding: 24px 20px; }
     .wa-modal-header { padding: 16px 20px; }
     .wa-section-title { font-size: 20px; }
-    .wa-addr-grid { grid-template-columns: 1fr; }
     .wa-otp-box { width: 56px; height: 56px; font-size: 22px; }
     .wa-otp-boxes { gap: 10px; }
   }
@@ -376,31 +375,37 @@
   .wa-payment-option {
     border: 1.5px solid #e2e8f0;
     border-radius: 12px;
-    padding: 16px;
+    padding: 18px 16px;
     margin-bottom: 12px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease-in-out;
     display: flex;
-    align-items: center;
-    gap: 12px;
+    align-items: flex-start;
+    gap: 14px;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
   }
-  .wa-payment-option:hover { border-color: #94a3b8; }
+  .wa-payment-option:hover { border-color: #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
   .wa-payment-option.selected {
-    border-color: var(--wa-theme, #0f172a);
-    background: #f8fafc;
-    box-shadow: 0 0 0 1px var(--wa-theme, #0f172a);
+    border-color: #2563eb;
+    background: #eff6ff;
+    box-shadow: 0 4px 14px rgba(37,99,235,0.1);
   }
   .wa-payment-radio {
-    width: 20px; height: 20px; border-radius: 50%;
+    width: 22px; height: 22px; border-radius: 50%;
     border: 2px solid #cbd5e1;
     display: flex; align-items: center; justify-content: center;
+    margin-top: 2px; flex-shrink: 0;
+    transition: all 0.2s;
+    background: #fff;
   }
   .wa-payment-option.selected .wa-payment-radio {
-    border-color: var(--wa-theme, #0f172a);
+    border-color: #2563eb;
   }
   .wa-payment-option.selected .wa-payment-radio::after {
     content: ''; width: 10px; height: 10px; border-radius: 50%;
-    background: var(--wa-theme, #0f172a);
+    background: #2563eb;
   }
 {% endstyle %}
 
@@ -1631,18 +1636,18 @@ window._shopifyCustomer = {
               let disc = waPaymentSettings.prepaid_offer_type === 'percent' ? (baseTotal * waPaymentSettings.prepaid_offer_value) / 100 : waPaymentSettings.prepaid_offer_value;
              disc = Math.min(disc, baseTotal);
              payAmt = baseTotal - disc;
-             offerStr = ` <span style="display:inline-flex; align-items:center; color:#fff; font-weight:800; font-size:11px; background: linear-gradient(135deg, #22c55e, #16a34a); padding:3px 8px; border-radius:20px; margin-left:8px; box-shadow: 0 2px 8px rgba(34,197,94,0.3); border:1px solid rgba(255,255,255,0.3); letter-spacing:0.5px; text-transform:uppercase;">🔥 SAVE ₹${Math.round(disc)}</span>`;
+             offerStr = `<span style="display:inline-flex; align-items:center; color:#fff; font-weight:800; font-size:10px; background: linear-gradient(135deg, #22c55e, #16a34a); padding:2px 8px; border-radius:6px; box-shadow: 0 2px 6px rgba(34,197,94,0.25); border:1px solid rgba(255,255,255,0.3); letter-spacing:0.5px; text-transform:uppercase;">🔥 SAVE ₹${Math.round(disc)}</span>`;
           }
-          methods.push({ id: 'prepaid', title: `Pay Online (UPI, Cards)${offerStr}`, desc: 'Secure online payment.' + paymentIconsHtml, payAmount: payAmt });
+          methods.push({ id: 'prepaid', title: `Pay Online (UPI, Cards)`, offer: offerStr, desc: 'Secure online payment.' + paymentIconsHtml, payAmount: payAmt });
         }
         if (waPaymentSettings.partial_cod_enabled) {
           let payAmt = waPaymentSettings.partial_cod_type === 'percent' ? (baseTotal * waPaymentSettings.partial_cod_value) / 100 : waPaymentSettings.partial_cod_value;
           let remAmt = baseTotal - payAmt;
-          methods.push({ id: 'partial_cod', title: 'Partial COD', desc: `Pay ₹${Math.round(payAmt)} now and remaining ₹${Math.round(remAmt)} on delivery.` + paymentIconsHtml, payAmount: payAmt });
+          methods.push({ id: 'partial_cod', title: 'Partial COD', offer: '', desc: `Pay ₹${Math.round(payAmt)} now and remaining ₹${Math.round(remAmt)} on delivery.` + paymentIconsHtml, payAmount: payAmt });
         }
         if (waPaymentSettings.cod_enabled) {
           let feeStr = waPaymentSettings.cod_fee > 0 ? ` (Extra ₹${waPaymentSettings.cod_fee} fee)` : '';
-          methods.push({ id: 'cod', title: `Cash on Delivery${feeStr}`, desc: 'Pay when your order arrives.', payAmount: baseTotal + (waPaymentSettings.cod_fee || 0) });
+          methods.push({ id: 'cod', title: `Cash on Delivery${feeStr}`, offer: '', desc: 'Pay when your order arrives.', payAmount: baseTotal + (waPaymentSettings.cod_fee || 0) });
         }
       }
       
@@ -1662,17 +1667,18 @@ window._shopifyCustomer = {
         };
         
         opt.innerHTML = `
-          <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
-            <div style="display:flex; align-items:center; gap:12px;">
+          <div style="display:flex; justify-content:space-between; width:100%; align-items:flex-start;">
+            <div style="display:flex; gap:14px; flex:1;">
               <div class="wa-payment-radio"></div>
-              <div>
-                <div style="font-weight:700; color:var(--wa-theme, #0f172a); font-size:15px; display:flex; align-items:center;">${m.title}</div>
-                <div style="font-size:12px; color:#64748b; margin-top:2px;">${m.desc}</div>
+              <div style="flex:1;">
+                <div style="font-weight:700; color:#1e293b; font-size:15px; display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
+                  <span>${m.title}</span>
+                  ${m.offer ? m.offer : ''}
+                </div>
+                <div style="font-size:13px; color:#64748b; margin-top:6px; line-height:1.4;">${m.desc}</div>
               </div>
             </div>
-            <div style="font-weight:700; color:var(--wa-theme, #0f172a); font-size:16px;">
-              ₹${m.payAmount.toFixed(2)}
-            </div>
+            <div style="font-weight:800; font-size:16px; color:#0f172a; padding-left:12px;">₹${m.payAmount.toFixed(2)}</div>
           </div>
         `;
         container.appendChild(opt);
