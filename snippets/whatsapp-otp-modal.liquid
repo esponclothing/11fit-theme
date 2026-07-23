@@ -1729,14 +1729,14 @@ window._shopifyCustomer = {
     // Skip if the form being submitted is inside the modal
     if (e.target.closest && e.target.closest('#wa-otp-overlay')) return;
     const ov = document.getElementById('wa-otp-overlay');
-    if (ov && ov.style.display !== 'none') {
+    if (ov && window.getComputedStyle(ov).display !== 'none') {
       e.preventDefault(); e.stopPropagation();
     }
   }, true);
   const _origSubmit = HTMLFormElement.prototype.submit;
   HTMLFormElement.prototype.submit = function() {
     const ov = document.getElementById('wa-otp-overlay');
-    if (ov && ov.style.display !== 'none') return;
+    if (ov && window.getComputedStyle(ov).display !== 'none') return;
     _origSubmit.apply(this, arguments);
   };
 
