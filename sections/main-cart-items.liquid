@@ -385,8 +385,8 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
             if (imgSrc && imgSrc.indexOf('?') === -1) imgSrc += '?width=400';
             var productUrl = p.url || ('/products/' + p.handle);
             var firstVariant = p.variants && p.variants[0];
-            var priceVal = firstVariant ? parseFloat(firstVariant.price) : 0;
-            var comparePriceVal = firstVariant && firstVariant.compare_at_price ? parseFloat(firstVariant.compare_at_price) : 0;
+            var priceVal = firstVariant ? (parseFloat(firstVariant.price) / 100) : 0;
+            var comparePriceVal = firstVariant && firstVariant.compare_at_price ? (parseFloat(firstVariant.compare_at_price) / 100) : 0;
             
             var price = priceVal.toLocaleString('en-IN',{style:'currency',currency:'INR',minimumFractionDigits:0});
             var comparePrice = '';
