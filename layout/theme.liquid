@@ -1123,6 +1123,11 @@
     return response;
   };
   
+  // Also track immediately on page load to catch any items added via non-fetch forms
+  setTimeout(() => {
+    trackCartSilently();
+  }, 1500);
+
   window.lxRefreshCartUI = refreshCartUI;
 })();
 </script>
