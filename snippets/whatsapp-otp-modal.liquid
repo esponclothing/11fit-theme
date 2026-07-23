@@ -1,5 +1,5 @@
 {% style %}
-  #wa-otp-overlay * { box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+  #wa-otp-overlay * { box-sizing: border-box; font-family: var(--wa-font-family, 'Inter', -apple-system, BlinkMacSystemFont, sans-serif); }
 
   #wa-otp-overlay {
     position: fixed !important; top: 0 !important; left: 0 !important;
@@ -1501,6 +1501,19 @@ window._shopifyCustomer = {
       _setVar('--wa-label',      _ps.text_label,     '#374151');
       _setVar('--wa-success',    _ps.accent_success, '#16a34a');
       _setVar('--wa-border',     _ps.accent_border,  '#e2e8f0');
+
+      if (_ps.font_family && _ps.font_family !== 'Inter') {
+        if (!document.getElementById('wa-custom-font')) {
+          const link = document.createElement('link');
+          link.id = 'wa-custom-font';
+          link.href = `https://fonts.googleapis.com/css2?family=${_ps.font_family.replace(/ /g, '+')}:wght@400;500;600;700;800&display=swap`;
+          link.rel = 'stylesheet';
+          document.head.appendChild(link);
+        }
+        _setVar('--wa-font-family', `'${_ps.font_family}', -apple-system, sans-serif`);
+      } else {
+        _setVar('--wa-font-family', `'Inter', -apple-system, BlinkMacSystemFont, sans-serif`);
+      }
 
       if (_ps.logo_url) {
         const _logoImg = `<img src="${_ps.logo_url}" alt="Store Logo" style="max-height:40px;max-width:150px;object-fit:contain;display:block;" />`;
