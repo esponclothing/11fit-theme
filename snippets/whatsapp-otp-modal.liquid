@@ -1178,7 +1178,7 @@ window._shopifyCustomer = {
               ${primary.company ? `<div class="wa-addr-text" style="color:#94a3b8;">${primary.company}</div>` : ''}
               
               <div style="display:flex;gap:12px;margin-top:10px;position:relative;z-index:2;">
-                ${!primary.id.toString().startsWith('shopify_') ? `<button onclick="event.stopPropagation(); waEditAddress('${primary.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;margin-left:-8px;text-decoration:none;">Edit</button>` : ''}
+                <button onclick="event.stopPropagation(); waEditAddress('${primary.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;margin-left:-8px;text-decoration:none;">Edit</button>
                 <button onclick="event.stopPropagation(); waDeleteAddress('${primary.id}')" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;text-decoration:none;">Delete</button>
               </div>
             </div>
@@ -1204,7 +1204,7 @@ window._shopifyCustomer = {
                 ${a.company ? `<div class="wa-addr-text" style="color:#94a3b8;">${a.company}</div>` : ''}
                 
                 <div style="display:flex;gap:12px;margin-top:10px;position:relative;z-index:2;">
-                  ${!a.id.toString().startsWith('shopify_') ? `<button onclick="event.stopPropagation(); waEditAddress('${a.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;margin-left:-8px;text-decoration:none;">Edit</button>` : ''}
+                  <button onclick="event.stopPropagation(); waEditAddress('${a.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;margin-left:-8px;text-decoration:none;">Edit</button>
                   <button onclick="event.stopPropagation(); waDeleteAddress('${a.id}')" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;text-decoration:none;">Delete</button>
                 </div>
               </div>
