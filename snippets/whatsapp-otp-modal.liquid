@@ -403,7 +403,7 @@ window._shopifyCustomer = {
     <!-- LEFT PANEL (desktop) -->
     <div class="wa-left-panel">
       <div>
-        <div class="wa-brand-name" style="text-transform: uppercase;">{{ shop.domain | remove: '.myshopify.com' }}</div>
+        <div class="wa-brand-name" id="wa-brand-name-left" style="text-transform: uppercase;">{{ shop.domain | remove: '.myshopify.com' }}</div>
         <div class="wa-brand-tagline">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           100% Secure Checkout
@@ -448,7 +448,7 @@ window._shopifyCustomer = {
       <!-- HEADER -->
       <div class="wa-modal-header">
         <div class="wa-mobile-brand">
-          <div class="wa-mobile-logo-text" style="text-transform: uppercase;">{{ shop.domain | remove: '.myshopify.com' }}</div>
+          <div class="wa-mobile-logo-text" id="wa-brand-name-mobile" style="text-transform: uppercase;">{{ shop.domain | remove: '.myshopify.com' }}</div>
           <div class="wa-secure-badge">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:#16a34a"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             Secure
@@ -850,6 +850,43 @@ window._shopifyCustomer = {
         body: JSON.stringify({ device_id, merchant_key: MERCHANT_KEY })
       });
       const data = await res.json();
+
+      // ── Apply branding & settings from identify response immediately ──────────
+      if (data.payment_settings && Object.keys(data.payment_settings).length > 0) {
+        waPaymentSettings = data.payment_settings;
+        const _ps = data.payment_settings;
+        const _sv = (name, val, fb) => document.documentElement.style.setProperty(name, val || fb);
+        _sv('--wa-theme',      _ps.theme_color,    '#0f172a');
+        _sv('--wa-bg',         _ps.bg_main,        '#f1f5f9');
+        _sv('--wa-card-bg',    _ps.bg_card,        '#ffffff');
+        _sv('--wa-header-bg',  _ps.bg_header,      '#0f172a');
+        _sv('--wa-heading',    _ps.text_heading,   '#0f172a');
+        _sv('--wa-subheading', _ps.text_subheading,'#64748b');
+        _sv('--wa-label',      _ps.text_label,     '#374151');
+        _sv('--wa-success',    _ps.accent_success, '#16a34a');
+        _sv('--wa-border',     _ps.accent_border,  '#e2e8f0');
+
+        // Apply logo to BOTH left panel and mobile header
+        if (_ps.logo_url) {
+          const logoImg = `<img src="${_ps.logo_url}" alt="Store Logo" style="max-height:40px;max-width:150px;object-fit:contain;display:block;" />`;
+          const leftBrand = document.getElementById('wa-brand-name-left');
+          if (leftBrand) leftBrand.outerHTML = `<div id="wa-brand-name-left">${logoImg}</div>`;
+          const mobileBrand = document.getElementById('wa-brand-name-mobile');
+          if (mobileBrand) mobileBrand.outerHTML = `<div id="wa-brand-name-mobile">${logoImg}</div>`;
+        }
+
+        // Apply email required/optional
+        const _emailInput = document.getElementById('wa-email');
+        const _emailBadge = document.getElementById('wa-email-badge');
+        if (_ps.email_required === true) {
+          if (_emailInput) { _emailInput.required = true; _emailInput.placeholder = 'you@example.com'; }
+          if (_emailBadge) { _emailBadge.textContent = '(Required)'; _emailBadge.style.color = '#f59e0b'; }
+        } else {
+          if (_emailInput) { _emailInput.required = false; _emailInput.placeholder = 'you@example.com (Optional)'; }
+          if (_emailBadge) { _emailBadge.textContent = '(Optional)'; _emailBadge.style.color = '#94a3b8'; }
+        }
+      }
+
       if (data.identified && data.masked_phone) {
         document.getElementById('wa-title-1').innerText = 'Welcome Back!';
         document.getElementById('wa-desc-1').innerText = `Continue as ${data.masked_phone}?`;
@@ -1416,10 +1453,11 @@ window._shopifyCustomer = {
       _setVar('--wa-border',     _ps.accent_border,  '#e2e8f0');
 
       if (_ps.logo_url) {
-        const brandLogoEl = document.querySelector('.wa-mobile-brand');
-        if (brandLogoEl) {
-          brandLogoEl.innerHTML = `<img src="${_ps.logo_url}" alt="Store Logo" style="max-height: 40px; max-width: 150px; object-fit: contain;" />`;
-        }
+        const _logoImg = `<img src="${_ps.logo_url}" alt="Store Logo" style="max-height:40px;max-width:150px;object-fit:contain;display:block;" />`;
+        const _leftBrand = document.getElementById('wa-brand-name-left');
+        if (_leftBrand) _leftBrand.outerHTML = `<div id="wa-brand-name-left">${_logoImg}</div>`;
+        const _mobileBrand = document.getElementById('wa-brand-name-mobile');
+        if (_mobileBrand) _mobileBrand.outerHTML = `<div id="wa-brand-name-mobile">${_logoImg}</div>`;
       }
 
       // Apply email required/optional setting from admin
