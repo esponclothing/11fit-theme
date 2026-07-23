@@ -1373,38 +1373,13 @@ class CartPerformance {
         const actualCount = group.items.reduce((sum, item) => sum + item.quantity, 0);
 
         if (actualCount < group.requiredCount) {
-          // Combo is broken! Mark all remaining items in this combo group for removal
-          group.items.forEach(item => {
-            itemsToRemove.push({ id: item.key, quantity: 0 });
-          });
-          console.log(`Combo ${comboId} is incomplete (${actualCount}/${group.requiredCount}). Removing remaining items.`);
+          // Combo is broken! Just log it. Do not auto-remove the items.
+          console.log(`Combo ${comboId} is incomplete (${actualCount}/${group.requiredCount}). User broke the combo.`);
         } else {
           // Combo is complete! Record it to apply coupon
           completeCombos.push(group);
         }
       });
-
-      // 3. Remove broken items if any
-      if (itemsToRemove.length > 0) {
-        const updatePayload = {
-          updates: {}
-        };
-        itemsToRemove.forEach(item => {
-          updatePayload.updates[item.id] = 0;
-        });
-
-        await fetch(window.Shopify.routes.root + 'cart/update.js', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updatePayload)
-        });
-
-        // Trigger cart reload event
-        document.dispatchEvent(new CustomEvent('cart:build'));
-        window.location.reload(); // Refresh the page to sync UI
-        isUpdatingCart = false;
-        return;
-      }
 
       // 4. Auto apply discount for complete combos
       // Coupon code format: 11FIT-COMBO-[PRODUCT_ID]-[COUNT]
