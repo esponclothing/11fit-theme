@@ -9,6 +9,38 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 
+<script>
+  window._lxComboConfigMap = {};
+  {% for c in collections.all.products limit: 100 %}
+    {% if c.metafields.price_editor.combo_config != blank %}
+      {% assign c_val = c.metafields.price_editor.combo_config.value | default: c.metafields.price_editor.combo_config %}
+      {% if c_val != blank %}
+      window._lxComboConfigMap[{{ c.id | json }}] = {
+        count: {{ c_val.count | default: 0 | json }},
+        price: {{ c_val.price | default: 0 | json }}
+      };
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  window.applyLxComboConfig = function(p) {
+    var comboData = window._lxComboConfigMap[p.id];
+    if (comboData && comboData.count > 0) {
+      if (p.title.indexOf(' - Pack of ') === -1) {
+        p.title = p.title + ' - Pack of ' + comboData.count;
+      }
+      p.price = comboData.price * 100;
+      if (p.compare_at_price) p.compare_at_price = p.compare_at_price * comboData.count;
+      if (p.variants && p.variants.length > 0) {
+        p.variants.forEach(function(v) {
+          v.price = comboData.price * 100;
+          if (v.compare_at_price) v.compare_at_price = v.compare_at_price * comboData.count;
+        });
+      }
+    }
+  };
+</script>
+
 {%- style -%}
 /* ═══════════════════════════════════════════════════
    LUXURY CART
@@ -375,6 +407,7 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                p.options = p.options.map(function(optName) { return { name: optName }; });
             }
 
+            if (window.applyLxComboConfig) window.applyLxComboConfig(p);
             window._lxProducts[p.id] = p;
             var imgSrc = '';
             if (p.featured_image) {
@@ -572,6 +605,7 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                     window._lxProducts = window._lxProducts || {};
                     var html = '';
                     products.forEach(function(p) {
+                      if (window.applyLxComboConfig) window.applyLxComboConfig(p);
                       window._lxProducts[p.id] = p;
                       // featured_image can be an object {src:...} or a plain URL string
                       var imgSrc = '';
@@ -890,6 +924,7 @@ cart-remove-button .button { min-width: auto; min-height: auto; }
                 window._lxProducts = window._lxProducts || {};
                 var html = '';
                 products.forEach(function(p) {
+                  if (window.applyLxComboConfig) window.applyLxComboConfig(p);
                   window._lxProducts[p.id] = p;
                   var imgSrc = '';
                   if (p.featured_image) {
