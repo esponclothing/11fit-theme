@@ -908,15 +908,17 @@
     });
   };
 
-  // Remove a single cart line item by its 1-based line index
+  // Remove a single cart line item by its unique item key
   window.lxRemoveCartItem = function(itemKey, btn) {
     btn.textContent = '...';
     btn.disabled = true;
     var item = btn.closest('.lx-cart-item');
-    fetch(window.Shopify.routes.root + 'cart/change.js', {
+    var updatesObj = {};
+    updatesObj[itemKey] = 0;
+    fetch(window.Shopify.routes.root + 'cart/update.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: itemKey, quantity: 0 })
+      body: JSON.stringify({ updates: updatesObj })
     })
     .then(function(res) { return res.json(); })
     .then(function() {
