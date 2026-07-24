@@ -2155,6 +2155,7 @@ window._shopifyCustomer = {
   
     function waUpdateBtnTotal(baseTotal) {
       let subtext = document.getElementById('wa-pay-btn-subtext');
+      let btnText = document.getElementById('wa-pay-btn-text');
       if (!subtext) return;
       
       if (waSelectedPayment === 'prepaid') {
@@ -2168,9 +2169,23 @@ window._shopifyCustomer = {
         } else {
             subtext.innerHTML = `Complete your secure online payment`;
         }
+        if (btnText) btnText.innerText = 'Pay Securely Now →';
+      } else if (waSelectedPayment === 'partial_cod') {
+        let advanceAmt = 0;
+        if (waPaymentSettings && waPaymentSettings.partial_cod_enabled) {
+            advanceAmt = waPaymentSettings.partial_cod_type === 'percent' ? (baseTotal * waPaymentSettings.partial_cod_value) / 100 : waPaymentSettings.partial_cod_value;
+        }
+        subtext.innerHTML = `Pay ₹${Math.round(advanceAmt)} now to confirm your order`;
+        if (btnText) btnText.innerText = `Pay ₹${Math.round(advanceAmt)} Advance →`;
       } else {
         // COD selected
-        subtext.innerHTML = `Pay securely when your order arrives`;
+        let fee = waPaymentSettings ? (waPaymentSettings.cod_fee || 0) : 0;
+        if (fee > 0) {
+          subtext.innerHTML = `Includes ₹${fee} COD fee. Pay securely on delivery`;
+        } else {
+          subtext.innerHTML = `Pay securely when your order arrives`;
+        }
+        if (btnText) btnText.innerText = 'Place Order (COD) →';
       }
     }
   
@@ -2189,12 +2204,14 @@ function renderPaymentMethods() {
       
       let methods = [];
       
-      // Load available methods based on settings
       if (!waPaymentSettings || Object.keys(waPaymentSettings).length === 0) {
         methods.push({ id: 'cod', type: 'cod', baseTotal });
       } else {
         if (waPaymentSettings.prepaid_enabled) {
           methods.push({ id: 'prepaid', type: 'prepaid', baseTotal });
+        }
+        if (waPaymentSettings.partial_cod_enabled) {
+          methods.push({ id: 'partial_cod', type: 'partial_cod', baseTotal });
         }
         if (waPaymentSettings.cod_enabled) {
           methods.push({ id: 'cod', type: 'cod', baseTotal });
@@ -2206,9 +2223,10 @@ function renderPaymentMethods() {
         return;
       }
       
-      if (!waSelectedPayment) waSelectedPayment = methods[0].id;
+      if (!waSelectedPayment || !methods.find(m => m.id === waSelectedPayment)) {
+        waSelectedPayment = methods[0].id;
+      }
       
-      // Inject some unique CSS for this UI to ensure the exact mockup look
       const uniqueCss = `
         <style>
           .wa-pay-opt { border:1px solid #e2e8f0; border-radius:14px; padding:20px; cursor:pointer; margin-bottom:16px; transition:0.2s; position:relative; overflow:hidden; }
@@ -2219,7 +2237,6 @@ function renderPaymentMethods() {
           .wa-pay-opt.selected .wa-radio-btn { border-color:#22c55e; }
           .wa-pay-opt.selected .wa-radio-btn::after { content:''; position:absolute; inset:4px; background:#22c55e; border-radius:50%; }
           .wa-icon-circ { width:48px; height:48px; background:#f8fafc; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; flex-shrink:0; }
-          .wa-icon-circ.green { background:#f0fdf4; }
           .wa-shield-badge { position:absolute; bottom:0; right:0; background:#22c55e; color:#fff; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid #fff; }
           .wa-logos-row img { filter: grayscale(0%); opacity: 1; mix-blend-mode: multiply; }
         </style>
@@ -2230,11 +2247,9 @@ function renderPaymentMethods() {
       methods.forEach(m => {
         const opt = document.createElement('div');
         const isSelected = waSelectedPayment === m.id;
-        
         let html = '';
         
         if (m.type === 'prepaid') {
-          // Calculate discount
           let disc = 0;
           if (waPaymentSettings.prepaid_offer_enabled) {
               disc = waPaymentSettings.prepaid_offer_type === 'percent' ? (baseTotal * waPaymentSettings.prepaid_offer_value) / 100 : waPaymentSettings.prepaid_offer_value;
@@ -2243,12 +2258,10 @@ function renderPaymentMethods() {
           let payAmt = baseTotal - disc;
           
           opt.className = `wa-pay-opt recommended ${isSelected ? 'selected' : ''}`;
-          
           html = `
             <div class="wa-rec-badge">RECOMMENDED</div>
             <div style="display:flex; width:100%; align-items:flex-start; gap:14px; margin-top:8px;">
                <div class="wa-radio-btn"></div>
-               
                <div style="flex:1;">
                  <div style="display:flex; justify-content:space-between; align-items:flex-start; width:100%;">
                     <div style="display:flex; gap:12px;">
@@ -2267,14 +2280,11 @@ function renderPaymentMethods() {
                          </div>` : ''}
                        </div>
                     </div>
-                    
                     <div style="text-align:right;">
                       <div style="font-size:16px; font-weight:800; color:#0f172a;">₹${payAmt.toFixed(2)}</div>
                       ${disc > 0 ? `<div style="font-size:13px; color:#94a3b8; text-decoration:line-through; margin-top:2px;">₹${baseTotal.toFixed(2)}</div>` : ''}
                     </div>
                  </div>
-                 
-                 <!-- Expandable Secure Details -->
                  ${isSelected ? `
                  <div style="margin-top:20px; animation:waFadeIn 0.3s ease;">
                     <div style="background:#f8fafc; border:1px solid #f1f5f9; border-radius:8px; padding:12px; display:flex; align-items:center; justify-content:space-between;">
@@ -2287,7 +2297,6 @@ function renderPaymentMethods() {
                       </div>
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                     </div>
-                    
                     <div class="wa-logos-row" style="display:flex; align-items:center; justify-content:space-between; margin-top:16px; padding:0 4px;">
                       <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" style="height:14px;" />
                       <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg" style="height:14px;" />
@@ -2295,14 +2304,53 @@ function renderPaymentMethods() {
                       <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" style="height:14px;" />
                       <img src="https://cdn.shopify.com/s/assets/payment_icons/visa-319d545c6fd255c9aad5eeaad21fd6f7f7b4fdbdb1a35ce83b89cca12a187f00.svg" style="height:12px;" />
                     </div>
-                    
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:16px; border-top:1px dashed #e2e8f0; padding-top:12px; font-size:10px; color:#64748b;">
-                      <div style="display:flex; align-items:center; gap:4px;">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-                        Trusted by 1M+ customers <span style="color:#22c55e; letter-spacing:1px; margin-left:4px;">★★★★★</span>
+                 </div>
+                 ` : ''}
+               </div>
+            </div>
+          `;
+        } else if (m.type === 'partial_cod') {
+          let advanceAmt = 0;
+          if (waPaymentSettings.partial_cod_type === 'percent') {
+            advanceAmt = (baseTotal * waPaymentSettings.partial_cod_value) / 100;
+          } else {
+            advanceAmt = waPaymentSettings.partial_cod_value;
+          }
+          let payAmt = advanceAmt;
+          let remainingAmt = baseTotal - payAmt;
+          
+          opt.className = `wa-pay-opt ${isSelected ? 'selected' : ''}`;
+          
+          html = `
+            <div style="display:flex; width:100%; align-items:flex-start; gap:14px;">
+               <div class="wa-radio-btn"></div>
+               <div style="flex:1;">
+                 <div style="display:flex; justify-content:space-between; align-items:flex-start; width:100%;">
+                    <div style="display:flex; gap:12px; align-items:flex-start;">
+                       <div class="wa-icon-circ">
+                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                         <div class="wa-shield-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg></div>
+                       </div>
+                       <div>
+                         <div style="font-weight:700; color:#1e293b; font-size:16px;">Partial COD (Advance)</div>
+                         <div style="font-size:12px; color:#64748b; margin-top:2px;">Pay ₹${Math.round(payAmt)} now, rest on delivery</div>
+                       </div>
+                    </div>
+                    <div style="text-align:right;">
+                      <div style="font-size:16px; font-weight:800; color:#0f172a;">₹${payAmt.toFixed(2)}</div>
+                      <div style="font-size:11px; color:#64748b; margin-top:2px;">Now</div>
+                    </div>
+                 </div>
+                 ${isSelected ? `
+                 <div style="margin-top:20px; animation:waFadeIn 0.3s ease;">
+                    <div style="background:#f8fafc; border:1px solid #f1f5f9; border-radius:8px; padding:12px; font-size:12px; color:#475569;">
+                      <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                        <span>Advance to pay now:</span>
+                        <span style="font-weight:700; color:#0f172a;">₹${payAmt.toFixed(2)}</span>
                       </div>
-                      <div style="display:flex; align-items:center; gap:4px;">
-                        <svg width="24" height="12" viewBox="0 0 40 20" fill="#0ea5e9"><text x="0" y="15" font-size="14" font-weight="800" font-family="sans-serif">PCI</text></svg> DSS Certified
+                      <div style="display:flex; justify-content:space-between;">
+                        <span>To pay on delivery:</span>
+                        <span style="font-weight:700; color:#0f172a;">₹${remainingAmt.toFixed(2)}</span>
                       </div>
                     </div>
                  </div>
@@ -2319,20 +2367,18 @@ function renderPaymentMethods() {
           html = `
             <div style="display:flex; width:100%; align-items:flex-start; gap:14px;">
                <div class="wa-radio-btn"></div>
-               
                <div style="flex:1;">
                  <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
                     <div style="display:flex; gap:12px; align-items:center;">
                        <div class="wa-icon-circ">
                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
-                         <div class="wa-shield-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg></div>
                        </div>
                        <div>
                          <div style="font-weight:700; color:#1e293b; font-size:16px;">Cash on Delivery</div>
                          <div style="font-size:12px; color:#64748b; margin-top:2px;">Pay when your order arrives</div>
+                         ${fee > 0 ? `<div style="font-size:11px; color:#ef4444; margin-top:4px; font-weight:600;">+ ₹${fee} COD fee applies</div>` : ''}
                        </div>
                     </div>
-                    
                     <div style="text-align:right;">
                       <div style="font-size:16px; font-weight:800; color:#0f172a;">₹${payAmt.toFixed(2)}</div>
                     </div>
@@ -2343,20 +2389,18 @@ function renderPaymentMethods() {
         }
         
         opt.innerHTML = html;
-        
         opt.onclick = () => {
           if (waSelectedPayment === m.id) return;
           waSelectedPayment = m.id;
           renderPaymentMethods();
         };
-        
         container.appendChild(opt);
       });
       
       waUpdateBtnTotal(baseTotal);
       
-      // Attempt to load Cashfree if prepaid is selected
-      if (waSelectedPayment === 'prepaid' && typeof Cashfree !== 'undefined') {
+      // Attempt to load Cashfree if needed
+      if ((waSelectedPayment === 'prepaid' || waSelectedPayment === 'partial_cod') && typeof Cashfree !== 'undefined') {
         try {
           waCashfree = Cashfree({ mode: waPaymentSettings.cashfree_env || 'sandbox' });
         } catch(e) { console.error('Cashfree init error', e); }
