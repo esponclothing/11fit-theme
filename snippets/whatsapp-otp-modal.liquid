@@ -1251,13 +1251,15 @@ window._shopifyCustomer = {
 
   
   function waSetStep(step) {
-    [1,2,3,4].forEach(i => {
+    let uiStep = step;
+    if (step === 4) uiStep = 3;
+    [1,2,3].forEach(i => {
       const dot = document.getElementById('wa-dot-' + i);
       if (dot) {
-        if(i < step) { 
+        if(i < uiStep) { 
           dot.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
           dot.style.background = '#16a34a'; dot.style.color = '#fff'; dot.style.border = 'none'; 
-        } else if(i === step) { 
+        } else if(i === uiStep) { 
           dot.innerHTML = i;
           dot.style.background = '#0f172a'; dot.style.color = '#fff'; dot.style.border = 'none'; 
         } else { 
@@ -1266,12 +1268,12 @@ window._shopifyCustomer = {
         }
       }
     });
-    [1,2,3].forEach(i => {
+    [1,2].forEach(i => {
       const line = document.getElementById('wa-line-' + i);
-      if (line) line.style.background = i < step ? '#16a34a' : '#e2e8f0';
+      if (line) line.style.background = i < uiStep ? '#16a34a' : '#e2e8f0';
     });
     const lbl = document.getElementById('wa-step-label');
-    if (lbl) lbl.innerText = 'STEP ' + step + ' OF 4';
+    if (lbl) lbl.innerText = 'STEP ' + uiStep + ' OF 3';
   }
 
   function waGoToStep(step) {
@@ -1564,18 +1566,31 @@ window._shopifyCustomer = {
     const dh = document.getElementById('wa-deliver-here-btn'); if(dh) dh.style.display = 'none';
     document.getElementById('wa-new-address-form').style.display = 'block';
     document.getElementById('wa-save-addr-btn').innerText = 'Save Address';
-    // Clear fields
-    ['wa-addr-fname','wa-addr-lname','wa-addr-street','wa-addr-city-input','wa-addr-zip','wa-addr-state','wa-addr-district'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('wa-city-select-wrapper').style.display = 'none';
-    document.getElementById('wa-addr-city-input').style.display = 'block';
-    document.getElementById('wa-addr-state').readOnly = false;
-    document.getElementById('wa-addr-district').readOnly = false;
-    document.getElementById('wa-addr-state').style.cursor = 'text';
-    document.getElementById('wa-addr-district').style.cursor = 'text';
-    document.getElementById('wa-addr-state').style.background = '#fff';
-    document.getElementById('wa-addr-district').style.background = '#fff';
-    document.getElementById('wa-pin-error').style.display = 'none';
-    document.getElementById('wa-pin-status').innerText = '';
+    
+    // Clear fields correctly safely
+    ['wa-first-name','wa-last-name','wa-address1','wa-address2','wa-city','wa-zip','wa-province','wa-addr-district'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    
+    const citySelectWrap = document.getElementById('wa-city-select-wrapper');
+    if (citySelectWrap) citySelectWrap.style.display = 'none';
+    const addrCityInp = document.getElementById('wa-addr-city-input');
+    if (addrCityInp) addrCityInp.style.display = 'block';
+    
+    const addrState = document.getElementById('wa-addr-state');
+    if (addrState) { addrState.readOnly = false; addrState.style.cursor = 'text'; addrState.style.background = '#fff'; }
+    
+    const waProv = document.getElementById('wa-province');
+    if (waProv) { waProv.readOnly = false; waProv.style.cursor = 'text'; waProv.style.background = '#fff'; }
+    
+    const dist = document.getElementById('wa-addr-district');
+    if (dist) { dist.readOnly = false; dist.style.cursor = 'text'; dist.style.background = '#fff'; }
+    
+    const errEl = document.getElementById('wa-pin-error');
+    if (errEl) errEl.style.display = 'none';
+    const statEl = document.getElementById('wa-pin-status');
+    if (statEl) statEl.innerText = '';
   }
 
   function waEditAddress(id) {
@@ -1931,7 +1946,7 @@ window._shopifyCustomer = {
       waEditingAddressId = null;
       await loadAddresses();
     } catch (e) { 
-      alert('Failed to save address. Please try again.'); 
+      alert('Failed to save address. Error: ' + e.message); console.error(e); 
     } finally {
       if (btn) { btn.disabled = false; btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Save & Deliver to this Address'; }
     }
