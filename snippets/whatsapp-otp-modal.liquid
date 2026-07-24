@@ -422,7 +422,7 @@ window._shopifyCustomer = {
           </div>
         </div>
 
-        <div class="wa-steps" id="wa-steps-indicator" style="display:flex; align-items:center; justify-content:flex-end; margin-bottom:32px;">
+        <div class="wa-steps" id="wa-steps-indicator" style="display:flex; align-items:center; justify-content:flex-start; margin-bottom:32px;">
           <div id="wa-dots-container" style="display:none;">
             <div class="wa-step-dot active" id="wa-dot-1" style="width:24px;height:24px;border-radius:50%;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">1</div>
             <div class="wa-step-line" id="wa-line-1" style="height:2px;background:#e2e8f0;width:12px;margin:0 4px;"></div>
@@ -1276,7 +1276,7 @@ window._shopifyCustomer = {
     const indicator = document.getElementById('wa-steps-indicator');
     if (indicator) {
       indicator.style.display = 'flex';
-      indicator.style.justifyContent = 'flex-end';
+      indicator.style.justifyContent = 'flex-start';
     }
     const dotsContainer = document.getElementById('wa-dots-container');
     if (dotsContainer) {
