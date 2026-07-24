@@ -424,7 +424,7 @@ window._shopifyCustomer = {
 
         <!-- Step Indicator -->
         <div class="wa-steps" id="wa-steps-indicator" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:32px;">
-          <div style="display:flex; align-items:center;">
+          <div id="wa-dots-container" style="display:flex; align-items:center;">
             <div class="wa-step-dot active" id="wa-dot-1" style="width:32px;height:32px;border-radius:50%;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;">1</div>
             <div class="wa-step-line" id="wa-line-1" style="height:2px;background:#e2e8f0;width:32px;margin:0 4px;"></div>
             <div class="wa-step-dot" id="wa-dot-2" style="width:32px;height:32px;border-radius:50%;background:#f1f5f9;color:#64748b;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;">2</div>
@@ -1276,7 +1276,12 @@ window._shopifyCustomer = {
   
     const indicator = document.getElementById('wa-steps-indicator');
     if (indicator) {
-      indicator.style.display = uiStep === 3 ? 'none' : 'flex';
+      indicator.style.display = 'flex';
+      indicator.style.justifyContent = uiStep === 3 ? 'flex-end' : 'space-between';
+    }
+    const dotsContainer = document.getElementById('wa-dots-container');
+    if (dotsContainer) {
+      dotsContainer.style.display = uiStep === 3 ? 'none' : 'flex';
     }
   }
 
