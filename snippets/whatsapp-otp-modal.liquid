@@ -1165,7 +1165,7 @@ window._shopifyCustomer = {
           {% endif %}
         </div>`;
           const mobileBrand = document.getElementById('wa-brand-name-mobile');
-          if (mobileBrand) mobileBrand.outerHTML = `<div id="wa-brand-name-mobile">${logoImg}</div>`;
+          if (mobileBrand) mobileBrand.innerHTML = logoImg;
         }
 
         // Apply email required/optional
@@ -2018,7 +2018,7 @@ window._shopifyCustomer = {
         const _leftBrand = document.getElementById('wa-brand-name-left');
         if (_leftBrand) _leftBrand.outerHTML = `<div id="wa-brand-name-left">${_logoImg}</div>`;
         const _mobileBrand = document.getElementById('wa-brand-name-mobile');
-        if (_mobileBrand) _mobileBrand.outerHTML = `<div id="wa-brand-name-mobile">${_logoImg}</div>`;
+        if (_mobileBrand) _mobileBrand.innerHTML = _logoImg;
       }
 
       // Apply email required/optional setting from admin
