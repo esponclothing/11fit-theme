@@ -2163,9 +2163,6 @@ window._shopifyCustomer = {
     
     document.getElementById('wa-step-3').style.display = 'none';
     document.getElementById('wa-step-4').style.display = 'block';
-    document.getElementById('wa-dot-3').classList.add('done');
-    document.getElementById('wa-line-3').classList.add('done');
-    document.getElementById('wa-dot-4').classList.add('active');
 
     renderPaymentMethods();
   }
@@ -2173,9 +2170,6 @@ window._shopifyCustomer = {
   function waBackToAddress() {
     document.getElementById('wa-step-4').style.display = 'none';
     document.getElementById('wa-step-3').style.display = 'block';
-    document.getElementById('wa-dot-4').classList.remove('active');
-    document.getElementById('wa-dot-3').classList.remove('done');
-    document.getElementById('wa-line-3').classList.remove('done');
   }
   
   let waSelectedPayment = null;
