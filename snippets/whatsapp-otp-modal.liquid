@@ -1103,7 +1103,11 @@ window._shopifyCustomer = {
     document.getElementById('wa-step-4').style.display = 'none';
     document.getElementById('wa-step-' + step).style.display = 'block';
     waSetStep(step);
-    if (step === 4) waRenderPaymentMethods();
+    if (step === 4) {
+      if (typeof renderPaymentMethods === 'function') {
+        renderPaymentMethods();
+      }
+    }
   }
 
   function closeWaModal() {
