@@ -1685,7 +1685,7 @@ window._shopifyCustomer = {
     }
   }
 
-  async async function waApplyCoupon() {
+  async function waApplyCoupon() {
     const code = document.getElementById('wa-coupon-code').value.trim().toUpperCase();
     if (!code) return;
     const btn = document.querySelector('[onclick="waApplyCoupon()"]');
