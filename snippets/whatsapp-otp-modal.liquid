@@ -1761,7 +1761,29 @@ window._shopifyCustomer = {
   let waSelectedPayment = null;
   let cashfreeObj = null;
 
-  function renderPaymentMethods() {
+  
+    function waUpdateBtnTotal(baseTotal) {
+      let subtext = document.getElementById('wa-pay-btn-subtext');
+      if (!subtext) return;
+      
+      if (waSelectedPayment === 'prepaid') {
+        let disc = 0;
+        if (waPaymentSettings && waPaymentSettings.prepaid_offer_enabled) {
+            disc = waPaymentSettings.prepaid_offer_type === 'percent' ? (baseTotal * waPaymentSettings.prepaid_offer_value) / 100 : waPaymentSettings.prepaid_offer_value;
+            disc = Math.min(disc, baseTotal);
+        }
+        if (disc > 0) {
+            subtext.innerHTML = `Complete your order and save ₹${Math.round(disc)}`;
+        } else {
+            subtext.innerHTML = `Complete your secure online payment`;
+        }
+      } else {
+        // COD selected
+        subtext.innerHTML = `Pay securely when your order arrives`;
+      }
+    }
+  
+function renderPaymentMethods() {
       const container = document.getElementById('wa-payment-methods-container');
       container.innerHTML = '';
       
@@ -1924,15 +1946,6 @@ window._shopifyCustomer = {
                       <div style="font-size:16px; font-weight:800; color:#0f172a;">₹${payAmt.toFixed(2)}</div>
                     </div>
                  </div>
-                 
-                 ${isSelected ? `
-                 <div style="margin-top:16px; animation:waFadeIn 0.3s ease;">
-                    <div style="background:#f0fdf4; border-radius:6px; padding:8px 12px; display:inline-flex; align-items:center; gap:6px; font-size:11px; color:#15803d; font-weight:500;">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-                      Open box delivery • Pay only if you're satisfied
-                    </div>
-                 </div>
-                 ` : ''}
                </div>
             </div>
           `;
