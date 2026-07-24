@@ -650,8 +650,10 @@ window._shopifyCustomer = {
             </div>
 
             <div style="margin-bottom:12px;">
-              <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">Email (optional)</label>
-              <input type="email" id="wa-email" class="wa-input" placeholder="your@email.com">
+              <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">
+                Email <span id="wa-email-badge" style="font-size:11px; font-weight:500; text-transform:none; color:#94a3b8;">(Optional)</span>
+              </label>
+              <input type="email" id="wa-email" class="wa-input" placeholder="your@email.com (Optional)" autocomplete="email">
             </div>
 
             <div style="margin-bottom:12px;">
@@ -955,6 +957,24 @@ window._shopifyCustomer = {
     }
   });
 
+  
+  function waApplyEmailSetting(ps) {
+    const emailInput = document.getElementById('wa-email');
+    const emailBadge = document.getElementById('wa-email-badge');
+    const emailLabel = emailBadge ? emailBadge.closest('label') : null;
+    
+    const isRequired = ps && ps.email_required === true;
+    
+    if (emailInput) {
+      emailInput.required = isRequired;
+      emailInput.placeholder = isRequired ? 'your@email.com *' : 'your@email.com (Optional)';
+    }
+    if (emailBadge) {
+      emailBadge.textContent = isRequired ? '(Required *)' : '(Optional)';
+      emailBadge.style.color = isRequired ? '#ef4444' : '#94a3b8';
+    }
+  }
+  
   async function openWaModal() {
     const overlay = document.getElementById('wa-otp-overlay');
     if (!overlay) return;
