@@ -1451,7 +1451,7 @@ window._shopifyCustomer = {
     }
   }
 
-  async async function loadAddresses() {
+  async function loadAddresses() {
     try {
       const res = await fetch(`${WA_API_BASE}/addresses`, {
         method: 'POST',
