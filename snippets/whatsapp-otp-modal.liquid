@@ -1612,7 +1612,18 @@ window._shopifyCustomer = {
     if(document.getElementById('wa-first-name')) document.getElementById('wa-first-name').value = addr.first_name || '';
     if(document.getElementById('wa-last-name')) document.getElementById('wa-last-name').value = addr.last_name || '';
     if(document.getElementById('wa-address1')) document.getElementById('wa-address1').value = addr.address1 || '';
-    if(document.getElementById('wa-address2')) document.getElementById('wa-address2').value = addr.address2 || '';
+    let extractedAddr2 = addr.address2 || '';
+    let extractedDistrict = addr.company ? addr.company.replace('District: ', '') : '';
+    
+    if (extractedAddr2.includes('District: ')) {
+        const parts = extractedAddr2.split(/\s*\|?\s*District:\s*/);
+        if (parts.length > 1) {
+            extractedAddr2 = parts[0].trim();
+            extractedDistrict = parts[1].trim();
+        }
+    }
+    
+    if(document.getElementById('wa-address2')) document.getElementById('wa-address2').value = extractedAddr2;
     if(document.getElementById('wa-zip')) document.getElementById('wa-zip').value = addr.zip || '';
     
     // City
@@ -1638,7 +1649,7 @@ window._shopifyCustomer = {
     // District
     const districtInput = document.getElementById('wa-addr-district');
     if(districtInput) {
-        districtInput.value = addr.company ? addr.company.replace('District: ', '') : '';
+        districtInput.value = extractedDistrict;
         districtInput.readOnly = false;
         districtInput.style.cursor = 'text';
         districtInput.style.background = '#fff';
@@ -1913,17 +1924,21 @@ window._shopifyCustomer = {
     if (!stateVal) { if (errEl) { errEl.textContent = 'Please select or enter your State.'; errEl.style.display = 'block'; } return; }
     if (!cityVal) { if (errEl) { errEl.textContent = 'Please select or enter your City.'; errEl.style.display = 'block'; } return; }
 
+    let finalAddress2 = address2;
+    if (district) {
+        finalAddress2 = finalAddress2 ? finalAddress2 + ' | District: ' + district : 'District: ' + district;
+    }
     const addr = {
       first_name: fname,
       last_name: lname,
       email: email,
       address1: address1,
-      address2: address2,
+      address2: finalAddress2,
       city: cityVal,
       zip: zip,
       province: stateVal,
       country: 'India',
-      company: district ? 'District: ' + district : ''
+      company: district ? 'District: ' + district : '' // Keep it for immediate use in UI
     };
 
     const btn = document.getElementById('wa-save-addr-btn');
