@@ -1182,8 +1182,25 @@ window._shopifyCustomer = {
 
       
       if (data.identified && data.masked_phone) {
-        document.getElementById('wa-title-1').innerText = 'Welcome Back!';
-        document.getElementById('wa-desc-1').innerText = 'Continue as ' + data.masked_phone + '?';
+        const title1 = document.getElementById('wa-title-1');
+        const desc1 = document.getElementById('wa-desc-1');
+        if (title1) title1.innerText = 'Welcome Back!';
+        if (desc1) desc1.innerText = 'Continue as ' + data.masked_phone + '?';
+        
+        // If we previously deleted the title/desc, inject a clean welcome message so the user isn't confused
+        if (!title1 && !document.getElementById('wa-dynamic-welcome')) {
+          const step1 = document.getElementById('wa-step-1');
+          if (step1) {
+             const welcomeHtml = `
+               <div id="wa-dynamic-welcome" style="margin-bottom:24px;">
+                 <h2 style="font-size:26px; font-weight:800; margin-bottom:8px; color:#0f172a; letter-spacing:-0.5px;">Welcome Back!</h2>
+                 <p style="font-size:15px; color:#475569;">Continue as <strong style="color:#0f172a;">${data.masked_phone}</strong>?</p>
+               </div>
+             `;
+             step1.insertAdjacentHTML('afterbegin', welcomeHtml);
+          }
+        }
+
         const pCont = document.getElementById('wa-phone-container'); if(pCont) pCont.style.display = 'none';
         const pSec = document.getElementById('wa-phone-input-section'); if(pSec) pSec.style.display = 'none';
         const midTb = document.getElementById('wa-mid-trust-badges'); if(midTb) midTb.style.display = 'none';
@@ -1265,8 +1282,14 @@ window._shopifyCustomer = {
 
   function waSwitchAccount(e) {
     if (e) e.preventDefault();
-    document.getElementById('wa-title-1').innerText = 'Swift Checkout';
-    document.getElementById('wa-desc-1').innerText = 'Enter your WhatsApp number to receive an OTP and complete your order in seconds.';
+    const title1 = document.getElementById('wa-title-1');
+    if (title1) title1.innerText = 'Swift Checkout';
+    const desc1 = document.getElementById('wa-desc-1');
+    if (desc1) desc1.innerText = 'Enter your WhatsApp number to receive an OTP and complete your order in seconds.';
+    
+    // Remove the dynamic welcome message if it exists
+    const dynWelcome = document.getElementById('wa-dynamic-welcome');
+    if (dynWelcome) dynWelcome.remove();
     
     const pCont = document.getElementById('wa-phone-container'); if(pCont) pCont.style.display = 'block';
     const pSec = document.getElementById('wa-phone-input-section'); if(pSec) pSec.style.display = 'block';
