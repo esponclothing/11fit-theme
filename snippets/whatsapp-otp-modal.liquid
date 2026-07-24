@@ -1273,6 +1273,11 @@ window._shopifyCustomer = {
     });
     const lbl = document.getElementById('wa-step-label');
     if (lbl) lbl.innerText = 'STEP ' + uiStep + ' OF 3';
+  
+    const indicator = document.getElementById('wa-steps-indicator');
+    if (indicator) {
+      indicator.style.display = uiStep === 3 ? 'none' : 'flex';
+    }
   }
 
   function waGoToStep(step) {
