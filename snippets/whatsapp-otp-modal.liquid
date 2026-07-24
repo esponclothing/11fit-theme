@@ -2611,7 +2611,7 @@ function renderPaymentMethods() {
             currency: 'INR',
             content_type: 'product',
             payment_type: payload.payment_method === 'cod' ? 'COD' : 'Prepaid'
-          });
+          }, { eventID: data.order_id });
         }
       } catch(pixelErr) {
         console.error('Meta Pixel Error:', pixelErr);
