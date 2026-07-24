@@ -369,7 +369,11 @@ window._shopifyCustomer = {
         </button>
         <div style="display:flex; align-items:center; gap:6px; flex:1; justify-content:center; overflow:hidden; padding: 0 4px;">
           <div id="wa-brand-name-mobile" style="display:flex; align-items:center;">
-            <img src="https://cdn.shopify.com/s/files/1/1043/0526/2673/files/11Fit_b896947e-8555-4c07-b230-0762bd134371.png?v=1733682976" alt="Store Logo" style="height:32px; max-width:110px; object-fit:contain; flex-shrink:1;">
+            {% if settings.logo %}
+              <img src="{{ settings.logo | img_url: 'master' }}" alt="{{ shop.name }}" style="height:32px; max-width:110px; object-fit:contain; flex-shrink:1;">
+            {% else %}
+              <span id="wa-brand-text-mobile" style="font-weight:800; font-size:18px; text-transform:uppercase;">{{ shop.domain | remove: '.myshopify.com' }}</span>
+            {% endif %}
           </div>
           <div style="display:flex; align-items:center; gap:4px; background:#f0fdf4; padding:4px 8px; border-radius:8px; flex-shrink:1; overflow:hidden;">
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#16a34a" stroke-width="2.5" style="flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -616,10 +620,7 @@ window._shopifyCustomer = {
         <div id="wa-step-3" style="display:none;">
           <h2 class="wa-section-title" style="font-size:20px; margin-bottom:4px;">Delivery Address</h2>
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
-            <p class="wa-section-desc" style="margin:0; font-size:12px; max-width:60%;">Enter accurate details for a smooth and timely delivery.</p>
-            <button type="button" onclick="waUseMyLocation(event)" style="border:1px solid #bbf7d0; background:#f0fdf4; color:#16a34a; font-size:12px; padding:6px 12px; border-radius:20px; font-weight:600; display:flex; align-items:center; gap:4px; cursor:pointer;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg> Detect Location
-            </button>
+            <p class="wa-section-desc" style="margin:0; font-size:12px; max-width:100%;">Enter accurate details for a smooth and timely delivery.</p>
           </div>
 
           <!-- Address List (only shown if addresses exist) -->
@@ -1021,7 +1022,13 @@ window._shopifyCustomer = {
         if (_ps.logo_url) {
           const logoImg = `<img src="${_ps.logo_url}" alt="Store Logo" style="max-height:40px;max-width:150px;object-fit:contain;display:block;" />`;
           const leftBrand = document.getElementById('wa-brand-name-left');
-          if (leftBrand) leftBrand.outerHTML = `<div id="wa-brand-name-left">${logoImg}</div>`;
+          if (leftBrand) leftBrand.outerHTML = `<div id="wa-brand-name-left" style="display:flex; align-items:center; margin-bottom:24px;">
+          {% if settings.logo %}
+            <img src="{{ settings.logo | img_url: 'master' }}" alt="{{ shop.name }}" style="height:40px; max-width:150px; object-fit:contain; flex-shrink:1;">
+          {% else %}
+            <span id="wa-brand-text-left" style="font-weight:800; font-size:22px; text-transform:uppercase;">{{ shop.domain | remove: '.myshopify.com' }}</span>
+          {% endif %}
+        </div>`;
           const mobileBrand = document.getElementById('wa-brand-name-mobile');
           if (mobileBrand) mobileBrand.outerHTML = `<div id="wa-brand-name-mobile">${logoImg}</div>`;
         }
