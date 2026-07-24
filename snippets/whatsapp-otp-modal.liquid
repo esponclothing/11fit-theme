@@ -1277,11 +1277,11 @@ window._shopifyCustomer = {
     const indicator = document.getElementById('wa-steps-indicator');
     if (indicator) {
       indicator.style.display = 'flex';
-      indicator.style.justifyContent = uiStep === 3 ? 'flex-end' : 'space-between';
+      indicator.style.justifyContent = 'space-between';
     }
     const dotsContainer = document.getElementById('wa-dots-container');
     if (dotsContainer) {
-      dotsContainer.style.display = uiStep === 3 ? 'none' : 'flex';
+      dotsContainer.style.display = 'flex';
     }
   }
 
