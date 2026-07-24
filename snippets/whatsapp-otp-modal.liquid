@@ -2600,6 +2600,22 @@ function renderPaymentMethods() {
       document.getElementById('wa-steps-indicator').style.display = 'none';
       const sc = document.getElementById('wa-success-screen');
       sc.style.display = 'flex';
+
+      // 4. Fire Meta Pixel Purchase Event
+      try {
+        if (typeof fbq === 'function') {
+          let rawTotal = document.getElementById('wa-total').innerText.replace(/[^0-9.]/g, '');
+          let finalTotal = parseFloat(rawTotal) || 0;
+          fbq('track', 'Purchase', {
+            value: finalTotal,
+            currency: 'INR',
+            content_type: 'product',
+            payment_type: payload.payment_method === 'cod' ? 'COD' : 'Prepaid'
+          });
+        }
+      } catch(pixelErr) {
+        console.error('Meta Pixel Error:', pixelErr);
+      }
     } catch (e) {
       alert('Order placed but failed to confirm natively. Support will contact you. ' + e.message);
       const btn = document.getElementById('wa-cod-btn');
