@@ -664,20 +664,45 @@ window._shopifyCustomer = {
               <input type="text" id="wa-address2" class="wa-input" placeholder="Apartment, Suite, etc.">
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
-              <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">Pincode</label>
-                <input type="text" id="wa-zip" class="wa-input" placeholder="110001" maxlength="6" oninput="waLookupPin(this.value)">
+            <!-- Pincode row -->
+            <div style="margin-bottom:12px;">
+              <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">
+                Pincode
+                <span id="wa-pin-status" style="font-size:11px; font-weight:500; margin-left:8px; text-transform:none;"></span>
+              </label>
+              <div style="position:relative;">
+                <input type="text" id="wa-zip" class="wa-input" placeholder="110001" maxlength="6" autocomplete="postal-code"
+                  oninput="if(this.value.length===6) waLookupPincode(this.value); else waResetPinFields();"
+                  style="padding-right:40px;">
+                <span id="wa-pin-spinner" style="display:none; position:absolute; right:12px; top:13px; font-size:14px;">⏳</span>
               </div>
-              <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">City</label>
-                <input type="text" id="wa-city" class="wa-input" placeholder="City">
-              </div>
+              <div id="wa-pin-error" style="display:none; font-size:12px; color:#f59e0b; margin-top:4px;"></div>
             </div>
 
-            <div style="margin-bottom:16px;">
+            <!-- State (auto-filled, locked on PIN success) -->
+            <div style="margin-bottom:12px;">
               <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">State</label>
-              <input type="text" id="wa-province" class="wa-input" placeholder="State">
+              <!-- State text input (default) -->
+              <input type="text" id="wa-province" class="wa-input" placeholder="State (auto-filled from PIN)">
+              <!-- State dropdown (UT/special states) -->
+              <select id="wa-province-select" class="wa-input" style="display:none; cursor:pointer;">
+                <option value="">-- Select State --</option>
+              </select>
+            </div>
+
+            <!-- District (auto-filled, locked on PIN success) -->
+            <div style="margin-bottom:12px;">
+              <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">District</label>
+              <input type="text" id="wa-addr-district" class="wa-input" placeholder="District (auto-filled from PIN)">
+            </div>
+
+            <!-- City (dropdown when PIN found, text when not) -->
+            <div style="margin-bottom:16px;">
+              <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">City / Area</label>
+              <!-- Dropdown populated from PIN lookup -->
+              <select id="wa-addr-city-select" class="wa-input" style="display:none; cursor:pointer;"></select>
+              <!-- Text input fallback -->
+              <input type="text" id="wa-city" class="wa-input" placeholder="Enter your city">
             </div>
 
             <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:12px 14px; margin-bottom:20px; display:flex; align-items:center; gap:10px;">
@@ -1442,119 +1467,268 @@ window._shopifyCustomer = {
   }
 
   // ── PINCODE LOOKUP ──
+  
+  // Union Territories and city-states that need dropdown
+  const WA_UT_STATES = {
+    'Delhi': ['New Delhi', 'North Delhi', 'South Delhi', 'East Delhi', 'West Delhi', 'Central Delhi', 'North West Delhi', 'North East Delhi', 'South West Delhi', 'Shahdara'],
+    'Chandigarh': ['Chandigarh'],
+    'Puducherry': ['Puducherry', 'Karaikal', 'Mahé', 'Yanam'],
+    'Lakshadweep': ['Kavaratti', 'Agatti', 'Amini', 'Andrott'],
+    'Dadra and Nagar Haveli and Daman and Diu': ['Daman', 'Diu', 'Silvassa'],
+    'Andaman and Nicobar Islands': ['Port Blair', 'Car Nicobar', 'Campbell Bay'],
+    'Ladakh': ['Leh', 'Kargil'],
+    'Jammu and Kashmir': ['Jammu', 'Srinagar', 'Anantnag', 'Baramulla']
+  };
+
+  function waResetPinFields() {
+    const stateInput = document.getElementById('wa-province');
+    const stateSelect = document.getElementById('wa-province-select');
+    const districtEl = document.getElementById('wa-addr-district');
+    const cityInput = document.getElementById('wa-city');
+    const citySelect = document.getElementById('wa-addr-city-select');
+    const errEl = document.getElementById('wa-pin-error');
+    const statusEl = document.getElementById('wa-pin-status');
+
+    // Unlock & show text inputs
+    if (stateInput) { stateInput.value = ''; stateInput.readOnly = false; stateInput.style.display = 'block'; stateInput.style.background = ''; stateInput.style.cursor = ''; }
+    if (stateSelect) stateSelect.style.display = 'none';
+    if (districtEl) { districtEl.value = ''; districtEl.readOnly = false; districtEl.style.background = ''; districtEl.style.cursor = ''; }
+    if (cityInput) { cityInput.value = ''; cityInput.style.display = 'block'; }
+    if (citySelect) { citySelect.style.display = 'none'; citySelect.innerHTML = ''; }
+    if (errEl) errEl.style.display = 'none';
+    if (statusEl) statusEl.textContent = '';
+  }
+
   async function waLookupPincode(pin) {
+    if (!pin || pin.length !== 6) return;
+    
     const spinner = document.getElementById('wa-pin-spinner');
     const statusEl = document.getElementById('wa-pin-status');
     const errEl = document.getElementById('wa-pin-error');
-    spinner.style.display = 'inline';
-    statusEl.innerText = '';
-    errEl.style.display = 'none';
-    
-    const stateEl = document.getElementById('wa-addr-state');
+    const stateInput = document.getElementById('wa-province');
+    const stateSelect = document.getElementById('wa-province-select');
     const districtEl = document.getElementById('wa-addr-district');
-    const cityInputEl = document.getElementById('wa-addr-city-input');
-    const citySelectWrap = document.getElementById('wa-city-select-wrapper');
+    const cityInput = document.getElementById('wa-city');
     const citySelect = document.getElementById('wa-addr-city-select');
+
+    if (spinner) spinner.style.display = 'inline';
+    if (statusEl) statusEl.textContent = 'Looking up...';
+    if (errEl) errEl.style.display = 'none';
 
     try {
       const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
       const data = await res.json();
+
       if (data && data[0] && data[0].Status === 'Success') {
         const postOffices = data[0].PostOffice;
         const firstPo = postOffices[0];
-        
-        // Lock district & state
-        districtEl.value = firstPo.District || '';
-        stateEl.value = firstPo.State || '';
-        districtEl.readOnly = true;
-        stateEl.readOnly = true;
-        districtEl.style.background = '#f8fafc';
-        stateEl.style.background = '#f8fafc';
-        districtEl.style.cursor = 'not-allowed';
-        stateEl.style.cursor = 'not-allowed';
+        const stateName = firstPo.State || '';
+        const districtName = firstPo.District || '';
 
-        // Populate city dropdown
-        citySelect.innerHTML = '';
-        const uniqueCities = [...new Set(postOffices.map(po => po.Name))];
-        uniqueCities.forEach(city => {
-          const opt = document.createElement('option');
-          opt.value = city;
-          opt.text = city;
-          citySelect.appendChild(opt);
-        });
+        // Auto-fill & lock District
+        if (districtEl) {
+          districtEl.value = districtName;
+          districtEl.readOnly = true;
+          districtEl.style.background = '#f8fafc';
+          districtEl.style.cursor = 'not-allowed';
+        }
 
-        cityInputEl.value = uniqueCities[0];
-        cityInputEl.style.display = 'none';
-        citySelectWrap.style.display = 'block';
+        // Check if this is a UT/city-state that needs a dropdown
+        const isUT = WA_UT_STATES.hasOwnProperty(stateName);
 
-        statusEl.innerHTML = '<span style="color:#16a34a;font-weight:600;">✓ Location found</span>';
+        if (isUT) {
+          // Show state dropdown
+          if (stateInput) stateInput.style.display = 'none';
+          if (stateSelect) {
+            stateSelect.innerHTML = '';
+            const cities = WA_UT_STATES[stateName];
+            cities.forEach(c => {
+              const opt = document.createElement('option');
+              opt.value = c; opt.textContent = c;
+              stateSelect.appendChild(opt);
+            });
+            // Put the state name itself as a locked option 
+            stateSelect.innerHTML = '<option value="' + stateName + '" selected>' + stateName + '</option>';
+            stateSelect.disabled = true;
+            stateSelect.style.display = 'block';
+            stateSelect.style.background = '#f8fafc';
+          }
+        } else {
+          // Normal state - auto-fill text input
+          if (stateInput) {
+            stateInput.value = stateName;
+            stateInput.readOnly = true;
+            stateInput.style.display = 'block';
+            stateInput.style.background = '#f8fafc';
+            stateInput.style.cursor = 'not-allowed';
+          }
+          if (stateSelect) stateSelect.style.display = 'none';
+        }
+
+        // Populate city/area dropdown from post offices
+        const uniqueAreas = [...new Set(postOffices.map(po => po.Name))].sort();
+        if (citySelect) {
+          citySelect.innerHTML = '';
+          uniqueAreas.forEach(area => {
+            const opt = document.createElement('option');
+            opt.value = area; opt.textContent = area;
+            citySelect.appendChild(opt);
+          });
+          citySelect.style.display = 'block';
+          citySelect.style.cursor = 'pointer';
+          // Sync with city hidden input
+          citySelect.onchange = () => { if (cityInput) cityInput.value = citySelect.value; };
+        }
+        if (cityInput) {
+          cityInput.value = uniqueAreas[0] || '';
+          cityInput.style.display = 'none';
+        }
+
+        if (statusEl) statusEl.innerHTML = '<span style="color:#16a34a; font-weight:700;">✓ Location found</span>';
+
       } else {
         throw new Error('PIN not found');
       }
-    } catch(e) {
-      // Unlock on failure
-      districtEl.readOnly = false;
-      stateEl.readOnly = false;
-      districtEl.style.background = '#fff';
-      stateEl.style.background = '#fff';
-      districtEl.style.cursor = 'text';
-      stateEl.style.cursor = 'text';
-      
-      citySelectWrap.style.display = 'none';
-      cityInputEl.style.display = 'block';
 
-      errEl.innerText = 'Could not auto-fill from PIN. Please fill manually.';
-      errEl.style.display = 'block';
-      statusEl.innerHTML = '<span style="color:#f59e0b;">Enter manually below</span>';
+    } catch(e) {
+      // API failed - provide manual fallback with state dropdown
+      if (statusEl) statusEl.innerHTML = '<span style="color:#f59e0b; font-weight:600;">⚠ Enter manually</span>';
+      if (errEl) {
+        errEl.textContent = 'Could not auto-fill. Please select/enter your location below.';
+        errEl.style.display = 'block';
+      }
+
+      // Unlock district & show text input
+      if (districtEl) { districtEl.readOnly = false; districtEl.style.background = ''; districtEl.style.cursor = ''; }
+
+      // Show state dropdown with all Indian states + UTs
+      const allStates = [
+        'Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa','Gujarat',
+        'Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh',
+        'Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab',
+        'Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh',
+        'Uttarakhand','West Bengal',
+        '-- Union Territories --',
+        'Andaman and Nicobar Islands','Chandigarh','Dadra and Nagar Haveli and Daman and Diu',
+        'Delhi','Jammu and Kashmir','Ladakh','Lakshadweep','Puducherry'
+      ];
+
+      if (stateInput) stateInput.style.display = 'none';
+      if (stateSelect) {
+        stateSelect.innerHTML = '<option value="">-- Select State --</option>';
+        allStates.forEach(s => {
+          const opt = document.createElement('option');
+          if (s.startsWith('--')) { opt.disabled = true; opt.textContent = s; }
+          else { opt.value = s; opt.textContent = s; }
+          stateSelect.appendChild(opt);
+        });
+        stateSelect.disabled = false;
+        stateSelect.style.background = '';
+        stateSelect.style.display = 'block';
+        stateSelect.style.cursor = 'pointer';
+
+        // When state is selected, show city dropdown or text based on UT
+        stateSelect.onchange = () => {
+          const sel = stateSelect.value;
+          if (stateInput) stateInput.value = sel;
+          
+          if (WA_UT_STATES.hasOwnProperty(sel)) {
+            // Show city dropdown for UT
+            if (citySelect) {
+              citySelect.innerHTML = '<option value="">-- Select City --</option>';
+              WA_UT_STATES[sel].forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c; opt.textContent = c;
+                citySelect.appendChild(opt);
+              });
+              citySelect.style.display = 'block';
+              citySelect.onchange = () => { if (cityInput) cityInput.value = citySelect.value; };
+            }
+            if (cityInput) cityInput.style.display = 'none';
+          } else {
+            // Regular state - free text city
+            if (citySelect) citySelect.style.display = 'none';
+            if (cityInput) { cityInput.style.display = 'block'; cityInput.value = ''; cityInput.readOnly = false; }
+          }
+        };
+      }
+
+      // City - keep text input visible by default
+      if (citySelect) citySelect.style.display = 'none';
+      if (cityInput) { cityInput.style.display = 'block'; cityInput.readOnly = false; }
+
     } finally {
-      spinner.style.display = 'none';
+      if (spinner) spinner.style.display = 'none';
     }
   }
 
   async function waSaveNewAddress() {
-    const fname = document.getElementById('wa-addr-fname').value.trim();
-    const lname = document.getElementById('wa-addr-lname').value.trim();
-    const street = document.getElementById('wa-addr-street').value.trim();
-    const city = document.getElementById('wa-addr-city-input').value.trim();
-    const zip = document.getElementById('wa-addr-zip').value.trim();
-    const district = document.getElementById('wa-addr-district').value.trim();
-    const state = document.getElementById('wa-addr-state').value.trim();
+    // Get city - prefer city text input (synced from select) or select value
+    const cityInput = document.getElementById('wa-city');
+    const citySelect = document.getElementById('wa-addr-city-select');
+    const citySelectVisible = citySelect && citySelect.style.display !== 'none';
+    const cityVal = citySelectVisible ? (citySelect.value || cityInput.value || '').trim() : (cityInput ? cityInput.value.trim() : '');
 
-    if (!fname || !street || !city || !zip || !state) {
-      const errEl = document.getElementById('wa-pin-error');
-      errEl.innerText = 'Please fill First Name, Street, City, PIN Code and State.';
-      errEl.style.display = 'block';
-      return;
-    }
+    // Get state - prefer text input, fallback to select
+    const stateInput = document.getElementById('wa-province');
+    const stateSelect = document.getElementById('wa-province-select');
+    const stateSelectVisible = stateSelect && stateSelect.style.display !== 'none';
+    const stateVal = stateSelectVisible ? (stateSelect.value || '').trim() : (stateInput ? stateInput.value.trim() : '');
+
+    const fname = (document.getElementById('wa-first-name') || {}).value?.trim() || '';
+    const lname = (document.getElementById('wa-last-name') || {}).value?.trim() || '';
+    const email = (document.getElementById('wa-email') || {}).value?.trim() || '';
+    const address1 = (document.getElementById('wa-address1') || {}).value?.trim() || '';
+    const address2 = (document.getElementById('wa-address2') || {}).value?.trim() || '';
+    const zip = (document.getElementById('wa-zip') || {}).value?.trim() || '';
+    const district = (document.getElementById('wa-addr-district') || {}).value?.trim() || '';
+
+    const errEl = document.getElementById('wa-pin-error');
+
+    // Validation
+    if (!fname) { if (errEl) { errEl.textContent = 'Please enter your First Name.'; errEl.style.display = 'block'; } document.getElementById('wa-first-name').focus(); return; }
+    if (!address1) { if (errEl) { errEl.textContent = 'Please enter your Address.'; errEl.style.display = 'block'; } document.getElementById('wa-address1').focus(); return; }
+    if (!zip || zip.length !== 6) { if (errEl) { errEl.textContent = 'Please enter a valid 6-digit PIN code.'; errEl.style.display = 'block'; } document.getElementById('wa-zip').focus(); return; }
+    if (!stateVal) { if (errEl) { errEl.textContent = 'Please select or enter your State.'; errEl.style.display = 'block'; } return; }
+    if (!cityVal) { if (errEl) { errEl.textContent = 'Please select or enter your City.'; errEl.style.display = 'block'; } return; }
 
     const addr = {
       first_name: fname,
       last_name: lname,
-      address1: street,
-      city: city,
+      email: email,
+      address1: address1,
+      address2: address2,
+      city: cityVal,
       zip: zip,
-      province: state,
+      province: stateVal,
       country: 'India',
-      company: district ? `District: ${district}` : ''
+      company: district ? 'District: ' + district : ''
     };
 
+    const btn = document.getElementById('wa-save-addr-btn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
+
     try {
-      await fetch(`${WA_API_BASE}/addresses`, {
+      await fetch(WA_API_BASE + '/addresses', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           merchant_key: MERCHANT_KEY, 
           phone: waPhone, 
           action: waEditingAddressId ? 'EDIT' : 'ADD', 
-          address_data: waEditingAddressId ? { id: waEditingAddressId, ...addr } : addr 
+          address_data: waEditingAddressId ? Object.assign({ id: waEditingAddressId }, addr) : addr 
         })
       });
       document.getElementById('wa-new-address-form').style.display = 'none';
       document.getElementById('wa-add-addr-btn').style.display = 'block';
-      document.getElementById('wa-pin-error').style.display = 'none';
+      if (errEl) errEl.style.display = 'none';
       waEditingAddressId = null;
       await loadAddresses();
-    } catch (e) { alert('Failed to save address. Please try again.'); }
+    } catch (e) { 
+      alert('Failed to save address. Please try again.'); 
+    } finally {
+      if (btn) { btn.disabled = false; btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Save & Deliver to this Address'; }
+    }
   }
 
   async function calculateCheckoutTotals(discountCode = null) {
