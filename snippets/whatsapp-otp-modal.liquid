@@ -617,162 +617,251 @@ window._shopifyCustomer = {
         </div>
 
         <!-- STEP 3: ADDRESS -->
-        <div id="wa-step-3" style="display:none;">
-          <!-- Address List (only shown if addresses exist) -->
+        <div id="wa-step-3" style="display:none; padding:0;">
+
+          <!-- Address List (saved addresses - shown when addresses exist) -->
           <div id="wa-address-list"></div>
-          
-          <button type="button" onclick="waShowNewAddressForm()" id="wa-add-addr-btn" style="width:100%;padding:13px;border:1.5px dashed #cbd5e1;background:transparent;border-radius:10px;font-size:14px;font-weight:600;color:#64748b;cursor:pointer;margin-bottom:20px;transition:0.2s;display:none;">
+
+          <!-- Add New Address button (shown after addresses load) -->
+          <button type="button" onclick="waShowNewAddressForm()" id="wa-add-addr-btn"
+            style="width:100%; padding:14px; border:1.5px dashed #cbd5e1; background:transparent; border-radius:12px; font-size:14px; font-weight:600; color:#64748b; cursor:pointer; margin-bottom:16px; transition:0.2s; display:none;">
             + Add New Address
           </button>
 
-          <!-- Deliver Here button (shown when saved address is selected) -->
-          <button type="button" id="wa-deliver-here-btn" class="wa-btn-primary" onclick="waGoToStep(4)" style="margin-bottom:12px; background:#0f172a; padding:18px; width:100%; display:flex; justify-content:center; align-items:center; gap:8px; border-radius:12px; color:#fff; font-size:16px; font-weight:700; border:none; cursor:pointer; transition:0.2s;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <!-- Deliver to this Address button (shown when a saved address is selected) -->
+          <button type="button" id="wa-deliver-here-btn" onclick="waGoToStep(4)"
+            style="display:none; width:100%; padding:18px; background:#0f172a; color:#fff; border:none; border-radius:14px; font-size:16px; font-weight:700; cursor:pointer; margin-bottom:20px; align-items:center; justify-content:center; gap:8px; transition:0.2s;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             Deliver to this Address →
-            <span style="display:block; font-size:11px; font-weight:500; color:rgba(255,255,255,0.75); margin-top:1px;">Proceed to secure payment</span>
           </button>
 
-          <!-- New Address Form (hidden by default) -->
+          <!-- NEW ADDRESS FORM -->
           <div id="wa-new-address-form" style="display:none;">
-            <!-- Hidden dummy for JS compat -->
-            <div id="wa-city-select-wrapper" style="display:none;"></div>
-            <div id="wa-pin-status" style="display:none;"></div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
-              <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">First Name</label>
-                <input type="text" id="wa-first-name" class="wa-input" placeholder="First name">
+            <!-- Header -->
+            <div style="margin-bottom:20px;">
+              <h2 style="font-size:22px; font-weight:800; color:#0f172a; margin:0 0 4px 0;">Delivery Address</h2>
+              <p style="font-size:13px; color:#64748b; margin:0;">Enter accurate details for a smooth and timely delivery.</p>
+            </div>
+
+            <!-- Trust Badges Row -->
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:6px; margin-bottom:20px; padding:12px 10px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px;">
+              <div style="display:flex; flex-direction:column; align-items:center; gap:4px; font-size:10px; font-weight:600; color:#15803d; text-align:center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                100% Secure
               </div>
-              <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">Last Name</label>
-                <input type="text" id="wa-last-name" class="wa-input" placeholder="Last name">
+              <div style="display:flex; flex-direction:column; align-items:center; gap:4px; font-size:10px; font-weight:600; color:#15803d; text-align:center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Privacy Protected
               </div>
-            </div>
-
-            <div style="margin-bottom:12px;">
-              <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">
-                Email <span id="wa-email-badge" style="font-size:11px; font-weight:500; text-transform:none; color:#94a3b8;">(Optional)</span>
-              </label>
-              <input type="email" id="wa-email" class="wa-input" placeholder="your@email.com (Optional)" autocomplete="email">
-            </div>
-
-            <div style="margin-bottom:12px;">
-              <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">Address Line 1</label>
-              <input type="text" id="wa-address1" class="wa-input" placeholder="House no, Street, Area">
-            </div>
-
-            <div style="margin-bottom:12px;">
-              <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">Address Line 2 (optional)</label>
-              <input type="text" id="wa-address2" class="wa-input" placeholder="Apartment, Suite, etc.">
-            </div>
-
-            <!-- Pincode row -->
-            <div style="margin-bottom:12px;">
-              <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">
-                Pincode
-                <span id="wa-pin-status" style="font-size:11px; font-weight:500; margin-left:8px; text-transform:none;"></span>
-              </label>
-              <div style="position:relative;">
-                <input type="text" id="wa-zip" class="wa-input" placeholder="110001" maxlength="6" autocomplete="postal-code"
-                  oninput="if(this.value.length===6) waLookupPincode(this.value); else waResetPinFields();"
-                  style="padding-right:40px;">
-                <span id="wa-pin-spinner" style="display:none; position:absolute; right:12px; top:13px; font-size:14px;">⏳</span>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:4px; font-size:10px; font-weight:600; color:#15803d; text-align:center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                Easy Returns
               </div>
-              <div id="wa-pin-error" style="display:none; font-size:12px; color:#f59e0b; margin-top:4px;"></div>
-            </div>
-
-            <!-- State (auto-filled, locked on PIN success) -->
-            <div style="margin-bottom:12px;">
-              <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">State</label>
-              <!-- State text input (default) -->
-              <input type="text" id="wa-province" class="wa-input" placeholder="State (auto-filled from PIN)">
-              <!-- State dropdown (UT/special states) -->
-              <select id="wa-province-select" class="wa-input" style="display:none; cursor:pointer;">
-                <option value="">-- Select State --</option>
-              </select>
-            </div>
-
-            <!-- District (auto-filled, locked on PIN success) -->
-            <div style="margin-bottom:12px;">
-              <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">District</label>
-              <input type="text" id="wa-addr-district" class="wa-input" placeholder="District (auto-filled from PIN)">
-            </div>
-
-            <!-- City (dropdown when PIN found, text when not) -->
-            <div style="margin-bottom:16px;">
-              <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">City / Area</label>
-              <!-- Dropdown populated from PIN lookup -->
-              <select id="wa-addr-city-select" class="wa-input" style="display:none; cursor:pointer;"></select>
-              <!-- Text input fallback -->
-              <input type="text" id="wa-city" class="wa-input" placeholder="Enter your city">
-            </div>
-
-            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:12px 14px; margin-bottom:20px; display:flex; align-items:center; gap:10px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-              <div style="display:block; font-size:12px; color:#15803d; font-weight:500;">
-                To ensure safe delivery, faster returns &amp; real-time order updates
+              <div style="display:flex; flex-direction:column; align-items:center; gap:4px; font-size:10px; font-weight:600; color:#15803d; text-align:center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                Free Shipping
               </div>
             </div>
 
-            <!-- Save Address Button (inside form) -->
-            <button type="button" id="wa-save-addr-btn" class="wa-btn-primary" onclick="waSaveNewAddress()" style="margin-bottom:12px; background:#0f172a; padding:18px; width:100%; display:flex; justify-content:center; align-items:center; gap:8px; border-radius:12px; color:#fff; font-size:16px; font-weight:700; border:none; cursor:pointer;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <!-- Email Field (icon-card style) -->
+            <div style="background:#fff; border:1.5px solid #e2e8f0; border-radius:14px; padding:14px 16px; margin-bottom:12px; display:flex; align-items:center; gap:12px; transition:0.2s;" 
+              onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#e2e8f0'">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <div style="flex:1;">
+                <div style="font-size:10px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:4px;">
+                  Email Address <span id="wa-email-badge" style="color:#ef4444; font-size:10px;">(Required)</span>
+                </div>
+                <input type="email" id="wa-email" placeholder="your@email.com" autocomplete="email"
+                  style="width:100%; border:none; outline:none; font-size:14px; font-weight:500; color:#0f172a; background:transparent; padding:0;">
+              </div>
+              <div id="wa-email-check" style="display:none;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+            </div>
+
+            <!-- First Name + Last Name -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+              <div style="background:#fff; border:1.5px solid #e2e8f0; border-radius:14px; padding:14px 16px; display:flex; align-items:center; gap:10px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <div style="flex:1;">
+                  <div style="font-size:10px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:4px;">First Name</div>
+                  <input type="text" id="wa-first-name" placeholder="Rahul" autocomplete="given-name"
+                    style="width:100%; border:none; outline:none; font-size:14px; font-weight:500; color:#0f172a; background:transparent; padding:0;">
+                </div>
+              </div>
+              <div style="background:#fff; border:1.5px solid #e2e8f0; border-radius:14px; padding:14px 16px; display:flex; align-items:center; gap:10px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <div style="flex:1;">
+                  <div style="font-size:10px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:4px;">Last Name</div>
+                  <input type="text" id="wa-last-name" placeholder="Sharma" autocomplete="family-name"
+                    style="width:100%; border:none; outline:none; font-size:14px; font-weight:500; color:#0f172a; background:transparent; padding:0;">
+                </div>
+              </div>
+            </div>
+
+            <!-- Street Address -->
+            <div style="background:#fff; border:1.5px solid #e2e8f0; border-radius:14px; padding:14px 16px; margin-bottom:12px; display:flex; align-items:center; gap:12px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <div style="flex:1;">
+                <div style="font-size:10px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:4px;">Street Address</div>
+                <input type="text" id="wa-address1" placeholder="House No, Street, Locality" autocomplete="address-line1"
+                  style="width:100%; border:none; outline:none; font-size:14px; font-weight:500; color:#0f172a; background:transparent; padding:0;">
+              </div>
+            </div>
+
+            <!-- Address Line 2 (optional) -->
+            <div style="background:#fff; border:1.5px solid #e2e8f0; border-radius:14px; padding:14px 16px; margin-bottom:12px; display:flex; align-items:center; gap:12px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              <div style="flex:1;">
+                <div style="font-size:10px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:4px;">Address Line 2 <span style="color:#94a3b8; text-transform:none;">(Optional)</span></div>
+                <input type="text" id="wa-address2" placeholder="Apartment, Suite, etc." autocomplete="address-line2"
+                  style="width:100%; border:none; outline:none; font-size:14px; font-weight:500; color:#0f172a; background:transparent; padding:0;">
+              </div>
+            </div>
+
+            <!-- PIN Code + State -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+              <div style="background:#fff; border:1.5px solid #e2e8f0; border-radius:14px; padding:14px 16px; display:flex; align-items:center; gap:10px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2"/></svg>
+                <div style="flex:1;">
+                  <div style="font-size:10px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:4px;">
+                    PIN Code
+                    <span id="wa-pin-spinner" style="display:none; font-size:10px;">⏳</span>
+                    <span id="wa-pin-status" style="font-size:10px; font-weight:600; margin-left:4px;"></span>
+                  </div>
+                  <input type="text" id="wa-zip" placeholder="400001" maxlength="6" autocomplete="postal-code"
+                    oninput="if(this.value.length===6) waLookupPincode(this.value); else waResetPinFields();"
+                    style="width:100%; border:none; outline:none; font-size:14px; font-weight:500; color:#0f172a; background:transparent; padding:0;">
+                </div>
+              </div>
+              <div style="background:#fff; border:1.5px solid #e2e8f0; border-radius:14px; padding:14px 16px; display:flex; align-items:center; gap:10px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <div style="flex:1;">
+                  <div style="font-size:10px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:4px;">State</div>
+                  <!-- Text input (default, auto-filled from PIN) -->
+                  <input type="text" id="wa-province" placeholder="Select State" autocomplete="address-level1"
+                    style="width:100%; border:none; outline:none; font-size:14px; font-weight:500; color:#0f172a; background:transparent; padding:0;">
+                  <!-- Select dropdown (shown on fallback or UT) -->
+                  <select id="wa-province-select"
+                    style="display:none; width:100%; border:none; outline:none; font-size:14px; font-weight:500; color:#0f172a; background:transparent; padding:0; cursor:pointer;">
+                    <option value="">Select State</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- City + District -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+              <div style="background:#fff; border:1.5px solid #e2e8f0; border-radius:14px; padding:14px 16px; display:flex; align-items:center; gap:10px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:10px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:4px;">City / Post Office</div>
+                  <!-- Text input (default) -->
+                  <input type="text" id="wa-city" placeholder="Enter City" autocomplete="address-level2"
+                    style="width:100%; border:none; outline:none; font-size:14px; font-weight:500; color:#0f172a; background:transparent; padding:0;">
+                  <!-- Dropdown (PIN found) -->
+                  <select id="wa-addr-city-select"
+                    style="display:none; width:100%; border:none; outline:none; font-size:14px; font-weight:500; color:#0f172a; background:transparent; padding:0; cursor:pointer;"></select>
+                </div>
+              </div>
+              <div style="background:#fff; border:1.5px solid #e2e8f0; border-radius:14px; padding:14px 16px; display:flex; align-items:center; gap:10px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <div style="flex:1;">
+                  <div style="font-size:10px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:4px;">District</div>
+                  <input type="text" id="wa-addr-district" placeholder="Enter District"
+                    style="width:100%; border:none; outline:none; font-size:14px; font-weight:500; color:#0f172a; background:transparent; padding:0;">
+                </div>
+              </div>
+            </div>
+
+            <!-- PIN Error -->
+            <div id="wa-pin-error" style="display:none; font-size:12px; color:#f59e0b; margin-bottom:12px; padding:10px 14px; background:#fffbeb; border:1px solid #fde68a; border-radius:10px;"></div>
+
+            <!-- Why address info box -->
+            <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:14px; padding:14px 16px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; gap:12px; cursor:pointer;">
+              <div style="display:flex; gap:12px; align-items:flex-start;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" style="flex-shrink:0; margin-top:2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                <div>
+                  <div style="font-size:13px; font-weight:700; color:#15803d; margin-bottom:2px;">Why we need your address?</div>
+                  <div style="font-size:12px; color:#16a34a; line-height:1.5;">To ensure safe delivery, faster returns &amp; real-time order updates</div>
+                </div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+
+            <!-- Save Address Button -->
+            <button type="button" id="wa-save-addr-btn" onclick="waSaveNewAddress()"
+              style="width:100%; padding:18px; background:#0f172a; color:#fff; border:none; border-radius:14px; font-size:16px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:12px; transition:0.2s;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               Save & Deliver to this Address
             </button>
-          </div>
+            <div style="text-align:center; font-size:11px; color:#16a34a; font-weight:500; margin-bottom:24px; display:flex; justify-content:center; align-items:center; gap:4px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              We respect your privacy. Your information is safe with us.
+            </div>
+
+            <!-- Dummy IDs for JS compat -->
+            <div id="wa-city-select-wrapper" style="display:none;"></div>
+
+          </div><!-- /wa-new-address-form -->
 
           <!-- Coupon Code -->
-          <div class="wa-coupon-row" style="display:flex; gap:8px; margin-bottom:20px; margin-top:24px;">
-            <div style="position:relative; flex:1;">
-              <div style="position:absolute; left:14px; top:13px; color:#64748b;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-              </div>
-              <input type="text" id="wa-coupon-code" class="wa-input" placeholder="Have a discount code?" style="padding-left:42px; text-transform:uppercase; font-size:13px; background:#f8fafc;">
-            </div>
-            <button type="button" onclick="waApplyCoupon()" style="padding:0 22px; background:#f0fdf4; color:#16a34a; border:1.5px solid #bbf7d0; border-radius:10px; font-weight:700; font-size:13px; cursor:pointer; white-space:nowrap;">Apply</button>
+          <div style="display:flex; align-items:center; gap:0; margin-bottom:20px; background:#fff; border:1.5px solid #e2e8f0; border-radius:14px; overflow:hidden; padding:4px 4px 4px 16px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5" style="flex-shrink:0;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+            <input type="text" id="wa-coupon-code" placeholder="Have a discount code?" autocomplete="off"
+              style="flex:1; border:none; outline:none; padding:12px 10px; font-size:14px; font-weight:500; color:#0f172a; background:transparent; text-transform:uppercase;">
+            <button type="button" onclick="waApplyCoupon()"
+              style="padding:10px 20px; background:#f0fdf4; color:#16a34a; border:1.5px solid #bbf7d0; border-radius:10px; font-weight:700; font-size:13px; cursor:pointer; white-space:nowrap; margin:0;">
+              Apply
+            </button>
           </div>
           <div id="wa-coupon-msg" style="display:none; margin:-12px 0 16px 0; font-size:12px; padding:8px 12px; border-radius:8px;"></div>
 
           <!-- Order Summary -->
-          <div class="wa-order-summary" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:20px; margin-bottom:24px;">
-            <div style="font-size:13px; font-weight:800; color:#64748b; letter-spacing:1px; text-transform:uppercase; margin-bottom:16px;">Order Summary</div>
-            
+          <div style="background:#fff; border:1.5px solid #e2e8f0; border-radius:14px; padding:20px; margin-bottom:24px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+              <div style="font-size:16px; font-weight:800; color:#0f172a;">Order Summary</div>
+              {% if cart.total_discount > 0 %}
+              <div style="font-size:12px; font-weight:700; color:#16a34a; background:#f0fdf4; border:1px solid #bbf7d0; padding:3px 10px; border-radius:20px;">
+                You Save ₹{{ cart.total_discount | divided_by: 100.00 }}!
+              </div>
+              {% endif %}
+            </div>
+
             <div style="display:flex; justify-content:space-between; margin-bottom:12px; font-size:14px; color:#475569;">
               <span>Subtotal (MRP)</span>
               <span id="wa-subtotal" style="font-weight:600; color:#0f172a;">₹{{ cart.original_total_price | divided_by: 100.00 }}</span>
             </div>
-            <div id="wa-discount-row" style="display:{% if cart.total_discount > 0 %}flex{% else %}none{% endif %}; justify-content:space-between; margin-bottom:12px; font-size:14px; color:#16a34a; font-weight:500;">
+            <div id="wa-discount-row" style="display:{% if cart.total_discount > 0 %}flex{% else %}none{% endif %}; justify-content:space-between; margin-bottom:12px; font-size:14px; color:#16a34a; font-weight:600;">
               <span>Cart Discounts</span>
               <span id="wa-discount-amt">-₹{{ cart.total_discount | divided_by: 100.00 }}</span>
             </div>
-            <div id="wa-coupon-discount-row" style="display:none; justify-content:space-between; margin-bottom:12px; font-size:14px; color:#059669; font-weight:500;">
+            <div id="wa-coupon-discount-row" style="display:none; justify-content:space-between; margin-bottom:12px; font-size:14px; color:#059669; font-weight:600;">
               <span>Coupon Discount</span>
               <span id="wa-coupon-discount-amt">-₹0</span>
             </div>
             <div style="display:flex; justify-content:space-between; margin-bottom:16px; font-size:14px; color:#475569;">
               <span>Shipping</span>
-              <span style="color:#16a34a; font-weight:700; background:#f0fdf4; border:1px solid #bbf7d0; padding:2px 8px; border-radius:4px; font-size:12px;">FREE</span>
+              <span style="color:#16a34a; font-weight:700; background:#f0fdf4; border:1px solid #bbf7d0; padding:2px 10px; border-radius:20px; font-size:12px;">FREE</span>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; font-size:17px; color:#0f172a; font-weight:800; border-top:1.5px dashed #e2e8f0; padding-top:16px;">
-              <span>Total</span>
-              <span id="wa-total" data-base-total="{{ cart.total_price | divided_by: 100.00 }}">₹{{ cart.total_price | divided_by: 100.00 }}</span>
-            </div>
-            
+
             {% if cart.total_discount > 0 %}
-            <div id="wa-yay-saving" style="display:flex; background:#f0fdf4; border:1px solid #bbf7d0; color:#15803d; font-size:12px; font-weight:600; padding:10px 14px; border-radius:8px; align-items:center; gap:8px; margin-top:14px;">
+            <div id="wa-yay-saving" style="display:flex; background:#f0fdf4; border:1px solid #bbf7d0; color:#15803d; font-size:13px; font-weight:600; padding:12px 14px; border-radius:10px; align-items:center; gap:8px;">
               🎁 Yay! You are saving <strong id="wa-yay-amt">₹{{ cart.total_discount | divided_by: 100.00 }}</strong> on this order 🎉
             </div>
             {% else %}
-            <div id="wa-yay-saving" style="display:none; background:#f0fdf4; border:1px solid #bbf7d0; color:#15803d; font-size:12px; font-weight:600; padding:10px 14px; border-radius:8px; align-items:center; gap:8px; margin-top:14px;">
+            <div id="wa-yay-saving" style="display:none; background:#f0fdf4; border:1px solid #bbf7d0; color:#15803d; font-size:13px; font-weight:600; padding:12px 14px; border-radius:10px; align-items:center; gap:8px;">
               🎁 Yay! You are saving <strong id="wa-yay-amt"></strong> on this order 🎉
             </div>
             {% endif %}
+
+            <!-- Hidden total for JS -->
+            <div style="display:none;">
+              <span id="wa-total" data-base-total="{{ cart.total_price | divided_by: 100.00 }}">₹{{ cart.total_price | divided_by: 100.00 }}</span>
+            </div>
           </div>
 
-          <div style="text-align:center; font-size:11px; color:#16a34a; font-weight:500; margin-bottom:20px; display:flex; justify-content:center; align-items:center; gap:4px;">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            We respect your privacy. Your information is safe with us.
-          </div>
         </div>
 
                 <!-- STEP 4: PAYMENT -->
