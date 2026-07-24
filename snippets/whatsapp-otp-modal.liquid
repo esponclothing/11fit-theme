@@ -369,15 +369,12 @@ window._shopifyCustomer = {
         </button>
         <div style="display:flex; align-items:center; gap:12px;">
           <div id="wa-brand-name-mobile" style="display:flex; align-items:center;">
-            <img src="//cdn.shopify.com/s/files/1/1043/0526/2673/files/11Fit_b896947e-8555-4c07-b230-0762bd134371.png?v=1733682976" style="height:28px; object-fit:contain;" onerror="this.style.display='none'; document.getElementById('wa-brand-text-mobile').style.display='block';">
+            <img src="https://cdn.shopify.com/s/files/1/1043/0526/2673/files/11Fit_b896947e-8555-4c07-b230-0762bd134371.png?v=1733682976" style="height:32px; max-width:120px; object-fit:contain;" onerror="this.style.display='none'; document.getElementById('wa-brand-text-mobile').style.display='block';">
             <span id="wa-brand-text-mobile" style="display:none; font-weight:800; font-size:18px; text-transform:uppercase;">{{ shop.domain | remove: '.myshopify.com' }}</span>
           </div>
-          <div style="display:flex; align-items:center; gap:6px; background:#f0fdf4; padding:4px 10px; border-radius:8px;">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#16a34a" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <div style="display:flex; flex-direction:column;">
-              <span style="font-size:10px; font-weight:700; color:#16a34a; line-height:1;">100% Secure Checkout</span>
-              <span style="font-size:9px; color:#64748b; line-height:1.2;">Your data is safe with us</span>
-            </div>
+          <div style="display:flex; align-items:center; gap:4px; background:#f0fdf4; padding:4px 8px; border-radius:8px;">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#16a34a" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span style="font-size:10px; font-weight:700; color:#16a34a; white-space:nowrap;">100% Secure</span>
           </div>
         </div>
         <button class="wa-close-btn" onclick="closeWaModal()" style="background:#f8fafc; border:none; width:32px; height:32px; border-radius:50%; font-size:18px; cursor:pointer; color:#64748b; display:flex; align-items:center; justify-content:center; transition:0.2s;">×</button>
@@ -730,7 +727,7 @@ window._shopifyCustomer = {
         </div>
 
                 <!-- STEP 4: PAYMENT -->
-        <div id="wa-step-4" style="display:none;">\n\n          <!-- Coupon -->
+        <div id="wa-step-4" style="display:none;">          <!-- Coupon -->
           <div class="wa-coupon-row" style="display:flex; gap:8px; margin-bottom:24px;">
             <div style="position:relative; flex:1;">
               <div style="position:absolute; left:14px; top:13px; color:#64748b;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
@@ -762,7 +759,7 @@ window._shopifyCustomer = {
             <div id="wa-yay-saving" style="display:none; background:#f0fdf4; border:1px solid #bbf7d0; color:#15803d; font-size:12px; font-weight:500; padding:10px; border-radius:8px; align-items:center; gap:8px;">
               <span>🎁</span> Yay! You are saving <span id="wa-yay-amt" style="font-weight:700;"></span> on this order 🎉
             </div>
-          </div>\n
+          </div>
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px;">
             <div>
               <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
@@ -1687,12 +1684,16 @@ window._shopifyCustomer = {
           const cartRes = await fetch('/cart.js');
           const cart = await cartRes.json();
           const total = (cart.total_price / 100).toFixed(0);
-          document.getElementById('wa-subtotal').innerText = `₹${total}`;
-          document.getElementById('wa-total').innerText = `₹${total}`;
-          document.getElementById('wa-total').setAttribute('data-base-total', total);
+          const subT = document.getElementById('wa-subtotal'); if (subT) subT.innerText = `₹${total}`;
+          const totT = document.getElementById('wa-total'); if (totT) totT.innerText = `₹${total}`;
+          if (totT) totT.setAttribute('data-base-total', total);
         } catch(e2) {
-          document.getElementById('wa-subtotal').innerText = 'See cart';
-          document.getElementById('wa-total').innerText = 'See cart';
+          const subT = document.getElementById('wa-subtotal'); if (subT) subT.innerText = 'See cart';
+          const totT = document.getElementById('wa-total'); if (totT) totT.innerText = 'See cart';
+        }
+        
+        if (document.getElementById('wa-step-4').style.display === 'block') {
+          if (typeof renderPaymentMethods === 'function') renderPaymentMethods();
         }
       }
     }
