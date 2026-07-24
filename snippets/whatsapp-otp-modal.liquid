@@ -1451,7 +1451,7 @@ window._shopifyCustomer = {
     }
   }
 
-  async function loadAddresses() {
+  async async function loadAddresses() {
     try {
       const res = await fetch(`${WA_API_BASE}/addresses`, {
         method: 'POST',
@@ -1461,13 +1461,31 @@ window._shopifyCustomer = {
       const data = await res.json();
       const networkAddrs = data.addresses || [];
       
-      // Merge: start with Shopify addresses (already pre-loaded), then add network ones
-      const existingIds = new Set(waAddresses.map(a => a.address1 + a.zip));
-      networkAddrs.forEach(a => {
-        const key = (a.address1 || '') + (a.zip || '');
-        if (!existingIds.has(key)) waAddresses.push(a);
-      });
+      // Combine existing loaded ones (from Shopify Liquid) and fetched ones
+      const combined = [...waAddresses, ...networkAddrs];
       
+      // Strong Deduplication based on address string to prevent duplicates
+      const unique = [];
+      const seen = new Set();
+      
+      for (const a of combined) {
+        // Create a normalized key (lowercase, no spaces)
+        const normalize = (str) => (str || '').toLowerCase().replace(/\s/g, '');
+        const key = normalize(a.address1) + normalize(a.zip);
+        
+        if (!seen.has(key)) {
+          seen.add(key);
+          unique.push(a);
+        } else if (String(a.id).startsWith('shopify_') && !unique.find(u => String(u.id).startsWith('shopify_') && normalize(u.address1)+normalize(u.zip) === key)) {
+          // Prefer shopify address ID if we have a duplicate
+          const existingIdx = unique.findIndex(u => normalize(u.address1)+normalize(u.zip) === key);
+          if (existingIdx !== -1 && !String(unique[existingIdx].id).startsWith('shopify_')) {
+              unique[existingIdx] = a; // Replace local with shopify equivalent
+          }
+        }
+      }
+      
+      waAddresses = unique;
       renderAddresses();
     } catch (e) { renderAddresses(); }
   }
@@ -1499,8 +1517,8 @@ window._shopifyCustomer = {
               ${primary.company ? `<div class="wa-addr-text" style="color:#94a3b8;">${primary.company}</div>` : ''}
               
               <div style="display:flex;gap:12px;margin-top:10px;position:relative;z-index:2;">
-                <button onclick="event.stopPropagation(); waEditAddress('${primary.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;margin-left:-8px;text-decoration:none;">Edit</button>
-                <button onclick="event.stopPropagation(); waDeleteAddress('${primary.id}')" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;text-decoration:none;">Delete</button>
+                <button onclick="(function(e){ e.stopPropagation(); waEditAddress('${primary.id}'); })(event)" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;margin-left:-8px;text-decoration:none;">Edit</button>
+                <button onclick="(function(e){ e.stopPropagation(); waDeleteAddress('${primary.id}'); })(event)" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;text-decoration:none;">Delete</button>
               </div>
             </div>
           </div>
@@ -1525,8 +1543,8 @@ window._shopifyCustomer = {
                 ${a.company ? `<div class="wa-addr-text" style="color:#94a3b8;">${a.company}</div>` : ''}
                 
                 <div style="display:flex;gap:12px;margin-top:10px;position:relative;z-index:2;">
-                  <button onclick="event.stopPropagation(); waEditAddress('${a.id}')" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;margin-left:-8px;text-decoration:none;">Edit</button>
-                  <button onclick="event.stopPropagation(); waDeleteAddress('${a.id}')" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;text-decoration:none;">Delete</button>
+                  <button onclick="(function(e){ e.stopPropagation(); waEditAddress('${a.id}'); })(event)" style="background:none;border:none;color:#3b82f6;font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;margin-left:-8px;text-decoration:none;">Edit</button>
+                  <button onclick="(function(e){ e.stopPropagation(); waDeleteAddress('${a.id}'); })(event)" style="background:none;border:none;color:#ef4444;font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;text-decoration:none;">Delete</button>
                 </div>
               </div>
             </div>
@@ -1564,32 +1582,57 @@ window._shopifyCustomer = {
     const addr = waAddresses.find(a => String(a.id) === String(id));
     if (!addr) return;
     waEditingAddressId = id;
-    document.getElementById('wa-add-addr-btn').style.display = 'none';
-    const dh = document.getElementById('wa-deliver-here-btn'); if(dh) dh.style.display = 'none';
-    document.getElementById('wa-new-address-form').style.display = 'block';
-    document.getElementById('wa-save-addr-btn').innerText = 'Update Address';
     
-    document.getElementById('wa-addr-fname').value = addr.first_name || '';
-    document.getElementById('wa-addr-lname').value = addr.last_name || '';
-    document.getElementById('wa-addr-street').value = addr.address1 || '';
-    document.getElementById('wa-addr-city-input').value = addr.city || '';
-    document.getElementById('wa-city-select-wrapper').style.display = 'none';
-    document.getElementById('wa-addr-city-input').style.display = 'block';
+    const addBtn = document.getElementById('wa-add-addr-btn');
+    if(addBtn) addBtn.style.display = 'none';
+    const dh = document.getElementById('wa-deliver-here-btn'); 
+    if(dh) dh.style.display = 'none';
     
-    document.getElementById('wa-addr-zip').value = addr.zip || '';
-    document.getElementById('wa-addr-state').value = addr.province || '';
-    document.getElementById('wa-addr-district').value = addr.company ? addr.company.replace('District: ', '') : '';
+    const formEl = document.getElementById('wa-new-address-form');
+    if(formEl) formEl.style.display = 'block';
     
-    // Unlock them for editing just in case
-    document.getElementById('wa-addr-state').readOnly = false;
-    document.getElementById('wa-addr-district').readOnly = false;
-    document.getElementById('wa-addr-state').style.cursor = 'text';
-    document.getElementById('wa-addr-district').style.cursor = 'text';
-    document.getElementById('wa-addr-state').style.background = '#fff';
-    document.getElementById('wa-addr-district').style.background = '#fff';
+    const saveBtn = document.getElementById('wa-save-addr-btn');
+    if(saveBtn) saveBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Update Address';
     
-    document.getElementById('wa-pin-error').style.display = 'none';
-    document.getElementById('wa-pin-status').innerText = '';
+    if(document.getElementById('wa-first-name')) document.getElementById('wa-first-name').value = addr.first_name || '';
+    if(document.getElementById('wa-last-name')) document.getElementById('wa-last-name').value = addr.last_name || '';
+    if(document.getElementById('wa-address1')) document.getElementById('wa-address1').value = addr.address1 || '';
+    if(document.getElementById('wa-address2')) document.getElementById('wa-address2').value = addr.address2 || '';
+    if(document.getElementById('wa-zip')) document.getElementById('wa-zip').value = addr.zip || '';
+    
+    // City
+    const cityInput = document.getElementById('wa-city');
+    const citySelect = document.getElementById('wa-addr-city-select');
+    if (citySelect) citySelect.style.display = 'none';
+    if (cityInput) { 
+        cityInput.value = addr.city || ''; 
+        cityInput.style.display = 'block';
+        cityInput.readOnly = false;
+        cityInput.style.cursor = 'text';
+    }
+    
+    // State
+    const stateInput = document.getElementById('wa-province');
+    if(stateInput) stateInput.value = addr.province || '';
+    const stateSelect = document.getElementById('wa-province-select');
+    if(stateSelect) {
+        stateSelect.value = addr.province || '';
+        stateSelect.style.display = 'block';
+    }
+    
+    // District
+    const districtInput = document.getElementById('wa-addr-district');
+    if(districtInput) {
+        districtInput.value = addr.company ? addr.company.replace('District: ', '') : '';
+        districtInput.readOnly = false;
+        districtInput.style.cursor = 'text';
+        districtInput.style.background = '#fff';
+    }
+    
+    const errEl = document.getElementById('wa-pin-error');
+    if (errEl) errEl.style.display = 'none';
+    const statusEl = document.getElementById('wa-pin-status');
+    if (statusEl) statusEl.innerText = '';
   }
 
   async function waDeleteAddress(id) {
