@@ -1248,6 +1248,35 @@ window._shopifyCustomer = {
   }
 
   function waGoToStep(step) {
+    if (step === 4) {
+      const emailEl = document.getElementById('wa-email');
+      let errEl = document.getElementById('wa-email-error');
+      if (!errEl) {
+        errEl = document.createElement('div');
+        errEl.id = 'wa-email-error';
+        errEl.style.color = '#ef4444';
+        errEl.style.fontSize = '12px';
+        errEl.style.marginTop = '6px';
+        errEl.style.fontWeight = '600';
+        if (emailEl) emailEl.parentElement.parentElement.parentElement.appendChild(errEl);
+      }
+      
+      if (emailEl && waPaymentSettings && waPaymentSettings.email_required === true && !emailEl.value.trim()) {
+        errEl.innerText = 'Please enter your email address to continue.';
+        errEl.style.display = 'block';
+        emailEl.focus();
+        return;
+      }
+      if (emailEl && emailEl.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim())) {
+        errEl.innerText = 'Please enter a valid email address.';
+        errEl.style.display = 'block';
+        emailEl.focus();
+        return;
+      }
+      if (errEl) errEl.style.display = 'none';
+      if (emailEl) waEmail = emailEl.value.trim();
+    }
+
     document.getElementById('wa-step-1').style.display = 'none';
     document.getElementById('wa-step-2').style.display = 'none';
     document.getElementById('wa-step-3').style.display = 'none';
