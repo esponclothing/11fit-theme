@@ -174,13 +174,25 @@
         });
       }
 
-      fetch(window.Shopify.routes.root + 'cart/add.js', {
+      fetch((window.Shopify && window.Shopify.routes ? window.Shopify.routes.root : '/') + 'cart/add.js', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        credentials: 'same-origin',
         body: JSON.stringify({ items: itemsToAdd })
       })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(err => { throw new Error(err.description || err.message || 'Failed to add') });
+        }
+        return response.json();
+      })
       .then(data => {
+        if (data.status && data.status !== 200) {
+          throw new Error(data.description || 'Error');
+        }
         const discountCode = '11FIT-COMBO-{{ product.id }}-{{ combo_count }}';
         window.location.href = '/discount/' + discountCode + '?redirect=/cart';
       })
