@@ -174,7 +174,10 @@
         });
       }
 
-      fetch((window.Shopify && window.Shopify.routes ? window.Shopify.routes.root : '/') + 'cart/add.js', {
+      // Use a cache buster to prevent stale network caches
+      const addUrl = (window.Shopify && window.Shopify.routes ? window.Shopify.routes.root : '/') + 'cart/add.js?t=' + Date.now();
+      
+      fetch(addUrl, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -193,8 +196,13 @@
         if (data.status && data.status !== 200) {
           throw new Error(data.description || 'Error');
         }
-        const discountCode = '11FIT-COMBO-{{ product.id }}-{{ combo_count }}';
-        window.location.href = '/discount/' + discountCode + '?redirect=/cart';
+        
+        // Wait 600ms before redirecting. 
+        // iOS Safari and some proxy caches can drop the Set-Cookie header if the page unloads too quickly after a fetch.
+        setTimeout(() => {
+          const discountCode = '11FIT-COMBO-{{ product.id }}-{{ combo_count }}';
+          window.location.href = '/discount/' + discountCode + '?redirect=/cart';
+        }, 600);
       })
       .catch(err => {
         console.error('Add to cart combo error:', err);
