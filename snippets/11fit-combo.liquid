@@ -178,13 +178,7 @@
       .then(response => response.json())
       .then(data => {
         const discountCode = '11FIT-COMBO-{{ product.id }}-{{ combo_count }}';
-        const destination = '/cart';
-        // Apply discount to session silently, then redirect to cart/checkout
-        fetch('/discount/' + discountCode, { redirect: 'manual' })
-          .catch(() => {})
-          .finally(() => {
-            window.location.href = destination;
-          });
+        window.location.href = '/discount/' + discountCode + '?redirect=/cart';
       })
       .catch(err => {
         console.error('Add to cart combo error:', err);
