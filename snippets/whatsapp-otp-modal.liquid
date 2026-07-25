@@ -881,7 +881,35 @@ window._shopifyCustomer = {
           <div id="wa-payment-methods-container" style="display:flex; flex-direction:column; gap:16px; margin-bottom:24px;">
             <!-- Rendered dynamically by waGoToStep(4) -->
           </div>
-          
+
+          <!-- Store Credit / Wallet Section (shown only if store_credit_enabled) -->
+          <div id="wa-wallet-section" style="display:none; margin-bottom:20px;">
+            <div style="border:1.5px solid #10b981; border-radius:14px; overflow:hidden; background:#f0fdf4;">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:#ecfdf5; border-bottom:1px dashed #a7f3d0;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <div style="width:36px; height:36px; background:#10b981; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+                  </div>
+                  <div>
+                    <div style="font-weight:700; font-size:14px; color:#065f46;">Wallet Balance</div>
+                    <div style="font-size:12px; color:#047857;">Available: <strong id="wa-wallet-balance-display">₹0</strong></div>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-size:11px; color:#047857; text-align:right; margin-bottom:4px;" id="wa-wallet-usable-text">Max usable: ₹0</div>
+                  <button type="button" id="wa-wallet-toggle-btn" onclick="waToggleWalletCredit()" style="background:#10b981; color:#fff; border:none; padding:8px 16px; border-radius:8px; font-weight:700; font-size:13px; cursor:pointer; transition:0.2s;">
+                    Apply Wallet
+                  </button>
+                </div>
+              </div>
+              <div id="wa-wallet-applied-row" style="display:none; padding:10px 16px; display:none; align-items:center; justify-content:space-between; background:#d1fae5;">
+                <span style="font-size:13px; font-weight:600; color:#065f46;">✓ Wallet Discount Applied</span>
+                <span id="wa-wallet-applied-amt" style="font-size:14px; font-weight:800; color:#059669;"></span>
+              </div>
+            </div>
+          </div>
+
+
           <!-- Trust Badges Footer -->
           <div style="display:flex; justify-content:space-between; align-items:flex-start; padding:16px 0; border-top:1px dashed #e2e8f0; margin-bottom:24px;">
             <div style="text-align:center; flex:1;">
@@ -1479,6 +1507,11 @@ window._shopifyCustomer = {
         sessionStorage.setItem('fit11_verified_email', data.profile.email);
         const emailInput = document.getElementById('wa-email');
         if (emailInput) emailInput.value = data.profile.email;
+      }
+
+      // Store wallet balance from verify response (avoids extra API call at payment step)
+      if (data.storeCreditBalance !== undefined) {
+        waWalletBalance = parseFloat(data.storeCreditBalance) || 0;
       }
       
       document.getElementById('wa-step-2').style.display = 'none';
@@ -2210,7 +2243,16 @@ window._shopifyCustomer = {
     document.getElementById('wa-step-3').style.display = 'none';
     document.getElementById('wa-step-4').style.display = 'block';
 
+    // Reset wallet state when entering payment step
+    waWalletApplied = false;
+    waWalletAppliedAmt = 0;
+
     renderPaymentMethods();
+
+    // Fetch customer wallet balance (async, non-blocking)
+    if (waPaymentSettings && waPaymentSettings.store_credit_enabled) {
+      fetchWalletBalance().then(() => waRenderWalletSection());
+    }
   }
   
   function waBackToAddress() {
@@ -2258,6 +2300,93 @@ window._shopifyCustomer = {
       }
     }
   
+  // ── WALLET / STORE CREDIT ─────────────────────────────────────────
+  let waWalletBalance = 0;         // customer's actual balance
+  let waWalletApplied = false;     // toggle state
+  let waWalletAppliedAmt = 0;      // amount currently deducted from total
+
+  async function fetchWalletBalance() {
+    if (!waPhone) return;
+    try {
+      const res = await fetch(`${WA_API_BASE}/identify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ merchant_key: MERCHANT_KEY, phone: waPhone })
+      });
+      const data = await res.json();
+      waWalletBalance = parseFloat(data?.customer?.storeCreditBalance || data?.storeCreditBalance || 0);
+    } catch(e) {
+      waWalletBalance = 0;
+    }
+  }
+
+  function computeWalletUsable() {
+    if (waWalletBalance <= 0) return 0;
+    const ps = waPaymentSettings || {};
+    const baseTotal = parseFloat(document.getElementById('wa-total').getAttribute('data-base-total') || '0');
+    let maxUsable = waWalletBalance;
+    if (ps.store_credit_limit_type === 'percent' && ps.store_credit_limit_value > 0) {
+      maxUsable = Math.min(waWalletBalance, (baseTotal * ps.store_credit_limit_value) / 100);
+    } else if (ps.store_credit_limit_type === 'fixed' && ps.store_credit_limit_value > 0) {
+      maxUsable = Math.min(waWalletBalance, ps.store_credit_limit_value);
+    }
+    return Math.min(maxUsable, baseTotal); // can't exceed total
+  }
+
+  function waRenderWalletSection() {
+    const section = document.getElementById('wa-wallet-section');
+    const ps = waPaymentSettings || {};
+    if (!ps.store_credit_enabled || waWalletBalance <= 0) {
+      if (section) section.style.display = 'none';
+      return;
+    }
+    if (section) section.style.display = 'block';
+    const usable = computeWalletUsable();
+    const balDisplay = document.getElementById('wa-wallet-balance-display');
+    if (balDisplay) balDisplay.innerText = `₹${waWalletBalance.toFixed(2)}`;
+    const usableText = document.getElementById('wa-wallet-usable-text');
+    if (usableText) {
+      if (ps.store_credit_limit_type === 'unlimited' || !ps.store_credit_limit_type) {
+        usableText.innerText = `Max usable: ₹${usable.toFixed(2)}`;
+      } else if (ps.store_credit_limit_type === 'percent') {
+        usableText.innerText = `Max ${ps.store_credit_limit_value}% of order = ₹${usable.toFixed(2)}`;
+      } else {
+        usableText.innerText = `Max ₹${ps.store_credit_limit_value} per order`;
+      }
+    }
+    const btn = document.getElementById('wa-wallet-toggle-btn');
+    const appliedRow = document.getElementById('wa-wallet-applied-row');
+    const appliedAmt = document.getElementById('wa-wallet-applied-amt');
+    if (waWalletApplied) {
+      if (btn) { btn.innerText = 'Remove'; btn.style.background = '#ef4444'; }
+      if (appliedRow) { appliedRow.style.display = 'flex'; }
+      if (appliedAmt) appliedAmt.innerText = `-₹${waWalletAppliedAmt.toFixed(2)}`;
+    } else {
+      if (btn) { btn.innerText = 'Apply Wallet'; btn.style.background = '#10b981'; }
+      if (appliedRow) { appliedRow.style.display = 'none'; }
+    }
+  }
+
+  function waToggleWalletCredit() {
+    const totalEl = document.getElementById('wa-total');
+    if (!totalEl) return;
+    let baseTotal = parseFloat(totalEl.getAttribute('data-base-total') || '0');
+
+    if (!waWalletApplied) {
+      const usable = computeWalletUsable();
+      if (usable <= 0) return;
+      waWalletAppliedAmt = Math.round(usable * 100) / 100;
+      waWalletApplied = true;
+    } else {
+      waWalletApplied = false;
+      waWalletAppliedAmt = 0;
+    }
+
+    // Re-compute display total (respecting payment method fee/discount too)
+    updateTotalDisplay();
+    waRenderWalletSection();
+  }
+
 function renderPaymentMethods() {
       const container = document.getElementById('wa-payment-methods-container');
       container.innerHTML = '';
@@ -2493,6 +2622,9 @@ function renderPaymentMethods() {
           waCashfree = Cashfree({ mode: waPaymentSettings.cashfree_env || 'sandbox' });
         } catch(e) { console.error('Cashfree init error', e); }
       }
+
+      // Show wallet section if applicable
+      waRenderWalletSection();
     }
 
   function updateVisualTotalForPaymentMethod() {
@@ -2521,8 +2653,16 @@ function renderPaymentMethods() {
       displayTotal -= discount;
     }
 
+    // Apply wallet credit discount
+    if (waWalletApplied && waWalletAppliedAmt > 0) {
+      displayTotal = Math.max(0, displayTotal - waWalletAppliedAmt);
+    }
+
     document.getElementById('wa-total').innerText = `₹${displayTotal.toFixed(2)}`;
   }
+
+  // Alias used by waToggleWalletCredit
+  const updateTotalDisplay = updateVisualTotalForPaymentMethod;
 
   async function waPayNow() {
       const btn = document.getElementById('wa-cod-btn');
@@ -2678,7 +2818,8 @@ function renderPaymentMethods() {
           phone: waPhone,
           device_id: localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id'),
           payment_method: payload.payment_method,
-          cashfree_order_id: payload.cashfree_order_id
+          cashfree_order_id: payload.cashfree_order_id,
+          wallet_credit_amount: (waWalletApplied && waWalletAppliedAmt > 0) ? waWalletAppliedAmt : 0
         })
       });
       const data = await res.json();
