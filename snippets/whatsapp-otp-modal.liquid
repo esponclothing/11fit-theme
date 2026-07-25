@@ -2495,6 +2495,19 @@ function renderPaymentMethods() {
       const errEl = document.getElementById('wa-payment-error');
       btn.disabled = true;
       btn.innerHTML = '⏳ Processing...';
+      if (window.waProcessingInterval) clearInterval(window.waProcessingInterval);
+      window.waProcessingInterval = setInterval(() => {
+        if (!btn.disabled) {
+           clearInterval(window.waProcessingInterval);
+           return;
+        }
+        const texts = ['⏳ Processing...', '⏳ Creating Order...', '⏳ Confirming...', '⏳ Securely saving...', '⏳ Almost done...'];
+        let curText = btn.innerText.trim();
+        let nextIdx = texts.indexOf(curText) + 1;
+        if (nextIdx >= texts.length || nextIdx === 0) nextIdx = 1; 
+        btn.innerHTML = texts[nextIdx];
+      }, 2500);
+      
       errEl.style.display = 'none';
       
       waEmail = document.getElementById('wa-email').value.trim();
@@ -2616,9 +2629,12 @@ function renderPaymentMethods() {
     }
 
   async function finishOrderBackend(payload) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
     try {
       const res = await fetch(`${WA_API_BASE}/checkout/complete`, {
         method: 'POST',
+        signal: controller.signal,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           merchant_key: MERCHANT_KEY, 
@@ -2644,7 +2660,7 @@ function renderPaymentMethods() {
       document.getElementById('wa-steps-indicator').style.display = 'none';
       const sc = document.getElementById('wa-success-screen');
       sc.style.display = 'flex';
-
+      clearTimeout(timeoutId);
       // 4. Fire Meta Pixel Purchase Event
       try {
         if (typeof fbq === 'function') {
@@ -2661,7 +2677,11 @@ function renderPaymentMethods() {
         console.error('Meta Pixel Error:', pixelErr);
       }
     } catch (e) {
-      alert('Order placed but failed to confirm natively. Support will contact you. ' + e.message);
+      if (e.name === 'AbortError') {
+        alert('The server is taking too long to respond. Please try again or contact support.');
+      } else {
+        alert('Order placed but failed to confirm natively. Support will contact you. ' + e.message);
+      }
       const btn = document.getElementById('wa-cod-btn');
       btn.disabled = false;
       btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span>';
