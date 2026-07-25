@@ -958,17 +958,27 @@ window._shopifyCustomer = {
     // Capture UTM parameters for Ad Tracking
     try {
       const params = new URLSearchParams(window.location.search);
-      const utm_source = params.get('utm_source');
-      const utm_medium = params.get('utm_medium');
-      const utm_campaign = params.get('utm_campaign');
+      let utm_source = params.get('utm_source');
+      let utm_medium = params.get('utm_medium');
+      let utm_campaign = params.get('utm_campaign');
+      const fbclid = params.get('fbclid');
+      const gclid = params.get('gclid');
       const referrer = document.referrer;
+      
+      if (!utm_source) {
+        if (fbclid) { utm_source = 'Meta Ads'; utm_medium = 'cpc'; }
+        else if (gclid) { utm_source = 'Google Ads'; utm_medium = 'cpc'; }
+        else if (referrer && (referrer.includes('facebook.com') || referrer.includes('instagram.com'))) { 
+          utm_source = 'Meta Organic'; utm_medium = 'social'; 
+        }
+      }
       
       if (utm_source || referrer) {
         let utmData = JSON.parse(localStorage.getItem('wa_utm_data') || '{}');
         if (utm_source) {
           utmData.utm_source = utm_source;
-          utmData.utm_medium = utm_medium;
-          utmData.utm_campaign = utm_campaign;
+          if (utm_medium) utmData.utm_medium = utm_medium;
+          if (utm_campaign) utmData.utm_campaign = utm_campaign;
         }
         if (!utmData.referrer && referrer && !referrer.includes(window.location.hostname)) {
           utmData.referrer = referrer;
@@ -1382,9 +1392,11 @@ window._shopifyCustomer = {
     const btn = document.getElementById('wa-send-btn');
     btn.disabled = true; btn.innerHTML = 'Sending OTP...';
     try {
-      const payload = { merchant_key: MERCHANT_KEY };
-      if (waPhone === 'MASKED') payload.device_id = localStorage.getItem('fit11_device_id');
-      else payload.phone = waPhone;
+      const payload = { 
+        merchant_key: MERCHANT_KEY,
+        device_id: localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id')
+      };
+      if (waPhone !== 'MASKED') payload.phone = waPhone;
       const res = await fetch(`${WA_API_BASE}/send-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
