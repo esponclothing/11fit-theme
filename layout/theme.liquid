@@ -1100,10 +1100,11 @@
       if (lastHash === cartHash) return; // Do not send if exactly same
       sessionStorage.setItem('last_tracked_cart', cartHash);
 
+      const utmData = JSON.parse(localStorage.getItem('wa_utm_data') || '{}');
       await fetch(`${WA_API_BASE}/checkout/track-cart`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ merchant_key: MERCHANT_KEY, device_id: waDeviceId, cart_details: cart })
+        body: JSON.stringify({ merchant_key: MERCHANT_KEY, device_id: waDeviceId, cart_details: { ...cart, utm_data: utmData } })
       });
     } catch(e) {}
   }
