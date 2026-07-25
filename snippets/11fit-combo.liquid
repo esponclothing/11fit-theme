@@ -149,9 +149,13 @@
 
     const addBtn = document.getElementById('fit11ComboAddToCartBtn');
     if(addBtn) {
+      if (addBtn.getAttribute('data-processing') === 'true') return;
+      addBtn.setAttribute('data-processing', 'true');
+      
       const origText = addBtn.querySelector('.fit11-btn-text').innerText;
       addBtn.querySelector('.fit11-btn-text').innerText = 'ADDING...';
       addBtn.disabled = true;
+      addBtn.style.pointerEvents = 'none';
       
       const comboGroupId = Date.now().toString();
       const count = {{ combo_count }};
@@ -186,6 +190,8 @@
         setTimeout(() => {
           addBtn.querySelector('.fit11-btn-text').innerText = origText;
           addBtn.disabled = false;
+          addBtn.style.pointerEvents = 'auto';
+          addBtn.setAttribute('data-processing', 'false');
         }, 2000);
       });
     }
