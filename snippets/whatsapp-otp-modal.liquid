@@ -955,6 +955,27 @@ window._shopifyCustomer = {
     if (!localStorage.getItem('fit11_device_id')) {
       localStorage.setItem('fit11_device_id', 'dev_' + Math.random().toString(36).substr(2, 9));
     }
+    // Capture UTM parameters for Ad Tracking
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const utm_source = params.get('utm_source');
+      const utm_medium = params.get('utm_medium');
+      const utm_campaign = params.get('utm_campaign');
+      const referrer = document.referrer;
+      
+      if (utm_source || referrer) {
+        let utmData = JSON.parse(localStorage.getItem('wa_utm_data') || '{}');
+        if (utm_source) {
+          utmData.utm_source = utm_source;
+          utmData.utm_medium = utm_medium;
+          utmData.utm_campaign = utm_campaign;
+        }
+        if (!utmData.referrer && referrer && !referrer.includes(window.location.hostname)) {
+          utmData.referrer = referrer;
+        }
+        localStorage.setItem('wa_utm_data', JSON.stringify(utmData));
+      }
+    } catch(e) { console.error('UTM tracking error', e); }
   });
 
   // ── MAP / LOCATION SEARCH (OpenStreetMap Nominatim - FREE, no API key) ──
@@ -1993,7 +2014,8 @@ window._shopifyCustomer = {
           cart_subtotal: cart.original_total_price || 0,
           phone: waPhone || null,
           device_id: localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id') || null,
-          raw_cart: cart
+          raw_cart: cart,
+          utm_data: JSON.parse(localStorage.getItem('wa_utm_data') || '{}')
         })
       });
       const data = await res.json();
