@@ -224,16 +224,46 @@
         const rootUrl = (window.Shopify && window.Shopify.routes ? window.Shopify.routes.root : '/');
         const addUrl = rootUrl + 'cart/add.js?t=' + Date.now();
 
-        const addRes = await fetch(addUrl, {
+        // 1. Primary JSON Add Request
+        let addRes = await fetch(addUrl, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
           body: JSON.stringify({ items: itemsToAdd })
         });
         
+        // 2. Fallback: Form Encoded Add Request if JSON fails on mobile browser
+        if (!addRes.ok) {
+          try {
+            const formPayload = new URLSearchParams();
+            itemsToAdd.forEach((item, idx) => {
+              formPayload.append(`items[${idx}][id]`, item.id);
+              formPayload.append(`items[${idx}][quantity]`, item.quantity);
+              if (item.properties) {
+                for (let p in item.properties) {
+                  formPayload.append(`items[${idx}][properties][${p}]`, item.properties[p]);
+                }
+              }
+            });
+
+            addRes = await fetch(addUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json'
+              },
+              body: formPayload.toString()
+            });
+          } catch(e) {}
+        }
+
         if (!addRes.ok) {
           const errData = await addRes.json().catch(() => ({}));
-          throw new Error(errData.description || errData.message || 'Failed to add items to cart');
+          const errMsg = errData.description || errData.message || 'One or more selected items are currently out of stock.';
+          alert(errMsg);
+          throw new Error(errMsg);
         }
 
         const discountCode = '11FIT-COMBO-{{ product.id }}-{{ combo_count }}';
@@ -241,7 +271,7 @@
 
       } catch (err) {
         console.error('Combo cart add error:', err);
-        if(btnTextEl) btnTextEl.innerText = 'ERROR';
+        if(btnTextEl) btnTextEl.innerText = 'UNAVAILABLE';
         setTimeout(() => {
           if(btnTextEl) btnTextEl.innerText = origText;
           addBtn.disabled = false;
@@ -252,6 +282,18 @@
     }
   };
 
+  function onComboSelectChange(e) {
+    const sel = e.target;
+    if (!sel) return;
+    const itemIndex = parseInt(sel.dataset.item);
+    const optionType = sel.dataset.option;
+    if (sel.value && sel.value !== '') {
+      if (!comboSelections[itemIndex]) comboSelections[itemIndex] = {};
+      comboSelections[itemIndex][optionType] = sel.value;
+    }
+    validateCombo();
+  }
+
   function initComboSelectionsFromDOM() {
     document.querySelectorAll('.combo-select').forEach(function(sel) {
       const itemIndex = parseInt(sel.dataset.item);
@@ -260,11 +302,17 @@
         if (!comboSelections[itemIndex]) comboSelections[itemIndex] = {};
         comboSelections[itemIndex][optionType] = sel.value;
       }
+      sel.removeEventListener('change', onComboSelectChange);
+      sel.addEventListener('change', onComboSelectChange);
     });
     validateCombo();
   }
 
-  document.addEventListener('DOMContentLoaded', initComboSelectionsFromDOM);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initComboSelectionsFromDOM);
+  } else {
+    initComboSelectionsFromDOM();
+  }
 
   window.addEventListener('pageshow', function(event) {
     comboSelections = {};
