@@ -670,16 +670,25 @@
                   </div>
                   <div class="fit11-variant-pills">
                     {% for value in option.values %}
-                      <input type="radio"
-                             id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
-                             name="{{ option.name }}"
-                             value="{{ value | escape }}"
-                             {% if option.selected_value == value %}checked{% endif %}
-                             class="fit11-variant-radio">
+                      {% assign val_avail = false %}
+                      {% for variant in product.variants %}
+                        {% if variant.available and variant.options contains value %}
+                          {% assign val_avail = true %}
+                          {% break %}
+                        {% endif %}
+                      {% endfor %}
+                      {% if val_avail %}
+                        <input type="radio"
+                               id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                               name="{{ option.name }}"
+                               value="{{ value | escape }}"
+                               {% if option.selected_value == value %}checked{% endif %}
+                               class="fit11-variant-radio">
 
-                      <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="fit11-variant-pill">
-                        {{ value }}
-                      </label>
+                        <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="fit11-variant-pill">
+                          {{ value }}
+                        </label>
+                      {% endif %}
                     {% endfor %}
                   </div>
                 </div>

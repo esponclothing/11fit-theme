@@ -47,7 +47,16 @@
               {% assign option_name_lower = option.name | downcase %}
               {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
                 {% for value in option.values %}
-                  <option value="{{ value | escape }}">{{ value }}</option>
+                  {% assign val_avail = false %}
+                  {% for variant in product.variants %}
+                    {% if variant.available and variant.options contains value %}
+                      {% assign val_avail = true %}
+                      {% break %}
+                    {% endif %}
+                  {% endfor %}
+                  {% if val_avail %}
+                    <option value="{{ value | escape }}">{{ value }}</option>
+                  {% endif %}
                 {% endfor %}
               {% endif %}
             {% endfor %}
@@ -63,12 +72,21 @@
         <label style="font-size: 14px; font-weight: 500; color: #1a1a1a; margin: 0;">Size {{ i }}</label>
         <div style="position: relative;">
           <select id="combo-size-{{ i }}" class="combo-select combo-size-select" data-item="{{ i }}" data-option="size" onchange="updateComboSelection({{ i }}, 'size', this.value)" style="width: 100%; appearance: none; -webkit-appearance: none; padding: 12px 14px; border: 1px solid #d0d0d0; border-radius: 4px; font-size: 14px; color: #1a1a1a; background: #fff; outline: none; cursor: pointer; font-family: inherit;">
-            <option value="" disabled selected>Select</option>
+            <option value="" disabled selected>Select Size</option>
             {% for option in product.options_with_values %}
               {% assign option_name_lower = option.name | downcase %}
               {% if option_name_lower contains 'size' %}
                 {% for value in option.values %}
-                  <option value="{{ value | escape }}">{{ value }}</option>
+                  {% assign val_avail = false %}
+                  {% for variant in product.variants %}
+                    {% if variant.available and variant.options contains value %}
+                      {% assign val_avail = true %}
+                      {% break %}
+                    {% endif %}
+                  {% endfor %}
+                  {% if val_avail %}
+                    <option value="{{ value | escape }}">{{ value }}</option>
+                  {% endif %}
                 {% endfor %}
               {% endif %}
             {% endfor %}
@@ -100,11 +118,84 @@
     return txt.value;
   }
 
+  function updateDynamicAvailableOptions(itemIndex) {
+    let variantsDataEl = document.getElementById('ProductVariantsData');
+    if (!variantsDataEl) return;
+    let variants = [];
+    try { variants = JSON.parse(variantsDataEl.textContent); } catch(e) { return; }
+
+    const availVariants = variants.filter(v => v.available === true);
+    const selColorEl = document.getElementById('combo-color-' + itemIndex);
+    const selSizeEl = document.getElementById('combo-size-' + itemIndex);
+
+    const selectedColor = selColorEl ? selColorEl.value : null;
+    const selectedSize = selSizeEl ? selSizeEl.value : null;
+
+    if (selectedColor && selSizeEl) {
+      const cVal = decodeHTML(selectedColor).trim().toLowerCase();
+      const validSizes = new Set();
+      availVariants.forEach(v => {
+        let vOpts = (v.options || []).map(o => decodeHTML(o).trim().toLowerCase());
+        if (vOpts.some(o => o === cVal || o.includes(cVal))) {
+          vOpts.forEach(o => validSizes.add(o));
+          if (v.option1) validSizes.add(decodeHTML(v.option1).trim().toLowerCase());
+          if (v.option2) validSizes.add(decodeHTML(v.option2).trim().toLowerCase());
+          if (v.option3) validSizes.add(decodeHTML(v.option3).trim().toLowerCase());
+        }
+      });
+      Array.from(selSizeEl.options).forEach(opt => {
+        if (!opt.value) return;
+        const optVal = decodeHTML(opt.value).trim().toLowerCase();
+        if (validSizes.has(optVal)) {
+          opt.disabled = false;
+          opt.style.display = 'block';
+        } else {
+          opt.disabled = true;
+          opt.style.display = 'none';
+          if (opt.selected) {
+            selSizeEl.value = '';
+            if (comboSelections[itemIndex]) delete comboSelections[itemIndex].size;
+          }
+        }
+      });
+    }
+
+    if (selectedSize && selColorEl) {
+      const sVal = decodeHTML(selectedSize).trim().toLowerCase();
+      const validColors = new Set();
+      availVariants.forEach(v => {
+        let vOpts = (v.options || []).map(o => decodeHTML(o).trim().toLowerCase());
+        if (vOpts.some(o => o === sVal || o.includes(sVal))) {
+          vOpts.forEach(o => validColors.add(o));
+          if (v.option1) validColors.add(decodeHTML(v.option1).trim().toLowerCase());
+          if (v.option2) validColors.add(decodeHTML(v.option2).trim().toLowerCase());
+          if (v.option3) validColors.add(decodeHTML(v.option3).trim().toLowerCase());
+        }
+      });
+      Array.from(selColorEl.options).forEach(opt => {
+        if (!opt.value) return;
+        const optVal = decodeHTML(opt.value).trim().toLowerCase();
+        if (validColors.has(optVal)) {
+          opt.disabled = false;
+          opt.style.display = 'block';
+        } else {
+          opt.disabled = true;
+          opt.style.display = 'none';
+          if (opt.selected) {
+            selColorEl.value = '';
+            if (comboSelections[itemIndex]) delete comboSelections[itemIndex].color;
+          }
+        }
+      });
+    }
+  }
+
   window.updateComboSelection = function(itemIndex, optionType, value) {
     if (!comboSelections[itemIndex]) {
       comboSelections[itemIndex] = {};
     }
     comboSelections[itemIndex][optionType] = value;
+    updateDynamicAvailableOptions(itemIndex);
     validateCombo();
   };
 
