@@ -189,71 +189,70 @@
       
       const comboGroupId = Date.now().toString();
       const count = {{ combo_count }};
-      const itemsToAdd = [];
+
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = (window.Shopify && window.Shopify.routes ? window.Shopify.routes.root : '/') + 'cart/add';
+      form.style.display = 'none';
 
       for (let i = 1; i <= count; i++) {
+        const idx = i - 1;
         const varId = comboSelections[i] ? comboSelections[i].variantId : null;
         if (!varId) {
           alert('One or more selected combinations are currently unavailable. Please pick different options.');
+          if(addBtn) {
+            addBtn.disabled = false;
+            addBtn.setAttribute('data-processing', 'false');
+            if(btnTextEl) btnTextEl.innerText = 'ADD TO CART';
+          }
           return false;
         }
-        itemsToAdd.push({
-          id: varId,
-          quantity: 1,
-          properties: {
-            '_combo_id': comboGroupId,
-            '_combo_required_count': count.toString(),
-            '_combo_product_id': '{{ product.id }}',
-            '_combo_item_index': i.toString()
-          }
-        });
+
+        const inputId = document.createElement('input');
+        inputId.type = 'hidden';
+        inputId.name = 'items[' + idx + '][id]';
+        inputId.value = varId;
+        form.appendChild(inputId);
+
+        const inputQty = document.createElement('input');
+        inputQty.type = 'hidden';
+        inputQty.name = 'items[' + idx + '][quantity]';
+        inputQty.value = '1';
+        form.appendChild(inputQty);
+
+        const inputPropId = document.createElement('input');
+        inputPropId.type = 'hidden';
+        inputPropId.name = 'items[' + idx + '][properties][_combo_id]';
+        inputPropId.value = comboGroupId;
+        form.appendChild(inputPropId);
+
+        const inputPropReq = document.createElement('input');
+        inputPropReq.type = 'hidden';
+        inputPropReq.name = 'items[' + idx + '][properties][_combo_required_count]';
+        inputPropReq.value = count.toString();
+        form.appendChild(inputPropReq);
+
+        const inputPropProd = document.createElement('input');
+        inputPropProd.type = 'hidden';
+        inputPropProd.name = 'items[' + idx + '][properties][_combo_product_id]';
+        inputPropProd.value = '{{ product.id }}';
+        form.appendChild(inputPropProd);
+
+        const inputPropIndex = document.createElement('input');
+        inputPropIndex.type = 'hidden';
+        inputPropIndex.name = 'items[' + idx + '][properties][_combo_item_index]';
+        inputPropIndex.value = i.toString();
+        form.appendChild(inputPropIndex);
       }
 
-      addBtn.setAttribute('data-processing', 'true');
-      const btnTextEl = addBtn.querySelector('.fit11-btn-text');
-      const origText = btnTextEl ? btnTextEl.innerText : 'ADD TO CART';
-      if(btnTextEl) btnTextEl.innerText = 'ADDING...';
-      addBtn.disabled = true;
-      addBtn.style.pointerEvents = 'none';
+      const inputReturn = document.createElement('input');
+      inputReturn.type = 'hidden';
+      inputReturn.name = 'return_to';
+      inputReturn.value = '/discount/11FIT-COMBO-{{ product.id }}-{{ combo_count }}?redirect=/cart';
+      form.appendChild(inputReturn);
 
-      // Use a cache buster to prevent stale network caches
-      const addUrl = (window.Shopify && window.Shopify.routes ? window.Shopify.routes.root : '/') + 'cart/add.js?t=' + Date.now();
-      
-      fetch(addUrl, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
-        },
-        credentials: 'same-origin',
-        body: JSON.stringify({ items: itemsToAdd })
-      })
-      .then(response => {
-        if (!response.ok) {
-          return response.json().then(err => { throw new Error(err.description || err.message || 'Failed to add to cart') });
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (data.status && data.status !== 200) {
-          throw new Error(data.description || 'Error adding to cart');
-        }
-        
-        setTimeout(() => {
-          const discountCode = '11FIT-COMBO-{{ product.id }}-{{ combo_count }}';
-          window.location.href = '/discount/' + discountCode + '?redirect=/cart';
-        }, 500);
-      })
-      .catch(err => {
-        console.error('Add to cart combo error:', err);
-        if(btnTextEl) btnTextEl.innerText = 'ERROR';
-        setTimeout(() => {
-          if(btnTextEl) btnTextEl.innerText = origText;
-          addBtn.disabled = false;
-          addBtn.style.pointerEvents = 'auto';
-          addBtn.setAttribute('data-processing', 'false');
-        }, 2000);
-      });
+      document.body.appendChild(form);
+      form.submit();
     }
   }
 
