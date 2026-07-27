@@ -218,9 +218,7 @@
 
       // Use a cache buster to prevent stale network caches
       const addUrl = (window.Shopify && window.Shopify.routes ? window.Shopify.routes.root : '/') + 'cart/add.js?t=' + Date.now();
-      const silentFetch = window._nativeFetch || window.fetch;
       
-      // Step 1: Send Item 1 via standard fetch so Shopify Web Pixel records EXACTLY 1 AddToCart event!
       fetch(addUrl, {
         method: 'POST',
         headers: { 
@@ -228,7 +226,7 @@
           'X-Requested-With': 'XMLHttpRequest'
         },
         credentials: 'same-origin',
-        body: JSON.stringify({ items: [ itemsToAdd[0] ] })
+        body: JSON.stringify({ items: itemsToAdd })
       })
       .then(response => {
         if (!response.ok) {
@@ -236,30 +234,15 @@
         }
         return response.json();
       })
-      .then(async data => {
+      .then(data => {
         if (data.status && data.status !== 200) {
           throw new Error(data.description || 'Error adding to cart');
-        }
-        
-        // Step 2: Add remaining combo items silently via un-patched native fetch
-        if (itemsToAdd.length > 1) {
-          try {
-            await silentFetch(addUrl, {
-              method: 'POST',
-              headers: { 
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-              },
-              credentials: 'same-origin',
-              body: JSON.stringify({ items: itemsToAdd.slice(1) })
-            });
-          } catch(e) {}
         }
         
         setTimeout(() => {
           const discountCode = '11FIT-COMBO-{{ product.id }}-{{ combo_count }}';
           window.location.href = '/discount/' + discountCode + '?redirect=/cart';
-        }, 400);
+        }, 500);
       })
       .catch(err => {
         console.error('Add to cart combo error:', err);

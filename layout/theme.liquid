@@ -1,7 +1,35 @@
 <!doctype html>
 <html class="js" lang="{{ request.locale.iso_code }}">
   <head>
-    <script>if (!window._nativeFetch) window._nativeFetch = window.fetch;</script>
+    <script>
+      (function() {
+        var lastAddToCartTime = 0;
+        function checkWrapFbq() {
+          if (window.fbq && !window.fbq._comboDedupeWrapped) {
+            var realFbq = window.fbq;
+            var wrappedFbq = function() {
+              var args = Array.prototype.slice.call(arguments);
+              if (args[0] === 'track' && args[1] === 'AddToCart') {
+                var now = Date.now();
+                if (now - lastAddToCartTime < 1500) {
+                  return;
+                }
+                lastAddToCartTime = now;
+              }
+              return realFbq.apply(this, arguments);
+            };
+            for (var k in realFbq) {
+              if (Object.prototype.hasOwnProperty.call(realFbq, k)) {
+                wrappedFbq[k] = realFbq[k];
+              }
+            }
+            wrappedFbq._comboDedupeWrapped = true;
+            window.fbq = wrappedFbq;
+          }
+        }
+        setInterval(checkWrapFbq, 300);
+      })();
+    </script>
     {% comment %} Cache buster {% endcomment %}
 	<!-- Added by AVADA SEO Suite -->
 	{% include 'avada-seo' %}
