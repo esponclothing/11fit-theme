@@ -6,12 +6,15 @@
     width: 100% !important; height: 100% !important;
     z-index: 2147483647 !important; display: none;
     overflow-y: auto !important;
-    background: rgba(15, 23, 42, 0.6) !important;
-    backdrop-filter: blur(6px) !important;
-    -webkit-backdrop-filter: blur(6px) !important;
+    background: rgba(15, 23, 42, 0.75) !important;
     align-items: flex-start !important;
     justify-content: center !important;
     padding: 0 !important;
+  }
+
+  /* ── CASHFREE MODAL Z-INDEX FIX ── */
+  div[id*="cf-"], div[class*="cf-"], div[id*="cashfree"], div[class*="cashfree"], iframe[src*="cashfree.com"] {
+    z-index: 2147483647 !important;
   }
 
   /* ── MAIN WRAPPER ── */
@@ -2760,10 +2763,7 @@ function renderPaymentMethods() {
           // Open Cashfree Modal
           let checkoutOptions = {
             paymentSessionId: data.payment_session_id,
-            redirectTarget: "_modal",
-            appearance: {
-              color: waPaymentSettings.theme_color || '#0f172a'
-            }
+            redirectTarget: "_modal"
           };
           
           // CRITICAL FIX: Hide our custom modal overlay so the Cashfree modal is visible!
