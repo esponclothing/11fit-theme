@@ -216,6 +216,13 @@
       addBtn.disabled = true;
       addBtn.style.pointerEvents = 'none';
 
+      window._isAddingCombo = true;
+      window._comboAddToCartFired = false;
+      setTimeout(function() {
+        window._isAddingCombo = false;
+        window._comboAddToCartFired = false;
+      }, 4000);
+
       // Use a cache buster to prevent stale network caches
       const addUrl = (window.Shopify && window.Shopify.routes ? window.Shopify.routes.root : '/') + 'cart/add.js?t=' + Date.now();
       
