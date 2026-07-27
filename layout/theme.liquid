@@ -1,6 +1,7 @@
 <!doctype html>
 <html class="js" lang="{{ request.locale.iso_code }}">
   <head>
+    <script>if (!window._nativeFetch) window._nativeFetch = window.fetch;</script>
     {% comment %} Cache buster {% endcomment %}
 	<!-- Added by AVADA SEO Suite -->
 	{% include 'avada-seo' %}
