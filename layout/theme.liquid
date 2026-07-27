@@ -1,6 +1,35 @@
 <!doctype html>
 <html class="js" lang="{{ request.locale.iso_code }}">
   <head>
+    <script>
+      (function() {
+        var lastAddedProductTime = 0;
+        function wrapTrekkieTrack() {
+          if (window.ShopifyAnalytics && window.ShopifyAnalytics.lib && typeof window.ShopifyAnalytics.lib.track === 'function') {
+            if (window.ShopifyAnalytics.lib.track._dedupeWrapped) return;
+            var origTrack = window.ShopifyAnalytics.lib.track;
+            
+            var wrappedTrack = function(eventName, properties, options, callback, metadata) {
+              var eName = String(eventName || '').toLowerCase();
+              if (eName.indexOf('added product') !== -1 || eName.indexOf('added_to_cart') !== -1 || eName.indexOf('addtocart') !== -1) {
+                var now = Date.now();
+                if (now - lastAddedProductTime < 2000) {
+                  if (typeof callback === 'function') callback();
+                  return;
+                }
+                lastAddedProductTime = now;
+              }
+              return origTrack.apply(this, arguments);
+            };
+            
+            wrappedTrack._dedupeWrapped = true;
+            window.ShopifyAnalytics.lib.track = wrappedTrack;
+          }
+        }
+        wrapTrekkieTrack();
+        setInterval(wrapTrekkieTrack, 250);
+      })();
+    </script>
     {% comment %} Cache buster {% endcomment %}
 	<!-- Added by AVADA SEO Suite -->
 	{% include 'avada-seo' %}

@@ -223,48 +223,19 @@
 
         const rootUrl = (window.Shopify && window.Shopify.routes ? window.Shopify.routes.root : '/');
         const addUrl = rootUrl + 'cart/add.js?t=' + Date.now();
-        const updateUrl = rootUrl + 'cart/update.js?t=' + Date.now();
 
-        // 1. Add Item 1 via /cart/add.js -> Triggers EXACTLY 1 AddToCart Pixel event!
         const addRes = await fetch(addUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
           credentials: 'same-origin',
-          body: JSON.stringify({ items: [ itemsToAdd[0] ] })
+          body: JSON.stringify({ items: itemsToAdd })
         });
         
         if (!addRes.ok) {
           const errData = await addRes.json().catch(() => ({}));
-          throw new Error(errData.description || errData.message || 'Failed to add item 1');
+          throw new Error(errData.description || errData.message || 'Failed to add items to cart');
         }
 
-        // 2. Add remaining combo items via /cart/update.js -> Silently updates cart without duplicate pixel events
-        if (itemsToAdd.length > 1) {
-          const updatesPayload = {};
-          for (let k = 1; k < itemsToAdd.length; k++) {
-            const vid = itemsToAdd[k].id;
-            updatesPayload[vid] = (updatesPayload[vid] || 0) + 1;
-          }
-
-          const cartRes = await fetch(rootUrl + 'cart.js');
-          if (cartRes.ok) {
-            const cartData = await cartRes.json();
-            const finalUpdates = {};
-            for (let vId in updatesPayload) {
-              const existingItem = (cartData.items || []).find(item => item.variant_id == vId);
-              const currentQty = existingItem ? existingItem.quantity : 0;
-              finalUpdates[vId] = currentQty + updatesPayload[vId];
-            }
-            await fetch(updateUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-              credentials: 'same-origin',
-              body: JSON.stringify({ updates: finalUpdates })
-            });
-          }
-        }
-
-        // 3. Redirect to discount URL
         const discountCode = '11FIT-COMBO-{{ product.id }}-{{ combo_count }}';
         window.location.href = rootUrl + 'discount/' + discountCode + '?redirect=/cart';
 
