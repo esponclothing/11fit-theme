@@ -37,58 +37,7 @@
       <meta name="description" content="{{ page_description | escape }}">
     {% endif %}
 
-    <!-- Meta Pixel AddToCart Combo Deduplicator -->
-    <script>
-      (function() {
-        if (window._fbqDeduperInstalled) return;
-        window._fbqDeduperInstalled = true;
-        window._isAddingCombo = false;
-        window._comboAddToCartFired = false;
-
-        function wrapFbq() {
-          var origFbq = window.fbq;
-          if (origFbq && origFbq._isDeduperWrapped) return;
-
-          var newFbq = function() {
-            var args = Array.prototype.slice.call(arguments);
-            if (args[0] === 'track' && args[1] === 'AddToCart') {
-              if (window._isAddingCombo) {
-                if (window._comboAddToCartFired) {
-                  return;
-                }
-                window._comboAddToCartFired = true;
-              }
-            }
-            if (typeof origFbq === 'function') {
-              return origFbq.apply(this, arguments);
-            }
-          };
-
-          for (var prop in origFbq) {
-            if (Object.prototype.hasOwnProperty.call(origFbq, prop)) {
-              newFbq[prop] = origFbq[prop];
-            }
-          }
-          newFbq._isDeduperWrapped = true;
-
-          try {
-            Object.defineProperty(window, 'fbq', {
-              configurable: true,
-              enumerable: true,
-              get: function() { return newFbq; },
-              set: function(val) {
-                origFbq = val;
-              }
-            });
-          } catch(e) {
-            window.fbq = newFbq;
-          }
-        }
-
-        wrapFbq();
-        document.addEventListener('DOMContentLoaded', wrapFbq);
-      })();
-    </script>
+    {% render 'meta-tags' %}
 
     <script src="{{ 'constants.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'pubsub.js' | asset_url }}" defer="defer"></script>
