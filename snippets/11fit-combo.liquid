@@ -83,7 +83,7 @@
 </div>
 
 <div class="fit11-main-buttons-container">
-  <button type="button" class="fit11-btn-cart" id="fit11ComboAddToCartBtn" style="width: 100%; margin: 0 !important; background: #222 !important; color: #fff !important; border-radius: 6px; border: none; font-weight: 600; font-size: 14px; height: 50px !important; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="addComboToCart()" disabled>
+  <button type="button" class="fit11-btn-cart" id="fit11ComboAddToCartBtn" style="width: 100%; margin: 0 !important; background: #222 !important; color: #fff !important; border-radius: 6px; border: none; font-weight: 600; font-size: 14px; height: 50px !important; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="addComboToCart(event)" disabled>
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
     <span class="fit11-btn-text">ADD TO CART</span>
   </button>
@@ -92,6 +92,13 @@
 
 <script>
   let comboSelections = {};
+
+  function decodeHTML(html) {
+    if (!html) return '';
+    var txt = document.createElement('textarea');
+    txt.innerHTML = html;
+    return txt.value;
+  }
 
   window.updateComboSelection = function(itemIndex, optionType, value) {
     if (!comboSelections[itemIndex]) {
@@ -105,22 +112,47 @@
     let allValid = true;
     let variantsDataEl = document.getElementById('ProductVariantsData');
     if(!variantsDataEl) return false;
-    let variants = JSON.parse(variantsDataEl.textContent);
+    let variants = [];
+    try {
+      variants = JSON.parse(variantsDataEl.textContent);
+    } catch(e) { return false; }
     
     const requiredCount = {{ combo_count }};
+    const colorSelects = document.querySelectorAll('.combo-color-select');
+    const sizeSelects = document.querySelectorAll('.combo-size-select');
+    const hasColorSelect = colorSelects.length > 0 && colorSelects[0].options.length > 1;
+    const hasSizeSelect = sizeSelects.length > 0 && sizeSelects[0].options.length > 1;
     
     for (let i = 1; i <= requiredCount; i++) {
       const sel = comboSelections[i];
-      if(!sel || !sel.color || !sel.size) {
-        allValid = false;
-        break;
-      }
+      if(!sel) { allValid = false; break; }
+      if(hasColorSelect && !sel.color) { allValid = false; break; }
+      if(hasSizeSelect && !sel.size) { allValid = false; break; }
       
       let matchedVariant = variants.find(v => {
-        return v.options.includes(sel.color) && v.options.includes(sel.size);
+        let vOpts = (v.options || []).map(o => decodeHTML(o).trim().toLowerCase());
+        let cVal = sel.color ? decodeHTML(sel.color).trim().toLowerCase() : null;
+        let sVal = sel.size ? decodeHTML(sel.size).trim().toLowerCase() : null;
+
+        let matchColor = !cVal || vOpts.some(o => o === cVal || o.includes(cVal));
+        let matchSize = !sVal || vOpts.some(o => o === sVal || o.includes(sVal));
+        return matchColor && matchSize;
       });
 
-      if (matchedVariant) {
+      // Fallback: If 1 option product or variants match by option1/option2 directly
+      if (!matchedVariant && variants.length > 0) {
+        if (!hasColorSelect && !hasSizeSelect) {
+          matchedVariant = variants[0];
+        } else if (!hasColorSelect && sel.size) {
+          let sVal = decodeHTML(sel.size).trim().toLowerCase();
+          matchedVariant = variants.find(v => (v.option1 || '').toLowerCase() === sVal || (v.option2 || '').toLowerCase() === sVal);
+        } else if (!hasSizeSelect && sel.color) {
+          let cVal = decodeHTML(sel.color).trim().toLowerCase();
+          matchedVariant = variants.find(v => (v.option1 || '').toLowerCase() === cVal || (v.option2 || '').toLowerCase() === cVal);
+        }
+      }
+
+      if (matchedVariant && matchedVariant.id) {
         comboSelections[i].variantId = matchedVariant.id;
       } else {
         allValid = false;
@@ -144,26 +176,29 @@
     return allValid;
   }
 
-  window.addComboToCart = function() {
-    if (!validateCombo()) return;
+  window.addComboToCart = function(e) {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    if (!validateCombo()) {
+      alert('Please select all required options before adding to cart.');
+      return false;
+    }
 
     const addBtn = document.getElementById('fit11ComboAddToCartBtn');
     if(addBtn) {
-      if (addBtn.getAttribute('data-processing') === 'true') return;
-      addBtn.setAttribute('data-processing', 'true');
-      
-      const origText = addBtn.querySelector('.fit11-btn-text').innerText;
-      addBtn.querySelector('.fit11-btn-text').innerText = 'ADDING...';
-      addBtn.disabled = true;
-      addBtn.style.pointerEvents = 'none';
+      if (addBtn.getAttribute('data-processing') === 'true') return false;
       
       const comboGroupId = Date.now().toString();
       const count = {{ combo_count }};
       const itemsToAdd = [];
 
       for (let i = 1; i <= count; i++) {
+        const varId = comboSelections[i] ? comboSelections[i].variantId : null;
+        if (!varId) {
+          alert('One or more selected combinations are currently unavailable. Please pick different options.');
+          return false;
+        }
         itemsToAdd.push({
-          id: comboSelections[i].variantId,
+          id: varId,
           quantity: 1,
           properties: {
             '_combo_id': comboGroupId,
@@ -173,6 +208,13 @@
           }
         });
       }
+
+      addBtn.setAttribute('data-processing', 'true');
+      const btnTextEl = addBtn.querySelector('.fit11-btn-text');
+      const origText = btnTextEl ? btnTextEl.innerText : 'ADD TO CART';
+      if(btnTextEl) btnTextEl.innerText = 'ADDING...';
+      addBtn.disabled = true;
+      addBtn.style.pointerEvents = 'none';
 
       // Use a cache buster to prevent stale network caches
       const addUrl = (window.Shopify && window.Shopify.routes ? window.Shopify.routes.root : '/') + 'cart/add.js?t=' + Date.now();
@@ -188,17 +230,15 @@
       })
       .then(response => {
         if (!response.ok) {
-          return response.json().then(err => { throw new Error(err.description || err.message || 'Failed to add') });
+          return response.json().then(err => { throw new Error(err.description || err.message || 'Failed to add to cart') });
         }
         return response.json();
       })
       .then(data => {
         if (data.status && data.status !== 200) {
-          throw new Error(data.description || 'Error');
+          throw new Error(data.description || 'Error adding to cart');
         }
         
-        // Wait 600ms before redirecting. 
-        // iOS Safari and some proxy caches can drop the Set-Cookie header if the page unloads too quickly after a fetch.
         setTimeout(() => {
           const discountCode = '11FIT-COMBO-{{ product.id }}-{{ combo_count }}';
           window.location.href = '/discount/' + discountCode + '?redirect=/cart';
@@ -206,9 +246,9 @@
       })
       .catch(err => {
         console.error('Add to cart combo error:', err);
-        addBtn.querySelector('.fit11-btn-text').innerText = 'ERROR';
+        if(btnTextEl) btnTextEl.innerText = 'ERROR';
         setTimeout(() => {
-          addBtn.querySelector('.fit11-btn-text').innerText = origText;
+          if(btnTextEl) btnTextEl.innerText = origText;
           addBtn.disabled = false;
           addBtn.style.pointerEvents = 'auto';
           addBtn.setAttribute('data-processing', 'false');
@@ -216,9 +256,7 @@
       });
     }
   }
-  
-  // On page load, read any pre-filled dropdown values (e.g. browser back navigation)
-  // and populate comboSelections so buttons enable correctly.
+
   function initComboSelectionsFromDOM() {
     document.querySelectorAll('.combo-select').forEach(function(sel) {
       const itemIndex = parseInt(sel.dataset.item);
@@ -233,9 +271,7 @@
 
   document.addEventListener('DOMContentLoaded', initComboSelectionsFromDOM);
 
-  // Also handle bfcache (browser back/forward) which doesn't re-fire DOMContentLoaded
   window.addEventListener('pageshow', function(event) {
-    // Reset and re-read from DOM on every page show
     comboSelections = {};
     initComboSelectionsFromDOM();
   });
