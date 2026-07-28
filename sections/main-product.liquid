@@ -858,27 +858,43 @@
     <h3 style="font-family: var(--font-heading); font-size: 24px; font-weight: 400; margin: 0 0 20px 0; border-bottom: 1px solid var(--lux-border); padding-bottom: 12px;">Size Guide</h3>
     <div class="fit11-modal-body">
         <style>
-          .fit11-size-tabs { display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--lux-border); }
-          .fit11-size-tab { padding: 8px 16px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--lux-text-muted); border-bottom: 2px solid transparent; }
+          .fit11-size-tabs { display: flex; gap: 8px; margin-bottom: 12px; border-bottom: 1px solid var(--lux-border); }
+          .fit11-size-tab { flex: 1; text-align: center; padding: 10px 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--lux-text-muted); border-bottom: 2px solid transparent; white-space: nowrap; }
           .fit11-size-tab.active { color: var(--lux-text); border-bottom: 2px solid var(--lux-text); }
-          .fit11-size-pane { display: none; overflow-x: auto; width: 100%; }
+          .fit11-size-swipe-hint { display: none; text-align: center; font-size: 11px; color: var(--lux-text-muted); padding: 4px 8px 12px; font-weight: 500; }
+          .fit11-size-pane { display: none; width: 100%; }
           .fit11-size-pane.active { display: block; }
-          .fit11-size-table { width: 100%; border-collapse: collapse; text-align: left; }
-          .fit11-size-table th, .fit11-size-table td { padding: 12px 16px; border-bottom: 1px solid var(--lux-border); color: var(--lux-text); font-size: 13px; white-space: nowrap; }
-          .fit11-size-table th { font-weight: 600; color: var(--lux-text-muted); font-size: 12px; }
+          .fit11-size-table { width: 100%; border-collapse: collapse; text-align: center; table-layout: fixed; }
+          .fit11-size-table th, .fit11-size-table td { padding: 11px 6px; border-bottom: 1px solid var(--lux-border); color: var(--lux-text); font-size: 13px; word-wrap: break-word; }
+          .fit11-size-table th { font-weight: 600; color: var(--lux-text-muted); font-size: 12px; line-height: 1.25; }
+          .fit11-size-table th .size-unit { font-size: 0.75em; font-weight: 600; opacity: 0.75; display: block; margin-top: 2px; }
           .fit11-size-table tbody tr:last-child td { border-bottom: none; }
+          @media (max-width: 600px) {
+            .fit11-modal-content { width: 98% !important; max-width: 100% !important; padding: 16px 10px !important; }
+            .fit11-size-tab { padding: 10px 4px !important; font-size: 12px !important; }
+            .fit11-size-swipe-hint { display: block; }
+            .fit11-size-table th { padding: 8px 2px !important; font-size: 11px !important; letter-spacing: -0.3px; }
+            .fit11-size-table td { padding: 8px 2px !important; font-size: 12px !important; letter-spacing: -0.2px; }
+          }
         </style>
 
         <div class="fit11-size-tabs">
-          <div class="fit11-size-tab active" onclick="fit11SwitchSizeTab(this, 'tshirt')">T-Shirt</div>
-          <div class="fit11-size-tab" onclick="fit11SwitchSizeTab(this, 'trackpants')">Track Pants</div>
-          <div class="fit11-size-tab" onclick="fit11SwitchSizeTab(this, 'shorts')">Shorts</div>
+          <div class="fit11-size-tab active" data-tab="tshirt" onclick="fit11SwitchSizeTab(this, 'tshirt')">T-Shirt</div>
+          <div class="fit11-size-tab" data-tab="trackpants" onclick="fit11SwitchSizeTab(this, 'trackpants')">Track Pants</div>
+          <div class="fit11-size-tab" data-tab="shorts" onclick="fit11SwitchSizeTab(this, 'shorts')">Shorts</div>
+        </div>
+        <div class="fit11-size-swipe-hint">
+          <i class="ti ti-hand-click"></i> Swipe left or right to view other size charts
         </div>
 
         <div id="size-pane-tshirt" class="fit11-size-pane active">
           <table class="fit11-size-table">
             <thead>
-              <tr style="border-bottom: 2px solid var(--lux-border); font-weight:500;"><th>Size</th><th>Chest (in)</th><th>Length (in)</th></tr>
+              <tr style="border-bottom: 2px solid var(--lux-border); font-weight:500;">
+                <th>Size</th>
+                <th>Chest<br><span class="size-unit">(in)</span></th>
+                <th>Length<br><span class="size-unit">(in)</span></th>
+              </tr>
             </thead>
             <tbody>
               <tr><td>XS</td><td>36</td><td>25</td></tr>
@@ -899,7 +915,11 @@
         <div id="size-pane-trackpants" class="fit11-size-pane">
           <table class="fit11-size-table">
             <thead>
-              <tr style="border-bottom: 2px solid var(--lux-border); font-weight:500;"><th>Size</th><th>Waist (in)</th><th>Length (in)</th></tr>
+              <tr style="border-bottom: 2px solid var(--lux-border); font-weight:500;">
+                <th>Size</th>
+                <th>Waist<br><span class="size-unit">(in)</span></th>
+                <th>Length<br><span class="size-unit">(in)</span></th>
+              </tr>
             </thead>
             <tbody>
               <tr><td>S</td><td>28 - 30</td><td>36</td></tr>
@@ -916,10 +936,10 @@
             <thead>
               <tr style="border-bottom: 2px solid var(--lux-border); font-weight:500;">
                 <th>Size</th>
-                <th>Waist (in)</th>
-                <th>Inseam (in)</th>
-                <th>Hip (in)</th>
-                <th>Outseam (in)</th>
+                <th>Waist<br><span class="size-unit">(in)</span></th>
+                <th>Inseam<br><span class="size-unit">(in)</span></th>
+                <th>Hip<br><span class="size-unit">(in)</span></th>
+                <th>Outseam<br><span class="size-unit">(in)</span></th>
               </tr>
             </thead>
             <tbody>
@@ -934,6 +954,29 @@
         </div>
 
         <script>
+          const fit11SizeTabsOrder = ['tshirt', 'trackpants', 'shorts'];
+
+          function fit11ActivateDefaultSizeTab() {
+            const prodTitle = "{{ product.title | downcase | escape }}";
+            const prodType = "{{ product.type | downcase | escape }}";
+            const prodHandle = "{{ product.handle | downcase | escape }}";
+            const combined = (prodTitle + " " + prodType + " " + prodHandle).toLowerCase();
+            
+            let targetTab = 'tshirt';
+            if (combined.includes('short')) {
+              targetTab = 'shorts';
+            } else if (combined.includes('track') || combined.includes('pant') || combined.includes('trouser') || combined.includes('jogger') || combined.includes('lower')) {
+              targetTab = 'trackpants';
+            } else {
+              targetTab = 'tshirt';
+            }
+            
+            const targetBtn = document.querySelector(`.fit11-size-tab[data-tab="${targetTab}"]`);
+            if (targetBtn) {
+              fit11SwitchSizeTab(targetBtn, targetTab);
+            }
+          }
+
           function fit11SwitchSizeTab(tabElem, paneId) {
             var tabs = tabElem.parentElement.querySelectorAll('.fit11-size-tab');
             tabs.forEach(function(t) { t.classList.remove('active'); });
@@ -944,6 +987,53 @@
             var targetPane = tabElem.parentElement.parentElement.querySelector('#size-pane-' + paneId);
             if (targetPane) targetPane.classList.add('active');
           }
+
+          document.addEventListener("DOMContentLoaded", function() {
+            fit11ActivateDefaultSizeTab();
+            const modalContent = document.querySelector('#fit11SizeModal .fit11-modal-content');
+            if (!modalContent) return;
+
+            let startX = 0;
+            let startY = 0;
+
+            modalContent.addEventListener('touchstart', function(e) {
+              if (e.changedTouches && e.changedTouches[0]) {
+                startX = e.changedTouches[0].screenX;
+                startY = e.changedTouches[0].screenY;
+              }
+            }, { passive: true });
+
+            modalContent.addEventListener('touchend', function(e) {
+              if (!e.changedTouches || !e.changedTouches[0]) return;
+              const endX = e.changedTouches[0].screenX;
+              const endY = e.changedTouches[0].screenY;
+              const diffX = startX - endX;
+              const diffY = startY - endY;
+
+              if (Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY)) {
+                const activePane = document.querySelector('#fit11SizeModal .fit11-size-pane.active');
+                if (!activePane) return;
+                const currentId = activePane.id.replace('size-pane-', '');
+                let currentIdx = fit11SizeTabsOrder.indexOf(currentId);
+                if (currentIdx === -1) currentIdx = 0;
+
+                let nextIdx = currentIdx;
+                if (diffX > 0) {
+                  nextIdx = (currentIdx + 1) % fit11SizeTabsOrder.length;
+                } else {
+                  nextIdx = (currentIdx - 1 + fit11SizeTabsOrder.length) % fit11SizeTabsOrder.length;
+                }
+
+                if (nextIdx !== currentIdx) {
+                  const targetTabId = fit11SizeTabsOrder[nextIdx];
+                  const targetBtn = document.querySelector(`.fit11-size-tab[data-tab="${targetTabId}"]`);
+                  if (targetBtn) {
+                    fit11SwitchSizeTab(targetBtn, targetTabId);
+                  }
+                }
+              }
+            }, { passive: true });
+          });
         </script>
     </div>
   </div>
@@ -1152,6 +1242,7 @@
     var modal = document.getElementById('fit11SizeModal');
     if(!modal) return;
     if(show) {
+      if (typeof fit11ActivateDefaultSizeTab === 'function') fit11ActivateDefaultSizeTab();
       modal.classList.add('open');
       document.body.style.overflow = 'hidden';
     } else {
