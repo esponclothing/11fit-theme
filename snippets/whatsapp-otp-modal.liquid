@@ -2152,6 +2152,12 @@ window._shopifyCustomer = {
       if (document.getElementById('wa-step-4').style.display === 'block') {
           renderPaymentMethods();
       }
+      if (payBtn) {
+        payBtn.disabled = false;
+        payBtn.style.pointerEvents = 'auto';
+        payBtn.style.opacity = '1';
+        payBtn.style.cursor = 'pointer';
+      }
 
     } catch (e) {
       if (discountCode && String(e.message) === 'invalid_discount') {
@@ -2176,6 +2182,12 @@ window._shopifyCustomer = {
           if (typeof renderPaymentMethods === 'function') renderPaymentMethods();
         }
       }
+    }
+    if (payBtn) {
+      payBtn.disabled = false;
+      payBtn.style.pointerEvents = 'auto';
+      payBtn.style.opacity = '1';
+      payBtn.style.cursor = 'pointer';
     }
   }
 
@@ -2303,6 +2315,14 @@ window._shopifyCustomer = {
           subtext.innerHTML = `Pay securely when your order arrives`;
         }
         if (btnText) btnText.innerText = 'Place Order (COD) →';
+      }
+
+      const codBtn = document.getElementById('wa-cod-btn');
+      if (codBtn) {
+        codBtn.disabled = false;
+        codBtn.style.pointerEvents = 'auto';
+        codBtn.style.opacity = '1';
+        codBtn.style.cursor = 'pointer';
       }
     }
   
@@ -2707,7 +2727,17 @@ function renderPaymentMethods() {
         btn.innerHTML = 'Pay Now <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
         return;
       }
-      const addr = waAddresses.find(a => String(a.id) === String(waSelectedAddress));
+      const addr = waAddresses.find(a => String(a.id) === String(waSelectedAddress)) || waAddresses[0];
+      if (!addr) {
+        errEl.innerText = 'Please add a shipping address first.';
+        errEl.style.display = 'block';
+        btn.disabled = false;
+        btn.style.pointerEvents = 'auto';
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+        btn.innerHTML = 'Place Order (COD) →';
+        return;
+      }
       
       if (waSelectedPayment === 'cod') {
         // Direct complete
@@ -2861,8 +2891,13 @@ function renderPaymentMethods() {
         alert('Order placed but failed to confirm natively. Support will contact you. ' + e.message);
       }
       const btn = document.getElementById('wa-cod-btn');
-      btn.disabled = false;
-      btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span>';
+      if (btn) {
+        btn.disabled = false;
+        btn.style.pointerEvents = 'auto';
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+        btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span>';
+      }
     }
   }
 
