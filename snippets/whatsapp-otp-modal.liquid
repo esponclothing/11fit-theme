@@ -2930,7 +2930,7 @@ function renderPaymentMethods() {
     if (sessionId) {
       console.log('Restoring cart session:', sessionId);
       try {
-        const recoverApiUrl = 'https://11fit-price-editor.vercel.app/api/recover-cart?id=' + encodeURIComponent(sessionId);
+        const recoverApiUrl = 'https://shopify-price-editor.vercel.app/api/recover-cart?id=' + encodeURIComponent(sessionId);
         
         const res = await fetch(recoverApiUrl);
         const data = await res.json();
