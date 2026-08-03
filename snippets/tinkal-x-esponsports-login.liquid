@@ -259,6 +259,31 @@
     border: none;
     display: block;
   }
+
+  @media (max-width: 767px) {
+    .tx-modal-popup {
+      height: 88vh !important;
+      max-height: 680px !important;
+      min-height: 480px !important;
+      width: calc(100% - 20px) !important;
+      border-radius: 18px !important;
+    }
+    .tx-modal-left-panel {
+      display: none !important;
+    }
+    .tx-modal-right-panel {
+      width: 100% !important;
+      height: 100% !important;
+      flex: 1 1 100% !important;
+    }
+    .tx-modal-close-btn {
+      top: 10px !important;
+      right: 10px !important;
+      width: 28px !important;
+      height: 28px !important;
+      font-size: 16px !important;
+    }
+  }
 </style>
 
 <script>
