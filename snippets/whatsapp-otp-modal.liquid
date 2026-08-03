@@ -1168,8 +1168,23 @@ window._shopifyCustomer = {
       }
     }
 
-    // Check if they already verified in this tab or device session
-    const cachedPhone = sessionStorage.getItem('fit11_verified_phone') || localStorage.getItem('fit11_verified_phone') || localStorage.getItem('kwikpass_user_phone');
+    // Check if they already verified in this tab or device session, or logged in via Shopify Customer Account
+    const sc = window._shopifyCustomer;
+    let cachedPhone = sessionStorage.getItem('fit11_verified_phone') || localStorage.getItem('fit11_verified_phone') || localStorage.getItem('kwikpass_user_phone');
+    if (!cachedPhone && sc && sc.logged_in && sc.phone) {
+      cachedPhone = sc.phone.replace(/\D/g, '');
+      if (cachedPhone.length >= 10) {
+        if (!cachedPhone.startsWith('91') && cachedPhone.length === 10) {
+          cachedPhone = '+91' + cachedPhone;
+        } else if (cachedPhone.startsWith('91') && cachedPhone.length === 12) {
+          cachedPhone = '+' + cachedPhone;
+        }
+      }
+      try {
+        localStorage.setItem('fit11_verified_phone', cachedPhone);
+        localStorage.setItem('kwikpass_user_phone', cachedPhone);
+      } catch (e) {}
+    }
     if (cachedPhone) {
       waPhone = cachedPhone;
       document.getElementById('wa-step-1').style.display = 'none';

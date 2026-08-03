@@ -153,26 +153,27 @@
   /* Close Button */
   .tx-modal-close-btn {
     position: absolute;
-    top: 16px;
-    right: 18px;
-    background: transparent;
-    border: none;
+    top: 14px;
+    right: 14px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    font-size: 26px;
+    font-size: 20px;
     line-height: 1;
-    color: #64748b;
+    color: #475569;
     cursor: pointer;
-    z-index: 10;
+    z-index: 50;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    transition: all 0.2s ease;
   }
   .tx-modal-close-btn:hover {
+    background: #e2e8f0;
     color: #0f172a;
-    transform: scale(1.1);
   }
 
   /* Left Panel (Deep Green Kwikpass Theme #143424) */
@@ -308,6 +309,21 @@
         localStorage.removeItem('kwikpass_user_phone');
         sessionStorage.removeItem('fit11_verified_phone');
       } catch (e) {}
+    }
+  });
+
+  window.addEventListener('DOMContentLoaded', function() {
+    var iframe = document.getElementById('tx-account-iframe');
+    if (iframe && (iframe.src === 'about:blank' || !iframe.src)) {
+      var savedPhone = '';
+      try {
+        savedPhone = localStorage.getItem('fit11_verified_phone') || localStorage.getItem('kwikpass_user_phone') || sessionStorage.getItem('fit11_verified_phone') || '';
+      } catch (e) {}
+      var portalUrl = '{{ LOGIN_PORTAL_URL }}?merchant_key={{ MERCHANT_KEY }}&store={{ shop.domain }}&mode=modal';
+      if (savedPhone) {
+        portalUrl += '&phone=' + encodeURIComponent(savedPhone);
+      }
+      iframe.src = portalUrl;
     }
   });
 </script>
