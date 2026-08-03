@@ -41,7 +41,11 @@
     <!-- Left Column: Deep Green Kwikpass Theme Panel -->
     <div class="tx-modal-left-panel">
       <div class="tx-brand-header">
-        <span class="tx-brand-logo">11FIT</span>
+        {% if settings.logo %}
+          <img src="{{ settings.logo | img_url: 'master' }}" alt="{{ shop.name }}" class="tx-brand-logo-img">
+        {% else %}
+          <span class="tx-brand-logo">{{ shop.name }}</span>
+        {% endif %}
         <span class="tx-brand-power">Powered by ⚡ Swift Network</span>
       </div>
 
