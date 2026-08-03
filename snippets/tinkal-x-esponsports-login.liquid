@@ -287,21 +287,24 @@
 </style>
 
 <script>
-  function openTxAccountModal() {
+  function openTxAccountModal(tab) {
     var overlay = document.getElementById('tx-login-modal-overlay');
     var iframe = document.getElementById('tx-account-iframe');
     if (overlay && iframe) {
       overlay.style.display = 'flex';
       document.body.style.overflow = 'hidden';
-      if (iframe.src === 'about:blank' || !iframe.src) {
-        var savedPhone = '';
-        try {
-          savedPhone = localStorage.getItem('fit11_verified_phone') || localStorage.getItem('kwikpass_user_phone') || sessionStorage.getItem('fit11_verified_phone') || '';
-        } catch (e) {}
-        var portalUrl = '{{ LOGIN_PORTAL_URL }}?merchant_key={{ MERCHANT_KEY }}&store={{ shop.domain }}&mode=modal';
-        if (savedPhone) {
-          portalUrl += '&phone=' + encodeURIComponent(savedPhone);
-        }
+      var savedPhone = '';
+      try {
+        savedPhone = localStorage.getItem('fit11_verified_phone') || localStorage.getItem('kwikpass_user_phone') || sessionStorage.getItem('fit11_verified_phone') || '';
+      } catch (e) {}
+      var portalUrl = '{{ LOGIN_PORTAL_URL }}?merchant_key={{ MERCHANT_KEY }}&store={{ shop.domain }}&mode=modal';
+      if (savedPhone) {
+        portalUrl += '&phone=' + encodeURIComponent(savedPhone);
+      }
+      if (tab && typeof tab === 'string') {
+        portalUrl += '&tab=' + encodeURIComponent(tab);
+      }
+      if (iframe.src === 'about:blank' || !iframe.src || tab) {
         iframe.src = portalUrl;
       }
     }
@@ -360,17 +363,28 @@
     }
   });
 
-  // Global Interceptor: ANY link to /account or /account/login across the entire store
-  // will open OUR custom OTP login/account modal instead of Shopify native account login!
+  // Global Interceptor: ANY link to /account, /account/login, or Order Tracking across the entire store
+  // will open OUR custom OTP login/account modal instead of Shopify native pages!
   document.addEventListener('click', function(e) {
-    var link = e.target.closest('a[href*="/account"]');
+    var link = e.target.closest('a[href*="/account"], a[href*="order-tracking"], a[href*="/pages/order-tracking"]');
     if (link && !link.hasAttribute('data-no-intercept') && link.getAttribute('target') !== '_blank') {
       e.preventDefault();
       var details = link.closest('details');
       if (details) details.removeAttribute('open');
+      var href = link.getAttribute('href') || '';
+      var tab = (href.indexOf('orders') !== -1 || href.indexOf('order-tracking') !== -1) ? 'orders' : '';
       if (typeof openTxAccountModal === 'function') {
-        openTxAccountModal();
+        openTxAccountModal(tab);
       }
     }
   });
+
+  // Automatically open OTP modal on Order Tracking page
+  if (window.location.pathname.indexOf('order-tracking') !== -1) {
+    window.addEventListener('DOMContentLoaded', function() {
+      if (typeof openTxAccountModal === 'function') {
+        openTxAccountModal('orders');
+      }
+    });
+  }
 </script>
