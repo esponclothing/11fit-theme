@@ -359,4 +359,18 @@
       iframe.src = portalUrl;
     }
   });
+
+  // Global Interceptor: ANY link to /account or /account/login across the entire store
+  // will open OUR custom OTP login/account modal instead of Shopify native account login!
+  document.addEventListener('click', function(e) {
+    var link = e.target.closest('a[href*="/account"]');
+    if (link && !link.hasAttribute('data-no-intercept') && link.getAttribute('target') !== '_blank') {
+      e.preventDefault();
+      var details = link.closest('details');
+      if (details) details.removeAttribute('open');
+      if (typeof openTxAccountModal === 'function') {
+        openTxAccountModal();
+      }
+    }
+  });
 </script>

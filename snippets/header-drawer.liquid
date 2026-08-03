@@ -54,6 +54,7 @@
     font-weight: 600;
     color: #0284c7;
     text-decoration: none;
+    cursor: pointer;
   }
   .bewakoof-drawer__close {
     background: none;
@@ -91,6 +92,12 @@
     border-radius: 8px;
     transition: background 0.15s ease;
   }
+  .bewakoof-drawer__menu-item--child {
+    padding-left: 28px;
+    font-size: 13.8px;
+    font-weight: 500;
+    color: #334155;
+  }
   .bewakoof-drawer__menu-item:hover,
   .bewakoof-drawer__menu-item:active {
     background: #f8fafc;
@@ -110,8 +117,8 @@
   }
   .bewakoof-drawer__profile-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
     padding: 6px 16px 18px;
   }
   .bewakoof-drawer__profile-card {
@@ -124,6 +131,7 @@
     border: 1.5px solid #e2e8f0;
     border-radius: 12px;
     text-decoration: none;
+    cursor: pointer;
     transition: all 0.2s ease;
   }
   .bewakoof-drawer__profile-card:hover {
@@ -140,7 +148,7 @@
     color: #eab308;
   }
   .bewakoof-drawer__profile-card-label {
-    font-size: 11px;
+    font-size: 11.5px;
     font-weight: 700;
     color: #0f172a;
     margin-top: 8px;
@@ -178,9 +186,9 @@
               <div class="bewakoof-drawer__user-text">
                 <h4>Hey There!</h4>
                 {%- if customer -%}
-                  <a href="{{ routes.account_url }}">{{ customer.first_name | default: customer.name | default: 'My Account' }}</a>
+                  <a href="javascript:void(0);" onclick="this.closest('details').removeAttribute('open'); if (typeof openTxAccountModal === 'function') openTxAccountModal();">{{ customer.first_name | default: customer.name | default: 'My Account' }}</a>
                 {%- else -%}
-                  <a href="{{ routes.account_login_url }}">Login / Sign Up</a>
+                  <a href="javascript:void(0);" onclick="this.closest('details').removeAttribute('open'); if (typeof openTxAccountModal === 'function') openTxAccountModal();">Login / Sign Up</a>
                 {%- endif -%}
               </div>
             </div>
@@ -241,15 +249,50 @@
                   </svg>
                 </a>
               </li>
+
+              {%- if link.links != blank -%}
+                {%- for childlink in link.links -%}
+                  {%- assign child_handle = childlink.handle | downcase -%}
+                  <li>
+                    <a
+                      href="{{ childlink.url }}"
+                      class="bewakoof-drawer__menu-item bewakoof-drawer__menu-item--child"
+                      {% if childlink.current %}aria-current="page"{% endif %}
+                    >
+                      <div class="bewakoof-drawer__menu-item-left">
+                        <span class="bewakoof-drawer__menu-icon">
+                          {%- if child_handle contains 'oversized' -%}
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.47a2 2 0 00-1.34-2.23z"/></svg>
+                          {%- elsif child_handle contains 'combo' -%}
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="7" width="16" height="15" rx="2" ry="2"/><path d="M17 2h-11a2 2 0 00-2 2v1h13v11h1a2 2 0 002-2v-10a2 2 0 00-2-2z"/></svg>
+                          {%- elsif child_handle contains 'polo' -%}
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.47a2 2 0 00-1.34-2.23z"/><path d="M12 2v6"/><path d="M10 2l2 4 2-4"/></svg>
+                          {%- elsif child_handle contains 'joggers' or child_handle contains 'trackpants' or child_handle contains 'pants' -%}
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M6 2h12l-1 20H13l-1-10-1 10H7L6 2z"/><path d="M6 6h12"/></svg>
+                          {%- elsif child_handle contains 'shorts' -%}
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M5 4h14l-1 12H13l-1-5-1 5H6L5 4z"/></svg>
+                          {%- else -%}
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                          {%- endif -%}
+                        </span>
+                        <span>{{ childlink.title | escape }}</span>
+                      </div>
+                      <svg viewBox="0 0 24 24" width="16" height="16" stroke="#cbd5e1" stroke-width="2" fill="none">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </a>
+                  </li>
+                {%- endfor -%}
+              {%- endif -%}
             {%- endfor -%}
           </ul>
 
           <div class="bewakoof-drawer__divider"></div>
 
-          <!-- 3. MY PROFILE Section (4 Grid Cards) -->
+          <!-- 3. MY PROFILE Section (3 Grid Cards: Wishlist removed!) -->
           <p class="bewakoof-drawer__section-title">MY PROFILE</p>
           <div class="bewakoof-drawer__profile-grid">
-            <a href="{{ routes.account_url }}" class="bewakoof-drawer__profile-card">
+            <a href="javascript:void(0);" onclick="this.closest('details').removeAttribute('open'); if (typeof openTxAccountModal === 'function') openTxAccountModal();" class="bewakoof-drawer__profile-card">
               <span class="bewakoof-drawer__profile-card-icon">
                 <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2.2" fill="none" style="color: #eab308;">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -259,7 +302,7 @@
               <span class="bewakoof-drawer__profile-card-label">My Account</span>
             </a>
 
-            <a href="{{ routes.account_url }}?tab=orders" class="bewakoof-drawer__profile-card">
+            <a href="javascript:void(0);" onclick="this.closest('details').removeAttribute('open'); if (typeof openTxAccountModal === 'function') openTxAccountModal();" class="bewakoof-drawer__profile-card">
               <span class="bewakoof-drawer__profile-card-icon">
                 <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2.2" fill="none" style="color: #eab308;">
                   <rect x="1" y="3" width="15" height="13"></rect>
@@ -271,7 +314,7 @@
               <span class="bewakoof-drawer__profile-card-label">My Orders</span>
             </a>
 
-            <a href="{{ routes.account_url }}?tab=wallet" class="bewakoof-drawer__profile-card">
+            <a href="javascript:void(0);" onclick="this.closest('details').removeAttribute('open'); if (typeof openTxAccountModal === 'function') openTxAccountModal();" class="bewakoof-drawer__profile-card">
               <span class="bewakoof-drawer__profile-card-icon">
                 <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2.2" fill="none" style="color: #eab308;">
                   <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/>
@@ -280,15 +323,6 @@
                 </svg>
               </span>
               <span class="bewakoof-drawer__profile-card-label">My Wallet</span>
-            </a>
-
-            <a href="{{ routes.account_url }}?tab=wishlist" class="bewakoof-drawer__profile-card">
-              <span class="bewakoof-drawer__profile-card-icon">
-                <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2.2" fill="none" style="color: #eab308;">
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                </svg>
-              </span>
-              <span class="bewakoof-drawer__profile-card-label">My Wishlist</span>
             </a>
           </div>
 
