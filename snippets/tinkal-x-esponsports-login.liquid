@@ -287,17 +287,65 @@
 </style>
 
 <script>
-  function openTxAccountModal(tab) {
+  function getOrCreateDeviceId() {
+    var deviceId = '';
+    try {
+      deviceId = localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id') || localStorage.getItem('__kp_device_id') || '';
+      if (!deviceId) {
+        deviceId = 'dev_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+        localStorage.setItem('fit11_device_id', deviceId);
+      }
+    } catch (e) {}
+    return deviceId;
+  }
+
+  async function autoFetchPhoneByDeviceId() {
+    try {
+      var device_id = getOrCreateDeviceId();
+      if (!device_id) return null;
+      var res = await fetch('https://checkout-app-one-lilac.vercel.app/api/identify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ device_id: device_id, merchant_key: '{{ MERCHANT_KEY }}' })
+      });
+      var data = await res.json();
+      if (data && data.identified && data.phone) {
+        localStorage.setItem('fit11_verified_phone', data.phone);
+        localStorage.setItem('kwikpass_user_phone', data.phone);
+        sessionStorage.setItem('fit11_verified_phone', data.phone);
+        if (data.email) {
+          localStorage.setItem('fit11_verified_email', data.email);
+          localStorage.setItem('kwikpass_user_email', data.email);
+        }
+        return data.phone;
+      }
+    } catch (e) {
+      console.warn('Auto-fetch phone by device ID failed:', e);
+    }
+    return null;
+  }
+
+  async function openTxAccountModal(tab) {
     var overlay = document.getElementById('tx-login-modal-overlay');
     var iframe = document.getElementById('tx-account-iframe');
     if (overlay && iframe) {
       overlay.style.display = 'flex';
       document.body.style.overflow = 'hidden';
+      var device_id = getOrCreateDeviceId();
       var savedPhone = '';
       try {
         savedPhone = localStorage.getItem('fit11_verified_phone') || localStorage.getItem('kwikpass_user_phone') || sessionStorage.getItem('fit11_verified_phone') || '';
       } catch (e) {}
+
+      // Auto-fetch phone number by device ID from Checkout App database if not already cached
+      if (!savedPhone) {
+        savedPhone = await autoFetchPhoneByDeviceId() || '';
+      }
+
       var portalUrl = '{{ LOGIN_PORTAL_URL }}?merchant_key={{ MERCHANT_KEY }}&store={{ shop.domain }}&mode=modal';
+      if (device_id) {
+        portalUrl += '&device_id=' + encodeURIComponent(device_id);
+      }
       if (savedPhone) {
         portalUrl += '&phone=' + encodeURIComponent(savedPhone);
       }
@@ -349,13 +397,18 @@
   });
 
   window.addEventListener('DOMContentLoaded', function() {
+    autoFetchPhoneByDeviceId();
     var iframe = document.getElementById('tx-account-iframe');
     if (iframe && (iframe.src === 'about:blank' || !iframe.src)) {
       var savedPhone = '';
       try {
         savedPhone = localStorage.getItem('fit11_verified_phone') || localStorage.getItem('kwikpass_user_phone') || sessionStorage.getItem('fit11_verified_phone') || '';
       } catch (e) {}
+      var device_id = getOrCreateDeviceId();
       var portalUrl = '{{ LOGIN_PORTAL_URL }}?merchant_key={{ MERCHANT_KEY }}&store={{ shop.domain }}&mode=modal';
+      if (device_id) {
+        portalUrl += '&device_id=' + encodeURIComponent(device_id);
+      }
       if (savedPhone) {
         portalUrl += '&phone=' + encodeURIComponent(savedPhone);
       }

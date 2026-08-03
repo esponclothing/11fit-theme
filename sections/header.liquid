@@ -282,8 +282,40 @@
         {%- endif -%}
       </a>
     </div>
-  </header>
 </{{ header_tag }}>
+
+<script>
+  // Desktop Auto-Open Submenu on Hover (T-Shirts ⌄, Bottoms ⌄, etc.)
+  window.addEventListener('DOMContentLoaded', function() {
+    var menuItems = document.querySelectorAll('.header__inline-menu > ul > li');
+    menuItems.forEach(function(item) {
+      var details = item.querySelector('details');
+      if (!details) return;
+      var summary = details.querySelector('summary');
+
+      item.addEventListener('mouseenter', function() {
+        if (window.innerWidth >= 990) {
+          document.querySelectorAll('.header__inline-menu details[open]').forEach(function(other) {
+            if (other !== details) {
+              other.removeAttribute('open');
+              var otherSummary = other.querySelector('summary');
+              if (otherSummary) otherSummary.setAttribute('aria-expanded', 'false');
+            }
+          });
+          details.setAttribute('open', '');
+          if (summary) summary.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      item.addEventListener('mouseleave', function() {
+        if (window.innerWidth >= 990) {
+          details.removeAttribute('open');
+          if (summary) summary.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+  });
+</script>
 
 {%- comment -%} Removed cart-notification {%- endcomment -%}
 
