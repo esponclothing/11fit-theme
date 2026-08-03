@@ -1169,8 +1169,8 @@ window._shopifyCustomer = {
       }
     }
 
-    // Check if they already verified in this tab session
-    const cachedPhone = sessionStorage.getItem('fit11_verified_phone');
+    // Check if they already verified in this tab or device session
+    const cachedPhone = sessionStorage.getItem('fit11_verified_phone') || localStorage.getItem('fit11_verified_phone') || localStorage.getItem('kwikpass_user_phone');
     if (cachedPhone) {
       waPhone = cachedPhone;
       document.getElementById('wa-step-1').style.display = 'none';
@@ -1512,8 +1512,12 @@ window._shopifyCustomer = {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Invalid OTP');
       
-      // Save to session so they don't have to re-verify if they navigate away and come back
+      // Save to session & local storage so they don't have to re-verify across checkout or profile modal
       sessionStorage.setItem('fit11_verified_phone', waPhone);
+      try {
+        localStorage.setItem('fit11_verified_phone', waPhone);
+        localStorage.setItem('kwikpass_user_phone', waPhone);
+      } catch (e) {}
       if (data.profile && data.profile.email) {
         sessionStorage.setItem('fit11_verified_email', data.profile.email);
         const emailInput = document.getElementById('wa-email');
