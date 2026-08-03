@@ -1169,7 +1169,6 @@ window._shopifyCustomer = {
     }
 
     // Check if they already verified in this tab or device session, or logged in via Shopify Customer Account
-    const sc = window._shopifyCustomer;
     let cachedPhone = sessionStorage.getItem('fit11_verified_phone') || localStorage.getItem('fit11_verified_phone') || localStorage.getItem('kwikpass_user_phone');
     if (!cachedPhone && sc && sc.logged_in && sc.phone) {
       cachedPhone = sc.phone.replace(/\D/g, '');
@@ -1185,20 +1184,8 @@ window._shopifyCustomer = {
         localStorage.setItem('kwikpass_user_phone', cachedPhone);
       } catch (e) {}
     }
-    if (cachedPhone) {
-      waPhone = cachedPhone;
-      document.getElementById('wa-step-1').style.display = 'none';
-      document.getElementById('wa-step-2').style.display = 'none';
-      document.getElementById('wa-step-3').style.display = 'block';
-      const cachedEmail = sessionStorage.getItem('fit11_verified_email');
-      if (cachedEmail) document.getElementById('wa-email').value = cachedEmail;
-      waSetStep(3);
-      loadAddresses();
-      calculateCheckoutTotals();
-      return; // Skip identify check completely!
-    }
 
-    // Check identity via device (for "Welcome Back" flow if no session cache)
+    // Always fetch identity & store settings first so payment methods & theme variables are loaded
     try {
       const device_id = localStorage.getItem('fit11_device_id');
       const res = await fetch(`${WA_API_BASE}/identify`, {
@@ -1248,6 +1235,23 @@ window._shopifyCustomer = {
           if (_emailInput) { _emailInput.required = false; _emailInput.placeholder = 'you@example.com (Optional)'; }
           if (_emailBadge) { _emailBadge.textContent = '(Optional)'; _emailBadge.style.color = '#94a3b8'; }
         }
+      }
+
+      // If user is already verified (cachedPhone), jump directly to step 3 now!
+      if (cachedPhone) {
+        waPhone = cachedPhone;
+        const s1 = document.getElementById('wa-step-1'); if (s1) s1.style.display = 'none';
+        const s2 = document.getElementById('wa-step-2'); if (s2) s2.style.display = 'none';
+        const s3 = document.getElementById('wa-step-3'); if (s3) s3.style.display = 'block';
+        const cachedEmail = sessionStorage.getItem('fit11_verified_email');
+        if (cachedEmail) {
+          const emEl = document.getElementById('wa-email');
+          if (emEl) emEl.value = cachedEmail;
+        }
+        waSetStep(3);
+        loadAddresses();
+        calculateCheckoutTotals();
+        return;
       }
 
       
