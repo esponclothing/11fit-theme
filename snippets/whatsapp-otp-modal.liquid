@@ -3054,4 +3054,28 @@ function renderPaymentMethods() {
       }
     }
   })();
+
+  // ── SWIFT REORDER: Buy Again from Account Portal ──
+  window.addEventListener('message', async function(event) {
+    if (!event.data || event.data.type !== 'SWIFT_REORDER') return;
+    const items = event.data.items;
+    if (!items || items.length === 0) return;
+    try {
+      // Clear existing cart first, then add reorder items
+      await fetch(window.Shopify.routes.root + 'cart/clear.js', { method: 'POST' });
+      await fetch(window.Shopify.routes.root + 'cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: items.map(function(i) { return { id: i.id, quantity: i.quantity }; }) })
+      });
+      // Open the custom checkout modal (same as clicking the checkout button)
+      if (typeof openWaModal === 'function') {
+        openWaModal();
+      } else {
+        window.location.href = '/checkout';
+      }
+    } catch (err) {
+      console.error('SWIFT_REORDER error:', err);
+    }
+  });
 </script>
