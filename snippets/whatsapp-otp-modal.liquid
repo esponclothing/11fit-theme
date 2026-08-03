@@ -1129,6 +1129,23 @@ window._shopifyCustomer = {
       emailBadge.style.color = isRequired ? '#ef4444' : '#94a3b8';
     }
   }
+
+  function waAutofillEmail(emailVal) {
+    const emEl = document.getElementById('wa-email');
+    let em = emailVal || sessionStorage.getItem('fit11_verified_email') || localStorage.getItem('fit11_verified_email') || localStorage.getItem('kwikpass_user_email');
+    if (!em && window._shopifyCustomer && window._shopifyCustomer.email) {
+      em = window._shopifyCustomer.email;
+    }
+    if (em) {
+      if (emEl && !emEl.value) emEl.value = em;
+      waEmail = em;
+      sessionStorage.setItem('fit11_verified_email', em);
+      try {
+        localStorage.setItem('fit11_verified_email', em);
+        localStorage.setItem('kwikpass_user_email', em);
+      } catch(e){}
+    }
+  }
   
   async function openWaModal() {
     const overlay = document.getElementById('wa-otp-overlay');
@@ -1237,18 +1254,10 @@ window._shopifyCustomer = {
         }
       }
 
-      // If user is already verified (cachedPhone), jump directly to step 3 now!
       if (cachedPhone) {
         waPhone = cachedPhone;
-        const s1 = document.getElementById('wa-step-1'); if (s1) s1.style.display = 'none';
-        const s2 = document.getElementById('wa-step-2'); if (s2) s2.style.display = 'none';
-        const s3 = document.getElementById('wa-step-3'); if (s3) s3.style.display = 'block';
-        const cachedEmail = sessionStorage.getItem('fit11_verified_email');
-        if (cachedEmail) {
-          const emEl = document.getElementById('wa-email');
-          if (emEl) emEl.value = cachedEmail;
-        }
-        waSetStep(3);
+        waAutofillEmail(data ? data.email : null);
+        waGoToStep(3);
         loadAddresses();
         calculateCheckoutTotals();
         return;
@@ -1366,7 +1375,14 @@ window._shopifyCustomer = {
         return;
       }
       if (errEl) errEl.style.display = 'none';
-      if (emailEl) waEmail = emailEl.value.trim();
+      if (emailEl && emailEl.value.trim()) {
+        waEmail = emailEl.value.trim();
+        sessionStorage.setItem('fit11_verified_email', waEmail);
+        try {
+          localStorage.setItem('fit11_verified_email', waEmail);
+          localStorage.setItem('kwikpass_user_email', waEmail);
+        } catch(e){}
+      }
     }
 
     document.getElementById('wa-step-1').style.display = 'none';
@@ -1536,11 +1552,7 @@ window._shopifyCustomer = {
         localStorage.setItem('fit11_verified_phone', waPhone);
         localStorage.setItem('kwikpass_user_phone', waPhone);
       } catch (e) {}
-      if (data.profile && data.profile.email) {
-        sessionStorage.setItem('fit11_verified_email', data.profile.email);
-        const emailInput = document.getElementById('wa-email');
-        if (emailInput) emailInput.value = data.profile.email;
-      }
+      waAutofillEmail(data.profile ? data.profile.email : (data.email || null));
 
       // Store wallet balance from verify response (avoids extra API call at payment step)
       if (data.storeCreditBalance !== undefined) {
@@ -1571,6 +1583,11 @@ window._shopifyCustomer = {
         body: JSON.stringify({ merchant_key: MERCHANT_KEY, phone: waPhone, action: 'FETCH' })
       });
       const data = await res.json();
+      if (data && data.email) {
+        waAutofillEmail(data.email);
+      } else {
+        waAutofillEmail(null);
+      }
       const networkAddrs = data.addresses || [];
       
       // Combine existing loaded ones (from Shopify Liquid) and fetched ones

@@ -327,12 +327,20 @@
         localStorage.setItem('fit11_verified_phone', event.data.phone);
         localStorage.setItem('kwikpass_user_phone', event.data.phone);
         sessionStorage.setItem('fit11_verified_phone', event.data.phone);
+        if (event.data.email) {
+          localStorage.setItem('fit11_verified_email', event.data.email);
+          localStorage.setItem('kwikpass_user_email', event.data.email);
+          sessionStorage.setItem('fit11_verified_email', event.data.email);
+        }
       } catch (e) {}
     } else if (event.data && event.data.type === 'KWIKPASS_LOGOUT') {
       try {
         localStorage.removeItem('fit11_verified_phone');
         localStorage.removeItem('kwikpass_user_phone');
         sessionStorage.removeItem('fit11_verified_phone');
+        localStorage.removeItem('fit11_verified_email');
+        localStorage.removeItem('kwikpass_user_email');
+        sessionStorage.removeItem('fit11_verified_email');
       } catch (e) {}
     }
   });
