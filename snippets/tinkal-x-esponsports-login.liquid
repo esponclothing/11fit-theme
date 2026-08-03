@@ -2,39 +2,73 @@
   ==============================================================================
   TINKAL X ESPONSPORTS - KWIKPASS-STYLE OTP LOGIN & ACCOUNT PORTAL SNIPPET
   ==============================================================================
-  Render this snippet in theme header or account link:
-     {% render 'tinkal-x-esponsports-login' %}
+  Renders a single profile icon in the header matching the theme style with a
+  Kwikpass lightning bolt badge. When clicked, opens a centered 2-column modal.
 {% endcomment %}
 
 {% assign MERCHANT_KEY = 'sk_live_11fit_106b31bb8dd7a7' %}
 {% assign LOGIN_PORTAL_URL = 'https://checkout-app-one-lilac.vercel.app/account' %}
 
-<!-- Customer Login Modal / Drawer Trigger Button -->
-<button 
+<!-- Single Profile Icon in Header with Lightning Bolt Badge -->
+<a 
   id="tx-login-trigger" 
-  class="tx-login-btn" 
-  aria-label="Login with OTP / Account"
+  class="header__icon header__icon--account link focus-inset tx-account-trigger" 
+  href="javascript:void(0);"
+  aria-label="Account / Login with OTP"
   onclick="openTxAccountModal()"
-  type="button"
 >
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-    <circle cx="12" cy="7" r="4"></circle>
-  </svg>
-  <span class="tx-login-btn-text">Login / Orders</span>
-</button>
+  <span class="svg-wrapper tx-icon-wrapper">
+    <!-- Standard Theme Account SVG Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="icon icon-account" viewBox="0 0 18 19">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M6 4.5a3 3 0 116 0 3 3 0 01-6 0zm3-4a4 4 0 100 8 4 4 0 000-8zm5.58 12.15c1.12.82 1.83 2.24 1.91 4.85H1.51c.08-2.6.79-4.03 1.9-4.85C4.66 11.75 6.5 11.5 9 11.5s4.35.26 5.58 1.15zM9 10.5c-2.5 0-4.65.24-6.17 1.35C1.27 12.98.5 14.93.5 18v.5h17V18c0-3.07-.77-5.02-2.33-6.15-1.52-1.1-3.67-1.35-6.17-1.35z" fill="currentColor"></path>
+    </svg>
+    <!-- Kwikpass Style Lightning Bolt Badge -->
+    <span class="tx-lightning-badge">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+      </svg>
+    </span>
+  </span>
+  <span class="visually-hidden">Account</span>
+</a>
 
-<!-- Slide-over Modal -->
-<div id="tx-login-modal-overlay" class="tx-modal-overlay" style="display: none;">
-  <div class="tx-modal-content">
-    <div class="tx-modal-header">
-      <div class="tx-modal-brand">
-        <span class="tx-modal-title">My Account & Orders</span>
-        <span class="tx-modal-subtitle">OTP Powered Login</span>
+<!-- Centered Kwikpass-Style 2-Column Popup Modal -->
+<div id="tx-login-modal-overlay" class="tx-modal-overlay" style="display: none;" onclick="handleTxOverlayClick(event)">
+  <div class="tx-modal-popup">
+    <!-- Close Button -->
+    <button class="tx-modal-close-btn" onclick="closeTxAccountModal()" aria-label="Close">&times;</button>
+    
+    <!-- Left Column: Theme-Matching Offers & Features Panel -->
+    <div class="tx-modal-left-panel">
+      <div class="tx-brand-header">
+        <span class="tx-brand-logo">11FIT</span>
+        <span class="tx-brand-power">Powered by ⚡ Swift Network</span>
       </div>
-      <button class="tx-modal-close" onclick="closeTxAccountModal()" type="button">&times;</button>
+
+      <div class="tx-modal-left-content">
+        <h3 class="tx-modal-headline">
+          Login now to get the best offers! And you'll also get...
+        </h3>
+
+        <div class="tx-features-grid">
+          <div class="tx-feature-card">
+            <span class="tx-feature-icon">⭐</span>
+            <span class="tx-feature-text">Free Shipping</span>
+          </div>
+          <div class="tx-feature-card">
+            <span class="tx-feature-icon">⭐</span>
+            <span class="tx-feature-text">5% OFF On Prepaid Orders</span>
+          </div>
+          <div class="tx-feature-card">
+            <span class="tx-feature-icon">⭐</span>
+            <span class="tx-feature-text">15 Days Hassle-Free Return</span>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="tx-modal-body">
+
+    <!-- Right Column: Clean White Account & Login Portal -->
+    <div class="tx-modal-right-panel">
       <iframe 
         id="tx-account-iframe" 
         src="about:blank" 
@@ -46,89 +80,194 @@
 </div>
 
 <style>
-  .tx-login-btn {
+  /* Header Icon Positioning */
+  .tx-account-trigger {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    background: #111827;
-    color: #ffffff;
-    border: 1px solid #374151;
-    border-radius: 9999px;
-    font-size: 13px;
-    font-weight: 600;
+    justify-content: center;
     cursor: pointer;
-    transition: all 0.2s ease;
-    margin-left: 8px;
   }
-  .tx-login-btn:hover {
-    background: #1f2937;
-    border-color: #ef4444;
+  .tx-icon-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
-  .tx-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(4px);
-    z-index: 999999;
-    display: flex;
-    justify-content: flex-end;
-  }
-  .tx-modal-content {
-    width: 100%;
-    max-width: 480px;
-    height: 100%;
-    background: #020617;
-    display: flex;
-    flex-direction: column;
-    box-shadow: -10px 0 30px rgba(0,0,0,0.5);
-    animation: txSlideIn 0.3s ease-out;
-  }
-  @keyframes txSlideIn {
-    from { transform: translateX(100%); }
-    to { transform: translateX(0); }
-  }
-  .tx-modal-header {
-    padding: 16px 24px;
-    border-bottom: 1px solid #1e293b;
+  .tx-lightning-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -4px;
+    background: #eab308;
+    color: #000000;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    font-size: 9px;
+  }
+
+  /* Centered Overlay */
+  .tx-modal-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: rgba(0, 0, 0, 0.7) !important;
+    backdrop-filter: blur(5px);
+    z-index: 2147483647 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    animation: txFadeIn 0.2s ease-out;
+  }
+
+  @keyframes txFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* 2-Column Popup Box */
+  .tx-modal-popup {
+    width: 100%;
+    max-width: 780px;
+    min-height: 440px;
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    animation: txScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (min-width: 768px) {
+    .tx-modal-popup {
+      flex-direction: row;
+      height: 480px;
+    }
+  }
+
+  @keyframes txScaleIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  /* Close Button */
+  .tx-modal-close-btn {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 24px;
+    line-height: 1;
+    color: #475569;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  .tx-modal-close-btn:hover {
+    background: #ffffff;
+    color: #0f172a;
+    transform: scale(1.05);
+  }
+
+  /* Left Panel (Theme Matching Green/Charcoal) */
+  .tx-modal-left-panel {
+    background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+    color: #ffffff;
+    padding: 32px 28px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     justify-content: space-between;
   }
-  .tx-modal-title {
-    font-weight: 700;
-    color: #f8fafc;
-    font-size: 16px;
-    display: block;
+  @media (min-width: 768px) {
+    .tx-modal-left-panel {
+      max-width: 45%;
+    }
   }
-  .tx-modal-subtitle {
+
+  .tx-brand-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .tx-brand-logo {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: #fbbf24;
+  }
+  .tx-brand-power {
     font-size: 11px;
-    color: #94a3b8;
+    color: #99f6e4;
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
-  .tx-modal-close {
-    background: transparent;
-    border: none;
-    color: #94a3b8;
-    font-size: 28px;
-    cursor: pointer;
-    line-height: 1;
+
+  .tx-modal-left-content {
+    margin-top: 24px;
+    margin-bottom: 16px;
   }
-  .tx-modal-close:hover {
+  .tx-modal-headline {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.35;
     color: #ffffff;
+    margin-bottom: 24px;
   }
-  .tx-modal-body {
+
+  .tx-features-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .tx-feature-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    backdrop-filter: blur(8px);
+  }
+  .tx-feature-icon {
+    font-size: 16px;
+  }
+  .tx-feature-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #f0fdf4;
+  }
+
+  /* Right Panel (Clean White Iframe) */
+  .tx-modal-right-panel {
     flex: 1;
+    background: #ffffff;
+    position: relative;
     overflow: hidden;
   }
   #tx-account-iframe {
     width: 100%;
     height: 100%;
     border: none;
+    display: block;
   }
 </style>
 
@@ -138,8 +277,9 @@
     var iframe = document.getElementById('tx-account-iframe');
     if (overlay && iframe) {
       overlay.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
       if (iframe.src === 'about:blank' || !iframe.src) {
-        var portalUrl = '{{ LOGIN_PORTAL_URL }}?merchant_key={{ MERCHANT_KEY }}&store={{ shop.domain }}';
+        var portalUrl = '{{ LOGIN_PORTAL_URL }}?merchant_key={{ MERCHANT_KEY }}&store={{ shop.domain }}&mode=modal';
         iframe.src = portalUrl;
       }
     }
@@ -149,6 +289,13 @@
     var overlay = document.getElementById('tx-login-modal-overlay');
     if (overlay) {
       overlay.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+
+  function handleTxOverlayClick(e) {
+    if (e.target && e.target.id === 'tx-login-modal-overlay') {
+      closeTxAccountModal();
     }
   }
 </script>
