@@ -25,15 +25,21 @@
     width: 100%; max-width: 480px;
     background: var(--wa-bg, #f1f5f9);
     display: flex; flex-direction: column;
-    min-height: 100%; position: relative;
+    height: 780px;
+    min-height: 780px;
+    max-height: 92vh;
+    position: relative;
     box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    border-radius: 16px;
     overflow-y: auto;
   }
   @media (min-width: 481px) {
     .wa-right-panel {
-      min-height: auto;
-      height: 95%; max-height: 900px;
+      height: 780px;
+      min-height: 780px;
+      max-height: 92vh;
       border-radius: 16px;
+      overflow-y: auto;
     }
   }
 
@@ -80,7 +86,7 @@
     flex: 1; padding: 36px 28px;
     max-width: 520px; width: 100%; margin: 0 auto;
     background: var(--wa-bg, #f1f5f9);
-    min-height: 560px;
+    display: flex; flex-direction: column;
   }
 
   /* ── STEP INDICATOR ── */
