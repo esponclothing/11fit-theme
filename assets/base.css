@@ -2415,8 +2415,8 @@ input[type='checkbox'] {
   .header-wrapper .page-width {
     max-width: 100% !important;
     width: 100% !important;
-    padding-left: 1.5rem !important;
-    padding-right: 1.5rem !important;
+    padding-left: 1.0rem !important;
+    padding-right: 0.5rem !important;
   }
 
   .header--top-center {
@@ -2556,7 +2556,7 @@ input[type='checkbox'] {
   grid-area: icons;
   justify-self: end;
   align-items: center;
-  padding-right: 0.5rem;
+  padding-right: 0;
   gap: 0.2rem;
 }
 
