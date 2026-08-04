@@ -2545,7 +2545,7 @@ input[type='checkbox'] {
   }
   .header__heading-logo {
     display: block !important;
-    max-height: 48px !important;
+    max-height: 38px !important;
     width: auto !important;
   }
 }
