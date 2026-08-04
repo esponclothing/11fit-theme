@@ -2415,8 +2415,8 @@ input[type='checkbox'] {
   .header-wrapper .page-width {
     max-width: 100% !important;
     width: 100% !important;
-    padding-left: 1.2rem !important;
-    padding-right: 1.2rem !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
   }
 
   .header--top-center {
@@ -2522,103 +2522,42 @@ input[type='checkbox'] {
   }
 }
 
-/* ==========================================================================
-   PERFECT LUXURY MOBILE HEADER LAYOUT
-   ========================================================================== */
+/* Strictly Center Logo on Mobile & Tablet Without Collapsing */
 @media screen and (max-width: 989px) {
-  /* 1. Header Container - Compact luxury padding, zero wasted empty spaces */
-  .header.page-width,
-  .header-wrapper .page-width,
   .header {
-    max-width: 100% !important;
-    width: 100% !important;
-    padding-left: 1.2rem !important;
-    padding-right: 1.2rem !important;
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
     position: relative !important;
   }
-
-  /* 2. Left Area (Hamburger Menu) */
-  .header__icon--menu {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    width: auto !important;
-    height: auto !important;
-    padding: 0.4rem !important;
-    margin: 0 !important;
-    z-index: 2;
-  }
-
-  /* 3. Center Area (Logo 11) - 100% true center without edge collision */
-  .header__heading,
-  .header__heading-link {
+  .header__heading {
     position: absolute !important;
     left: 50% !important;
     top: 50% !important;
     transform: translate(-50%, -50%) !important;
     margin: 0 !important;
-    padding: 0 !important;
-    z-index: 1;
+    z-index: 5 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    max-width: 130px !important;
+  }
+  .header__heading-link {
+    display: inline-block !important;
+    position: static !important;
+    transform: none !important;
   }
   .header__heading-logo {
-    max-height: 42px !important;
-    width: auto !important;
-    object-fit: contain !important;
     display: block !important;
-  }
-
-  /* 4. Right Area (Search, Account, Cart Icons) - Zero empty gap on right edge */
-  .header__icons {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
-    gap: 0.8rem !important;
-    padding-right: 0 !important;
-    margin-right: 0 !important;
-    z-index: 2;
-  }
-
-  /* 5. INCREASE THE SIZE OF THESE ICONS ON MOBILE */
-  .header__icons .header__icon,
-  .header__icon--menu {
+    max-height: 48px !important;
     width: auto !important;
-    height: auto !important;
-    padding: 0.35rem !important;
-  }
-
-  .header__icons .header__icon .icon,
-  .header__icons .header__icon svg,
-  .header__icon--menu .icon,
-  .header__icon--menu svg {
-    width: 2.6rem !important;
-    height: 2.6rem !important;
-    stroke-width: 2.2px !important;
-  }
-
-  /* Fix cart bubble position with larger icons */
-  .header__icon--cart .cart-count-bubble {
-    top: 0 !important;
-    right: -3px !important;
   }
 }
 
-/* Header icons desktop default */
+/* Header icons */
 .header__icons {
   display: flex;
   grid-area: icons;
   justify-self: end;
   align-items: center;
-  padding-right: 0;
-  gap: 0.5rem;
+  padding-right: 0.5rem;
+  gap: 0.2rem;
 }
 
 .header__icons .header__icon {
@@ -2662,8 +2601,8 @@ input[type='checkbox'] {
 }
 
 .header__icon .icon {
-  height: 2rem;
-  width: 2rem;
+  height: 2.3rem;
+  width: 2.3rem;
   fill: none;
   vertical-align: middle;
 }
