@@ -73,7 +73,7 @@
           <label style="font-size: 14px; font-weight: 500; color: #1a1a1a; margin: 0;">Size {{ i }}</label>
           {% if i == 1 %}
           <label style="font-size: 12px; color: #198754; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; margin: 0;">
-            <input type="checkbox" id="combo-sync-size-checkbox" onchange="syncComboSizes()" style="accent-color: #198754; margin: 0; cursor: pointer; width: 14px; height: 14px;"> Same for all
+            <input type="checkbox" id="combo-sync-size-checkbox" onchange="syncComboSizes()" style="accent-color: #198754; margin: 0; cursor: pointer; width: 14px; height: 14px;" checked> Same for all
           </label>
           {% endif %}
         </div>
@@ -418,12 +418,23 @@
   }
 
   function initComboSelectionsFromDOM() {
+    let colorSelects = document.querySelectorAll('.combo-color-select');
+    if (colorSelects.length > 0) {
+      const availableColors = Array.from(colorSelects[0].options).filter(opt => opt.value !== '').map(opt => opt.value);
+      colorSelects.forEach((sel, index) => {
+        if (!sel.value && availableColors.length > 0) {
+           sel.value = availableColors[index % availableColors.length];
+        }
+      });
+    }
+
     document.querySelectorAll('.combo-select').forEach(function(sel) {
       const itemIndex = parseInt(sel.dataset.item);
       const optionType = sel.dataset.option;
       if (sel.value && sel.value !== '') {
         if (!comboSelections[itemIndex]) comboSelections[itemIndex] = {};
         comboSelections[itemIndex][optionType] = sel.value;
+        updateDynamicAvailableOptions(itemIndex);
       }
       sel.removeEventListener('change', onComboSelectChange);
       sel.addEventListener('change', onComboSelectChange);
