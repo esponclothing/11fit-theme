@@ -21,34 +21,15 @@
   .wa-checkout-wrapper { width: 100%; min-height: 100%; display: flex; align-items: center; justify-content: center; }
 
   /* ── RIGHT PANEL ── */
-  .wa-right-panel {
-    width: 100%; max-width: 480px;
-    background: var(--wa-bg, #f1f5f9);
-    display: flex; flex-direction: column;
-    height: 780px;
-    min-height: 780px;
-    max-height: 92vh;
-    position: relative;
-    box-shadow: 0 0 20px rgba(0,0,0,0.05);
-    border-radius: 16px;
-    overflow-y: auto;
-  }
-  @media (min-width: 481px) {
-    .wa-right-panel {
-      height: 780px;
-      min-height: 780px;
-      max-height: 92vh;
-      border-radius: 16px;
-      overflow-y: auto;
-    }
-  }
+  .wa-right-panel { width: 100%; max-width: 480px; background: #fdfdfd; display: flex; flex-direction: column; min-height: 100%; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); } @media (min-width: 481px) { .wa-right-panel { min-height: auto; height: 95%; max-height: 900px; border-radius: 16px; overflow-y: auto; } }
 
   /* ── HEADER ── */
   .wa-modal-header {
     display: flex; align-items: center; justify-content: center;
     padding: 18px 28px;
-    border-bottom: none;
-    position: sticky; top: 0; background: var(--wa-bg, #f1f5f9); z-index: 10;
+    border-bottom: 1px solid #f1f5f9;
+    position: sticky; top: 0; background: var(--wa-card-bg, #fff); z-index: 10;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
   }
   .wa-mobile-brand { display: flex; align-items: center; gap: 10px; }
   #wa-brand-name-mobile {
@@ -86,7 +67,6 @@
     flex: 1; padding: 36px 28px;
     max-width: 520px; width: 100%; margin: 0 auto;
     background: var(--wa-bg, #f1f5f9);
-    display: flex; flex-direction: column;
   }
 
   /* ── STEP INDICATOR ── */
@@ -296,21 +276,13 @@
     .wa-otp-box { width: 72px; height: 72px; font-size: 28px; }
   }
 
-  /* ── MOBILE & TABLET (up to 1024px) ── */
-  @media (max-width: 1024px) {
-    #wa-top-trust-badges { display: none !important; }
-    .wa-content-area { padding: 12px 10px !important; }
-    .wa-modal-header { padding: 10px 12px !important; }
-    .wa-section-title { font-size: 18px !important; }
+  /* ── MOBILE ── */
+  @media (max-width: 767px) {
+    .wa-content-area { padding: 24px 20px; }
+    .wa-modal-header { padding: 16px 20px; }
+    .wa-section-title { font-size: 20px; }
     .wa-otp-box { width: 56px; height: 56px; font-size: 22px; }
     .wa-otp-boxes { gap: 10px; }
-    .wa-pay-opt { padding: 12px 14px !important; margin-bottom: 8px !important; }
-    #wa-payment-methods-container { gap: 8px !important; margin-bottom: 10px !important; }
-    #wa-cod-btn { padding: 13px !important; margin-top: 2px !important; margin-bottom: 8px !important; }
-    .wa-trust-badge-row { padding: 10px 6px !important; margin-bottom: 14px !important; gap: 4px !important; }
-    .wa-trust-badge-row svg { width: 16px !important; height: 16px !important; }
-    .wa-trust-badge-row .wa-tb-title { font-size: 10.5px !important; white-space: normal !important; line-height: 1.1 !important; }
-    .wa-trust-badge-row .wa-tb-sub { font-size: 9.5px !important; line-height: 1.1 !important; }
   }
 
   #wa-step-2, #wa-step-3, #wa-step-4, .wa-success-screen, #wa-new-address-form { display: none; }
@@ -398,7 +370,7 @@ window._shopifyCustomer = {
     <div class="wa-right-panel">
       
       <!-- HEADER -->
-      <div style="position:sticky; top:0; z-index:10; background:var(--wa-bg, #f1f5f9); border-bottom:none;">
+      <div style="position:sticky; top:0; z-index:10; background:#fff; border-bottom:1px solid #f1f5f9;">
 
         <!-- Logo Bar -->
         <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 24px; position:relative;">
@@ -406,7 +378,7 @@ window._shopifyCustomer = {
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           </button>
 
-          <div id="wa-brand-name-mobile" style="display:flex; align-items:center; z-index:1;">
+          <div id="wa-brand-name-mobile" style="position:absolute; left:50%; transform:translateX(-50%); display:flex; align-items:center; z-index:1;">
             {% if settings.logo %}
               <img src="{{ settings.logo | img_url: 'master' }}" alt="{{ shop.name }}" style="height:36px; max-width:120px; object-fit:contain;">
             {% else %}
@@ -414,7 +386,7 @@ window._shopifyCustomer = {
             {% endif %}
           </div>
 
-          <button onclick="closeWaModal()" style="background:#e2e8f0; border:none; width:36px; height:36px; border-radius:50%; font-size:18px; cursor:pointer; color:#475569; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:0.2s; margin-left:auto; z-index:2;">&#x2715;</button>
+          <button id="wa-close-modal-btn" onclick="closeWaModal()" style="background:#f1f5f9; border:none; width:36px; height:36px; border-radius:50%; font-size:18px; cursor:pointer; color:#64748b; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:0.2s; margin-left:auto; z-index:2;">&#x2715;</button>
         </div>
       </div>
 
@@ -457,7 +429,7 @@ window._shopifyCustomer = {
               <div class="wa-step-line" id="wa-line-2" style="height:2px;background:#e2e8f0;width:12px;margin:0 4px;"></div>
               <div class="wa-step-dot" id="wa-dot-3" style="width:24px;height:24px;border-radius:50%;background:#f1f5f9;color:#64748b;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">3</div>
             </div>
-            <div id="wa-step-label" style="font-size:12px; font-weight:700; color:#16a34a; background:#f0fdf4; border:1px solid #bbf7d0; padding:6px 10px; border-radius:6px; white-space:nowrap; letter-spacing:0.5px;">STEP 1 OF 3</div>
+            <div id="wa-step-label" style="font-size:12px; font-weight:700; color:#16a34a; background:#fff; border:1px solid #bbf7d0; padding:6px 10px; border-radius:6px; white-space:nowrap; letter-spacing:0.5px;">STEP 1 OF 3</div>
           </div>
           <button id="wa-change-number-btn" onclick="waSwitchAccount(event)" style="display:none; background:none; border:none; color:#16a34a; font-size:12.5px; font-weight:800; cursor:pointer; text-decoration:underline;">Change Number</button>
         </div>
@@ -474,7 +446,7 @@ window._shopifyCustomer = {
                 <div class="wa-phone-prefix" style="padding:16px; background:#f8fafc; border-right:1px solid #e2e8f0; font-weight:700; color:#0f172a; font-size:15px; display:flex; align-items:center; gap:6px;">
                   IN +91 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg>
                 </div>
-                <input type="tel" id="wa-phone" class="wa-input" placeholder="98765 43210" maxlength="10" style="border:none; padding:16px; font-size:16px; font-weight:500; color:#0f172a; flex:1; outline:none;" oninput="this.value=this.value.replace(/\D/g,'')">
+                <input type="tel" id="wa-phone" name="tel" autocomplete="tel" inputmode="tel" class="wa-input" placeholder="98765 43210" style="border:none; padding:16px; font-size:16px; font-weight:500; color:#0f172a; flex:1; outline:none;" oninput="waCleanPhoneInput(this)" onchange="waCleanPhoneInput(this)" onpaste="setTimeout(() => waCleanPhoneInput(this), 50)">
               </div>
             </div>
             
@@ -486,40 +458,43 @@ window._shopifyCustomer = {
 
 
           
-          <div class="wa-trust-badge-row" style="display:flex; justify-content:space-between; align-items:center; padding:14px 10px; border:1px solid #e2e8f0; border-radius:12px; margin-bottom:20px; background:#fff; gap:4px; flex-wrap:wrap;">
-            <div style="display:flex; align-items:center; gap:6px; flex:1; justify-content:center; min-width:85px;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" style="flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" stroke-width="1.5"/></svg>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:16px; border:1px solid #e2e8f0; border-radius:12px; margin-bottom:24px; background:#fff; gap:4px;">
+            <div style="display:flex; align-items:center; gap:8px; flex:1; justify-content:center;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" style="flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" stroke-width="1.5"/></svg>
               <div style="text-align:left;">
-                <div class="wa-tb-title" style="font-size:11px; font-weight:700; color:#0f172a;">Trusted by</div>
-                <div class="wa-tb-sub" style="font-size:10px; color:#64748b; line-height:1.2;">1M+ Customers</div>
+                <div style="font-size:11px; font-weight:700; color:#0f172a; white-space:nowrap;">Trusted by</div>
+                <div style="font-size:10px; color:#64748b; line-height:1.2;">1M+ Customers</div>
               </div>
             </div>
-            <div style="width:1px; height:24px; background:#e2e8f0; flex-shrink:0;"></div>
-            <div style="text-align:center; flex:1.1; min-width:90px;">
+            <div style="width:1px; height:28px; background:#e2e8f0; flex-shrink:0;"></div>
+            <div style="text-align:center; flex:1.2;">
               <div style="color:#16a34a; display:flex; gap:2px; justify-content:center; margin-bottom:2px;">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="#16a34a" stroke="#16a34a" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="#16a34a" stroke="#16a34a" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="#16a34a" stroke="#16a34a" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="#16a34a" stroke="#16a34a" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="#16a34a" stroke="#16a34a" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="#16a34a" stroke="#16a34a" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="#16a34a" stroke="#16a34a" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="#16a34a" stroke="#16a34a" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="#16a34a" stroke="#16a34a" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="#16a34a" stroke="#16a34a" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
               </div>
-              <div class="wa-tb-title" style="font-size:11px; font-weight:700; color:#0f172a;">4.8/5 Rating</div>
-              <div class="wa-tb-sub" style="font-size:10px; color:#64748b; line-height:1.2;">Across Platforms</div>
+              <div style="font-size:11px; font-weight:700; color:#0f172a; white-space:nowrap;">4.8/5 Average Rating</div>
+              <div style="font-size:10px; color:#64748b; line-height:1.2;">Across Platforms</div>
             </div>
-            <div style="width:1px; height:24px; background:#e2e8f0; flex-shrink:0;"></div>
-            <div style="display:flex; align-items:center; gap:6px; flex:1; justify-content:center; min-width:80px;">
-              <div style="background:#16a34a; color:#fff; font-size:10px; font-weight:800; padding:3px 5px; border-radius:4px; flex-shrink:0;">PCI</div>
+            <div style="width:1px; height:28px; background:#e2e8f0; flex-shrink:0;"></div>
+            <div style="display:flex; align-items:center; gap:8px; flex:1; justify-content:center;">
+              <div style="background:#16a34a; color:#fff; font-size:11px; font-weight:800; padding:3px 5px; border-radius:4px; flex-shrink:0;">PCI</div>
               <div style="text-align:left;">
-                <div class="wa-tb-title" style="font-size:11px; font-weight:700; color:#0f172a;">PCI DSS</div>
-                <div class="wa-tb-sub" style="font-size:10px; color:#64748b; line-height:1.2;">Certified</div>
+                <div style="font-size:11px; font-weight:700; color:#0f172a; white-space:nowrap;">PCI DSS</div>
+                <div style="font-size:10px; color:#64748b; line-height:1.2;">Certified</div>
               </div>
             </div>
           </div>
 
           <button type="button" class="wa-btn-primary" id="wa-send-btn" onclick="sendWaOtp()" style="background:#0f172a; padding:18px; margin-bottom:16px; display:flex; flex-direction:column; align-items:center; gap:4px; border-radius:12px; width:100%; border:none; cursor:pointer;">
-            <div style="display:flex; align-items:center; gap:10px; color:#fff;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-              <span style="font-size:16px; font-weight:700;">Continue Securely <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-3px; margin-left:4px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+            <div style="display:flex; align-items:center; justify-content:center; gap:8px; color:#fff; width:100%;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" style="flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+              <span style="font-size:16px; font-weight:700; display:flex; align-items:center; gap:4px; white-space:nowrap;">
+                Continue Securely
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </span>
             </div>
             <span style="font-size:11px; font-weight:500; color:#94a3b8;">It only takes a few seconds</span>
           </button>
@@ -894,67 +869,57 @@ window._shopifyCustomer = {
 
                 <!-- STEP 4: PAYMENT -->
         <div id="wa-step-4" style="display:none;">          <!-- Coupon -->
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px;">
             <div>
-              <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                <h2 class="wa-section-title" style="margin:0; letter-spacing:-0.5px;">Payment Method</h2>
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <h2 class="wa-section-title" style="font-size:24px; margin:0; letter-spacing:-0.5px;">Payment Method</h2>
               </div>
-              <p class="wa-section-desc" style="margin:0; font-size:12px; color:#64748b;">Choose the safest and most convenient way to pay.</p>
+              <p class="wa-section-desc" style="margin:0; font-size:13px; color:#64748b;">Choose the safest and most convenient way to pay.</p>
             </div>
-            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#16a34a; background:#f0fdf4; border:1px solid #bbf7d0; padding:3px 8px; border-radius:20px; font-weight:600; flex-shrink:0;">
+            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#16a34a; background:#f0fdf4; border:1px solid #bbf7d0; padding:4px 10px; border-radius:20px; font-weight:600; flex-shrink:0;">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Safe & Secure
             </div>
           </div>
 
-          <div id="wa-payment-error" style="color: #ef4444; font-size: 13px; font-weight: 500; margin-bottom: 8px; display: none; padding:8px; background:#fef2f2; border:1px solid #fecaca; border-radius:8px;"></div>
+          <div id="wa-payment-error" style="color: #ef4444; font-size: 13px; font-weight: 500; margin-bottom: 12px; display: none; padding:10px; background:#fef2f2; border:1px solid #fecaca; border-radius:8px;"></div>
           
-          <div id="wa-payment-methods-container" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;">
+          <div id="wa-payment-methods-container" style="display:flex; flex-direction:column; gap:16px; margin-bottom:24px;">
             <!-- Rendered dynamically by waGoToStep(4) -->
           </div>
 
           <!-- Store Credit / Wallet Section (shown only if store_credit_enabled) -->
-          <div id="wa-wallet-section" style="display:none; margin-bottom:10px;">
-            <div style="border:1.5px solid #10b981; border-radius:14px; overflow:hidden; background:#f0fdf4;">
-              <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:#ecfdf5; border-bottom:1px dashed #a7f3d0;">
-                <div style="display:flex; align-items:center; gap:10px;">
-                  <div style="width:36px; height:36px; background:#10b981; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
-                  </div>
-                  <div>
-                    <div style="font-weight:700; font-size:14px; color:#065f46;">Wallet Balance</div>
-                    <div style="font-size:12px; color:#047857;">Available: <strong id="wa-wallet-balance-display">₹0</strong></div>
-                  </div>
+          <div id="wa-wallet-section" style="display:none; margin-bottom:20px;">
+             <div class="wa-payment-option wa-pay-opt" id="wa-wallet-card" style="margin-top:12px; cursor: pointer; transition: 0.2s; border:1.5px dashed #cbd5e1; background:#f8fafc;" onclick="waToggleWalletCredit()">
+                <div style="display:flex; width:100%; align-items:flex-start; gap:14px;">
+                   <div class="wa-checkbox-btn" id="wa-wallet-checkbox" style="width:20px; height:20px; border-radius:4px; border:2px solid #94a3b8; display:flex; align-items:center; justify-content:center; margin-top:2px; transition:0.2s;">
+                      <svg id="wa-wallet-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" style="display:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                   </div>
+                   <div style="flex:1;">
+                     <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                        <div style="display:flex; gap:12px; align-items:center;">
+                           <div class="wa-icon-circ" style="background:#e0e7ff;">
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2"><path d="M21 12V7H5a2 2 0 0 1 2-2h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5H5a2 2 0 0 1-2-2z"/></svg>
+                           </div>
+                           <div>
+                             <div style="font-weight:700; color:#1e293b; font-size:16px;">Store Credit Wallet</div>
+                             <div style="font-size:12px; color:#64748b; margin-top:2px;">Available: <strong id="wa-wallet-balance-display">₹0</strong></div>
+                           </div>
+                        </div>
+                     </div>
+                     <div id="wa-wallet-usable-text" style="font-size:11px; color:#64748b; margin-top:8px;">Max usable: ₹0</div>
+                     <div id="wa-wallet-applied-row" style="display:none; margin-top:12px; background:#fff; border-radius:8px; padding:10px; border:1px solid #c7d2fe; display:none; align-items:center; justify-content:space-between;">
+                        <span style="font-size:13px; font-weight:600; color:#4f46e5;">Applied to order</span>
+                        <span style="font-size:14px; font-weight:800; color:#1e293b;" id="wa-wallet-applied-amt">-₹0</span>
+                     </div>
+                   </div>
                 </div>
-                <div>
-                  <div style="font-size:11px; color:#047857; text-align:right; margin-bottom:4px;" id="wa-wallet-usable-text">Max usable: ₹0</div>
-                  <button type="button" id="wa-wallet-toggle-btn" onclick="waToggleWalletCredit()" style="background:#10b981; color:#fff; border:none; padding:8px 16px; border-radius:8px; font-weight:700; font-size:13px; cursor:pointer; transition:0.2s;">
-                    Apply Wallet
-                  </button>
-                </div>
-              </div>
-              <div id="wa-wallet-applied-row" style="display:none; padding:10px 16px; display:none; align-items:center; justify-content:space-between; background:#d1fae5;">
-                <span style="font-size:13px; font-weight:600; color:#065f46;">✓ Wallet Discount Applied</span>
-                <span id="wa-wallet-applied-amt" style="font-size:14px; font-weight:800; color:#059669;"></span>
-              </div>
-            </div>
+             </div>
           </div>
 
 
-          <button type="button" class="wa-btn-primary" id="wa-cod-btn" onclick="waPayNow()" style="background:#0f172a; padding:13px; margin-top:2px; margin-bottom:8px; display:flex; flex-direction:column; align-items:center; gap:2px;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <span id="wa-pay-btn-text" style="font-size:16px;">Pay Securely Now →</span>
-            </div>
-            <span id="wa-pay-btn-subtext" style="font-size:11px; font-weight:500; color:rgba(255,255,255,0.8);">Complete your order and save ₹45</span>
-          </button>
-          
-          <button type="button" class="wa-btn-secondary" onclick="waBackToAddress()" style="width:100%; padding:10px; background:#fff; border:1px solid #e2e8f0; border-radius:10px; color:#475569; font-weight:600; font-size:14px; cursor:pointer; margin-bottom:10px; transition:0.2s;">
-            ← Back to Address
-          </button>
-
           <!-- Trust Badges Footer -->
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; padding:8px 0; border-top:1px dashed #e2e8f0; margin-bottom:6px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; padding:16px 0; border-top:1px dashed #e2e8f0; margin-bottom:24px;">
             <div style="text-align:center; flex:1;">
               <div style="display:flex; justify-content:center; margin-bottom:6px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
               <div style="font-size:11px; font-weight:700; color:#0f172a; margin-bottom:2px;">Best Price</div>
@@ -972,7 +937,19 @@ window._shopifyCustomer = {
             </div>
           </div>
 
-          <div style="text-align:center; font-size:11px; color:#64748b; margin-bottom:12px; display:flex; justify-content:center; align-items:center; gap:4px;">
+          <button type="button" class="wa-btn-primary" id="wa-cod-btn" onclick="waPayNow()" style="background:#0f172a; padding:18px; margin-bottom:12px; display:flex; flex-direction:column; align-items:center; gap:2px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span id="wa-pay-btn-text" style="font-size:16px;">Pay Securely Now →</span>
+            </div>
+            <span id="wa-pay-btn-subtext" style="font-size:11px; font-weight:500; color:rgba(255,255,255,0.8);">Complete your order and save ₹45</span>
+          </button>
+          
+          <button type="button" class="wa-btn-secondary" onclick="waBackToAddress()" style="width:100%; padding:16px; background:#fff; border:1px solid #e2e8f0; border-radius:10px; color:#475569; font-weight:600; font-size:14px; cursor:pointer; margin-bottom:24px; transition:0.2s;">
+            ← Back to Address
+          </button>
+
+          <div style="text-align:center; font-size:11px; color:#64748b; margin-bottom:24px; display:flex; justify-content:center; align-items:center; gap:4px;">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             Your security is our priority. We never share your details.
           </div>
@@ -982,8 +959,9 @@ window._shopifyCustomer = {
         <div class="wa-success-screen" id="wa-success-screen">
           <div class="wa-success-checkmark">✓</div>
           <h2 class="wa-section-title">Order Placed!</h2>
-          <p class="wa-section-desc" style="max-width:320px; margin:0 auto 32px;">Your COD order has been successfully placed. You will receive a confirmation on WhatsApp shortly.</p>
-          <button type="button" class="wa-btn-primary" style="max-width:280px;" onclick="window.location='/'">Continue Shopping</button>
+          <p class="wa-section-desc" id="wa-success-desc" style="max-width:320px; margin:0 auto 16px;">Your COD order has been successfully placed. You will receive a confirmation on WhatsApp shortly.</p>
+          <div id="wa-success-order-number" style="font-size:16px; font-weight:700; color:#0f172a; margin-bottom:32px; background:#f1f5f9; padding:8px 16px; border-radius:8px; display:none;">Order Number: <span id="wa-success-order-val"></span></div>
+          <button type="button" class="wa-btn-primary" style="max-width:280px;" onclick="window.location.href='/'; setTimeout(() => window.location.reload(), 100);">Continue Shopping</button>
         </div>
 
       </div>
@@ -1012,7 +990,11 @@ window._shopifyCustomer = {
 
   document.addEventListener('DOMContentLoaded', () => {
     if (!localStorage.getItem('fit11_device_id')) {
-      localStorage.setItem('fit11_device_id', 'dev_' + Math.random().toString(36).substr(2, 9));
+      if (localStorage.getItem('wa_device_id')) {
+        localStorage.setItem('fit11_device_id', localStorage.getItem('wa_device_id'));
+      } else {
+        localStorage.setItem('fit11_device_id', 'dev_' + Math.random().toString(36).substr(2, 9));
+      }
     }
     // Capture UTM parameters for Ad Tracking
     try {
@@ -1150,47 +1132,237 @@ window._shopifyCustomer = {
       emailBadge.style.color = isRequired ? '#ef4444' : '#94a3b8';
     }
   }
-
-  function waAutofillEmail(emailVal) {
-    const emEl = document.getElementById('wa-email');
-    let em = emailVal || sessionStorage.getItem('fit11_verified_email') || localStorage.getItem('fit11_verified_email') || localStorage.getItem('kwikpass_user_email');
-    if (!em && window._shopifyCustomer && window._shopifyCustomer.email) {
-      em = window._shopifyCustomer.email;
+  
+  function waSavePhoneGlobally(phone) {
+    if (!phone) return;
+    let digits = String(phone).replace(/\D/g, '');
+    if (digits.length > 10 && (digits.startsWith('91') || digits.startsWith('0'))) {
+      digits = digits.slice(-10);
     }
-    if (em) {
-      if (emEl && !emEl.value) emEl.value = em;
-      waEmail = em;
-      sessionStorage.setItem('fit11_verified_email', em);
+    digits = digits.slice(0, 10);
+    if (digits.length === 10) {
       try {
-        localStorage.setItem('fit11_verified_email', em);
-        localStorage.setItem('kwikpass_user_email', em);
-      } catch(e){}
+        localStorage.setItem('wa_saved_phone', digits);
+        localStorage.setItem('wa_user_phone', digits);
+        localStorage.setItem('espon_user_phone', digits);
+        localStorage.setItem('fit11_user_phone', digits);
+        localStorage.setItem('notify_phone_number', digits);
+        sessionStorage.setItem('wa_verified_phone', digits);
+        sessionStorage.setItem('fit11_verified_phone', digits);
+        document.cookie = `wa_saved_phone=${digits}; path=/; max-age=2592000`; // 30 days
+      } catch(e) {}
     }
   }
-  
+
+  function waGetSavedPhone() {
+    let phone = '';
+
+    // 1. Check window._shopifyCustomer
+    const sc = window._shopifyCustomer;
+    if (sc && sc.logged_in && sc.phone) {
+      phone = sc.phone;
+    }
+
+    // 2. Check localStorage & sessionStorage keys
+    if (!phone) {
+      const keys = [
+        'wa_saved_phone',
+        'wa_user_phone',
+        'espon_user_phone',
+        'fit11_user_phone',
+        'tinkal_user_phone',
+        'notify_phone_number',
+        'wa_verified_phone',
+        'fit11_verified_phone',
+        'espon_verified_phone'
+      ];
+      for (let k of keys) {
+        try {
+          let v = localStorage.getItem(k) || sessionStorage.getItem(k);
+          if (v) { phone = v; break; }
+        } catch(e) {}
+      }
+    }
+
+    // 3. Check base64 notifyph if present
+    if (!phone) {
+      try {
+        let nph = localStorage.getItem('notifyph');
+        if (nph) {
+          let decoded = atob(nph);
+          if (decoded && decoded !== '0000000000') phone = decoded;
+        }
+      } catch(e) {}
+    }
+
+    // 4. Check Cookies
+    if (!phone) {
+      try {
+        const cookies = document.cookie.split('; ');
+        for (let c of cookies) {
+          let [name, val] = c.split('=');
+          if (name === 'wa_saved_phone' || name === 'notify_phone_number' || name === 'user_phone') {
+            if (val) { phone = decodeURIComponent(val); break; }
+          }
+        }
+      } catch(e) {}
+    }
+
+    // 5. Check DOM inputs on the page (autofilled or typed inputs)
+    if (!phone) {
+      const telInputs = document.querySelectorAll('input[type="tel"], input[name*="phone"], input[name*="mobile"]');
+      for (let inp of telInputs) {
+        if (inp && inp.value && inp.id !== 'wa-phone') {
+          let digits = inp.value.replace(/\D/g, '');
+          if (digits.length > 10 && (digits.startsWith('91') || digits.startsWith('0'))) {
+            digits = digits.slice(-10);
+          }
+          if (digits.length === 10) { phone = digits; break; }
+        }
+      }
+    }
+
+    if (phone) {
+      let digits = String(phone).replace(/\D/g, '');
+      if (digits.length > 10 && (digits.startsWith('91') || digits.startsWith('0'))) {
+        digits = digits.slice(-10);
+      }
+      digits = digits.slice(0, 10);
+      if (digits.length === 10) return digits;
+    }
+    return '';
+  }
+
+  function waSaveEmailGlobally(email) {
+    if (!email || !email.trim()) return;
+    let cleanEmail = email.trim();
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      try {
+        localStorage.setItem('wa_saved_email', cleanEmail);
+        localStorage.setItem('wa_user_email', cleanEmail);
+        localStorage.setItem('espon_user_email', cleanEmail);
+        localStorage.setItem('fit11_user_email', cleanEmail);
+        localStorage.setItem('notify_email', cleanEmail);
+        sessionStorage.setItem('fit11_verified_email', cleanEmail);
+        sessionStorage.setItem('wa_verified_email', cleanEmail);
+        document.cookie = `wa_saved_email=${encodeURIComponent(cleanEmail)}; path=/; max-age=2592000`; // 30 days
+      } catch(e) {}
+    }
+  }
+
+  function waGetSavedEmail() {
+    let email = '';
+
+    // 1. Check window._shopifyCustomer
+    const sc = window._shopifyCustomer;
+    if (sc && sc.logged_in && sc.email) {
+      email = sc.email;
+    }
+
+    // 2. Check localStorage & sessionStorage
+    if (!email) {
+      const keys = [
+        'wa_saved_email',
+        'wa_user_email',
+        'espon_user_email',
+        'fit11_user_email',
+        'fit11_verified_email',
+        'wa_verified_email',
+        'notify_email'
+      ];
+      for (let k of keys) {
+        try {
+          let v = localStorage.getItem(k) || sessionStorage.getItem(k);
+          if (v && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())) {
+            email = v.trim();
+            break;
+          }
+        } catch(e) {}
+      }
+    }
+
+    // 3. Check Cookies
+    if (!email) {
+      try {
+        const cookies = document.cookie.split('; ');
+        for (let c of cookies) {
+          let [name, val] = c.split('=');
+          if (name === 'wa_saved_email' || name === 'notify_email' || name === 'user_email') {
+            if (val && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(decodeURIComponent(val).trim())) {
+              email = decodeURIComponent(val).trim();
+              break;
+            }
+          }
+        }
+      } catch(e) {}
+    }
+
+    // 4. Check DOM email inputs on page
+    if (!email) {
+      const emailInputs = document.querySelectorAll('input[type="email"], input[name*="email"]');
+      for (let inp of emailInputs) {
+        if (inp && inp.value && inp.id !== 'wa-email') {
+          let val = inp.value.trim();
+          if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+            email = val;
+            break;
+          }
+        }
+      }
+    }
+
+    return email;
+  }
+
+  function waCleanPhoneInput(el) {
+    if (!el) return '';
+    let val = el.value || '';
+    let digits = val.replace(/\D/g, '');
+    if (digits.length > 10 && digits.startsWith('91')) {
+      digits = digits.slice(2);
+    } else if (digits.length > 10 && digits.startsWith('0')) {
+      digits = digits.slice(1);
+    }
+    digits = digits.slice(0, 10);
+    el.value = digits;
+    if (digits.length === 10) {
+      waSavePhoneGlobally(digits);
+    }
+    return digits;
+  }
+
   async function openWaModal() {
     const overlay = document.getElementById('wa-otp-overlay');
     if (!overlay) return;
     if (overlay.parentNode !== document.body) {
       document.body.appendChild(overlay);
     }
-    overlay.style.cssText = 'position:fixed!important;top:0!important;left:0!important;width:100vw!important;height:100vh!important;z-index:2147483647!important;display:flex!important;align-items:flex-start!important;justify-content:center!important;overflow-y:auto!important;padding:0!important;background:rgba(15,23,42,0.6)!important;backdrop-filter:blur(6px)!important;-webkit-backdrop-filter:blur(6px)!important;';
+    overlay.style.cssText = 'position:fixed!important;top:0!important;left:0!important;width:100vw!important;height:100vh!important;z-index:2147483647!important;display:flex!important;align-items:flex-start!important;justify-content:center!important;overflow-y:auto!important;padding:0!important;background:rgba(15,23,42,0.75)!important;';
     document.body.style.overflow = 'hidden';
     waResetModal();
 
-    // Pre-fill from Shopify logged-in customer data
+    // Auto-fetch saved or cached phone & email from browser
+    const phoneInput = document.getElementById('wa-phone');
+    const emailInput = document.getElementById('wa-email');
+
+    const cachedPhone = waGetSavedPhone();
+    const cachedEmail = waGetSavedEmail();
+
+    if (phoneInput && cachedPhone) {
+      phoneInput.value = cachedPhone;
+    }
+    if (emailInput && cachedEmail) {
+      emailInput.value = cachedEmail;
+      waEmail = cachedEmail;
+    }
+
     const sc = window._shopifyCustomer;
     if (sc && sc.logged_in) {
-      // Pre-fill phone if available
-      if (sc.phone) {
-        const cleanPhone = sc.phone.replace(/\D/g, '').replace(/^91/, '');
-        document.getElementById('wa-phone').value = cleanPhone;
+      if (sc.email && emailInput) {
+        emailInput.value = sc.email;
+        waEmail = sc.email;
+        waSaveEmailGlobally(sc.email);
       }
-      // Pre-fill email
-      if (sc.email) {
-        document.getElementById('wa-email').value = sc.email;
-      }
-      // Pre-load Shopify addresses (merge with network_addresses later)
       if (sc.addresses && sc.addresses.length > 0) {
         waAddresses = sc.addresses.map(a => ({
           id: 'shopify_' + a.id,
@@ -1206,116 +1378,102 @@ window._shopifyCustomer = {
       }
     }
 
-    // Check if they already verified in this tab or device session, or logged in via Shopify Customer Account
-    let cachedPhone = sessionStorage.getItem('fit11_verified_phone') || localStorage.getItem('fit11_verified_phone') || localStorage.getItem('kwikpass_user_phone');
-    if (!cachedPhone && sc && sc.logged_in && sc.phone) {
-      cachedPhone = sc.phone.replace(/\D/g, '');
-      if (cachedPhone.length >= 10) {
-        if (!cachedPhone.startsWith('91') && cachedPhone.length === 10) {
-          cachedPhone = '+91' + cachedPhone;
-        } else if (cachedPhone.startsWith('91') && cachedPhone.length === 12) {
-          cachedPhone = '+' + cachedPhone;
-        }
+    // Immediately jump to Step 3 if user is already logged in / cached
+    if (cachedPhone) {
+      waPhone = cachedPhone;
+      waSavePhoneGlobally(cachedPhone);
+      document.getElementById('wa-step-1').style.display = 'none';
+      document.getElementById('wa-step-2').style.display = 'none';
+      document.getElementById('wa-step-3').style.display = 'block';
+      
+      const activeEmail = cachedEmail || (emailInput ? emailInput.value : '');
+      if (activeEmail && emailInput) {
+        emailInput.value = activeEmail;
+        waEmail = activeEmail;
       }
-      try {
-        localStorage.setItem('fit11_verified_phone', cachedPhone);
-        localStorage.setItem('kwikpass_user_phone', cachedPhone);
-      } catch (e) {}
+      waSetStep(3);
+      loadAddresses();
+      calculateCheckoutTotals();
+      fetchWalletBalance();
     }
 
-    // Always fetch identity & store settings first so payment methods & theme variables are loaded
-    try {
-      const device_id = localStorage.getItem('fit11_device_id');
-      const res = await fetch(`${WA_API_BASE}/identify`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ device_id, merchant_key: MERCHANT_KEY })
-      });
-      const data = await res.json();
+    // Run identify asynchronously in background so modal opens instantly
+    (async () => {
+      try {
+        const device_id = localStorage.getItem('fit11_device_id') || ('dev_' + Math.random().toString(36).substr(2, 9));
+        localStorage.setItem('fit11_device_id', device_id);
+        const res = await fetch(`${WA_API_BASE}/identify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ device_id, merchant_key: MERCHANT_KEY })
+        });
+        const data = await res.json();
+        if (data.payment_settings && Object.keys(data.payment_settings).length > 0) {
+          waPaymentSettings = data.payment_settings;
+          const _ps = data.payment_settings;
+          const _sv = (name, val, fb) => document.documentElement.style.setProperty(name, val || fb);
+          _sv('--wa-theme',      _ps.theme_color,    '#0f172a');
+          _sv('--wa-bg',         _ps.bg_main,        '#f1f5f9');
+          _sv('--wa-card-bg',    _ps.bg_card,        '#ffffff');
+          _sv('--wa-header-bg',  _ps.bg_header,      '#0f172a');
+          _sv('--wa-heading',    _ps.text_heading,   '#0f172a');
+          _sv('--wa-subheading', _ps.text_subheading,'#64748b');
+          _sv('--wa-label',      _ps.text_label,     '#374151');
+          _sv('--wa-success',    _ps.accent_success, '#16a34a');
+          _sv('--wa-border',     _ps.accent_border,  '#e2e8f0');
 
-      // ── Apply branding & settings from identify response immediately ──────────
-      if (data.payment_settings && Object.keys(data.payment_settings).length > 0) {
-        waPaymentSettings = data.payment_settings;
-        const _ps = data.payment_settings;
-        const _sv = (name, val, fb) => document.documentElement.style.setProperty(name, val || fb);
-        _sv('--wa-theme',      _ps.theme_color,    '#0f172a');
-        _sv('--wa-bg',         _ps.bg_main,        '#f1f5f9');
-        _sv('--wa-card-bg',    _ps.bg_card,        '#ffffff');
-        _sv('--wa-header-bg',  _ps.bg_header,      '#0f172a');
-        _sv('--wa-heading',    _ps.text_heading,   '#0f172a');
-        _sv('--wa-subheading', _ps.text_subheading,'#64748b');
-        _sv('--wa-label',      _ps.text_label,     '#374151');
-        _sv('--wa-success',    _ps.accent_success, '#16a34a');
-        _sv('--wa-border',     _ps.accent_border,  '#e2e8f0');
+          if (_ps.logo_url) {
+            const logoImg = `<img src="${_ps.logo_url}" alt="Store Logo" style="max-height:40px;max-width:150px;object-fit:contain;display:block;" />`;
+            const mobileBrand = document.getElementById('wa-brand-name-mobile');
+            if (mobileBrand) mobileBrand.innerHTML = logoImg;
+          }
 
-        // Apply logo to BOTH left panel and mobile header
-        if (_ps.logo_url) {
-          const logoImg = `<img src="${_ps.logo_url}" alt="Store Logo" style="max-height:40px;max-width:150px;object-fit:contain;display:block;" />`;
-          const leftBrand = document.getElementById('wa-brand-name-left');
-          if (leftBrand) leftBrand.outerHTML = `<div id="wa-brand-name-left" style="display:flex; align-items:center; margin-bottom:24px;">
-          {% if settings.logo %}
-            <img src="{{ settings.logo | img_url: 'master' }}" alt="{{ shop.name }}" style="height:40px; max-width:150px; object-fit:contain; flex-shrink:1;">
-          {% else %}
-            <span id="wa-brand-text-left" style="font-weight:800; font-size:22px; text-transform:uppercase;">{{ shop.domain | remove: '.myshopify.com' }}</span>
-          {% endif %}
-        </div>`;
-          const mobileBrand = document.getElementById('wa-brand-name-mobile');
-          if (mobileBrand) mobileBrand.innerHTML = logoImg;
-        }
-
-        // Apply email required/optional
-        const _emailInput = document.getElementById('wa-email');
-        const _emailBadge = document.getElementById('wa-email-badge');
-        if (_ps.email_required === true) {
-          if (_emailInput) { _emailInput.required = true; _emailInput.placeholder = 'you@example.com'; }
-          if (_emailBadge) { _emailBadge.textContent = '(Required)'; _emailBadge.style.color = '#f59e0b'; }
-        } else {
-          if (_emailInput) { _emailInput.required = false; _emailInput.placeholder = 'you@example.com (Optional)'; }
-          if (_emailBadge) { _emailBadge.textContent = '(Optional)'; _emailBadge.style.color = '#94a3b8'; }
-        }
-      }
-
-      if (cachedPhone) {
-        waPhone = cachedPhone;
-        waAutofillEmail(data ? data.email : null);
-        waGoToStep(3);
-        loadAddresses();
-        calculateCheckoutTotals();
-        return;
-      }
-
-      
-      if (data.identified && data.masked_phone) {
-        const title1 = document.getElementById('wa-title-1');
-        const desc1 = document.getElementById('wa-desc-1');
-        if (title1) title1.innerText = 'Welcome Back!';
-        if (desc1) desc1.innerText = 'Continue as ' + data.masked_phone + '?';
-        
-        // If we previously deleted the title/desc, inject a clean welcome message so the user isn't confused
-        if (!title1 && !document.getElementById('wa-dynamic-welcome')) {
-          const step1 = document.getElementById('wa-step-1');
-          if (step1) {
-             const welcomeHtml = `
-               <div id="wa-dynamic-welcome" style="margin-bottom:24px;">
-                 <h2 style="font-size:26px; font-weight:800; margin-bottom:8px; color:#0f172a; letter-spacing:-0.5px;">Welcome Back!</h2>
-                 <p style="font-size:15px; color:#475569;">Continue as <strong style="color:#0f172a;">${data.masked_phone}</strong>?</p>
-               </div>
-             `;
-             step1.insertAdjacentHTML('afterbegin', welcomeHtml);
+          const _emailInput = document.getElementById('wa-email');
+          const _emailBadge = document.getElementById('wa-email-badge');
+          if (_ps.email_required === true) {
+            if (_emailInput) { _emailInput.required = true; _emailInput.placeholder = 'you@example.com'; }
+            if (_emailBadge) { _emailBadge.textContent = '(Required)'; _emailBadge.style.color = '#f59e0b'; }
+          } else {
+            if (_emailInput) { _emailInput.required = false; _emailInput.placeholder = 'you@example.com (Optional)'; }
+            if (_emailBadge) { _emailBadge.textContent = '(Optional)'; _emailBadge.style.color = '#94a3b8'; }
           }
         }
 
-        const pCont = document.getElementById('wa-phone-container'); if(pCont) pCont.style.display = 'none';
-        const pSec = document.getElementById('wa-phone-input-section'); if(pSec) pSec.style.display = 'none';
-        const midTb = document.getElementById('wa-mid-trust-badges'); if(midTb) midTb.style.display = 'none';
-        const greenBox = document.getElementById('wa-green-otp-box'); if(greenBox) greenBox.style.display = 'none';
-        document.getElementById('wa-switch-account').style.display = 'block';
-        waPhone = 'MASKED';
-        if (data.email) {
-          document.getElementById('wa-email').value = data.email;
+        if (data.identified && data.masked_phone && !cachedPhone) {
+          const title1 = document.getElementById('wa-title-1');
+          const desc1 = document.getElementById('wa-desc-1');
+          if (title1) title1.innerText = 'Welcome Back!';
+          if (desc1) desc1.innerText = 'Continue as ' + data.masked_phone + '?';
+          
+          if (!title1 && !document.getElementById('wa-dynamic-welcome')) {
+            const step1 = document.getElementById('wa-step-1');
+            if (step1) {
+               const welcomeHtml = `
+                 <div id="wa-dynamic-welcome" style="margin-bottom:24px;">
+                   <h2 style="font-size:26px; font-weight:800; margin-bottom:8px; color:#0f172a; letter-spacing:-0.5px;">Welcome Back!</h2>
+                   <p style="font-size:15px; color:#475569;">Continue as <strong style="color:#0f172a;">${data.masked_phone}</strong>?</p>
+                 </div>
+               `;
+               step1.insertAdjacentHTML('afterbegin', welcomeHtml);
+            }
+          }
+
+          const pCont = document.getElementById('wa-phone-container'); if(pCont) pCont.style.display = 'none';
+          const pSec = document.getElementById('wa-phone-input-section'); if(pSec) pSec.style.display = 'none';
+          const midTb = document.getElementById('wa-mid-trust-badges'); if(midTb) midTb.style.display = 'none';
+          const greenBox = document.getElementById('wa-green-otp-box'); if(greenBox) greenBox.style.display = 'none';
+          const switchAcc = document.getElementById('wa-switch-account'); if(switchAcc) switchAcc.style.display = 'block';
+          waPhone = 'MASKED';
+          if (data.storeCreditBalance) {
+            waWalletBalance = parseFloat(data.storeCreditBalance || 0);
+          }
+          if (data.email) {
+            const em = document.getElementById('wa-email');
+            if (em) em.value = data.email;
+          }
         }
-      }
-    } catch (e) { /* Silent fail */ }
+      } catch(e) { console.error('Identify error:', e); }
+    })();
   }
 
   function waResetModal() {
@@ -1324,6 +1482,13 @@ window._shopifyCustomer = {
     document.getElementById('wa-step-3').style.display = 'none';
     document.getElementById('wa-success-screen').style.display = 'none';
     document.getElementById('wa-steps-indicator').style.display = 'flex';
+    
+    const closeBtn = document.getElementById('wa-close-modal-btn');
+    if (closeBtn) closeBtn.style.display = 'flex';
+    
+    const scBox = document.getElementById('wa-success-order-number');
+    if (scBox) scBox.style.display = 'none';
+    
     waSetStep(1);
   }
 
@@ -1396,14 +1561,7 @@ window._shopifyCustomer = {
         return;
       }
       if (errEl) errEl.style.display = 'none';
-      if (emailEl && emailEl.value.trim()) {
-        waEmail = emailEl.value.trim();
-        sessionStorage.setItem('fit11_verified_email', waEmail);
-        try {
-          localStorage.setItem('fit11_verified_email', waEmail);
-          localStorage.setItem('kwikpass_user_email', waEmail);
-        } catch(e){}
-      }
+      if (emailEl) waEmail = emailEl.value.trim();
     }
 
     document.getElementById('wa-step-1').style.display = 'none';
@@ -1477,10 +1635,13 @@ window._shopifyCustomer = {
   }
 
   async function sendWaOtp() {
-    let phoneInput = document.getElementById('wa-phone').value.trim();
+    let phoneInputEl = document.getElementById('wa-phone');
+    let phoneInput = phoneInputEl ? waCleanPhoneInput(phoneInputEl) : '';
     if (waPhone !== 'MASKED') {
       if (phoneInput.length < 10) return alert('Please enter a valid 10-digit mobile number');
       waPhone = phoneInput;
+      localStorage.setItem('wa_saved_phone', waPhone);
+      localStorage.setItem('fit11_user_phone', waPhone);
     }
     // Validation moved to final checkout / address save
     const btn = document.getElementById('wa-send-btn');
@@ -1567,13 +1728,13 @@ window._shopifyCustomer = {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Invalid OTP');
       
-      // Save to session & local storage so they don't have to re-verify across checkout or profile modal
+      // Save to session so they don't have to re-verify if they navigate away and come back
       sessionStorage.setItem('fit11_verified_phone', waPhone);
-      try {
-        localStorage.setItem('fit11_verified_phone', waPhone);
-        localStorage.setItem('kwikpass_user_phone', waPhone);
-      } catch (e) {}
-      waAutofillEmail(data.profile ? data.profile.email : (data.email || null));
+      if (data.profile && data.profile.email) {
+        sessionStorage.setItem('fit11_verified_email', data.profile.email);
+        const emailInput = document.getElementById('wa-email');
+        if (emailInput) emailInput.value = data.profile.email;
+      }
 
       // Store wallet balance from verify response (avoids extra API call at payment step)
       if (data.storeCreditBalance !== undefined) {
@@ -1604,11 +1765,6 @@ window._shopifyCustomer = {
         body: JSON.stringify({ merchant_key: MERCHANT_KEY, phone: waPhone, action: 'FETCH' })
       });
       const data = await res.json();
-      if (data && data.email) {
-        waAutofillEmail(data.email);
-      } else {
-        waAutofillEmail(null);
-      }
       const networkAddrs = data.addresses || [];
       
       // Combine existing loaded ones (from Shopify Liquid) and fetched ones
@@ -1632,6 +1788,15 @@ window._shopifyCustomer = {
           if (existingIdx !== -1 && !String(unique[existingIdx].id).startsWith('shopify_')) {
               unique[existingIdx] = a; // Replace local with shopify equivalent
           }
+        }
+      }
+
+      if (data.email) {
+        waSaveEmailGlobally(data.email);
+        const emailInput = document.getElementById('wa-email');
+        if (emailInput && (!emailInput.value || !emailInput.value.trim())) {
+          emailInput.value = data.email;
+          waEmail = data.email;
         }
       }
       
@@ -2113,14 +2278,19 @@ window._shopifyCustomer = {
   }
 
   async function calculateCheckoutTotals(discountCode = null) {
-    const subT = document.getElementById('wa-subtotal'); if (subT) subT.innerText = 'Calculating...';
-    const totT = document.getElementById('wa-total'); if (totT) totT.innerText = '...';
-    const payBtn = document.getElementById('wa-cod-btn');
-    if (payBtn) payBtn.disabled = true;
-
+    const subT = document.getElementById('wa-subtotal');
+    const totT = document.getElementById('wa-total');
     try {
       const cartRes = await fetch('/cart.js');
       const cart = await cartRes.json();
+      
+      const initialTotal = (cart.total_price / 100).toFixed(2);
+      if (subT && (subT.innerText === 'Calculating...' || !subT.innerText)) subT.innerText = `₹${initialTotal}`;
+      if (totT && (totT.innerText === '...' || !totT.getAttribute('data-base-total'))) {
+        totT.innerText = `₹${initialTotal}`;
+        totT.setAttribute('data-base-total', initialTotal);
+      }
+
       const items = cart.items.map(i => ({ variant_id: i.variant_id, quantity: i.quantity }));
       const res = await fetch(`${WA_API_BASE}/checkout/calculate`, {
         method: 'POST',
@@ -2169,6 +2339,9 @@ window._shopifyCustomer = {
       }
       
       waPaymentSettings = data.payment_settings || {};
+      if (data.storeCreditBalance) {
+        waWalletBalance = parseFloat(data.storeCreditBalance || 0);
+      }
 
       // Apply Branding — inject all theme CSS variables from admin settings
       const _ps = waPaymentSettings;
@@ -2220,12 +2393,6 @@ window._shopifyCustomer = {
       if (document.getElementById('wa-step-4').style.display === 'block') {
           renderPaymentMethods();
       }
-      if (payBtn) {
-        payBtn.disabled = false;
-        payBtn.style.pointerEvents = 'auto';
-        payBtn.style.opacity = '1';
-        payBtn.style.cursor = 'pointer';
-      }
 
     } catch (e) {
       if (discountCode && String(e.message) === 'invalid_discount') {
@@ -2250,12 +2417,6 @@ window._shopifyCustomer = {
           if (typeof renderPaymentMethods === 'function') renderPaymentMethods();
         }
       }
-    }
-    if (payBtn) {
-      payBtn.disabled = false;
-      payBtn.style.pointerEvents = 'auto';
-      payBtn.style.opacity = '1';
-      payBtn.style.cursor = 'pointer';
     }
   }
 
@@ -2320,7 +2481,7 @@ window._shopifyCustomer = {
     await calculateCheckoutTotals();
   }
 
-  function waProceedToPayment() {
+  async function waProceedToPayment() {
     if (!waSelectedAddress) {
       alert('Please select a delivery address first.');
       return;
@@ -2333,12 +2494,10 @@ window._shopifyCustomer = {
     waWalletApplied = false;
     waWalletAppliedAmt = 0;
 
-    renderPaymentMethods();
-
     // Fetch customer wallet balance (async, non-blocking)
-    if (waPaymentSettings && waPaymentSettings.store_credit_enabled) {
-      fetchWalletBalance().then(() => waRenderWalletSection());
-    }
+    await fetchWalletBalance();
+    renderPaymentMethods();
+    waRenderWalletSection();
   }
   
   function waBackToAddress() {
@@ -2384,14 +2543,6 @@ window._shopifyCustomer = {
         }
         if (btnText) btnText.innerText = 'Place Order (COD) →';
       }
-
-      const codBtn = document.getElementById('wa-cod-btn');
-      if (codBtn) {
-        codBtn.disabled = false;
-        codBtn.style.pointerEvents = 'auto';
-        codBtn.style.opacity = '1';
-        codBtn.style.cursor = 'pointer';
-      }
     }
   
   // ── WALLET / STORE CREDIT ─────────────────────────────────────────
@@ -2400,12 +2551,17 @@ window._shopifyCustomer = {
   let waWalletAppliedAmt = 0;      // amount currently deducted from total
 
   async function fetchWalletBalance() {
-    if (!waPhone) return;
+    const devId = localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id');
+    if (!waPhone && !devId) return;
     try {
-      const res = await fetch(`${WA_API_BASE}/identify`, {
+      const res = await fetch(`${WA_API_BASE}/wallet-balance`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ merchant_key: MERCHANT_KEY, phone: waPhone })
+        body: JSON.stringify({ 
+          merchant_key: MERCHANT_KEY, 
+          phone: waPhone,
+          device_id: devId
+        })
       });
       const data = await res.json();
       waWalletBalance = parseFloat(data?.customer?.storeCreditBalance || data?.storeCreditBalance || 0);
@@ -2417,20 +2573,44 @@ window._shopifyCustomer = {
   function computeWalletUsable() {
     if (waWalletBalance <= 0) return 0;
     const ps = waPaymentSettings || {};
-    const baseTotal = parseFloat(document.getElementById('wa-total').getAttribute('data-base-total') || '0');
+    const baseTotal = parseFloat(document.getElementById('wa-total')?.getAttribute('data-base-total') || '0');
+    
+    let targetPayable = baseTotal;
+    if (waSelectedPayment === 'partial_cod') {
+      if (ps.partial_cod_type === 'percent') {
+        targetPayable = (baseTotal * ps.partial_cod_value) / 100;
+      } else if (ps.partial_cod_value > 0) {
+        targetPayable = ps.partial_cod_value;
+      }
+    } else if (waSelectedPayment === 'prepaid' && ps.prepaid_offer_enabled) {
+      let disc = ps.prepaid_offer_type === 'percent' ? (baseTotal * ps.prepaid_offer_value) / 100 : ps.prepaid_offer_value;
+      targetPayable = Math.max(0, baseTotal - Math.min(disc, baseTotal));
+    }
+
     let maxUsable = waWalletBalance;
     if (ps.store_credit_limit_type === 'percent' && ps.store_credit_limit_value > 0) {
       maxUsable = Math.min(waWalletBalance, (baseTotal * ps.store_credit_limit_value) / 100);
     } else if (ps.store_credit_limit_type === 'fixed' && ps.store_credit_limit_value > 0) {
       maxUsable = Math.min(waWalletBalance, ps.store_credit_limit_value);
     }
-    return Math.min(maxUsable, baseTotal); // can't exceed total
+    return Math.min(maxUsable, targetPayable);
+  }
+
+  function waUpdateTotalDisplay() {
+    const totalEl = document.getElementById('wa-total');
+    if (!totalEl) return;
+    let baseTotal = parseFloat(totalEl.getAttribute('data-base-total') || '0');
+    let finalPayable = baseTotal;
+    if (waWalletApplied && waWalletAppliedAmt > 0) {
+      finalPayable = Math.max(0, baseTotal - waWalletAppliedAmt);
+    }
+    totalEl.innerText = '₹' + finalPayable.toFixed(2);
   }
 
   function waRenderWalletSection() {
     const section = document.getElementById('wa-wallet-section');
     const ps = waPaymentSettings || {};
-    if (!ps.store_credit_enabled || waWalletBalance <= 0) {
+    if (ps.store_credit_enabled === false || waWalletBalance <= 0) {
       if (section) section.style.display = 'none';
       return;
     }
@@ -2448,16 +2628,23 @@ window._shopifyCustomer = {
         usableText.innerText = `Max ₹${ps.store_credit_limit_value} per order`;
       }
     }
-    const btn = document.getElementById('wa-wallet-toggle-btn');
+    const card = document.getElementById('wa-wallet-card');
+    const checkbox = document.getElementById('wa-wallet-checkbox');
+    const checkIcon = document.getElementById('wa-wallet-check-icon');
     const appliedRow = document.getElementById('wa-wallet-applied-row');
     const appliedAmt = document.getElementById('wa-wallet-applied-amt');
     if (waWalletApplied) {
-      if (btn) { btn.innerText = 'Remove'; btn.style.background = '#ef4444'; }
-      if (appliedRow) { appliedRow.style.display = 'flex'; }
+      waWalletAppliedAmt = Math.round(computeWalletUsable() * 100) / 100;
+      if (card) { card.style.borderColor = 'var(--wa-primary, #0f172a)'; card.style.background = '#f0f9ff'; }
+      if (checkbox) { checkbox.style.borderColor = 'var(--wa-primary, #0f172a)'; checkbox.style.background = 'var(--wa-primary, #0f172a)'; }
+      if (checkIcon) checkIcon.style.display = 'block';
+      if (appliedRow) { appliedRow.style.display = 'flex'; appliedRow.style.background = '#eff6ff'; }
       if (appliedAmt) appliedAmt.innerText = `-₹${waWalletAppliedAmt.toFixed(2)}`;
     } else {
-      if (btn) { btn.innerText = 'Apply Wallet'; btn.style.background = '#10b981'; }
-      if (appliedRow) { appliedRow.style.display = 'none'; }
+      if (card) { card.style.borderColor = '#cbd5e1'; card.style.background = '#f8fafc'; }
+      if (checkbox) { checkbox.style.borderColor = '#94a3b8'; checkbox.style.background = 'transparent'; }
+      if (checkIcon) checkIcon.style.display = 'none';
+      if (appliedRow) appliedRow.style.display = 'none';
     }
   }
 
@@ -2477,8 +2664,9 @@ window._shopifyCustomer = {
     }
 
     // Re-compute display total (respecting payment method fee/discount too)
-    updateTotalDisplay();
+    waUpdateTotalDisplay();
     waRenderWalletSection();
+    renderPaymentMethods();
   }
 
 function renderPaymentMethods() {
@@ -2493,6 +2681,10 @@ function renderPaymentMethods() {
         }
       }
       let baseTotal = parseFloat(baseTotalText) || 0;
+
+      if (waWalletApplied) {
+        waWalletAppliedAmt = Math.round(computeWalletUsable() * 100) / 100;
+      }
       
       let methods = [];
       
@@ -2521,14 +2713,14 @@ function renderPaymentMethods() {
       
       const uniqueCss = `
         <style>
-          .wa-pay-opt { border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px; cursor:pointer; margin-bottom:10px; transition:0.2s; position:relative; overflow:hidden; }
+          .wa-pay-opt { border:1px solid #e2e8f0; border-radius:14px; padding:20px; cursor:pointer; margin-bottom:16px; transition:0.2s; position:relative; overflow:hidden; }
           .wa-pay-opt.selected { border-color:#22c55e; background:#fff; }
 
-          .wa-rec-badge { position:absolute; top:0; left:16px; background:#22c55e; color:#fff; font-size:9px; font-weight:800; padding:3px 8px; border-radius:0 0 8px 8px; letter-spacing:0.5px; }
-          .wa-radio-btn { width:20px; height:20px; border:2px solid #cbd5e1; border-radius:50%; position:relative; flex-shrink:0; margin-top:2px; }
+          .wa-rec-badge { position:absolute; top:0; left:16px; background:#22c55e; color:#fff; font-size:9px; font-weight:800; padding:4px 10px; border-radius:0 0 8px 8px; letter-spacing:0.5px; }
+          .wa-radio-btn { width:22px; height:22px; border:2px solid #cbd5e1; border-radius:50%; position:relative; flex-shrink:0; margin-top:2px; }
           .wa-pay-opt.selected .wa-radio-btn { border-color:#22c55e; }
-          .wa-pay-opt.selected .wa-radio-btn::after { content:''; position:absolute; inset:3px; background:#22c55e; border-radius:50%; }
-          .wa-icon-circ { width:42px; height:42px; background:#f8fafc; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; flex-shrink:0; }
+          .wa-pay-opt.selected .wa-radio-btn::after { content:''; position:absolute; inset:4px; background:#22c55e; border-radius:50%; }
+          .wa-icon-circ { width:48px; height:48px; background:#f8fafc; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; flex-shrink:0; }
           .wa-shield-badge { position:absolute; bottom:0; right:0; background:#22c55e; color:#fff; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid #fff; }
           .wa-logos-row img { filter: grayscale(0%); opacity: 1; mix-blend-mode: multiply; }
         </style>
@@ -2547,24 +2739,24 @@ function renderPaymentMethods() {
               disc = waPaymentSettings.prepaid_offer_type === 'percent' ? (baseTotal * waPaymentSettings.prepaid_offer_value) / 100 : waPaymentSettings.prepaid_offer_value;
               disc = Math.min(disc, baseTotal);
           }
-          let payAmt = baseTotal - disc;
+          let payAmt = Math.max(0, (baseTotal - disc) - (waWalletApplied ? waWalletAppliedAmt : 0));
           
           opt.className = `wa-pay-opt recommended ${isSelected ? 'selected' : ''}`;
           html = `
             <div class="wa-rec-badge">RECOMMENDED</div>
-            <div style="display:flex; width:100%; align-items:flex-start; gap:12px; margin-top:6px;">
+            <div style="display:flex; width:100%; align-items:flex-start; gap:14px; margin-top:8px;">
                <div class="wa-radio-btn"></div>
                <div style="flex:1;">
                  <div style="display:flex; justify-content:space-between; align-items:flex-start; width:100%;">
-                    <div style="display:flex; gap:10px;">
+                    <div style="display:flex; gap:12px;">
                        <div class="wa-icon-circ">
-                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
                          <div class="wa-shield-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg></div>
                        </div>
                        <div>
-                         <div style="font-weight:700; color:#1e293b; font-size:15px;">Pay Online (UPI, Cards)</div>
+                         <div style="font-weight:700; color:#1e293b; font-size:16px;">Pay Online (UPI, Cards)</div>
                          <div style="font-size:12px; color:#64748b; margin-top:2px;">Fast, secure & hassle-free</div>
-                         ${disc > 0 ? `<div style="margin-top:4px;">
+                         ${disc > 0 ? `<div style="margin-top:6px;">
                            <span style="display:inline-flex; align-items:center; color:#059669; font-weight:800; font-size:10px; background: #ecfdf5; padding:3px 8px; border-radius:4px; border:1px dashed #10b981; letter-spacing:0.5px; text-transform:uppercase;">
                              <svg width="12" height="12" style="margin-right:4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
                              YOU SAVE ₹${Math.round(disc)}
@@ -2573,23 +2765,23 @@ function renderPaymentMethods() {
                        </div>
                     </div>
                     <div style="text-align:right;">
-                      <div style="font-size:15px; font-weight:800; color:#0f172a;">₹${payAmt.toFixed(2)}</div>
-                      ${disc > 0 ? `<div style="font-size:12px; color:#94a3b8; text-decoration:line-through; margin-top:2px;">₹${baseTotal.toFixed(2)}</div>` : ''}
+                      <div style="font-size:16px; font-weight:800; color:#0f172a;">₹${payAmt.toFixed(2)}</div>
+                      ${disc > 0 ? `<div style="font-size:13px; color:#94a3b8; text-decoration:line-through; margin-top:2px;">₹${baseTotal.toFixed(2)}</div>` : ''}
                     </div>
                  </div>
                  ${isSelected ? `
-                 <div style="margin-top:12px; animation:waFadeIn 0.3s ease;">
-                    <div style="background:#f8fafc; border:1px solid #f1f5f9; border-radius:8px; padding:10px; display:flex; align-items:center; justify-content:space-between;">
+                 <div style="margin-top:20px; animation:waFadeIn 0.3s ease;">
+                    <div style="background:#f8fafc; border:1px solid #f1f5f9; border-radius:8px; padding:12px; display:flex; align-items:center; justify-content:space-between;">
                       <div style="display:flex; gap:10px; align-items:center;">
-                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
                          <div>
-                            <div style="color:#059669; font-size:11px; font-weight:700;">100% Secure Payment</div>
-                            <div style="color:#64748b; font-size:10px; margin-top:1px; line-height:1.3;">Your payment details are encrypted<br>and protected.</div>
+                            <div style="color:#059669; font-size:12px; font-weight:700;">100% Secure Payment</div>
+                            <div style="color:#64748b; font-size:10px; margin-top:2px; line-height:1.4;">Your payment details are encrypted<br>and protected.</div>
                          </div>
                       </div>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                     </div>
-                    <div class="wa-logos-row" style="display:flex; align-items:center; justify-content:space-between; margin-top:10px; padding:0 4px;">
+                    <div class="wa-logos-row" style="display:flex; align-items:center; justify-content:space-between; margin-top:16px; padding:0 4px;">
                       <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" style="height:14px;" />
                       <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg" style="height:14px;" />
                       <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Paytm_Logo_%28standalone%29.svg" style="height:10px;" />
@@ -2608,46 +2800,46 @@ function renderPaymentMethods() {
           } else {
             advanceAmt = waPaymentSettings.partial_cod_value;
           }
-          let payAmt = advanceAmt;
-          let remainingAmt = baseTotal - payAmt;
+          let payAmt = Math.max(0, advanceAmt - (waWalletApplied ? waWalletAppliedAmt : 0));
+          let remainingAmt = Math.max(0, baseTotal - advanceAmt);
           
           opt.className = `wa-pay-opt ${isSelected ? 'selected' : ''}`;
           
           html = `
-            <div style="display:flex; width:100%; align-items:flex-start; gap:12px;">
+            <div style="display:flex; width:100%; align-items:flex-start; gap:14px;">
                <div class="wa-radio-btn"></div>
                <div style="flex:1;">
                  <div style="display:flex; justify-content:space-between; align-items:flex-start; width:100%;">
-                    <div style="display:flex; gap:10px; align-items:flex-start;">
+                    <div style="display:flex; gap:12px; align-items:flex-start;">
                        <div class="wa-icon-circ">
-                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
                          <div class="wa-shield-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg></div>
                        </div>
                        <div>
-                         <div style="font-weight:700; color:#1e293b; font-size:15px;">Partial COD (Advance)</div>
+                         <div style="font-weight:700; color:#1e293b; font-size:16px;">Partial COD (Advance)</div>
                          <div style="font-size:12px; color:#64748b; margin-top:2px;">Pay ₹${Math.round(payAmt)} now, rest on delivery</div>
                        </div>
                     </div>
                     <div style="text-align:right;">
-                      <div style="font-size:15px; font-weight:800; color:#0f172a;">₹${payAmt.toFixed(2)}</div>
+                      <div style="font-size:16px; font-weight:800; color:#0f172a;">₹${payAmt.toFixed(2)}</div>
                       <div style="font-size:11px; color:#64748b; margin-top:2px;">Now</div>
                     </div>
                  </div>
                  ${isSelected ? `
-                 <div style="margin-top:12px; animation:waFadeIn 0.3s ease;">
-                    <div style="background:#f8fafc; border:1px solid #f1f5f9; border-radius:8px; padding:10px; display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                 <div style="margin-top:20px; animation:waFadeIn 0.3s ease;">
+                    <div style="background:#f8fafc; border:1px solid #f1f5f9; border-radius:8px; padding:12px; display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
                       <div style="display:flex; gap:10px; align-items:center;">
-                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
                          <div>
-                            <div style="color:#059669; font-size:11px; font-weight:700;">100% Secure Payment</div>
-                            <div style="color:#64748b; font-size:10px; margin-top:1px; line-height:1.3;">Your payment details are encrypted<br>and protected.</div>
+                            <div style="color:#059669; font-size:12px; font-weight:700;">100% Secure Payment</div>
+                            <div style="color:#64748b; font-size:10px; margin-top:2px; line-height:1.4;">Your payment details are encrypted<br>and protected.</div>
                          </div>
                       </div>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                     </div>
                     
-                    <div style="background:#fff; border:1.5px dashed #e2e8f0; border-radius:8px; padding:10px; font-size:12px; color:#475569; margin-bottom:10px;">
-                      <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                    <div style="background:#fff; border:1.5px dashed #e2e8f0; border-radius:8px; padding:12px; font-size:12px; color:#475569; margin-bottom:16px;">
+                      <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
                         <span>Advance to pay now:</span>
                         <span style="font-weight:700; color:#0f172a;">₹${payAmt.toFixed(2)}</span>
                       </div>
@@ -2671,27 +2863,27 @@ function renderPaymentMethods() {
           `;
         } else if (m.type === 'cod') {
           let fee = waPaymentSettings.cod_fee || 0;
-          let payAmt = baseTotal + fee;
+          let payAmt = Math.max(0, (baseTotal + fee) - (waWalletApplied ? waWalletAppliedAmt : 0));
           
           opt.className = `wa-pay-opt ${isSelected ? 'selected' : ''}`;
           
           html = `
-            <div style="display:flex; width:100%; align-items:flex-start; gap:12px;">
+            <div style="display:flex; width:100%; align-items:flex-start; gap:14px;">
                <div class="wa-radio-btn"></div>
                <div style="flex:1;">
                  <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
-                    <div style="display:flex; gap:10px; align-items:center;">
+                    <div style="display:flex; gap:12px; align-items:center;">
                        <div class="wa-icon-circ">
-                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
                        </div>
                        <div>
-                         <div style="font-weight:700; color:#1e293b; font-size:15px;">Cash on Delivery</div>
+                         <div style="font-weight:700; color:#1e293b; font-size:16px;">Cash on Delivery</div>
                          <div style="font-size:12px; color:#64748b; margin-top:2px;">Pay when your order arrives</div>
-                         ${fee > 0 ? `<div style="font-size:11px; color:#ef4444; margin-top:3px; font-weight:600;">+ ₹${fee} COD fee applies</div>` : ''}
+                         ${fee > 0 ? `<div style="font-size:11px; color:#ef4444; margin-top:4px; font-weight:600;">+ ₹${fee} COD fee applies</div>` : ''}
                        </div>
                     </div>
                     <div style="text-align:right;">
-                      <div style="font-size:15px; font-weight:800; color:#0f172a;">₹${payAmt.toFixed(2)}</div>
+                      <div style="font-size:16px; font-weight:800; color:#0f172a;">₹${payAmt.toFixed(2)}</div>
                     </div>
                  </div>
                </div>
@@ -2713,7 +2905,7 @@ function renderPaymentMethods() {
       // Attempt to load Cashfree if needed
       if ((waSelectedPayment === 'prepaid' || waSelectedPayment === 'partial_cod') && typeof Cashfree !== 'undefined') {
         try {
-          waCashfree = Cashfree({ mode: waPaymentSettings.cashfree_env || 'sandbox' });
+          cashfreeObj = Cashfree({ mode: waPaymentSettings.cashfree_env || 'sandbox' });
         } catch(e) { console.error('Cashfree init error', e); }
       }
 
@@ -2795,53 +2987,55 @@ function renderPaymentMethods() {
         btn.innerHTML = 'Pay Now <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
         return;
       }
-      const addr = waAddresses.find(a => String(a.id) === String(waSelectedAddress)) || waAddresses[0];
+      let addr = waAddresses.find(a => 
+        String(a.id) === String(waSelectedAddress) || 
+        String(a.id).replace('shopify_', '') === String(waSelectedAddress).replace('shopify_', '')
+      );
+      if (!addr && waAddresses.length > 0) {
+        addr = waAddresses[0];
+      }
       if (!addr) {
-        errEl.innerText = 'Please add a shipping address first.';
+        errEl.innerText = 'Please select or add a shipping address before proceeding.';
         errEl.style.display = 'block';
+        errEl.scrollIntoView({ behavior: 'smooth' });
         btn.disabled = false;
-        btn.style.pointerEvents = 'auto';
-        btn.style.opacity = '1';
-        btn.style.cursor = 'pointer';
-        btn.innerHTML = 'Place Order (COD) →';
+        btn.innerHTML = 'Pay Now <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
         return;
       }
       
       if (waSelectedPayment === 'cod') {
         // Direct complete
         await finishOrderBackend({ payment_method: 'cod', shipping_address: addr });
-      } else if (waPaymentSettings.use_shopify_checkout_prepaid) {
-        // Shopify Native Checkout flow for Prepaid and Partial COD
-        try {
-          const res = await fetch(`${WA_API_BASE}/checkout/update-draft`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              merchant_key: MERCHANT_KEY, 
-              draft_order_id: waDraftOrderId,
-              payment_method: waSelectedPayment,
-              customer_email: waEmail,
-              customer_phone: waPhone,
-              device_id: localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id'),
-              shipping_address: addr
-            })
-          });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error || 'Failed to update draft order');
-          
-          if (data.invoice_url) {
-             window.location.href = data.invoice_url;
-          } else {
-             throw new Error('No checkout URL returned from Shopify.');
-          }
-        } catch(e) {
-          errEl.innerText = 'Error: ' + e.message;
-          errEl.style.display = 'block';
-          btn.disabled = false;
-          btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
-        }
       } else {
         // Cashfree flow (Partial COD or standard Prepaid)
+        const walletDeduction = (waWalletApplied && waWalletAppliedAmt > 0) ? waWalletAppliedAmt : 0;
+        let targetPay = parseFloat(document.getElementById('wa-total')?.getAttribute('data-base-total') || '0');
+        if (waSelectedPayment === 'partial_cod') {
+          targetPay = waPaymentSettings.partial_cod_type === 'percent' 
+            ? (targetPay * waPaymentSettings.partial_cod_value) / 100 
+            : waPaymentSettings.partial_cod_value;
+        } else if (waSelectedPayment === 'prepaid' && waPaymentSettings.prepaid_offer_enabled) {
+          const disc = waPaymentSettings.prepaid_offer_type === 'percent'
+            ? (targetPay * waPaymentSettings.prepaid_offer_value) / 100
+            : waPaymentSettings.prepaid_offer_value;
+          targetPay = Math.max(0, targetPay - disc);
+        }
+        const netPayable = Math.max(0, targetPay - walletDeduction);
+
+        if (netPayable <= 0) {
+          // Store Credit covers 100% of online advance payable amount! Directly complete order!
+          try {
+            await finishOrderBackend({ payment_method: waSelectedPayment, shipping_address: addr });
+          } catch (e) {
+            errEl.innerText = 'Error: ' + (e.message || 'Failed to complete order.');
+            errEl.style.display = 'block';
+            errEl.scrollIntoView({ behavior: 'smooth' });
+            btn.disabled = false;
+            btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+          }
+          return;
+        }
+
         try {
           const res = await fetch(`${WA_API_BASE}/checkout/create-payment`, {
             method: 'POST',
@@ -2853,13 +3047,24 @@ function renderPaymentMethods() {
               customer_phone: waPhone,
               device_id: localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id'),
               customer_email: waEmail,
-              customer_name: (addr?.first_name || '') + ' ' + (addr?.last_name || '')
+              customer_name: (addr?.first_name || '') + ' ' + (addr?.last_name || ''),
+              wallet_credit_amount: walletDeduction
             })
           });
           const data = await res.json();
-          if (!res.ok) throw new Error(data.error);
+          if (!res.ok || !data || !data.payment_session_id) {
+            throw new Error(data.error || data.message || 'Payment server failed to generate Cashfree session.');
+          }
           
-          if (!cashfreeObj) throw new Error('Payment gateway failed to load.');
+          if (!cashfreeObj && typeof Cashfree !== 'undefined') {
+            try {
+              cashfreeObj = Cashfree({ mode: waPaymentSettings.cashfree_env || 'production' });
+            } catch(cfInitErr) {
+              console.error('Cashfree init error:', cfInitErr);
+              throw new Error('Cashfree SDK init error: ' + (cfInitErr.message || cfInitErr));
+            }
+          }
+          if (!cashfreeObj) throw new Error('Payment gateway SDK failed to load from sdk.cashfree.com/js/v3/cashfree.js. Please check network/ad-blocker settings.');
 
           // Open Cashfree Modal
           let checkoutOptions = {
@@ -2867,36 +3072,59 @@ function renderPaymentMethods() {
             redirectTarget: "_modal"
           };
           
-          // CRITICAL FIX: Hide our custom modal overlay so the Cashfree modal is visible!
-          // Cashfree's injected iframe modal might have a lower z-index than our 9999999 overlay.
+          // CRITICAL FIX (matching 11fit): Hide our custom modal overlay so the Cashfree modal is visible!
           const overlay = document.getElementById('wa-otp-overlay');
-          const originalDisplay = overlay.style.display;
-          overlay.style.display = 'none';
+          const originalDisplay = overlay ? overlay.style.display : 'flex';
+          if (overlay) overlay.style.display = 'none';
           
           cashfreeObj.checkout(checkoutOptions).then(async (result) => {
-            // Bring our modal back
-            overlay.style.display = originalDisplay;
+            if (overlay) overlay.style.display = originalDisplay;
             
             if (result.error) {
-              errEl.innerText = result.error.message || 'Payment failed or cancelled by user.';
+              const exactErr = result.error.message || result.error.code || (typeof result.error === 'string' ? result.error : JSON.stringify(result.error)) || 'Payment failed or cancelled by user.';
+              errEl.innerText = 'Payment Error: ' + exactErr;
               errEl.style.display = 'block';
+              errEl.style.padding = '12px';
+              errEl.style.background = '#fef2f2';
+              errEl.style.border = '1px solid #f87171';
+              errEl.style.borderRadius = '8px';
+              errEl.style.color = '#dc2626';
+              errEl.scrollIntoView({ behavior: 'smooth' });
               btn.disabled = false;
               btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
             } else {
-              // Success
               if (result.paymentDetails && result.paymentDetails.paymentMessage) {
                 await finishOrderBackend({ payment_method: waSelectedPayment, shipping_address: addr, cashfree_order_id: data.order_id });
               }
             }
+          }).catch((cfErr) => {
+            if (overlay) overlay.style.display = originalDisplay;
+            const exactErr = (cfErr && cfErr.message) ? cfErr.message : (typeof cfErr === 'string' ? cfErr : JSON.stringify(cfErr));
+            errEl.innerText = 'Payment Gateway Error: ' + exactErr;
+            errEl.style.display = 'block';
+            errEl.style.padding = '12px';
+            errEl.style.background = '#fef2f2';
+            errEl.style.border = '1px solid #f87171';
+            errEl.style.borderRadius = '8px';
+            errEl.style.color = '#dc2626';
+            errEl.scrollIntoView({ behavior: 'smooth' });
+            btn.disabled = false;
+            btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
           });
   
         } catch(e) {
-          // If we hid the overlay, make sure it's back
           const overlay = document.getElementById('wa-otp-overlay');
           if (overlay && overlay.style.display === 'none') overlay.style.display = 'flex';
           
-          errEl.innerText = 'Error: ' + e.message;
+          const exactErr = (e && e.message) ? e.message : (typeof e === 'string' ? e : JSON.stringify(e));
+          errEl.innerText = 'Payment Error: ' + exactErr;
           errEl.style.display = 'block';
+          errEl.style.padding = '12px';
+          errEl.style.background = '#fef2f2';
+          errEl.style.border = '1px solid #f87171';
+          errEl.style.borderRadius = '8px';
+          errEl.style.color = '#dc2626';
+          errEl.scrollIntoView({ behavior: 'smooth' });
           btn.disabled = false;
           btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
         }
@@ -2904,9 +3132,22 @@ function renderPaymentMethods() {
     }
 
   async function finishOrderBackend(payload) {
+    const btn = document.getElementById('wa-cod-btn');
+    const errEl = document.getElementById('wa-payment-error');
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
     try {
+      let addr = payload.shipping_address;
+      if (!addr && waAddresses && waAddresses.length > 0) {
+        addr = waAddresses.find(a => 
+          String(a.id) === String(waSelectedAddress) || 
+          String(a.id).replace('shopify_', '') === String(waSelectedAddress).replace('shopify_', '')
+        ) || waAddresses[0];
+      }
+      if (!addr) {
+        throw new Error('Shipping address is missing. Please select or add an address.');
+      }
+
       const res = await fetch(`${WA_API_BASE}/checkout/complete`, {
         method: 'POST',
         signal: controller.signal,
@@ -2914,18 +3155,18 @@ function renderPaymentMethods() {
         body: JSON.stringify({ 
           merchant_key: MERCHANT_KEY, 
           draft_order_id: waDraftOrderId, 
-          shipping_address: payload.shipping_address, 
+          shipping_address: addr, 
           email: waEmail, 
           phone: waPhone,
           device_id: localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id'),
-          payment_method: payload.payment_method,
+          payment_method: payload.payment_method || waSelectedPayment,
           cashfree_order_id: payload.cashfree_order_id,
           wallet_credit_amount: (waWalletApplied && waWalletAppliedAmt > 0) ? waWalletAppliedAmt : 0
         })
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-      
+      if (!res.ok) throw new Error(data.error || 'Failed to complete order.');
+
       // Clear Shopify Cart
       try {
         await fetch('/cart/clear.js', { method: 'POST' });
@@ -2933,38 +3174,45 @@ function renderPaymentMethods() {
       } catch(e) {}
 
       document.getElementById('wa-step-4').style.display = 'none';
-      document.getElementById('wa-steps-indicator').style.display = 'none';
+      const stepsInd = document.getElementById('wa-steps-indicator');
+      if (stepsInd) stepsInd.style.display = 'none';
+      
+      const closeBtn = document.getElementById('wa-close-modal-btn');
+      if (closeBtn) closeBtn.style.display = 'none';
+      
+      const scVal = document.getElementById('wa-success-order-val');
+      const scBox = document.getElementById('wa-success-order-number');
+      if (scVal && scBox && data.order_id) {
+        const oNum = String(data.order_id);
+        scVal.innerText = oNum.startsWith('#') ? oNum : '#' + oNum;
+        scBox.style.display = 'inline-block';
+      }
+
       const sc = document.getElementById('wa-success-screen');
-      sc.style.display = 'flex';
+      if (sc) sc.style.display = 'flex';
       clearTimeout(timeoutId);
-      // 4. Fire Meta Pixel Purchase Event
+
+      // Fire Meta Pixel Purchase Event
       try {
         if (typeof fbq === 'function') {
-          let rawTotal = document.getElementById('wa-total').innerText.replace(/[^0-9.]/g, '');
-          let finalTotal = parseFloat(rawTotal) || 0;
           fbq('track', 'Purchase', {
-            value: finalTotal,
-            currency: 'INR',
-            content_type: 'product',
-            payment_type: payload.payment_method === 'cod' ? 'COD' : 'Prepaid'
-          }, { eventID: data.order_id });
+            value: data.order?.total_price || 0,
+            currency: 'INR'
+          });
         }
-      } catch(pixelErr) {
-        console.error('Meta Pixel Error:', pixelErr);
+      } catch(e) {}
+
+    } catch (err) {
+      clearTimeout(timeoutId);
+      console.error('Order Complete Error:', err);
+      if (errEl) {
+        errEl.innerText = 'Error: ' + (err.message || 'Failed to complete order. Please try again.');
+        errEl.style.display = 'block';
+        errEl.scrollIntoView({ behavior: 'smooth' });
       }
-    } catch (e) {
-      if (e.name === 'AbortError') {
-        alert('The server is taking too long to respond. Please try again or contact support.');
-      } else {
-        alert('Order placed but failed to confirm natively. Support will contact you. ' + e.message);
-      }
-      const btn = document.getElementById('wa-cod-btn');
       if (btn) {
         btn.disabled = false;
-        btn.style.pointerEvents = 'auto';
-        btn.style.opacity = '1';
-        btn.style.cursor = 'pointer';
-        btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span>';
+        btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
       }
     }
   }
@@ -2978,17 +3226,25 @@ function renderPaymentMethods() {
   window.triggerFullCheckout = function() { openWaModal(); };
   window.openWaModal = openWaModal;
 
-  // Block ONLY the cart form from submitting while modal is open (not forms inside modal)
+  // Intercept cart form submit events outside modal and launch custom modal instead
   document.addEventListener('submit', function(e) {
-    // Skip if the form being submitted is inside the modal
     if (e.target.closest && e.target.closest('#wa-otp-overlay')) return;
-    const ov = document.getElementById('wa-otp-overlay');
-    if (ov && window.getComputedStyle(ov).display !== 'none') {
-      e.preventDefault(); e.stopPropagation();
+    const action = (e.target.action || '').toLowerCase();
+    if (action.includes('cashfree') || action.includes('razorpay') || action.includes('paytm')) return;
+    const isShopifyCheckout = (action.includes('/cart') || action.includes('/checkout')) && !action.includes('cashfree');
+    if (isShopifyCheckout || e.target.querySelector('button[name="checkout"], input[name="checkout"]')) {
+      e.preventDefault();
+      e.stopPropagation();
+      openWaModal();
     }
   }, true);
   const _origSubmit = HTMLFormElement.prototype.submit;
   HTMLFormElement.prototype.submit = function() {
+    const action = (this.action || '').toLowerCase();
+    if (action.includes('cashfree') || action.includes('razorpay') || action.includes('paytm')) {
+      _origSubmit.apply(this, arguments);
+      return;
+    }
     const ov = document.getElementById('wa-otp-overlay');
     if (ov && window.getComputedStyle(ov).display !== 'none') return;
     _origSubmit.apply(this, arguments);
@@ -3000,17 +3256,27 @@ function renderPaymentMethods() {
       if (!e.target || !e.target.closest) return;
       // CRITICAL: Never intercept clicks inside the modal itself
       if (e.target.closest('#wa-otp-overlay')) return;
-      let target = e.target.closest('button[name="checkout"], a[href^="/checkout"], input[name="checkout"], #checkout, .cart__checkout-button');
+      let target = e.target.closest('button[name="checkout"], a[href*="/checkout"], input[name="checkout"], #checkout, .cart__checkout-button, .checkout-btn, .cart-drawer__checkout, .cart__submit, [data-checkout], form[action*="/cart"] [type="submit"], form[action*="/checkout"] [type="submit"]');
+      if (!target) {
+        const btnEl = e.target.closest('button, a, input[type="submit"]');
+        if (btnEl) {
+          const txt = (btnEl.innerText || btnEl.value || '').toLowerCase();
+          const href = (btnEl.getAttribute('href') || '').toLowerCase();
+          if (txt.includes('checkout') || txt.includes('check out') || href.includes('/checkout')) {
+            target = btnEl;
+          }
+        }
+      }
       if (target) {
+        e.preventDefault();
+        e.stopPropagation();
         if (evt === 'touchstart') {
           if (!window._waModalOpening) {
             window._waModalOpening = true;
-            e.preventDefault(); e.stopPropagation();
             openWaModal();
             setTimeout(() => window._waModalOpening = false, 500);
           }
         } else if (evt === 'click') {
-          e.preventDefault(); e.stopPropagation();
           if (!window._waModalOpening) openWaModal();
         }
       }
@@ -3024,79 +3290,6 @@ function renderPaymentMethods() {
       btn.disabled = false;
       btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span>';
       if (window.waProcessingInterval) clearInterval(window.waProcessingInterval);
-    }
-  });
-  // ── CART RECOVERY ──
-  (async function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const sessionId = urlParams.get('r');
-    if (sessionId) {
-      console.log('Restoring cart session:', sessionId);
-      try {
-        const recoverApiUrl = 'https://shopify-price-editor.vercel.app/api/recover-cart?id=' + encodeURIComponent(sessionId);
-        
-        const res = await fetch(recoverApiUrl);
-        const data = await res.json();
-        
-        if (data.success && data.items && data.items.length > 0) {
-          // Clear current cart
-          await fetch(window.Shopify.routes.root + 'cart/clear.js', { method: 'POST' });
-          
-          // Build payload with properties if they exist
-          const itemsPayload = { 
-            items: data.items.map(item => ({ 
-              id: item.variant_id || item.id, 
-              quantity: item.quantity,
-              properties: item.properties || {}
-            })) 
-          };
-          
-          // Add items back
-          await fetch(window.Shopify.routes.root + 'cart/add.js', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(itemsPayload)
-          });
-          
-          console.log('Cart restored successfully!');
-          
-          // Remove query param from URL without reload
-          const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-          window.history.replaceState({path:newUrl},'',newUrl);
-          
-          // Refresh cart summary and open modal
-          if (typeof waCheckCart === 'function') await waCheckCart();
-          if (typeof openWaModal === 'function') {
-            setTimeout(openWaModal, 500);
-          }
-        }
-      } catch (err) {
-        console.error('Error recovering cart:', err);
-      }
-    }
-  })();
-
-  // ── SWIFT REORDER: Buy Again from Account Portal ──
-  window.addEventListener('message', async function(event) {
-    if (!event.data || event.data.type !== 'SWIFT_REORDER') return;
-    const items = event.data.items;
-    if (!items || items.length === 0) return;
-    try {
-      // Clear existing cart first, then add reorder items
-      await fetch(window.Shopify.routes.root + 'cart/clear.js', { method: 'POST' });
-      await fetch(window.Shopify.routes.root + 'cart/add.js', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: items.map(function(i) { return { id: i.id, quantity: i.quantity }; }) })
-      });
-      // Open the custom checkout modal (same as clicking the checkout button)
-      if (typeof openWaModal === 'function') {
-        openWaModal();
-      } else {
-        window.location.href = '/checkout';
-      }
-    } catch (err) {
-      console.error('SWIFT_REORDER error:', err);
     }
   });
 </script>
