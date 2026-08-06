@@ -3014,6 +3014,9 @@ function renderPaymentMethods() {
       if (waSelectedPayment === 'cod') {
         // Direct complete
         await finishOrderBackend({ payment_method: 'cod', shipping_address: addr });
+      } else if (waSelectedPayment === 'prepaid' && waPaymentSettings.use_shopify_checkout_prepaid) {
+        window.location.href = '/checkout';
+        return;
       } else {
         // Cashfree flow (Partial COD or standard Prepaid)
         const walletDeduction = (waWalletApplied && waWalletAppliedAmt > 0) ? waWalletAppliedAmt : 0;
