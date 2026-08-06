@@ -105,6 +105,9 @@
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
     <span class="fit11-btn-text">ADD TO CART</span>
   </button>
+  <div style="text-align: center; margin-top: 10px; font-size: 12px; color: #198754; font-weight: 500;">
+    <i class="ti ti-bolt"></i> Tip: Select Color 1 & Size 1 to auto-fill the rest!
+  </div>
 </div>
 <div class="fit11-original-buttons-anchor"></div>
 
@@ -196,6 +199,21 @@
     }
     comboSelections[itemIndex][optionType] = value;
     updateDynamicAvailableOptions(itemIndex);
+
+    // Speed Optimization: Auto-sync Item 1's selections to the rest if they are empty
+    if (itemIndex === 1) {
+      const requiredCount = {{ combo_count }};
+      for (let i = 2; i <= requiredCount; i++) {
+        const targetSelect = document.getElementById('combo-' + optionType + '-' + i);
+        if (targetSelect && !targetSelect.value) {
+          targetSelect.value = value;
+          if (!comboSelections[i]) comboSelections[i] = {};
+          comboSelections[i][optionType] = value;
+          updateDynamicAvailableOptions(i);
+        }
+      }
+    }
+
     validateCombo();
   };
 
