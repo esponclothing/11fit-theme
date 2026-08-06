@@ -2708,7 +2708,8 @@ function renderPaymentMethods() {
       }
       
       if (!waSelectedPayment || !methods.find(m => m.id === waSelectedPayment)) {
-        waSelectedPayment = methods[0].id;
+        const prepaidMethod = methods.find(m => m.id === 'prepaid');
+        waSelectedPayment = prepaidMethod ? 'prepaid' : methods[0].id;
       }
       
       const uniqueCss = `
