@@ -69,7 +69,14 @@
       
       <!-- Size Select -->
       <div style="display: flex; flex-direction: column; gap: 8px;">
-        <label style="font-size: 14px; font-weight: 500; color: #1a1a1a; margin: 0;">Size {{ i }}</label>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <label style="font-size: 14px; font-weight: 500; color: #1a1a1a; margin: 0;">Size {{ i }}</label>
+          {% if i == 1 %}
+          <label style="font-size: 12px; color: #198754; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; margin: 0;">
+            <input type="checkbox" id="combo-sync-size-checkbox" onchange="syncComboSizes()" style="accent-color: #198754; margin: 0; cursor: pointer; width: 14px; height: 14px;"> Same for all
+          </label>
+          {% endif %}
+        </div>
         <div style="position: relative;">
           <select id="combo-size-{{ i }}" class="combo-select combo-size-select" data-item="{{ i }}" data-option="size" onchange="updateComboSelection({{ i }}, 'size', this.value)" style="width: 100%; appearance: none; -webkit-appearance: none; padding: 12px 14px; border: 1px solid #d0d0d0; border-radius: 4px; font-size: 14px; color: #1a1a1a; background: #fff; outline: none; cursor: pointer; font-family: inherit;">
             <option value="" disabled selected>Select Size</option>
@@ -190,12 +197,37 @@
     }
   }
 
+  window.syncComboSizes = function() {
+    const isChecked = document.getElementById('combo-sync-size-checkbox')?.checked;
+    if (isChecked) {
+      const size1 = document.getElementById('combo-size-1');
+      if (size1 && size1.value) {
+        const requiredCount = {{ combo_count }};
+        for (let i = 2; i <= requiredCount; i++) {
+          const targetSelect = document.getElementById('combo-size-' + i);
+          if (targetSelect) {
+            targetSelect.value = size1.value;
+            if (!comboSelections[i]) comboSelections[i] = {};
+            comboSelections[i].size = size1.value;
+            updateDynamicAvailableOptions(i);
+          }
+        }
+        validateCombo();
+      }
+    }
+  };
+
   window.updateComboSelection = function(itemIndex, optionType, value) {
     if (!comboSelections[itemIndex]) {
       comboSelections[itemIndex] = {};
     }
     comboSelections[itemIndex][optionType] = value;
     updateDynamicAvailableOptions(itemIndex);
+    
+    if (itemIndex === 1 && optionType === 'size') {
+      window.syncComboSizes();
+    }
+    
     validateCombo();
   };
 
