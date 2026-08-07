@@ -302,11 +302,18 @@
   async function autoFetchPhoneByDeviceId() {
     try {
       var device_id = getOrCreateDeviceId();
-      if (!device_id) return null;
+      var cachedPhone = localStorage.getItem('fit11_verified_phone') || localStorage.getItem('kwikpass_user_phone') || sessionStorage.getItem('fit11_verified_phone');
+      
+      if (!device_id && !cachedPhone) return null;
+      
+      var bodyParams = { merchant_key: '{{ MERCHANT_KEY }}' };
+      if (device_id) bodyParams.device_id = device_id;
+      if (cachedPhone) bodyParams.phone = cachedPhone;
+
       var res = await fetch('https://checkout-app-one-lilac.vercel.app/api/identify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ device_id: device_id, merchant_key: '{{ MERCHANT_KEY }}' })
+        body: JSON.stringify(bodyParams)
       });
       var data = await res.json();
       if (data && data.identified && data.phone) {
@@ -323,7 +330,7 @@
         return data.phone;
       }
     } catch (e) {
-      console.warn('Auto-fetch phone by device ID failed:', e);
+      console.warn('Auto-fetch user identity failed:', e);
     }
     return null;
   }
