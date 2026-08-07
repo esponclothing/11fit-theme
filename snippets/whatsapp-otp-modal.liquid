@@ -1408,6 +1408,7 @@ window._shopifyCustomer = {
         if (data.payment_settings && Object.keys(data.payment_settings).length > 0) {
           waPaymentSettings = data.payment_settings;
           const _ps = data.payment_settings;
+          waSelectedPayment = null;
           calculateCheckoutTotals();
           const _sv = (name, val, fb) => document.documentElement.style.setProperty(name, val || fb);
           _sv('--wa-theme',      _ps.theme_color,    '#0f172a');
