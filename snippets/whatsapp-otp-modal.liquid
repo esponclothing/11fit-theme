@@ -258,6 +258,10 @@
   .wa-resend a { font-size: 13px; color: #3b82f6; text-decoration: none; font-weight: 500; }
   .wa-resend a:hover { text-decoration: underline; }
 
+  /* 🔄 SPINNER ANIMATION */
+  @keyframes wa-spin { 100% { transform: rotate(360deg); } }
+  .wa-spinner { animation: wa-spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px; }
+
   /* ── WHATSAPP NOTE ── */
   .wa-wa-note {
     display: flex; align-items: center; gap: 8px;
@@ -807,7 +811,7 @@ window._shopifyCustomer = {
             <!-- Save Address Button -->
             <button type="button" id="wa-save-addr-btn" onclick="waSaveNewAddress()"
               style="width:100%; padding:18px; background:#0f172a; color:#fff; border:none; border-radius:14px; font-size:16px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:12px; transition:0.2s;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               Save & Deliver to this Address
             </button>
             <div style="text-align:center; font-size:11px; color:#16a34a; font-weight:500; margin-bottom:24px; display:flex; justify-content:center; align-items:center; gap:4px;">
@@ -1688,16 +1692,17 @@ window._shopifyCustomer = {
     let timeLeft = waOtpSendCount === 1 ? 60 : 300;
     const link = document.getElementById('wa-resend-link');
     const timerText = document.getElementById('wa-resend-timer');
+    const timerWrap = document.getElementById('wa-resend-timer-wrap');
     
     link.style.display = 'none';
-    timerText.style.display = 'inline-block';
+    if(timerWrap) timerWrap.style.display = 'flex';
     
     waResendInterval = setInterval(() => {
       timeLeft--;
       if (timeLeft <= 0) {
         clearInterval(waResendInterval);
         link.style.display = 'inline-block';
-        timerText.style.display = 'none';
+        if(timerWrap) timerWrap.style.display = 'none';
       } else {
         const m = Math.floor(timeLeft / 60);
         const s = timeLeft % 60;
@@ -2969,20 +2974,19 @@ function renderPaymentMethods() {
   async function waPayNow() {
       const btn = document.getElementById('wa-cod-btn');
       const errEl = document.getElementById('wa-payment-error');
+      const btnText = document.getElementById('wa-pay-btn-text');
+      const btnSubtext = document.getElementById('wa-pay-btn-subtext');
+      const originalBtnHTML = btn.innerHTML;
+      
       btn.disabled = true;
-      btn.innerHTML = '⏳ Processing...';
-      if (window.waProcessingInterval) clearInterval(window.waProcessingInterval);
-      window.waProcessingInterval = setInterval(() => {
-        if (!btn.disabled) {
-           clearInterval(window.waProcessingInterval);
-           return;
-        }
-        const texts = ['⏳ Processing...', '⏳ Creating Order...', '⏳ Confirming...', '⏳ Securely saving...', '⏳ Almost done...'];
-        let curText = btn.innerText.trim();
-        let nextIdx = texts.indexOf(curText) + 1;
-        if (nextIdx >= texts.length || nextIdx === 0) nextIdx = 1; 
-        btn.innerHTML = texts[nextIdx];
-      }, 2500);
+      btn.style.opacity = '0.8';
+      
+      if (btnText && btnSubtext) {
+        btnText.innerHTML = '<svg class="wa-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"/></svg>Processing...';
+        btnSubtext.innerText = 'Please do not close this window';
+      } else {
+        btn.innerHTML = '<div style="display:flex;align-items:center;gap:8px;"><svg class="wa-spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"/></svg><span>Processing...</span></div>';
+      }
       
       errEl.style.display = 'none';
       
@@ -2990,17 +2994,19 @@ function renderPaymentMethods() {
       
       // Email validation
       if (waPaymentSettings?.email_required === true && !waEmail) {
-        errEl.innerText = 'Please enter your email address in the address section to continue.';
+        errEl.innerText = 'Please enter your email address to continue.';
         errEl.style.display = 'block';
         btn.disabled = false;
-        btn.innerHTML = 'Pay Now <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+        btn.style.opacity = '1';
+        btn.innerHTML = originalBtnHTML;
         return;
       }
       if (waEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(waEmail)) {
         errEl.innerText = 'Please enter a valid email address.';
         errEl.style.display = 'block';
         btn.disabled = false;
-        btn.innerHTML = 'Pay Now <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+        btn.style.opacity = '1';
+        btn.innerHTML = originalBtnHTML;
         return;
       }
       let addr = waAddresses.find(a => 
@@ -3015,7 +3021,8 @@ function renderPaymentMethods() {
         errEl.style.display = 'block';
         errEl.scrollIntoView({ behavior: 'smooth' });
         btn.disabled = false;
-        btn.innerHTML = 'Pay Now <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+        btn.style.opacity = '1';
+        btn.innerHTML = originalBtnHTML;
         return;
       }
       
@@ -3050,7 +3057,8 @@ function renderPaymentMethods() {
           errEl.style.display = 'block';
           errEl.scrollIntoView({ behavior: 'smooth' });
           btn.disabled = false;
-          btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+          btn.style.opacity = '1';
+          btn.innerHTML = originalBtnHTML;
         }
         return;
       } else {
@@ -3074,11 +3082,11 @@ function renderPaymentMethods() {
           try {
             await finishOrderBackend({ payment_method: waSelectedPayment, shipping_address: addr });
           } catch (e) {
-            errEl.innerText = 'Error: ' + (e.message || 'Failed to complete order.');
-            errEl.style.display = 'block';
-            errEl.scrollIntoView({ behavior: 'smooth' });
+            console.error(e);
             btn.disabled = false;
-            btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+            btn.style.opacity = '1';
+            btn.innerHTML = originalBtnHTML;
+            errEl.innerText = err.message || 'Failed to complete order. Please contact support.';
           }
           return;
         }
@@ -3128,17 +3136,11 @@ function renderPaymentMethods() {
             if (overlay) overlay.style.display = originalDisplay;
             
             if (result.error) {
-              const exactErr = result.error.message || result.error.code || (typeof result.error === 'string' ? result.error : JSON.stringify(result.error)) || 'Payment failed or cancelled by user.';
-              errEl.innerText = 'Payment Error: ' + exactErr;
-              errEl.style.display = 'block';
-              errEl.style.padding = '12px';
-              errEl.style.background = '#fef2f2';
-              errEl.style.border = '1px solid #f87171';
-              errEl.style.borderRadius = '8px';
-              errEl.style.color = '#dc2626';
-              errEl.scrollIntoView({ behavior: 'smooth' });
               btn.disabled = false;
-              btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+              btn.style.opacity = '1';
+              btn.innerHTML = originalBtnHTML;
+              errEl.innerText = result.error.message || 'Payment failed or cancelled.';
+              errEl.style.display = 'block';
             } else {
               if (result.paymentDetails && result.paymentDetails.paymentMessage) {
                 await finishOrderBackend({ payment_method: waSelectedPayment, shipping_address: addr, cashfree_order_id: data.order_id });
