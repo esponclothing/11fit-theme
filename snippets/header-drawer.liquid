@@ -188,7 +188,7 @@
                 {%- if customer -%}
                   <a href="javascript:void(0);" onclick="this.closest('details').removeAttribute('open'); if (typeof openTxAccountModal === 'function') openTxAccountModal();">{{ customer.first_name | default: customer.name | default: 'My Account' }}</a>
                 {%- else -%}
-                  <a href="javascript:void(0);" onclick="this.closest('details').removeAttribute('open'); if (typeof openTxAccountModal === 'function') openTxAccountModal();">Login / Sign Up</a>
+                  <a id="tx-menu-login-btn" href="javascript:void(0);" onclick="this.closest('details').removeAttribute('open'); if (typeof openTxAccountModal === 'function') openTxAccountModal();">Login / Sign Up</a>
                 {%- endif -%}
               </div>
             </div>

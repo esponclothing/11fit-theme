@@ -383,6 +383,8 @@
           localStorage.setItem('kwikpass_user_email', event.data.email);
           sessionStorage.setItem('fit11_verified_email', event.data.email);
         }
+        var menuBtn = document.getElementById('tx-menu-login-btn');
+        if (menuBtn) menuBtn.innerText = 'My Account';
       } catch (e) {}
     } else if (event.data && event.data.type === 'KWIKPASS_LOGOUT') {
       try {
@@ -392,12 +394,20 @@
         localStorage.removeItem('fit11_verified_email');
         localStorage.removeItem('kwikpass_user_email');
         sessionStorage.removeItem('fit11_verified_email');
+        var menuBtn = document.getElementById('tx-menu-login-btn');
+        if (menuBtn) menuBtn.innerText = 'Login / Sign Up';
       } catch (e) {}
     }
   });
 
   window.addEventListener('DOMContentLoaded', function() {
-    autoFetchPhoneByDeviceId();
+    autoFetchPhoneByDeviceId().then(function(fetchedPhone) {
+      var phone = fetchedPhone || localStorage.getItem('fit11_verified_phone') || localStorage.getItem('kwikpass_user_phone') || sessionStorage.getItem('fit11_verified_phone');
+      if (phone) {
+        var menuBtn = document.getElementById('tx-menu-login-btn');
+        if (menuBtn) menuBtn.innerText = 'My Account';
+      }
+    });
     var iframe = document.getElementById('tx-account-iframe');
     if (iframe && (iframe.src === 'about:blank' || !iframe.src)) {
       var savedPhone = '';
