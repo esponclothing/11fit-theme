@@ -1405,7 +1405,7 @@ window._shopifyCustomer = {
         const res = await fetch(`${WA_API_BASE}/identify`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ device_id, merchant_key: MERCHANT_KEY })
+          body: JSON.stringify({ device_id, merchant_key: MERCHANT_KEY, include_settings: true })
         });
         const data = await res.json();
         if (data.payment_settings && Object.keys(data.payment_settings).length > 0) {

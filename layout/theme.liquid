@@ -1113,11 +1113,7 @@
     waDeviceId = 'dev_' + Math.random().toString(36).substr(2, 9) + Date.now();
     localStorage.setItem('fit11_device_id', waDeviceId);
   }
-  fetch(`${WA_API_BASE}/identify`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ merchant_key: MERCHANT_KEY, device_id: waDeviceId })
-  }).catch(()=>{});
+
 
   async function trackCartSilently() {
     try {
