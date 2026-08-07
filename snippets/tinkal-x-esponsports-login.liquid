@@ -317,6 +317,9 @@
           localStorage.setItem('fit11_verified_email', data.email);
           localStorage.setItem('kwikpass_user_email', data.email);
         }
+        if (data.first_name) {
+          localStorage.setItem('fit11_first_name', data.first_name);
+        }
         return data.phone;
       }
     } catch (e) {
@@ -404,8 +407,12 @@
     autoFetchPhoneByDeviceId().then(function(fetchedPhone) {
       var phone = fetchedPhone || localStorage.getItem('fit11_verified_phone') || localStorage.getItem('kwikpass_user_phone') || sessionStorage.getItem('fit11_verified_phone');
       if (phone) {
+        var firstName = localStorage.getItem('fit11_first_name');
         var menuBtn = document.getElementById('tx-menu-login-btn');
-        if (menuBtn) menuBtn.innerText = 'My Account';
+        if (menuBtn) menuBtn.innerText = firstName ? 'My Account' : 'My Account';
+        
+        var greeting = document.getElementById('tx-drawer-greeting');
+        if (greeting && firstName) greeting.innerText = 'Hey ' + firstName + '!';
       }
     });
     var iframe = document.getElementById('tx-account-iframe');

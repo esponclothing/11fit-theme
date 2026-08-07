@@ -2587,8 +2587,8 @@ input[type='checkbox'] {
 }
 
 .header__icon .svg-wrapper {
-  width: 44px;
-  height: 44px;
+  width: 3.4rem;
+  height: 3.4rem;
 }
 
 .header__icon::after {
@@ -2610,7 +2610,7 @@ input[type='checkbox'] {
 .header__icon,
 .header__icon--cart .icon {
   height: 4.0rem;
-  width: 3.4rem;
+  width: 3.2rem;
   padding: 0;
 }
 
