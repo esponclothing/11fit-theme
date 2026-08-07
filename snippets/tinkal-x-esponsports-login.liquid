@@ -419,7 +419,7 @@
         if (menuBtn) menuBtn.innerText = firstName ? 'My Account' : 'My Account';
         
         var greeting = document.getElementById('tx-drawer-greeting');
-        if (greeting && firstName) greeting.innerText = 'Hey ' + firstName + '!';
+        if (greeting && firstName && firstName.trim() !== '' && firstName !== 'null') greeting.innerText = 'Hey ' + firstName + '!';
       }
     });
     var iframe = document.getElementById('tx-account-iframe');
