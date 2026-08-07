@@ -1437,6 +1437,10 @@ window._shopifyCustomer = {
             if (_emailBadge) { _emailBadge.textContent = '(Optional)'; _emailBadge.style.color = '#94a3b8'; }
           }
         }
+        
+        if (data.first_name) {
+          waUpdateHeaderGreeting(data.first_name);
+        }
 
         if (data.identified && data.masked_phone && !cachedPhone) {
           const title1 = document.getElementById('wa-title-1');
@@ -1733,6 +1737,11 @@ window._shopifyCustomer = {
         sessionStorage.setItem('fit11_verified_email', data.profile.email);
         const emailInput = document.getElementById('wa-email');
         if (emailInput) emailInput.value = data.profile.email;
+      }
+      if (data.profile && data.profile.first_name) {
+        waUpdateHeaderGreeting(data.profile.first_name);
+      } else {
+        waUpdateHeaderGreeting();
       }
 
       // Store wallet balance from verify response (avoids extra API call at payment step)
@@ -3339,5 +3348,29 @@ function renderPaymentMethods() {
       btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span>';
       if (window.waProcessingInterval) clearInterval(window.waProcessingInterval);
     }
+  });
+
+  function waUpdateHeaderGreeting(name) {
+    try {
+      if (name) {
+        localStorage.setItem('fit11_first_name', name);
+      } else {
+        name = localStorage.getItem('fit11_first_name');
+      }
+      const phone = localStorage.getItem('fit11_verified_phone') || sessionStorage.getItem('fit11_verified_phone') || document.cookie.includes('wa_saved_phone=');
+      if (phone) {
+        var menuBtn = document.getElementById('tx-menu-login-btn');
+        if (menuBtn) menuBtn.innerText = 'My Account';
+        
+        var greeting = document.getElementById('tx-drawer-greeting');
+        if (greeting && name && name.trim() !== '' && name !== 'null') {
+          greeting.innerText = 'Hey ' + name + '!';
+        }
+      }
+    } catch(e) {}
+  }
+
+  window.addEventListener('DOMContentLoaded', function() {
+    waUpdateHeaderGreeting();
   });
 </script>
