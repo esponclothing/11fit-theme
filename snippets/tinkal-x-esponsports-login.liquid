@@ -316,18 +316,20 @@
         body: JSON.stringify(bodyParams)
       });
       var data = await res.json();
-      if (data && data.identified && data.phone) {
-        localStorage.setItem('fit11_verified_phone', data.phone);
-        localStorage.setItem('kwikpass_user_phone', data.phone);
-        sessionStorage.setItem('fit11_verified_phone', data.phone);
-        if (data.email) {
-          localStorage.setItem('fit11_verified_email', data.email);
-          localStorage.setItem('kwikpass_user_email', data.email);
-        }
+      if (data && data.identified) {
         if (data.first_name) {
           localStorage.setItem('fit11_first_name', data.first_name);
         }
-        return data.phone;
+        // Use masked_phone or cachedPhone as the identifier we return
+        var returnedPhone = data.phone || data.masked_phone || cachedPhone;
+        if (returnedPhone) {
+          localStorage.setItem('fit11_verified_phone', returnedPhone);
+          sessionStorage.setItem('fit11_verified_phone', returnedPhone);
+        }
+        if (data.email) {
+          localStorage.setItem('fit11_verified_email', data.email);
+        }
+        return returnedPhone;
       }
     } catch (e) {
       console.warn('Auto-fetch user identity failed:', e);
