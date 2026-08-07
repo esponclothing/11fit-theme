@@ -2774,7 +2774,7 @@ function renderPaymentMethods() {
                              let cbAmt = waPaymentSettings.cashback_type === 'percent' ? Math.round(((baseTotal - disc) * waPaymentSettings.cashback_value) / 100) : Math.round(waPaymentSettings.cashback_value);
                              return `<span style="display:inline-flex; align-items:center; color:#4f46e5; font-weight:800; font-size:9px; background: #e0e7ff; padding:2px 6px; border-radius:4px; border:1px dashed #6366f1; letter-spacing:0.2px; text-transform:uppercase; white-space:nowrap;">
                              <svg width="10" height="10" style="margin-right:3px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12a2 2 0 0 0 2 2h14v-4"/><path d="M18 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/></svg>
-                             + ₹${cbAmt} Credit
+                             + ₹${cbAmt} Store Credit
                            </span>`;
                            })() : ''}
                          </div>` : ''}
