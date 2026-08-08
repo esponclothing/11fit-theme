@@ -1777,7 +1777,8 @@ window._shopifyCustomer = {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ merchant_key: MERCHANT_KEY, phone: waPhone, action: 'FETCH' })
       });
-      const data = await res.json();
+      let data = {};
+      try { data = await res.json(); } catch(e) {}
       const networkAddrs = data.addresses || [];
       
       // Combine existing loaded ones (from Shopify Liquid) and fetched ones
@@ -1819,16 +1820,20 @@ window._shopifyCustomer = {
   }
 
   function renderAddresses() {
+    try {
     const list = document.getElementById('wa-address-list');
-    list.innerHTML = '';
-    if (waAddresses.length === 0) {
+    if (list) list.innerHTML = '';
+    if (!waAddresses || waAddresses.length === 0) {
       waShowAddressForm();
-      document.getElementById('wa-cod-btn').disabled = true;
+      const codBtn = document.getElementById('wa-cod-btn');
+      if (codBtn) codBtn.disabled = true;
       return;
     }
-    document.getElementById('wa-add-addr-btn').style.display = 'block';
+    const addBtn = document.getElementById('wa-add-addr-btn');
+    if (addBtn) addBtn.style.display = 'block';
     const dh = document.getElementById('wa-deliver-here-btn'); if(dh) dh.style.display = 'flex';
-    document.getElementById('wa-new-address-form').style.display = 'none';
+    const formEl = document.getElementById('wa-new-address-form');
+    if (formEl) formEl.style.display = 'none';
 
     if (!waSelectedAddress) waSelectedAddress = waAddresses[0].id;
 
@@ -1883,16 +1888,19 @@ window._shopifyCustomer = {
       html += `</div>`;
     }
 
-    list.innerHTML = html;
-    document.getElementById('wa-cod-btn').disabled = false;
+    if (list) list.innerHTML = html;
+    const codBtnEl = document.getElementById('wa-cod-btn');
+    if (codBtnEl) codBtnEl.disabled = false;
+    } catch(e) { console.error('Error in renderAddresses:', e); }
   }
 
   function waShowAddressForm() {
+    try {
     waEditingAddressId = null;
-    document.getElementById('wa-add-addr-btn').style.display = 'none';
+    const addBtn2 = document.getElementById('wa-add-addr-btn'); if(addBtn2) addBtn2.style.display = 'none';
     const dh = document.getElementById('wa-deliver-here-btn'); if(dh) dh.style.display = 'none';
-    document.getElementById('wa-new-address-form').style.display = 'block';
-    document.getElementById('wa-save-addr-btn').innerText = 'Save Address';
+    const formEl2 = document.getElementById('wa-new-address-form'); if(formEl2) formEl2.style.display = 'block';
+    const saveBtn = document.getElementById('wa-save-addr-btn'); if(saveBtn) saveBtn.innerText = 'Save Address';
     
     // Clear fields correctly safely
     ['wa-first-name','wa-last-name','wa-address1','wa-address2','wa-city','wa-zip','wa-province','wa-addr-district'].forEach(id => {
@@ -1918,6 +1926,7 @@ window._shopifyCustomer = {
     if (errEl) errEl.style.display = 'none';
     const statEl = document.getElementById('wa-pin-status');
     if (statEl) statEl.innerText = '';
+    } catch(e) { console.error('Error in waShowAddressForm:', e); }
   }
 
   function waEditAddress(id) {
@@ -3092,11 +3101,30 @@ function renderPaymentMethods() {
         }
 
         try {
-          
-          // Removed update-draft here to SPEED UP Pay Now processing.
-          // complete/route.ts handles saving the customer details and applying the final discount natively.
-          // This saves 1.5 - 2.0 seconds of blocking time!
+          // STEP 1: Apply discount + link customer to Shopify draft BEFORE Cashfree payment.
+          // This ensures: correct discounted price in Shopify order + correct customer details.
+          try {
+            const udRes = await fetch(`${WA_API_BASE}/checkout/update-draft`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ 
+                merchant_key: MERCHANT_KEY, 
+                draft_order_id: waDraftOrderId,
+                payment_method: waSelectedPayment,
+                customer_email: waEmail,
+                customer_phone: waPhone,
+                shipping_address: addr
+              })
+            });
+            if (!udRes.ok) {
+              const udErr = await udRes.json().catch(() => ({}));
+              console.warn('update-draft warning (non-fatal):', udErr);
+            }
+          } catch(udErr) {
+            console.warn('update-draft network error (non-fatal):', udErr);
+          }
 
+          // STEP 2: Create Cashfree payment session (now using discounted draft total)
           const res = await fetch(`${WA_API_BASE}/checkout/create-payment`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
