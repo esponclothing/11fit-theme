@@ -3092,6 +3092,23 @@ function renderPaymentMethods() {
         }
 
         try {
+          
+          // FIX: Ensure Draft Order has customer details BEFORE payment!
+          try {
+            await fetch(`${WA_API_BASE}/checkout/update-draft`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ 
+                merchant_key: MERCHANT_KEY, 
+                draft_order_id: waDraftOrderId,
+                payment_method: waSelectedPayment,
+                customer_phone: waPhone,
+                customer_email: waEmail,
+                shipping_address: addr
+              })
+            });
+          } catch(udErr) { console.error('Failed to update draft details before payment:', udErr); }
+
           const res = await fetch(`${WA_API_BASE}/checkout/create-payment`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
