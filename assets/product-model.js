@@ -57,3 +57,5 @@ window.ProductModel = {
 window.addEventListener('DOMContentLoaded', () => {
   if (window.ProductModel) window.ProductModel.loadShopifyXR();
 });
+
+// Cache buster

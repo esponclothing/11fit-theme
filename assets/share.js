@@ -54,3 +54,5 @@ if (!customElements.get('share-button')) {
     }
   );
 }
+
+// Cache buster

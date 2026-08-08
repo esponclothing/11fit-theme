@@ -43,3 +43,5 @@ class MainSearch extends SearchForm {
 }
 
 customElements.define('main-search', MainSearch);
+
+// Cache buster

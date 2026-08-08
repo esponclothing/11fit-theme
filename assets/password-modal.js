@@ -7,3 +7,5 @@ class PasswordModal extends DetailsModal {
 }
 
 customElements.define('password-modal', PasswordModal);
+
+// Cache buster
