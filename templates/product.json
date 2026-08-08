@@ -84,7 +84,7 @@
         "full_width": false,
         "show_view_all": false,
         "view_all_style": "solid",
-        "color_scheme": "",
+        "color_scheme": "scheme-2",
         "image_ratio": "portrait",
         "image_shape": "default",
         "show_secondary_image": true,
