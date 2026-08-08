@@ -3174,12 +3174,15 @@ function renderPaymentMethods() {
               btn.innerHTML = originalBtnHTML;
               errEl.innerText = result.error.message || 'Payment failed or cancelled.';
               errEl.style.display = 'block';
+            } else if (result.paymentDetails && (result.paymentDetails.paymentStatus === 'SUCCESS' || result.paymentDetails.paymentMessage)) {
+              await finishOrderBackend({ payment_method: waSelectedPayment, shipping_address: addr, cashfree_order_id: data.order_id });
             } else {
-              if (result.paymentDetails && result.paymentDetails.paymentMessage) {
-                await finishOrderBackend({ payment_method: waSelectedPayment, shipping_address: addr, cashfree_order_id: data.order_id });
-              }
-            }
-          }).catch((cfErr) => {
+              btn.disabled = false;
+              btn.style.opacity = '1';
+              btn.innerHTML = originalBtnHTML;
+              errEl.innerText = 'Payment was cancelled or not completed. Please try again.';
+              errEl.style.display = 'block';
+            }}).catch((cfErr) => {
             if (overlay) overlay.style.display = originalDisplay;
             const exactErr = (cfErr && cfErr.message) ? cfErr.message : (typeof cfErr === 'string' ? cfErr : JSON.stringify(cfErr));
             errEl.innerText = 'Payment Gateway Error: ' + exactErr;
