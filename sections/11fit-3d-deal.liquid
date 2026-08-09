@@ -20,7 +20,7 @@
     },
     {
       "type": "header",
-      "content": "🎨 Aesthetics"
+      "content": "🎨 Global Aesthetics"
     },
     {
       "type": "text",
@@ -49,20 +49,38 @@
     {
       "type": "color",
       "id": "accent_color",
-      "label": "Luxury Accent (Gold/Champagne)",
+      "label": "Luxury Accent (Text/Borders)",
+      "default": "#D4AF37"
+    },
+    {
+      "type": "header",
+      "content": "🌟 Animated Glow Effect"
+    },
+    {
+      "type": "color",
+      "id": "glow_color_1",
+      "label": "Glow Color 1",
       "default": "#D4AF37"
     },
     {
       "type": "color",
-      "id": "btn_bg_color",
-      "label": "Unlocked Button Color",
-      "default": "#D4AF37"
+      "id": "glow_color_2",
+      "label": "Glow Color 2",
+      "default": "#9B7E20"
     },
     {
-      "type": "color",
-      "id": "btn_text_color",
-      "label": "Unlocked Button Text",
-      "default": "#000000"
+      "type": "header",
+      "content": "🎛️ Image & Layout Settings"
+    },
+    {
+      "type": "range",
+      "id": "image_scale",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Product Image Scale",
+      "default": 80
     },
     {
       "type": "range",
@@ -73,20 +91,6 @@
       "unit": "sec",
       "label": "Auto-Swipe Speed",
       "default": 4
-    },
-    {
-      "type": "header",
-      "content": "⏳ Urgency Settings"
-    },
-    {
-      "type": "number",
-      "id": "timer_hours",
-      "label": "Countdown Hours",
-      "default": 12
-    },
-    {
-      "type": "header",
-      "content": "📐 Layout & Borders"
     },
     {
       "type": "checkbox",
@@ -103,25 +107,69 @@
       "unit": "px",
       "label": "Vertical Padding",
       "default": 80
+    },
+    {
+      "type": "header",
+      "content": "⏳ Urgency Settings"
+    },
+    {
+      "type": "number",
+      "id": "timer_hours",
+      "label": "Countdown Hours",
+      "default": 12
     }
   ],
   "blocks": [
     {
       "type": "deal",
-      "name": "Luxury Product",
+      "name": "Custom Deal Slide",
       "limit": 8,
       "settings": [
         {
           "type": "product",
           "id": "product",
-          "label": "Select Product"
+          "label": "Select Product (Optional Fallback)"
+        },
+        {
+          "type": "header",
+          "content": "Custom Overrides"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_image",
+          "label": "Custom Image",
+          "info": "Upload an image to override the product image."
+        },
+        {
+          "type": "url",
+          "id": "custom_link",
+          "label": "Custom Link",
+          "info": "Where should the image and button link to?"
+        },
+        {
+          "type": "text",
+          "id": "custom_title",
+          "label": "Custom Deal Title",
+          "info": "Overrides the product title."
+        },
+        {
+          "type": "text",
+          "id": "custom_price",
+          "label": "Custom Price (e.g. 999.00)",
+          "info": "Overrides the product price."
+        },
+        {
+          "type": "text",
+          "id": "custom_compare",
+          "label": "Custom Compare Price (e.g. 1499.00)",
+          "info": "Leave blank if not on sale."
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Luxe Swipe Deal",
+      "name": "Luxe Swipe Deal (Pro)",
       "blocks": [
         { "type": "deal" },
         { "type": "deal" },
@@ -145,13 +193,13 @@
     --color-bg: {{ section.settings.bg_color }};
     --color-text: {{ section.settings.text_color }};
     --color-accent: {{ section.settings.accent_color }};
-    --color-btn-bg: {{ section.settings.btn_bg_color }};
-    --color-btn-text: {{ section.settings.btn_text_color }};
+    --glow-1: {{ section.settings.glow_color_1 }};
+    --glow-2: {{ section.settings.glow_color_2 }};
+    --image-scale: {{ section.settings.image_scale }}%;
     --padding-y: {{ section.settings.padding_vertical }}px;
     --glass-bg: rgba(255, 255, 255, 0.03);
     --glass-border: rgba(255, 255, 255, 0.08);
     
-    background: radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--color-accent) 15%, transparent), var(--color-bg) 60%);
     background-color: var(--color-bg);
     padding: var(--padding-y) 20px;
     font-family: var(--font-body);
@@ -230,15 +278,6 @@
     position: relative;
   }
 
-  .luxe-timer-box::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    box-shadow: inset 0 0 20px color-mix(in srgb, var(--color-accent) 15%, transparent);
-    border-radius: 8px;
-    pointer-events: none;
-  }
-
   .luxe-timer-colon {
     font-weight: 300;
     font-size: 24px;
@@ -261,7 +300,7 @@
     margin-top: 6px;
   }
 
-  /* Slider Area with Glowing Orb */
+  /* Slider Area with Animated Custom Glowing Orb */
   .luxe-slider-wrap {
     width: 100%;
     max-width: 450px;
@@ -274,12 +313,18 @@
   .luxe-slider-wrap::before {
     content: '';
     position: absolute;
-    top: 10%; left: 10%; right: 10%; bottom: 10%;
-    background: radial-gradient(circle, var(--color-accent) 0%, transparent 70%);
-    opacity: 0.15;
+    top: 5%; left: 5%; right: 5%; bottom: 5%;
+    background: linear-gradient(45deg, var(--glow-1), var(--glow-2));
+    opacity: 0.25;
     border-radius: 50%;
-    filter: blur(30px);
+    filter: blur(40px);
+    animation: luxeGlowAnimate 6s ease-in-out infinite alternate;
     z-index: -1;
+  }
+
+  @keyframes luxeGlowAnimate {
+    0% { transform: scale(0.9) rotate(0deg); opacity: 0.15; }
+    100% { transform: scale(1.1) rotate(15deg); opacity: 0.35; }
   }
 
   .luxe-track {
@@ -303,26 +348,37 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 10px;
     box-sizing: border-box;
   }
 
+  .luxe-slide-link {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
   .luxe-slide img {
-    max-width: 100%;
-    max-height: 100%;
+    max-width: var(--image-scale);
+    max-height: var(--image-scale);
     object-fit: contain;
     filter: drop-shadow(0px 30px 40px rgba(0,0,0,0.4));
     transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
     pointer-events: none;
   }
   
-  .luxe-slide:hover img {
+  .luxe-slide-link:hover img {
     transform: scale(1.08) translateY(-10px);
   }
 
   .luxe-placeholder-svg {
-    width: 70%;
-    height: 70%;
+    width: var(--image-scale);
+    height: var(--image-scale);
     fill: var(--color-text);
     opacity: 0.1;
   }
@@ -356,7 +412,7 @@
     text-align: center;
     max-width: 420px;
     margin: 40px auto 0;
-    transition: opacity 0.4s ease, transform 0.4s ease;
+    transition: opacity 0.4s ease;
     position: relative;
     z-index: 2;
   }
@@ -438,7 +494,6 @@
     opacity: 0.3;
   }
 
-  /* Locked State = Glass Outline */
   .luxe-btn.is-locked {
     background: var(--glass-bg);
     color: var(--color-text);
@@ -446,21 +501,20 @@
     backdrop-filter: blur(5px);
   }
 
-  /* Unlocked State = Solid Premium */
   .luxe-btn.is-unlocked {
-    background: var(--color-btn-bg);
-    color: var(--color-btn-text);
-    border: 1px solid var(--color-btn-bg);
-    box-shadow: 0 10px 30px color-mix(in srgb, var(--color-btn-bg) 30%, transparent);
+    background: var(--glow-1);
+    color: #000000;
+    border: 1px solid var(--glow-1);
+    box-shadow: 0 10px 30px color-mix(in srgb, var(--glow-1) 30%, transparent);
   }
 
   .luxe-btn.is-unlocked:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 40px color-mix(in srgb, var(--color-btn-bg) 50%, transparent);
+    box-shadow: 0 15px 40px color-mix(in srgb, var(--glow-1) 50%, transparent);
     filter: brightness(1.1);
   }
 
-  /* PC Refinements */
+  /* PC Layout Grid */
   @media (min-width: 900px) {
     #luxe-wrapper-{{ section.id }} {
       max-width: 1200px;
@@ -478,7 +532,6 @@
       border-radius: 24px;
       box-shadow: 0 40px 100px rgba(0,0,0,0.5);
     }
-    
     .luxe-header { grid-area: header; text-align: left; margin-bottom: 0; align-self: end; }
     .luxe-timer-wrap { grid-area: timer; justify-content: flex-start; margin-bottom: 0; align-self: start; }
     .luxe-text-area { grid-area: textarea; text-align: center; margin: 0 auto; max-width: 450px; }
@@ -514,20 +567,37 @@
   <div class="luxe-slider-wrap">
     <div class="luxe-track" id="luxeTrack-{{ section.id }}">
       {% for block in section.blocks %}
-        {% assign product = block.settings.product %}
+        
+        {%- comment -%} Determine values: Fallback to Product if Custom is empty {%- endcomment -%}
+        {% assign slide_product = block.settings.product %}
+        
+        {% assign slide_title = block.settings.custom_title | default: slide_product.title | default: 'VIP Exclusive Deal' %}
+        {% assign slide_price = block.settings.custom_price | default: slide_product.price | money_without_trailing_zeros | default: '999.00' %}
+        
+        {% assign slide_compare = block.settings.custom_compare %}
+        {% if slide_compare == blank and slide_product.compare_at_price > slide_product.price %}
+            {% assign slide_compare = slide_product.compare_at_price | money_without_trailing_zeros %}
+        {% endif %}
+
+        {% assign slide_link = block.settings.custom_link | default: slide_product.url | default: '#' %}
+        {% assign slide_image = block.settings.custom_image | default: slide_product.featured_image %}
+
         <div class="luxe-slide" 
              data-index="{{ forloop.index0 }}"
-             data-title="{{ product.title | default: 'The Signature Collection' | escape }}"
-             data-price="{{ product.price | default: 99900 | money_without_trailing_zeros }}"
-             data-compare="{% if product.compare_at_price > product.price %}{{ product.compare_at_price | money_without_trailing_zeros }}{% endif %}"
-             data-url="{{ product.url | default: '#' }}"
+             data-title="{{ slide_title | escape }}"
+             data-price="{{ slide_price }}"
+             data-compare="{{ slide_compare }}"
+             data-url="{{ slide_link }}"
              {{ block.shopify_attributes }}>
-          {% if product != blank and product.featured_image %}
-            <img src="{{ product.featured_image | img_url: '800x800' }}" alt="{{ product.title | escape }}" loading="lazy">
-          {% else %}
-            <!-- SVG Fallback prevents the section from looking blank -->
-            {{ 'product-' | append: forloop.index | placeholder_svg_tag: 'luxe-placeholder-svg' }}
-          {% endif %}
+          
+          <a href="{{ slide_link }}" class="luxe-slide-link" draggable="false">
+            {% if slide_image != blank %}
+              <img src="{{ slide_image | img_url: '800x800' }}" alt="{{ slide_title | escape }}" loading="lazy" draggable="false">
+            {% else %}
+              {{ 'product-' | append: forloop.index | placeholder_svg_tag: 'luxe-placeholder-svg' }}
+            {% endif %}
+          </a>
+          
         </div>
       {% endfor %}
     </div>
@@ -640,9 +710,16 @@
       if (btnProgress) btnProgress.style.width = '100%';
       const activeSlide = slides[currentIndex];
       
-      priceEl.innerHTML = '<span class="luxe-unlocked-text">' + activeSlide.getAttribute('data-price') + '</span>';
-      if (activeSlide.getAttribute('data-compare')) {
-        compareEl.innerText = activeSlide.getAttribute('data-compare');
+      let priceTxt = activeSlide.getAttribute('data-price');
+      if (!priceTxt.includes('Rs.') && !priceTxt.includes('$')) priceTxt = 'Rs. ' + priceTxt;
+      
+      priceEl.innerHTML = '<span class="luxe-unlocked-text">' + priceTxt + '</span>';
+      
+      const compVal = activeSlide.getAttribute('data-compare');
+      if (compVal && compVal.trim() !== '') {
+        let compTxt = compVal;
+        if (!compTxt.includes('Rs.') && !compTxt.includes('$')) compTxt = 'Rs. ' + compTxt;
+        compareEl.innerText = compTxt;
         compareEl.classList.add('is-visible');
       }
 
@@ -662,6 +739,13 @@
     btnEl.addEventListener('mouseleave', cancelHold);
     btnEl.addEventListener('click', (e) => { if (!isPriceUnlocked) e.preventDefault(); });
 
+    // Ensure links inside slider don't trigger click on drag
+    let startX = 0, startY = 0;
+    track.addEventListener('mousedown', (e) => { startX = e.clientX; startY = e.clientY; });
+    track.addEventListener('click', (e) => {
+      if (Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5) e.preventDefault();
+    });
+
     function updateTextForSlide(index) {
       if (!slides[index]) return;
       textArea.style.opacity = '0';
@@ -671,10 +755,15 @@
         titleEl.innerText = activeSlide.getAttribute('data-title') || '';
         isPriceUnlocked = true;
         
-        priceEl.innerText = 'Rs. ' + activeSlide.getAttribute('data-price');
+        let priceTxt = activeSlide.getAttribute('data-price');
+        if (!priceTxt.includes('Rs.') && !priceTxt.includes('$')) priceTxt = 'Rs. ' + priceTxt;
+        priceEl.innerText = priceTxt;
+        
         const compVal = activeSlide.getAttribute('data-compare');
-        if (compVal && compVal !== '0') {
-          compareEl.innerText = 'Rs. ' + compVal;
+        if (compVal && compVal.trim() !== '') {
+          let compTxt = compVal;
+          if (!compTxt.includes('Rs.') && !compTxt.includes('$')) compTxt = 'Rs. ' + compTxt;
+          compareEl.innerText = compTxt;
           compareEl.classList.add('is-visible');
         } else {
           compareEl.classList.remove('is-visible');
