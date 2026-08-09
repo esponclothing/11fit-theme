@@ -187,31 +187,51 @@
         "deal_1782371678334": {
           "type": "deal",
           "settings": {
-            "product": "11fit-savage-tee"
+            "product": "11fit-savage-tee",
+            "custom_link": "",
+            "custom_title": "",
+            "custom_price": "",
+            "custom_compare": ""
           }
         },
         "deal_1782371686944": {
           "type": "deal",
           "settings": {
-            "product": "shark-graphic-tee"
+            "product": "shark-graphic-tee",
+            "custom_link": "",
+            "custom_title": "",
+            "custom_price": "",
+            "custom_compare": ""
           }
         },
         "deal_1782371692070": {
           "type": "deal",
           "settings": {
-            "product": "fearless-lion-tee"
+            "product": "fearless-lion-tee",
+            "custom_link": "",
+            "custom_title": "",
+            "custom_price": "",
+            "custom_compare": ""
           }
         },
         "deal_1782371698796": {
           "type": "deal",
           "settings": {
-            "product": "11-fit-air-flex-4-way-lycra-active-shorts"
+            "product": "11-fit-air-flex-4-way-lycra-active-shorts",
+            "custom_link": "",
+            "custom_title": "",
+            "custom_price": "",
+            "custom_compare": ""
           }
         },
         "deal_1782450693979": {
           "type": "deal",
           "settings": {
-            "product": "cockroach-janta-takeover-tee"
+            "product": "cockroach-janta-takeover-tee",
+            "custom_link": "",
+            "custom_title": "",
+            "custom_price": "",
+            "custom_compare": ""
           }
         }
       },
@@ -231,12 +251,13 @@
         "bg_color": "#ffffff",
         "text_color": "#9a7b4f",
         "accent_color": "#9a7b4f",
-        "btn_bg_color": "#1a1a1a",
-        "btn_text_color": "#ffffff",
-        "autoplay_speed": 2,
-        "timer_hours": 12,
+        "glow_color_1": "#d4af37",
+        "glow_color_2": "#9b7e20",
+        "image_scale": 100,
+        "autoplay_speed": 5,
         "show_luxury_border": true,
-        "padding_vertical": 40
+        "padding_vertical": 40,
+        "timer_hours": 12
       }
     },
     "11fit_2x2_grid_F4nxF3": {
