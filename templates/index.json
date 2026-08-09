@@ -218,6 +218,7 @@
           "type": "deal",
           "settings": {
             "product": "11-fit-air-flex-4-way-lycra-active-shorts",
+            "custom_image": "shopify://shop_images/blk.jpg",
             "custom_link": "",
             "custom_title": "",
             "custom_price": "",
