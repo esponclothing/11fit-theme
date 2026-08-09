@@ -111,17 +111,17 @@
         "category_k7wwaT": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/Front_1_c_2_1000x1250_b27a1689-e4f4-4dc2-b95c-d95f2bf6be7c.webp",
+            "image": "shopify://shop_images/red_02b1dcc5-a0fc-4f80-a045-5d91a2f2e3c7.jpg",
             "title": "T-shirts",
             "link": "shopify://collections/t-shirts"
           }
         },
-        "category_D6qQPw": {
+        "category_cLGiAM": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/Untitleddesign_48.jpg",
-            "title": "Swimwear",
-            "link": "shopify://collections/swimwear"
+            "image": "shopify://shop_images/Black_92f0cb67-4e10-4821-a2cc-d771566ac2cd.jpg",
+            "title": "Shorts",
+            "link": "shopify://collections/shorts"
           }
         },
         "category_QgxK7J": {
@@ -132,12 +132,12 @@
             "link": "shopify://collections/trackpants"
           }
         },
-        "category_cLGiAM": {
+        "category_D6qQPw": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/4.png",
-            "title": "Shorts",
-            "link": "shopify://collections/shorts"
+            "image": "shopify://shop_images/Untitleddesign_48.jpg",
+            "title": "Swimwear",
+            "link": "shopify://collections/swimwear"
           }
         },
         "category_JzGtHK": {
@@ -161,9 +161,9 @@
       },
       "block_order": [
         "category_k7wwaT",
-        "category_D6qQPw",
-        "category_QgxK7J",
         "category_cLGiAM",
+        "category_QgxK7J",
+        "category_D6qQPw",
         "category_JzGtHK",
         "category_WKnXtX"
       ],
@@ -218,7 +218,6 @@
           "type": "deal",
           "settings": {
             "product": "11-fit-air-flex-4-way-lycra-active-shorts",
-            "custom_image": "shopify://shop_images/blk.jpg",
             "custom_link": "",
             "custom_title": "",
             "custom_price": "",
@@ -254,8 +253,8 @@
         "accent_color": "#9a7b4f",
         "glow_color_1": "#d4af37",
         "glow_color_2": "#9b7e20",
-        "image_scale": 100,
-        "autoplay_speed": 5,
+        "image_scale": 80,
+        "autoplay_speed": 2,
         "show_luxury_border": true,
         "padding_vertical": 40,
         "timer_hours": 12
@@ -399,14 +398,14 @@
         "promo_banner_kq3Xnb": {
           "type": "promo_banner",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_9_2026_03_02_37_PM.png",
+            "image": "shopify://shop_images/ChatGPT_Image_May_29_2026_12_40_05_PM.png",
             "link": "shopify://collections"
           }
         },
         "promo_banner_7Hra3w": {
           "type": "promo_banner",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_9_2026_02_53_19_PM.png",
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_3_2026_01_59_09_PM.png",
             "link": "shopify://products/11-fit-air-flex-4-way-lycra-active-shorts"
           }
         }
