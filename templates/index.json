@@ -108,6 +108,14 @@
     "11fit_category_bubbles_wmm7Lw": {
       "type": "11fit-category-bubbles",
       "blocks": {
+        "category_QgxK7J": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/Untitleddesign_50.jpg",
+            "title": "Trackpants",
+            "link": "shopify://collections/trackpants"
+          }
+        },
         "category_k7wwaT": {
           "type": "category",
           "settings": {
@@ -122,14 +130,6 @@
             "image": "shopify://shop_images/Black_92f0cb67-4e10-4821-a2cc-d771566ac2cd.jpg",
             "title": "Shorts",
             "link": "shopify://collections/shorts"
-          }
-        },
-        "category_QgxK7J": {
-          "type": "category",
-          "settings": {
-            "image": "shopify://shop_images/Untitleddesign_50.jpg",
-            "title": "Trackpants",
-            "link": "shopify://collections/trackpants"
           }
         },
         "category_D6qQPw": {
@@ -160,9 +160,9 @@
         }
       },
       "block_order": [
+        "category_QgxK7J",
         "category_k7wwaT",
         "category_cLGiAM",
-        "category_QgxK7J",
         "category_D6qQPw",
         "category_JzGtHK",
         "category_WKnXtX"
