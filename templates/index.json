@@ -253,8 +253,8 @@
         "accent_color": "#9a7b4f",
         "glow_color_1": "#d4af37",
         "glow_color_2": "#9b7e20",
-        "image_scale": 80,
-        "autoplay_speed": 2,
+        "image_scale": 100,
+        "autoplay_speed": 4,
         "show_luxury_border": true,
         "padding_vertical": 40,
         "timer_hours": 12
