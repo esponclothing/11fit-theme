@@ -500,7 +500,7 @@ window._shopifyCustomer = {
 
 
           
-          <div class="wa-trust-badge-container" id="wa-mid-trust-badges" style="display:flex; justify-content:space-between; align-items:center; padding:16px; border:1px solid #e2e8f0; border-radius:12px; margin-bottom:24px; background:#fff; gap:4px;">
+          <div class="wa-trust-badge-container" id="wa-mid-trust-badges" style="display:flex; justify-content:space-between; align-items:center; padding:12px 6px; border:1px solid #e2e8f0; border-radius:12px; margin-bottom:24px; background:#fff; gap:2px;">
             <div style="display:flex; align-items:center; gap:8px; flex:1; justify-content:center;">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" style="flex-shrink:0;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
               <div style="text-align:left;">
@@ -542,8 +542,8 @@ window._shopifyCustomer = {
           </button>
           
           <div style="text-align:center; font-size:11px; color:#475569; font-weight:600; display:flex; justify-content:center; align-items:center; gap:6px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            Your security is our priority. We never share your details.
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>Your security is our priority. We never share your details.</span>
           </div>
 
           <!-- Switch Account fallback -->
@@ -1732,7 +1732,7 @@ window._shopifyCustomer = {
       alert(errMsg);
     } finally {
       btn.disabled = false;
-      btn.innerHTML = 'Continue <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+      btn.innerHTML = originalBtnHTML;
     }
   }
 
@@ -1819,7 +1819,7 @@ window._shopifyCustomer = {
       document.querySelectorAll('.wa-otp-box')[0].focus();
     } finally {
       btn.disabled = false;
-      btn.innerHTML = 'Verify & Continue <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+      btn.innerHTML = originalBtnHTML;
     }
   }
 
@@ -2869,7 +2869,7 @@ function renderPaymentMethods() {
                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg" style="height:12px;" />
                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Paytm_Logo_%28standalone%29.svg" style="height:9px;" />
                        <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" style="height:12px;" />
-                       <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Visa_Logo_2012_color.svg" style="height:10px;" />
+                       <img src="https://cdn.shopify.com/s/assets/payment_icons/visa-319d545c6fd255c9aad5eeaad21fd6f7f7b4fdbdb1a35ce83b89cca12a187f00.svg" style="height:10px;" />
                      </div>
                   </div>
                  ` : ''}
@@ -3247,7 +3247,7 @@ function renderPaymentMethods() {
             errEl.style.color = '#dc2626';
             errEl.scrollIntoView({ behavior: 'smooth' });
             btn.disabled = false;
-            btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+            btn.innerHTML = originalBtnHTML;
           });
   
         } catch(e) {
@@ -3264,7 +3264,7 @@ function renderPaymentMethods() {
           errEl.style.color = '#dc2626';
           errEl.scrollIntoView({ behavior: 'smooth' });
           btn.disabled = false;
-          btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+          btn.innerHTML = originalBtnHTML;
         }
       }
     }
@@ -3360,7 +3360,7 @@ function renderPaymentMethods() {
       }
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<span id="wa-pay-btn-text">Pay Now</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+        btn.innerHTML = originalBtnHTML;
       }
     }
   }
