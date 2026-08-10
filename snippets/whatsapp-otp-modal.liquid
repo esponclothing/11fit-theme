@@ -852,6 +852,11 @@ window._shopifyCustomer = {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               Save & Deliver to this Address
             </button>
+            <!-- Cancel Button -->
+            <button type="button" id="wa-cancel-addr-btn" onclick="renderAddresses()"
+              style="display:none; width:100%; padding:14px; background:transparent; color:#64748b; border:none; font-size:14px; font-weight:600; cursor:pointer; margin-bottom:12px;">
+              Cancel
+            </button>
             <div style="text-align:center; font-size:11px; color:#16a34a; font-weight:500; margin-bottom:24px; display:flex; justify-content:center; align-items:center; gap:4px;">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
               We respect your privacy. Your information is safe with us.
@@ -1887,6 +1892,7 @@ window._shopifyCustomer = {
     const dh = document.getElementById('wa-deliver-here-btn'); if(dh) dh.style.display = 'flex';
     const formEl = document.getElementById('wa-new-address-form');
     if (formEl) formEl.style.display = 'none';
+    const alList = document.getElementById('wa-address-list'); if (alList) alList.style.display = 'block';
 
     if (!waSelectedAddress) waSelectedAddress = waAddresses[0].id;
 
@@ -1953,6 +1959,15 @@ window._shopifyCustomer = {
     const addBtn2 = document.getElementById('wa-add-addr-btn'); if(addBtn2) addBtn2.style.display = 'none';
     const dh = document.getElementById('wa-deliver-here-btn'); if(dh) dh.style.display = 'none';
     const formEl2 = document.getElementById('wa-new-address-form'); if(formEl2) formEl2.style.display = 'block';
+    const al = document.getElementById('wa-address-list'); if (al) al.style.display = 'none';
+    const cancelBtn = document.getElementById('wa-cancel-addr-btn');
+    if (cancelBtn) {
+      if (typeof waAddresses !== 'undefined' && waAddresses && waAddresses.length > 0) {
+        cancelBtn.style.display = 'block';
+      } else {
+        cancelBtn.style.display = 'none';
+      }
+    }
     const saveBtn = document.getElementById('wa-save-addr-btn'); if(saveBtn) saveBtn.innerText = 'Save Address';
     
     // Clear fields correctly safely
