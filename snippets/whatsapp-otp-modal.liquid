@@ -1647,6 +1647,16 @@ window._shopifyCustomer = {
     const switchAcct = document.getElementById('wa-switch-account'); if (switchAcct) switchAcct.style.display = 'none';
     waPhone = null;
     
+    // Clear persisted sessions when switching accounts
+    sessionStorage.removeItem('fit11_verified_phone');
+    sessionStorage.removeItem('fit11_verified_email');
+    localStorage.removeItem('fit11_verified_phone');
+    localStorage.removeItem('fit11_verified_email');
+    localStorage.removeItem('wa_saved_phone');
+    localStorage.removeItem('wa_user_phone');
+    localStorage.removeItem('fit11_user_phone');
+    document.cookie = 'wa_saved_phone=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    
     const phoneInput = document.getElementById('wa-phone');
     if (phoneInput) {
       phoneInput.value = '';
@@ -1776,8 +1786,12 @@ window._shopifyCustomer = {
       
       // Save to session so they don't have to re-verify if they navigate away and come back
       sessionStorage.setItem('fit11_verified_phone', waPhone);
+      localStorage.setItem('fit11_verified_phone', waPhone);
+      document.cookie = `wa_saved_phone=${waPhone}; path=/; max-age=2592000`; // 30 days
+      
       if (data.profile && data.profile.email) {
         sessionStorage.setItem('fit11_verified_email', data.profile.email);
+        localStorage.setItem('fit11_verified_email', data.profile.email);
         const emailInput = document.getElementById('wa-email');
         if (emailInput) emailInput.value = data.profile.email;
       }
