@@ -1224,7 +1224,16 @@ window._shopifyCustomer = {
       for (let k of keys) {
         try {
           let v = localStorage.getItem(k) || sessionStorage.getItem(k);
-          if (v) { phone = v; break; }
+          if (v && v !== 'undefined' && v !== 'null') {
+            let digits = String(v).replace(/\D/g, '');
+            if (digits.length > 10 && (digits.startsWith('91') || digits.startsWith('0'))) {
+              digits = digits.slice(-10);
+            }
+            if (digits.length === 10) { 
+              phone = digits; 
+              break; 
+            }
+          }
         } catch(e) {}
       }
     }
@@ -1247,7 +1256,16 @@ window._shopifyCustomer = {
         for (let c of cookies) {
           let [name, val] = c.split('=');
           if (name === 'wa_saved_phone' || name === 'notify_phone_number' || name === 'user_phone') {
-            if (val) { phone = decodeURIComponent(val); break; }
+            if (val && val !== 'undefined' && val !== 'null') { 
+              let digits = String(decodeURIComponent(val)).replace(/\D/g, '');
+              if (digits.length > 10 && (digits.startsWith('91') || digits.startsWith('0'))) {
+                digits = digits.slice(-10);
+              }
+              if (digits.length === 10) { 
+                phone = digits; 
+                break; 
+              }
+            }
           }
         }
       } catch(e) {}
