@@ -21,7 +21,7 @@
   .wa-checkout-wrapper { width: 100%; min-height: 100%; display: flex; align-items: center; justify-content: center; }
 
   /* ── RIGHT PANEL ── */
-  .wa-right-panel { width: 100%; max-width: 480px; background: #fdfdfd; display: flex; flex-direction: column; min-height: 100%; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); } @media (min-width: 481px) { .wa-right-panel { min-height: auto; height: 95%; max-height: 900px; border-radius: 16px; overflow-y: auto; } }
+  .wa-right-panel { width: 100%; max-width: 480px; background: #fdfdfd; display: flex; flex-direction: column; min-height: 100%; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); } @media (min-width: 481px) { .wa-right-panel { min-height: auto; height: 95%; max-height: 900px; border-radius: 16px; overflow-y: auto; } } @media (max-width: 480px) { .wa-right-panel { max-width: 100%; min-height: 100dvh; border-radius: 0; } }
 
   /* ── HEADER ── */
   .wa-modal-header {
@@ -68,6 +68,7 @@
     max-width: 520px; width: 100%; margin: 0 auto;
     background: var(--wa-bg, #f1f5f9);
   }
+  @media (max-width: 480px) { .wa-content-area { padding: 20px 16px; } .wa-modal-header { padding: 14px 16px; } }
 
   /* ── STEP INDICATOR ── */
   .wa-steps {
@@ -97,6 +98,7 @@
     font-size: 24px; font-weight: 800; color: var(--wa-heading, #0f172a);
     margin: 0 0 6px 0; letter-spacing: -0.5px; line-height: 1.2;
   }
+  @media (max-width: 480px) { .wa-section-title { font-size: 20px; } }
   .wa-section-desc {
     font-size: 14px; color: var(--wa-subheading, #64748b); margin: 0 0 28px 0; line-height: 1.5;
   }
