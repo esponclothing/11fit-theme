@@ -1186,8 +1186,8 @@ window._shopifyCustomer = {
         localStorage.setItem('espon_user_phone', digits);
         localStorage.setItem('fit11_user_phone', digits);
         localStorage.setItem('notify_phone_number', digits);
-        sessionStorage.setItem('wa_verified_phone', digits);
-        sessionStorage.setItem('fit11_verified_phone', digits);
+        localStorage.setItem('wa_verified_phone', digits);
+        localStorage.setItem('fit11_verified_phone', digits);
         document.cookie = `wa_saved_phone=${digits}; path=/; max-age=2592000`; // 30 days
       } catch(e) {}
     }
