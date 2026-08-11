@@ -2226,7 +2226,8 @@ function renderPaymentMethods() {
               device_id: localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id'),
               customer_email: waEmail,
               customer_name: (addr?.first_name || '') + ' ' + (addr?.last_name || ''),
-              wallet_credit_amount: walletDeduction
+              wallet_credit_amount: walletDeduction,
+              amount: netPayable
             })
           });
           const data = await res.json();
