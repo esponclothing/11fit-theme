@@ -707,6 +707,7 @@
     }
     // Validation moved to final checkout / address save
     const btn = document.getElementById('wa-send-btn');
+    const originalBtnHTML = btn.innerHTML;
     btn.disabled = true; btn.innerHTML = 'Sending OTP...';
     try {
       const payload = { 
@@ -772,6 +773,7 @@
     const otp = waGetOtp();
     if (otp.length < 4) return;
     const errEl = document.getElementById('wa-otp-error');
+    const originalBtnHTML = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = 'Verifying...';
     errEl.style.display = 'none';
@@ -2136,13 +2138,14 @@ function renderPaymentMethods() {
             body: JSON.stringify({ 
               merchant_key: MERCHANT_KEY, 
               draft_order_id: waDraftOrderId,
-              payment_method: waSelectedPayment,
+              payment_method: (waSelectedPayment === 'prepaid' && sessionStorage.getItem('wa_prepaid_' + waDraftOrderId)) ? 'none' : waSelectedPayment,
               customer_email: waEmail,
               customer_phone: waPhone,
               device_id: localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id'),
               shipping_address: addr
             })
           });
+          if (waSelectedPayment === 'prepaid') sessionStorage.setItem('wa_prepaid_' + waDraftOrderId, 'true');
           const data = await res.json();
           if (!res.ok) throw new Error(data.error || 'Failed to update draft order');
           
@@ -2200,12 +2203,13 @@ function renderPaymentMethods() {
               body: JSON.stringify({ 
                 merchant_key: MERCHANT_KEY, 
                 draft_order_id: waDraftOrderId,
-                payment_method: waSelectedPayment,
-                customer_email: waEmail,
+              payment_method: (waSelectedPayment === 'prepaid' && sessionStorage.getItem('wa_prepaid_' + waDraftOrderId)) ? 'none' : waSelectedPayment,
+              customer_email: waEmail,
                 customer_phone: waPhone,
                 shipping_address: addr
               })
             });
+            if (waSelectedPayment === 'prepaid') sessionStorage.setItem('wa_prepaid_' + waDraftOrderId, 'true');
             if (!udRes.ok) {
               const udErr = await udRes.json().catch(() => ({}));
               console.warn('update-draft warning (non-fatal):', udErr);
@@ -2310,6 +2314,7 @@ function renderPaymentMethods() {
   async function finishOrderBackend(payload) {
     const btn = document.getElementById('wa-cod-btn');
     const errEl = document.getElementById('wa-payment-error');
+    const originalBtnHTML = btn ? btn.innerHTML : '';
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 30000);
     try {
@@ -2511,3 +2516,4 @@ function renderPaymentMethods() {
   window.addEventListener('DOMContentLoaded', function() {
     waUpdateHeaderGreeting();
   });
+
