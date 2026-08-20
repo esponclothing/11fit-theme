@@ -2231,7 +2231,8 @@ function renderPaymentMethods() {
               customer_email: waEmail,
               customer_name: (addr?.first_name || '') + ' ' + (addr?.last_name || ''),
               wallet_credit_amount: walletDeduction,
-              amount: netPayable
+              amount: netPayable,
+              shipping_address: addr
             })
           });
           const data = await res.json();
