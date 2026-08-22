@@ -1601,6 +1601,7 @@
     // Reset wallet state when entering payment step
     waWalletApplied = false;
     waWalletAppliedAmt = 0;
+    waSelectedPayment = null;
 
     // Fetch customer wallet balance (async, non-blocking)
     await fetchWalletBalance();
@@ -1785,6 +1786,11 @@
 
 function renderPaymentMethods() {
       const container = document.getElementById('wa-payment-methods-container');
+      const payBtn = document.getElementById('wa-cod-btn');
+      const safeZone = document.getElementById('wa-btn-safe-zone') || document.body;
+      if (payBtn && container.contains(payBtn)) {
+          safeZone.appendChild(payBtn);
+      }
       container.innerHTML = '';
       
       let baseTotalText = document.getElementById('wa-total').getAttribute('data-base-total');
@@ -2019,10 +2025,26 @@ function renderPaymentMethods() {
           waSelectedPayment = m.id;
           renderPaymentMethods();
         };
+        opt.id = 'wa-pay-opt-' + m.id;
         container.appendChild(opt);
       });
       
       waUpdateBtnTotal(baseTotal);
+      
+      if (payBtn) {
+         const selectedOpt = document.getElementById('wa-pay-opt-' + waSelectedPayment);
+         if (selectedOpt) {
+            payBtn.style.marginTop = '14px';
+            payBtn.style.marginBottom = '4px';
+            payBtn.style.width = '100%';
+            payBtn.style.borderRadius = '10px';
+            payBtn.onclick = (e) => {
+                e.stopPropagation();
+                waPayNow();
+            };
+            selectedOpt.appendChild(payBtn);
+         }
+      }
       
       // Attempt to load Cashfree if needed
       if ((waSelectedPayment === 'prepaid' || waSelectedPayment === 'partial_cod') && typeof Cashfree !== 'undefined') {
@@ -2179,20 +2201,6 @@ function renderPaymentMethods() {
         }
         const netPayable = Math.max(0, targetPay - walletDeduction);
 
-        if (netPayable <= 0) {
-          // Store Credit covers 100% of online advance payable amount! Directly complete order!
-          try {
-            await finishOrderBackend({ payment_method: waSelectedPayment, shipping_address: addr });
-          } catch (e) {
-            console.error(e);
-            btn.disabled = false;
-            btn.style.opacity = '1';
-            btn.innerHTML = originalBtnHTML;
-            errEl.innerText = err.message || 'Failed to complete order. Please contact support.';
-          }
-          return;
-        }
-
         try {
           // STEP 1: Apply discount + link customer to Shopify draft BEFORE Cashfree payment.
           // This ensures: correct discounted price in Shopify order + correct customer details.
@@ -2217,6 +2225,23 @@ function renderPaymentMethods() {
           } catch(udErr) {
             console.warn('update-draft network error (non-fatal):', udErr);
           }
+        } catch(ignore) {}
+
+        if (netPayable <= 0) {
+          // Store Credit covers 100% of online advance payable amount! Directly complete order!
+          try {
+            await finishOrderBackend({ payment_method: waSelectedPayment, shipping_address: addr });
+          } catch (e) {
+            console.error(e);
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.innerHTML = originalBtnHTML;
+            errEl.innerText = err.message || 'Failed to complete order. Please contact support.';
+          }
+          return;
+        }
+
+
 
           // STEP 2: Create Cashfree payment session (now using discounted draft total)
           const res = await fetch(`${WA_API_BASE}/checkout/create-payment`, {
@@ -2349,10 +2374,14 @@ function renderPaymentMethods() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to complete order.');
 
-      // Clear Shopify Cart
+      // Clear Shopify Cart and Wallet Cache
       try {
         await fetch('/cart/clear.js', { method: 'POST' });
         if (window.lxRefreshCartUI) window.lxRefreshCartUI();
+        if (typeof waPhone !== 'undefined' && waPhone) sessionStorage.removeItem('wa_bal_' + waPhone);
+        waWalletBalance = 0;
+        waWalletApplied = false;
+        waWalletAppliedAmt = 0;
       } catch(e) {}
 
       document.getElementById('wa-step-4').style.display = 'none';
@@ -2399,16 +2428,15 @@ function renderPaymentMethods() {
         s.parentNode.insertBefore(t,s)}(window, document,'script',
         'https://connect.facebook.net/en_US/fbevents.js');
         
-        // 100% Foolproof Tracking using Meta Image Pixels (Bypasses all Shopify Proxies & Sandboxes)
-        const firePixel = (pixelId, val) => {
-          const img = document.createElement('img');
-          img.height = 1; img.width = 1; img.style.display = 'none';
-          img.src = 'https://www.facebook.com/tr/?id=' + pixelId + '&ev=Purchase&cd[value]=' + val + '&cd[currency]=INR&noscript=1';
-          document.body.appendChild(img);
-        };
+        // Init BOTH Pixels
+        fbq('init', '1389821399722687');
+        fbq('init', '1065954715920985');
         
-        firePixel('1389821399722687', finalPrice);
-        firePixel('1065954715920985', finalPrice);
+        // Fire Purchase Event explicitly for EACH pixel using trackSingle
+        fbq('trackSingle', '1389821399722687', 'Purchase', {
+          value: finalPrice,
+          currency: 'INR'
+        });
         fbq('trackSingle', '1065954715920985', 'Purchase', {
           value: finalPrice,
           currency: 'INR'
@@ -2547,5 +2575,5 @@ function renderPaymentMethods() {
 
   window.addEventListener('DOMContentLoaded', function() {
     waUpdateHeaderGreeting();
-  });
+  });
 
