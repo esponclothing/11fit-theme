@@ -67,6 +67,16 @@ if (!customElements.get('product-form')) {
             }
 
             const afterAdded = (finalResponse) => {
+              try {
+                if (window.Shopify && window.Shopify.analytics && typeof window.Shopify.analytics.publish === 'function') {
+                  window.Shopify.analytics.publish("product_added_to_cart", {
+                    cartLine: {
+                      merchandise: { id: "gid://shopify/ProductVariant/" + formData.get('id') },
+                      quantity: parseInt(formData.get('quantity') || 1, 10)
+                    }
+                  });
+                }
+              } catch(e) {}
               const startMarker = CartPerformance.createStartingMarker('add:wait-for-subscribers');
               if (!this.error)
                 publish(PUB_SUB_EVENTS.cartUpdate, {

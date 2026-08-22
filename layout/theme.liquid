@@ -741,6 +741,16 @@
     })
     .then(response => response.json())
     .then(parsedState => {
+      try {
+        if (window.Shopify && window.Shopify.analytics && typeof window.Shopify.analytics.publish === 'function') {
+          window.Shopify.analytics.publish("product_added_to_cart", {
+            cartLine: {
+              merchandise: { id: "gid://shopify/ProductVariant/" + variantId },
+              quantity: 1
+            }
+          });
+        }
+      } catch(e) {}
       if (parsedState.status) {
         alert(parsedState.description || parsedState.message);
         return;
