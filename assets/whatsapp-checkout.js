@@ -2387,8 +2387,10 @@ function renderPaymentMethods() {
       // Fire Meta Pixel Purchase Event
       try {
         if (typeof fbq === 'function') {
+          const totEl = document.getElementById('wa-total');
+          const finalPrice = totEl ? (parseFloat(totEl.getAttribute('data-base-total') || totEl.innerText.replace(/[^0-9.]/g, '')) || 0) : 0;
           fbq('track', 'Purchase', {
-            value: data.order?.total_price || 0,
+            value: finalPrice,
             currency: 'INR'
           });
         }
