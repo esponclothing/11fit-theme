@@ -2399,15 +2399,16 @@ function renderPaymentMethods() {
         s.parentNode.insertBefore(t,s)}(window, document,'script',
         'https://connect.facebook.net/en_US/fbevents.js');
         
-        // Init BOTH Pixels
-        fbq('init', '1389821399722687');
-        fbq('init', '1065954715920985');
+        // 100% Foolproof Tracking using Meta Image Pixels (Bypasses all Shopify Proxies & Sandboxes)
+        const firePixel = (pixelId, val) => {
+          const img = document.createElement('img');
+          img.height = 1; img.width = 1; img.style.display = 'none';
+          img.src = 'https://www.facebook.com/tr/?id=' + pixelId + '&ev=Purchase&cd[value]=' + val + '&cd[currency]=INR&noscript=1';
+          document.body.appendChild(img);
+        };
         
-        // Fire Purchase Event explicitly for EACH pixel using trackSingle
-        fbq('trackSingle', '1389821399722687', 'Purchase', {
-          value: finalPrice,
-          currency: 'INR'
-        });
+        firePixel('1389821399722687', finalPrice);
+        firePixel('1065954715920985', finalPrice);
         fbq('trackSingle', '1065954715920985', 'Purchase', {
           value: finalPrice,
           currency: 'INR'
