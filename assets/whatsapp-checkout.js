@@ -2403,8 +2403,12 @@ function renderPaymentMethods() {
         fbq('init', '1389821399722687');
         fbq('init', '1065954715920985');
         
-        // Fire Purchase Event
-        fbq('track', 'Purchase', {
+        // Fire Purchase Event explicitly for EACH pixel using trackSingle
+        fbq('trackSingle', '1389821399722687', 'Purchase', {
+          value: finalPrice,
+          currency: 'INR'
+        });
+        fbq('trackSingle', '1065954715920985', 'Purchase', {
           value: finalPrice,
           currency: 'INR'
         });
