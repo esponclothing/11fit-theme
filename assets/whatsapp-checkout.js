@@ -2225,7 +2225,7 @@ function renderPaymentMethods() {
           } catch(udErr) {
             console.warn('update-draft network error (non-fatal):', udErr);
           }
-        } catch(ignore) {}
+        
 
         if (netPayable <= 0) {
           // Store Credit covers 100% of online advance payable amount! Directly complete order!
