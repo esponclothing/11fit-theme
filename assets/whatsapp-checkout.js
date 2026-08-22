@@ -2389,7 +2389,7 @@ function renderPaymentMethods() {
         const totEl = document.getElementById('wa-total');
         const finalPrice = totEl ? (parseFloat(totEl.getAttribute('data-base-total') || totEl.innerText.replace(/[^0-9.]/g, '')) || 0) : 0;
         
-        // Inject standard Meta Pixel if missing due to Shopify sandbox
+        // Inject standard Meta Pixel to completely bypass Shopify Sandbox for BOTH pixels
         !function(f,b,e,v,n,t,s)
         {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
         n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -2399,7 +2399,11 @@ function renderPaymentMethods() {
         s.parentNode.insertBefore(t,s)}(window, document,'script',
         'https://connect.facebook.net/en_US/fbevents.js');
         
-        fbq('init', '4335665233');
+        // Init BOTH Pixels
+        fbq('init', '1389821399722687');
+        fbq('init', '1065954715920985');
+        
+        // Fire Purchase Event
         fbq('track', 'Purchase', {
           value: finalPrice,
           currency: 'INR'
