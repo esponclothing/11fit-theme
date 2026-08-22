@@ -1663,11 +1663,6 @@
     const devId = localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id');
     if (!waPhone && !devId) return;
     try {
-      const cachedBal = sessionStorage.getItem(`wa_bal_${waPhone}`);
-        if (cachedBal) {
-          waWalletBalance = parseFloat(cachedBal);
-          return;
-        }
         const res = await fetch(`${WA_API_BASE}/wallet-balance`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1679,7 +1674,6 @@
       });
       const data = await res.json();
       waWalletBalance = parseFloat(data?.customer?.storeCreditBalance || data?.storeCreditBalance || 0);
-        sessionStorage.setItem(`wa_bal_${waPhone}`, waWalletBalance);
     } catch(e) {
       waWalletBalance = 0;
     }
