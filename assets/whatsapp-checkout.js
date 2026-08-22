@@ -2042,7 +2042,8 @@ function renderPaymentMethods() {
                 e.stopPropagation();
                 waPayNow();
             };
-            selectedOpt.appendChild(payBtn);
+            // Append right AFTER the selected option, placing it OUTSIDE the method box
+            container.insertBefore(payBtn, selectedOpt.nextSibling);
          }
       }
       
