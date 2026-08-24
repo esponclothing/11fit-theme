@@ -2035,8 +2035,12 @@ function renderPaymentMethods() {
                 e.stopPropagation();
                 waPayNow();
             };
-            // Append right AFTER the selected option, placing it OUTSIDE the method box
-            container.insertBefore(payBtn, selectedOpt.nextSibling);
+            // Append at the bottom in the safe zone, completely outside the payment methods
+            if (safeZone) {
+                safeZone.appendChild(payBtn);
+            } else {
+                container.appendChild(payBtn);
+            }
          }
       }
       
