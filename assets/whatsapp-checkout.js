@@ -1,5 +1,26 @@
   const WA_API_BASE = 'https://checkout-app-one-lilac.vercel.app/api';
   const MERCHANT_KEY = 'sk_live_11fit_106b31bb8dd7a7';
+  const META_PIXEL_ID = '1065954715920985';
+
+  function waEnsureMetaPixel(userData = {}) {
+    try {
+      if (!window.fbq) {
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+      }
+      if (window.fbq) {
+        window.fbq('init', META_PIXEL_ID, userData);
+      }
+    } catch(e) {
+      console.error('Meta Pixel init error:', e);
+    }
+  }
 
   let waPhone = null;
   let waSignature = null;
@@ -386,6 +407,20 @@
     overlay.style.cssText = 'position:fixed!important;top:0!important;left:0!important;width:100vw!important;height:100vh!important;z-index:2147483647!important;display:flex!important;align-items:flex-start!important;justify-content:center!important;overflow-y:auto!important;padding:0!important;background:rgba(15,23,42,0.75)!important;';
     document.body.style.overflow = 'hidden';
     waResetModal();
+
+    // Track Meta Pixel InitiateCheckout
+    try {
+      waEnsureMetaPixel();
+      const totEl = document.getElementById('wa-total');
+      const baseTot = totEl ? (parseFloat(totEl.getAttribute('data-base-total') || totEl.innerText.replace(/[^0-9.]/g, '')) || 0) : 0;
+      if (window.fbq) {
+        window.fbq('trackSingle', META_PIXEL_ID, 'InitiateCheckout', {
+          value: baseTot,
+          currency: 'INR',
+          content_type: 'product'
+        });
+      }
+    } catch(e) {}
 
     // Auto-fetch saved or cached phone & email from browser
     const phoneInput = document.getElementById('wa-phone');
@@ -1391,6 +1426,7 @@
     try {
       const cartRes = await fetch('/cart.js');
       const cart = await cartRes.json();
+      window._waLastCart = cart;
       
       const initialTotal = (cart.total_price / 100).toFixed(2);
       if (subT && (subT.innerText === 'Calculating...' || !subT.innerText)) subT.innerText = `₹${initialTotal}`;
@@ -2407,12 +2443,81 @@ function renderPaymentMethods() {
       if (sc) sc.style.display = 'flex';
       clearTimeout(timeoutId);
 
-      // Fire Meta Pixel Purchase Event
+      // Fire Meta Pixel Purchase Event for Pixel ID: 1065954715920985
       try {
+        const orderNum = String(data.order_id || waDraftOrderId || '').replace('#', '');
         const totEl = document.getElementById('wa-total');
-        const finalPrice = totEl ? (parseFloat(totEl.getAttribute('data-base-total') || totEl.innerText.replace(/[^0-9.]/g, '')) || 0) : 0;
-        
-        // Attempt Shopify Web Pixels API for Google Analytics/others
+        let finalPrice = totEl ? (parseFloat(totEl.getAttribute('data-base-total') || totEl.innerText.replace(/[^0-9.]/g, '')) || 0) : 0;
+        if (waWalletApplied && waWalletAppliedAmt > 0) {
+          finalPrice = Math.max(0, finalPrice - waWalletAppliedAmt);
+        }
+
+        const cleanPhone = String(waPhone || addr?.phone || '').replace(/\D/g, '');
+        const userMatchingData = {};
+        if (waEmail) userMatchingData.em = waEmail.toLowerCase().trim();
+        if (cleanPhone) userMatchingData.ph = cleanPhone.startsWith('91') ? cleanPhone : ('91' + cleanPhone.slice(-10));
+        if (addr?.first_name) userMatchingData.fn = addr.first_name.toLowerCase().trim();
+        if (addr?.last_name) userMatchingData.ln = addr.last_name.toLowerCase().trim();
+        if (addr?.city) userMatchingData.ct = addr.city.toLowerCase().trim();
+        if (addr?.zip) userMatchingData.zp = String(addr.zip).trim();
+        userMatchingData.country = 'in';
+
+        // 1. Initialize Pixel with Advanced Matching parameters
+        waEnsureMetaPixel(userMatchingData);
+
+        const cartItems = (window._waLastCart && window._waLastCart.items) ? window._waLastCart.items : [];
+        const purchaseParams = {
+          value: Number(finalPrice.toFixed(2)),
+          currency: 'INR',
+          content_type: 'product',
+          order_id: orderNum || undefined,
+          num_items: cartItems.length ? cartItems.reduce((s, i) => s + (i.quantity || 1), 0) : 1
+        };
+
+        if (cartItems.length > 0) {
+          purchaseParams.contents = cartItems.map(item => ({
+            id: String(item.variant_id || item.id),
+            quantity: item.quantity || 1,
+            item_price: item.price ? (item.price / 100) : undefined
+          }));
+        }
+
+        const eventId = 'order_' + (orderNum || waDraftOrderId || Date.now());
+
+        // 2. Fire Purchase Event explicitly for target pixel with deduplication eventID
+        if (window.fbq) {
+          window.fbq('trackSingle', META_PIXEL_ID, 'Purchase', purchaseParams, { eventID: eventId });
+        }
+
+        // 3. Fallback Direct HTTP Image Beacon (100% Guaranteed delivery)
+        try {
+          const beaconImg = document.createElement('img');
+          beaconImg.height = 1;
+          beaconImg.width = 1;
+          beaconImg.style.display = 'none';
+          let beaconSrc = `https://www.facebook.com/tr/?id=${META_PIXEL_ID}&ev=Purchase` +
+            `&cd[value]=${encodeURIComponent(finalPrice.toFixed(2))}` +
+            `&cd[currency]=INR` +
+            `&cd[content_type]=product` +
+            `&cd[order_id]=${encodeURIComponent(orderNum)}` +
+            `&eid=${encodeURIComponent(eventId)}` +
+            `&noscript=1`;
+
+          if (userMatchingData.em) beaconSrc += `&ud[em]=${encodeURIComponent(userMatchingData.em)}`;
+          if (userMatchingData.ph) beaconSrc += `&ud[ph]=${encodeURIComponent(userMatchingData.ph)}`;
+          if (userMatchingData.fn) beaconSrc += `&ud[fn]=${encodeURIComponent(userMatchingData.fn)}`;
+          if (userMatchingData.ln) beaconSrc += `&ud[ln]=${encodeURIComponent(userMatchingData.ln)}`;
+          if (userMatchingData.zp) beaconSrc += `&ud[zp]=${encodeURIComponent(userMatchingData.zp)}`;
+
+          beaconImg.src = beaconSrc;
+          document.body.appendChild(beaconImg);
+        } catch(bErr) {
+          console.error('Meta Pixel Beacon Error:', bErr);
+        }
+
+        console.log('✅ Meta Pixel Purchase fired for 1065954715920985:', purchaseParams);
+
+        // Also publish to Shopify Analytics Web Pixels API for Google Analytics/other listeners
         if (window.Shopify && window.Shopify.analytics && typeof window.Shopify.analytics.publish === 'function') {
            window.Shopify.analytics.publish("checkout_completed", {
              checkout: {
@@ -2421,7 +2526,9 @@ function renderPaymentMethods() {
              }
            });
         }
-      } catch(e) {}
+      } catch(pixelErr) {
+        console.error('Meta Pixel Purchase Tracking Error:', pixelErr);
+      }
 
     } catch (err) {
       clearTimeout(timeoutId);
