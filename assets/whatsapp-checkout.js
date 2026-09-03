@@ -1,4 +1,4 @@
-  const WA_API_BASE = 'https://checkout-app-one-lilac.vercel.app/api';
+  const WA_API_BASE = 'https://checkout-app-production-7acb.up.railway.app/api';
   const MERCHANT_KEY = 'sk_live_11fit_106b31bb8dd7a7';
   const META_PIXEL_ID = '1065954715920985';
 
