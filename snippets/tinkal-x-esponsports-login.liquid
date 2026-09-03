@@ -7,7 +7,7 @@
 {% endcomment %}
 
 {% assign MERCHANT_KEY = 'sk_live_11fit_106b31bb8dd7a7' %}
-{% assign LOGIN_PORTAL_URL = 'https://shopify-price-editor-production.up.railway.app/account' %}
+{% assign LOGIN_PORTAL_URL = 'https://checkout-app-production-7acb.up.railway.app/account' %}
 
 <!-- Single Integrated Profile Icon in Header (One SVG to prevent Flexbox stretching) -->
 <a 
@@ -310,7 +310,7 @@
       if (device_id) bodyParams.device_id = device_id;
       if (cachedPhone) bodyParams.phone = cachedPhone;
 
-      var res = await fetch('https://shopify-price-editor-production.up.railway.app/api/identify', {
+      var res = await fetch('https://checkout-app-production-7acb.up.railway.app/api/identify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bodyParams)
