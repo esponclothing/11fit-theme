@@ -206,99 +206,51 @@
   function waGetSavedPhone() {
     let phone = '';
 
-    // 1. Check window._shopifyCustomer
+    // 1. Shopify customer - authenticated by Shopify's own session
     const sc = window._shopifyCustomer;
     if (sc && sc.logged_in && sc.phone) {
       phone = sc.phone;
     }
 
-    // 2. Check localStorage & sessionStorage keys
-    if (!phone) {
-      const keys = [
-        'wa_saved_phone',
-        'wa_user_phone',
-        'espon_user_phone',
-        'fit11_user_phone',
-        'tinkal_user_phone',
-        'notify_phone_number',
-        'wa_verified_phone',
-        'fit11_verified_phone',
-        'espon_verified_phone'
-      ];
-      for (let k of keys) {
-        try {
-          let v = localStorage.getItem(k) || sessionStorage.getItem(k);
-          if (v && v !== 'undefined' && v !== 'null') {
-            let digits = String(v).replace(/\D/g, '');
-            if (digits.length > 10 && (digits.startsWith('91') || digits.startsWith('0'))) {
-              digits = digits.slice(-10);
-            }
-            if (digits.length === 10) { 
-              phone = digits; 
-              break; 
-            }
-          }
-        } catch(e) {}
-      }
-    }
-
-    // 3. Check base64 notifyph if present
+    // 2. sessionStorage — ONLY written by successful verify-otp response
     if (!phone) {
       try {
-        let nph = localStorage.getItem('notifyph');
-        if (nph) {
-          let decoded = atob(nph);
-          if (decoded && decoded !== '0000000000') phone = decoded;
+        let v = sessionStorage.getItem('fit11_verified_phone');
+        if (v && v !== 'undefined' && v !== 'null') {
+          let digits = String(v).replace(/\D/g, '');
+          if (digits.length > 10 && (digits.startsWith('91') || digits.startsWith('0'))) digits = digits.slice(-10);
+          if (digits.length === 10) phone = digits;
         }
       } catch(e) {}
     }
 
-    // 4. Check Cookies
+    // 3. Cookie wa_saved_phone — ONLY written by successful verify-otp response (30-day)
     if (!phone) {
       try {
         const cookies = document.cookie.split('; ');
         for (let c of cookies) {
           let [name, val] = c.split('=');
-          if (name === 'wa_saved_phone' || name === 'notify_phone_number' || name === 'user_phone') {
-            if (val && val !== 'undefined' && val !== 'null') { 
+          if (name === 'wa_saved_phone') {
+            if (val && val !== 'undefined' && val !== 'null') {
               let digits = String(decodeURIComponent(val)).replace(/\D/g, '');
-              if (digits.length > 10 && (digits.startsWith('91') || digits.startsWith('0'))) {
-                digits = digits.slice(-10);
-              }
-              if (digits.length === 10) { 
-                phone = digits; 
-                break; 
-              }
+              if (digits.length > 10 && (digits.startsWith('91') || digits.startsWith('0'))) digits = digits.slice(-10);
+              if (digits.length === 10) { phone = digits; break; }
             }
           }
         }
       } catch(e) {}
     }
 
-    // 5. Check DOM inputs on the page (autofilled or typed inputs)
-    if (!phone) {
-      const telInputs = document.querySelectorAll('input[type="tel"], input[name*="phone"], input[name*="mobile"]');
-      for (let inp of telInputs) {
-        if (inp && inp.value && inp.id !== 'wa-phone') {
-          let digits = inp.value.replace(/\D/g, '');
-          if (digits.length > 10 && (digits.startsWith('91') || digits.startsWith('0'))) {
-            digits = digits.slice(-10);
-          }
-          if (digits.length === 10) { phone = digits; break; }
-        }
-      }
-    }
-
     if (phone) {
       let digits = String(phone).replace(/\D/g, '');
-      if (digits.length > 10 && (digits.startsWith('91') || digits.startsWith('0'))) {
-        digits = digits.slice(-10);
-      }
+      if (digits.length > 10 && (digits.startsWith('91') || digits.startsWith('0'))) digits = digits.slice(-10);
       digits = digits.slice(0, 10);
       if (digits.length === 10) return digits;
     }
     return '';
   }
+
+
 
   function waSaveEmailGlobally(email) {
     if (!email || !email.trim()) return;
@@ -705,6 +657,11 @@
     localStorage.removeItem('wa_user_phone');
     localStorage.removeItem('fit11_user_phone');
     document.cookie = 'wa_saved_phone=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+
+    // Generate a fresh device_id so identify no longer returns the old user's data
+    const freshDeviceId = 'dev_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+    localStorage.setItem('fit11_device_id', freshDeviceId);
+    localStorage.setItem('wa_device_id', freshDeviceId);
     
     const phoneInput = document.getElementById('wa-phone');
     if (phoneInput) {
