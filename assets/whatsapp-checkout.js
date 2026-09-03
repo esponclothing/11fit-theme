@@ -554,13 +554,16 @@
           if (data.storeCreditBalance) {
             waWalletBalance = parseFloat(data.storeCreditBalance || 0);
           }
-          if (data.email) {
-            const em = document.getElementById('wa-email');
-            if (em) {
-              em.value = data.email;
-              waEmail = data.email;
-              localStorage.setItem('fit11_user_email', data.email);
-            }
+        }
+
+        // Always fill email from identify response — regardless of whether cachedPhone exists
+        if (data.email) {
+          const em = document.getElementById('wa-email');
+          if (em) {
+            em.value = data.email;
+            waEmail = data.email;
+            localStorage.setItem('fit11_user_email', data.email);
+            localStorage.setItem('fit11_verified_email', data.email);
           }
         }
       } catch(e) { console.error('Identify error:', e); }
