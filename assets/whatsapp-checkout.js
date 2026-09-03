@@ -741,8 +741,6 @@
     if (waPhone !== 'MASKED') {
       if (phoneInput.length < 10) return alert('Please enter a valid 10-digit mobile number');
       waPhone = phoneInput;
-      localStorage.setItem('wa_saved_phone', waPhone);
-      localStorage.setItem('fit11_user_phone', waPhone);
     }
     // Validation moved to final checkout / address save
     const btn = document.getElementById('wa-send-btn');
