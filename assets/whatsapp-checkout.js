@@ -183,6 +183,9 @@
   }
   
   function waSavePhoneGlobally(phone) {
+    // NOTE: This function intentionally does NOT write wa_saved_phone cookie
+    // or any 'verified' keys. Those are ONLY written by the verify-otp success
+    // handler to prevent bypassing OTP verification.
     if (!phone) return;
     let digits = String(phone).replace(/\D/g, '');
     if (digits.length > 10 && (digits.startsWith('91') || digits.startsWith('0'))) {
@@ -191,14 +194,8 @@
     digits = digits.slice(0, 10);
     if (digits.length === 10) {
       try {
-        localStorage.setItem('wa_saved_phone', digits);
         localStorage.setItem('wa_user_phone', digits);
-        localStorage.setItem('espon_user_phone', digits);
         localStorage.setItem('fit11_user_phone', digits);
-        localStorage.setItem('notify_phone_number', digits);
-        localStorage.setItem('wa_verified_phone', digits);
-        localStorage.setItem('fit11_verified_phone', digits);
-        document.cookie = `wa_saved_phone=${digits}; path=/; max-age=2592000`; // 30 days
       } catch(e) {}
     }
   }
@@ -344,9 +341,6 @@
     }
     digits = digits.slice(0, 10);
     el.value = digits;
-    if (digits.length === 10) {
-      waSavePhoneGlobally(digits);
-    }
     return digits;
   }
 
@@ -414,7 +408,6 @@
     // Immediately jump to Step 3 if user is already logged in / cached
     if (cachedPhone) {
       waPhone = cachedPhone;
-      waSavePhoneGlobally(cachedPhone);
       document.getElementById('wa-step-1').style.display = 'none';
       document.getElementById('wa-step-2').style.display = 'none';
       document.getElementById('wa-step-3').style.display = 'block';
