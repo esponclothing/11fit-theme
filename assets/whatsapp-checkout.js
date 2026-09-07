@@ -2274,21 +2274,33 @@ function renderPaymentMethods() {
           cashfreeObj.checkout(checkoutOptions).then(async (result) => {
             if (overlay) overlay.style.display = originalDisplay;
             
-            if (result.error) {
+            if (result && result.error) {
               btn.disabled = false;
               btn.style.opacity = '1';
               btn.innerHTML = originalBtnHTML;
               errEl.innerText = result.error.message || 'Payment failed or cancelled.';
               errEl.style.display = 'block';
-            } else if (result.paymentDetails && (result.paymentDetails.paymentStatus === 'SUCCESS' || result.paymentDetails.paymentMessage)) {
+              return;
+            }
+
+            // In Cashfree SDK v3, modal completion or mobile UPI intent may return without paymentDetails.
+            // Always verify with backend using data.order_id to confirm!
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            btn.innerHTML = '<span class="wa-spinner"></span> Verifying payment...';
+            errEl.style.display = 'none';
+
+            try {
               await finishOrderBackend({ payment_method: waSelectedPayment, shipping_address: addr, cashfree_order_id: data.order_id });
-            } else {
+            } catch (err) {
               btn.disabled = false;
               btn.style.opacity = '1';
               btn.innerHTML = originalBtnHTML;
-              errEl.innerText = 'Payment was cancelled or not completed. Please try again.';
+              errEl.innerText = err.message || 'Payment was cancelled or not completed. Please try again.';
               errEl.style.display = 'block';
-            }}).catch((cfErr) => {
+              errEl.scrollIntoView({ behavior: 'smooth' });
+            }
+          }).catch((cfErr) => {
             if (overlay) overlay.style.display = originalDisplay;
             const exactErr = (cfErr && cfErr.message) ? cfErr.message : (typeof cfErr === 'string' ? cfErr : JSON.stringify(cfErr));
             errEl.innerText = 'Payment Gateway Error: ' + exactErr;
