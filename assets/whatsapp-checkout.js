@@ -2425,88 +2425,113 @@ function renderPaymentMethods() {
       if (sc) sc.style.display = 'flex';
       clearTimeout(timeoutId);
 
-      // Fire Meta Pixel Purchase Event for Pixel ID: 1065954715920985
+      // Fire Meta Pixel Purchase Event for Pixel ID: 1065954715920985 ONLY on confirmed orders
       try {
-        const orderNum = String(data.order_id || waDraftOrderId || '').replace('#', '');
-        const totEl = document.getElementById('wa-total');
-        let finalPrice = totEl ? (parseFloat(totEl.getAttribute('data-base-total') || totEl.innerText.replace(/[^0-9.]/g, '')) || 0) : 0;
-        if (waWalletApplied && waWalletAppliedAmt > 0) {
-          finalPrice = Math.max(0, finalPrice - waWalletAppliedAmt);
-        }
+        const rawOrderId = String(data.order_id || '').trim();
+        const draftId = String(waDraftOrderId || '').trim();
 
-        const cleanPhone = String(waPhone || addr?.phone || '').replace(/\D/g, '');
-        const userMatchingData = {};
-        if (waEmail) userMatchingData.em = waEmail.toLowerCase().trim();
-        if (cleanPhone) userMatchingData.ph = cleanPhone.startsWith('91') ? cleanPhone : ('91' + cleanPhone.slice(-10));
-        if (addr?.first_name) userMatchingData.fn = addr.first_name.toLowerCase().trim();
-        if (addr?.last_name) userMatchingData.ln = addr.last_name.toLowerCase().trim();
-        if (addr?.city) userMatchingData.ct = addr.city.toLowerCase().trim();
-        if (addr?.zip) userMatchingData.zp = String(addr.zip).trim();
-        userMatchingData.country = 'in';
+        // STRICT VALIDATION: Order must be a real confirmed Shopify order!
+        // 1. Must not be empty
+        // 2. Must not equal the draft order ID
+        // 3. Must not be a Shopify draft order name (e.g. #D1322 or D1322)
+        const isDraftOrder = !rawOrderId || 
+                             rawOrderId === draftId || 
+                             rawOrderId.replace(/^#/, '') === draftId.replace(/^#/, '') ||
+                             /^#?D\d+/i.test(rawOrderId);
 
-        // 1. Initialize Pixel with Advanced Matching parameters
-        waEnsureMetaPixel(userMatchingData);
+        if (isDraftOrder) {
+          console.warn('⚠️ [Pixel Guard] Refusing to fire Meta Pixel Purchase event: Order is a Draft Order (' + rawOrderId + ') and NOT a confirmed Shopify order.');
+        } else {
+          const orderNum = rawOrderId.replace(/^#/, '');
+          const dedupeKey = 'wa_pixel_purchase_done_' + orderNum;
 
-        const cartItems = (window._waLastCart && window._waLastCart.items) ? window._waLastCart.items : [];
-        const purchaseParams = {
-          value: Number(finalPrice.toFixed(2)),
-          currency: 'INR',
-          content_type: 'product',
-          order_id: orderNum || undefined,
-          num_items: cartItems.length ? cartItems.reduce((s, i) => s + (i.quantity || 1), 0) : 1
-        };
+          if (sessionStorage.getItem(dedupeKey)) {
+            console.log('ℹ️ [Pixel Guard] Meta Pixel Purchase already fired for order #' + orderNum + ' in this session. Skipping duplicate fire.');
+          } else {
+            sessionStorage.setItem(dedupeKey, 'true');
 
-        if (cartItems.length > 0) {
-          purchaseParams.contents = cartItems.map(item => ({
-            id: String(item.variant_id || item.id),
-            quantity: item.quantity || 1,
-            item_price: item.price ? (item.price / 100) : undefined
-          }));
-        }
+            const totEl = document.getElementById('wa-total');
+            let finalPrice = totEl ? (parseFloat(totEl.getAttribute('data-base-total') || totEl.innerText.replace(/[^0-9.]/g, '')) || 0) : 0;
+            if (waWalletApplied && waWalletAppliedAmt > 0) {
+              finalPrice = Math.max(0, finalPrice - waWalletAppliedAmt);
+            }
 
-        const eventId = 'order_' + (orderNum || waDraftOrderId || Date.now());
+            const cleanPhone = String(waPhone || addr?.phone || '').replace(/\D/g, '');
+            const userMatchingData = {};
+            if (waEmail) userMatchingData.em = waEmail.toLowerCase().trim();
+            if (cleanPhone) userMatchingData.ph = cleanPhone.startsWith('91') ? cleanPhone : ('91' + cleanPhone.slice(-10));
+            if (addr?.first_name) userMatchingData.fn = addr.first_name.toLowerCase().trim();
+            if (addr?.last_name) userMatchingData.ln = addr.last_name.toLowerCase().trim();
+            if (addr?.city) userMatchingData.ct = addr.city.toLowerCase().trim();
+            if (addr?.zip) userMatchingData.zp = String(addr.zip).trim();
+            userMatchingData.country = 'in';
 
-        // 2. Fire Purchase Event explicitly for target pixel with deduplication eventID
-        if (window.fbq) {
-          window.fbq('trackSingle', META_PIXEL_ID, 'Purchase', purchaseParams, { eventID: eventId });
-        }
+            // 1. Initialize Pixel with Advanced Matching parameters
+            waEnsureMetaPixel(userMatchingData);
 
-        // 3. Fallback Direct HTTP Image Beacon (100% Guaranteed delivery)
-        try {
-          const beaconImg = document.createElement('img');
-          beaconImg.height = 1;
-          beaconImg.width = 1;
-          beaconImg.style.display = 'none';
-          let beaconSrc = `https://www.facebook.com/tr/?id=${META_PIXEL_ID}&ev=Purchase` +
-            `&cd[value]=${encodeURIComponent(finalPrice.toFixed(2))}` +
-            `&cd[currency]=INR` +
-            `&cd[content_type]=product` +
-            `&cd[order_id]=${encodeURIComponent(orderNum)}` +
-            `&eid=${encodeURIComponent(eventId)}` +
-            `&noscript=1`;
+            const cartItems = (window._waLastCart && window._waLastCart.items) ? window._waLastCart.items : [];
+            const purchaseParams = {
+              value: Number(finalPrice.toFixed(2)),
+              currency: 'INR',
+              content_type: 'product',
+              order_id: orderNum,
+              num_items: cartItems.length ? cartItems.reduce((s, i) => s + (i.quantity || 1), 0) : 1
+            };
 
-          if (userMatchingData.em) beaconSrc += `&ud[em]=${encodeURIComponent(userMatchingData.em)}`;
-          if (userMatchingData.ph) beaconSrc += `&ud[ph]=${encodeURIComponent(userMatchingData.ph)}`;
-          if (userMatchingData.fn) beaconSrc += `&ud[fn]=${encodeURIComponent(userMatchingData.fn)}`;
-          if (userMatchingData.ln) beaconSrc += `&ud[ln]=${encodeURIComponent(userMatchingData.ln)}`;
-          if (userMatchingData.zp) beaconSrc += `&ud[zp]=${encodeURIComponent(userMatchingData.zp)}`;
+            if (cartItems.length > 0) {
+              purchaseParams.contents = cartItems.map(item => ({
+                id: String(item.variant_id || item.id),
+                quantity: item.quantity || 1,
+                item_price: item.price ? (item.price / 100) : undefined
+              }));
+            }
 
-          beaconImg.src = beaconSrc;
-          document.body.appendChild(beaconImg);
-        } catch(bErr) {
-          console.error('Meta Pixel Beacon Error:', bErr);
-        }
+            const eventId = 'order_' + orderNum;
 
-        console.log('✅ Meta Pixel Purchase fired for 1065954715920985:', purchaseParams);
+            // 2. Fire Purchase Event explicitly for target pixel with deduplication eventID
+            if (window.fbq) {
+              window.fbq('trackSingle', META_PIXEL_ID, 'Purchase', purchaseParams, { eventID: eventId });
+            }
 
-        // Also publish to Shopify Analytics Web Pixels API for Google Analytics/other listeners
-        if (window.Shopify && window.Shopify.analytics && typeof window.Shopify.analytics.publish === 'function') {
-           window.Shopify.analytics.publish("checkout_completed", {
-             checkout: {
-               currencyCode: "INR",
-               totalPrice: { amount: finalPrice, currencyCode: "INR" }
-             }
-           });
+            // 3. Fallback Direct HTTP Image Beacon (100% Guaranteed delivery)
+            try {
+              const beaconImg = document.createElement('img');
+              beaconImg.height = 1;
+              beaconImg.width = 1;
+              beaconImg.style.display = 'none';
+              let beaconSrc = `https://www.facebook.com/tr/?id=${META_PIXEL_ID}&ev=Purchase` +
+                `&cd[value]=${encodeURIComponent(finalPrice.toFixed(2))}` +
+                `&cd[currency]=INR` +
+                `&cd[content_type]=product` +
+                `&cd[order_id]=${encodeURIComponent(orderNum)}` +
+                `&eid=${encodeURIComponent(eventId)}` +
+                `&noscript=1`;
+
+              if (userMatchingData.em) beaconSrc += `&ud[em]=${encodeURIComponent(userMatchingData.em)}`;
+              if (userMatchingData.ph) beaconSrc += `&ud[ph]=${encodeURIComponent(userMatchingData.ph)}`;
+              if (userMatchingData.fn) beaconSrc += `&ud[fn]=${encodeURIComponent(userMatchingData.fn)}`;
+              if (userMatchingData.ln) beaconSrc += `&ud[ln]=${encodeURIComponent(userMatchingData.ln)}`;
+              if (userMatchingData.zp) beaconSrc += `&ud[zp]=${encodeURIComponent(userMatchingData.zp)}`;
+
+              beaconImg.src = beaconSrc;
+              document.body.appendChild(beaconImg);
+            } catch(bErr) {
+              console.error('Meta Pixel Beacon Error:', bErr);
+            }
+
+            console.log('✅ Meta Pixel Purchase successfully fired for confirmed order #' + orderNum + ' (Pixel ID: 1065954715920985):', purchaseParams);
+
+            // Also publish to Shopify Analytics Web Pixels API for Google Analytics/other listeners
+            if (window.Shopify && window.Shopify.analytics && typeof window.Shopify.analytics.publish === 'function') {
+               window.Shopify.analytics.publish("checkout_completed", {
+                 checkout: {
+                   order: { id: orderNum },
+                   currencyCode: "INR",
+                   totalPrice: { amount: finalPrice, currencyCode: "INR" }
+                 }
+               });
+            }
+          }
         }
       } catch(pixelErr) {
         console.error('Meta Pixel Purchase Tracking Error:', pixelErr);
