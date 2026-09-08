@@ -2287,16 +2287,31 @@ function renderPaymentMethods() {
             // Always verify with backend using data.order_id to confirm!
             btn.disabled = true;
             btn.style.opacity = '0.7';
-            btn.innerHTML = '<span class="wa-spinner"></span> Verifying payment...';
+            btn.innerHTML = '<span class="wa-spinner"></span> Confirming payment with bank...';
             errEl.style.display = 'none';
 
-            try {
-              await finishOrderBackend({ payment_method: waSelectedPayment, shipping_address: addr, cashfree_order_id: data.order_id });
-            } catch (err) {
+            let completed = false;
+            let lastErr = null;
+            for (let retry = 0; retry < 2; retry++) {
+              try {
+                if (retry > 0) {
+                  btn.innerHTML = '<span class="wa-spinner"></span> Still verifying with payment gateway, please wait...';
+                  await new Promise(r => setTimeout(r, 3000));
+                }
+                await finishOrderBackend({ payment_method: waSelectedPayment, shipping_address: addr, cashfree_order_id: data.order_id });
+                completed = true;
+                break;
+              } catch (err) {
+                lastErr = err;
+                console.warn('finishOrderBackend attempt ' + (retry + 1) + ' failed:', err);
+              }
+            }
+
+            if (!completed) {
               btn.disabled = false;
               btn.style.opacity = '1';
               btn.innerHTML = originalBtnHTML;
-              errEl.innerText = err.message || 'Payment was cancelled or not completed. Please try again.';
+              errEl.innerText = (lastErr && lastErr.message) || 'Payment was cancelled or not completed. Please try again.';
               errEl.style.display = 'block';
               errEl.scrollIntoView({ behavior: 'smooth' });
             }
