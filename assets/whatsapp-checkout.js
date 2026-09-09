@@ -2135,8 +2135,24 @@ function renderPaymentMethods() {
       }
       
       if (waSelectedPayment === 'cod') {
+        // Strip any prepaid discount that may have been applied during this session before completing as COD
+        try {
+          await fetch(`${WA_API_BASE}/checkout/update-draft`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              merchant_key: MERCHANT_KEY,
+              draft_order_id: waDraftOrderId,
+              payment_method: 'cod',
+              customer_email: waEmail,
+              customer_phone: waPhone,
+              shipping_address: addr
+            })
+          });
+        } catch(e) { console.warn('update-draft for COD (non-fatal):', e); }
         // Direct complete
         await finishOrderBackend({ payment_method: 'cod', shipping_address: addr });
+
       } else if (waSelectedPayment === 'prepaid' && waPaymentSettings.use_shopify_checkout_prepaid) {
         try {
           const res = await fetch(`${WA_API_BASE}/checkout/update-draft`, {
