@@ -2246,7 +2246,32 @@ function renderPaymentMethods() {
             })
           });
           const data = await res.json();
-          if (!res.ok || !data || !data.payment_session_id) {
+          if (!res.ok || !data) {
+            throw new Error(data?.error || data?.message || 'Payment server failed to initiate payment.');
+          }
+
+          if (data.zero_amount) {
+            // Order completed directly on server (covered 100% by credit/discount)
+            document.getElementById('wa-step-4').style.display = 'none';
+            const stepsInd = document.getElementById('wa-steps-indicator');
+            if (stepsInd) stepsInd.style.display = 'none';
+            const scVal = document.getElementById('wa-success-order-val');
+            const scBox = document.getElementById('wa-success-order-number');
+            if (scVal && scBox && (data.order_id || data.shopify_order_id)) {
+              const oNum = String(data.order_id || data.shopify_order_id);
+              scVal.innerText = oNum.startsWith('#') ? oNum : '#' + oNum;
+              scBox.style.display = 'inline-block';
+            }
+            const sc = document.getElementById('wa-success-screen');
+            if (sc) sc.style.display = 'flex';
+            try {
+              await fetch('/cart/clear.js', { method: 'POST' });
+              if (window.lxRefreshCartUI) window.lxRefreshCartUI();
+            } catch(e) {}
+            return;
+          }
+
+          if (!data.payment_session_id) {
             throw new Error(data.error || data.message || 'Payment server failed to generate Cashfree session.');
           }
           
