@@ -2395,108 +2395,77 @@ function renderPaymentMethods() {
     const errEl = document.getElementById('wa-payment-error');
     const originalBtnHTML = btn ? btn.innerHTML : '';
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000);
-    try {
-      let addr = payload.shipping_address;
-      if (!addr && waAddresses && waAddresses.length > 0) {
-        addr = waAddresses.find(a => 
-          String(a.id) === String(waSelectedAddress) || 
-          String(a.id).replace('shopify_', '') === String(waSelectedAddress).replace('shopify_', '')
-        ) || waAddresses[0];
+    const timeoutId = setTimeout(() => controller.abort(), 60000);
+
+    // Helper: show verifying spinner overlay
+    function showVerifyingSpinner(visible) {
+      let overlay = document.getElementById('wa-verifying-overlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'wa-verifying-overlay';
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;';
+        overlay.innerHTML = `
+          <div style="width:54px;height:54px;border:5px solid rgba(255,255,255,0.25);border-top-color:#fff;border-radius:50%;animation:wa-spin 0.8s linear infinite;"></div>
+          <p id="wa-verify-msg" style="color:#fff;font-size:16px;font-weight:600;text-align:center;max-width:280px;line-height:1.5;">Verifying your payment…<br><span style="font-size:13px;font-weight:400;opacity:0.75;">Please do not close this window</span></p>
+          <style>@keyframes wa-spin{to{transform:rotate(360deg)}}</style>`;
+        document.body.appendChild(overlay);
       }
-      if (!addr) {
-        throw new Error('Shipping address is missing. Please select or add an address.');
+      overlay.style.display = visible ? 'flex' : 'none';
+    }
+
+    // Helper: show failure message
+    function showFailedScreen(msg) {
+      if (errEl) {
+        errEl.innerHTML = `<b>❌ Payment verification failed.</b><br>${msg || 'If money was deducted, it will be refunded in 3–5 days. Please <a href="/pages/contact" style="color:#dc2626">contact us</a> with your order details.'}`;
+        errEl.style.display = 'block';
+        errEl.scrollIntoView({ behavior: 'smooth' });
       }
+      if (btn) { btn.disabled = false; btn.innerHTML = originalBtnHTML; }
+    }
 
-      const res = await fetch(`${WA_API_BASE}/checkout/complete`, {
-        method: 'POST',
-        signal: controller.signal,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          merchant_key: MERCHANT_KEY, 
-          draft_order_id: waDraftOrderId, 
-          shipping_address: addr, 
-          email: waEmail, 
-          phone: waPhone,
-          device_id: localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id'),
-          payment_method: payload.payment_method || waSelectedPayment,
-          cashfree_order_id: payload.cashfree_order_id,
-          wallet_credit_amount: (waWalletApplied && waWalletAppliedAmt > 0) ? waWalletAppliedAmt : 0
-        })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to complete order.');
-
-      // Clear Shopify Cart and Wallet Cache
-      try {
-        await fetch('/cart/clear.js', { method: 'POST' });
-        if (window.lxRefreshCartUI) window.lxRefreshCartUI();
-        if (typeof waPhone !== 'undefined' && waPhone) sessionStorage.removeItem('wa_bal_' + waPhone);
-        waWalletBalance = 0;
-        waWalletApplied = false;
-        waWalletAppliedAmt = 0;
-      } catch(e) {}
-
+    // Helper: show success screen + fire pixel
+    function showSuccessScreen(data) {
+      try { sessionStorage.removeItem('wa_bal_' + waPhone); waWalletBalance = 0; waWalletApplied = false; waWalletAppliedAmt = 0; } catch(e) {}
       document.getElementById('wa-step-4').style.display = 'none';
       const stepsInd = document.getElementById('wa-steps-indicator');
       if (stepsInd) stepsInd.style.display = 'none';
-      
       const closeBtn = document.getElementById('wa-close-modal-btn');
       if (closeBtn) closeBtn.style.display = 'none';
-      
       const scVal = document.getElementById('wa-success-order-val');
       const scBox = document.getElementById('wa-success-order-number');
-      if (scVal && scBox && data.order_id) {
+      if (scVal && scBox && data && data.order_id) {
         const oNum = String(data.order_id);
         scVal.innerText = oNum.startsWith('#') ? oNum : '#' + oNum;
         scBox.style.display = 'inline-block';
       }
-
       const scDesc = document.getElementById('wa-success-desc');
       if (scDesc) {
         const pm = payload.payment_method || waSelectedPayment;
-        if (pm === 'cod') {
-          scDesc.innerText = 'Your COD order has been successfully placed. You will receive a confirmation on WhatsApp shortly.';
-        } else {
-          scDesc.innerText = 'Your prepaid order has been successfully placed. You will receive a confirmation on WhatsApp shortly.';
-        }
+        scDesc.innerText = pm === 'cod'
+          ? 'Your COD order has been successfully placed. You will receive a confirmation on WhatsApp shortly.'
+          : 'Your prepaid order has been successfully placed. You will receive a confirmation on WhatsApp shortly.';
       }
-
       const sc = document.getElementById('wa-success-screen');
       if (sc) sc.style.display = 'flex';
-      clearTimeout(timeoutId);
 
-      // Fire Meta Pixel Purchase Event for Pixel ID: 1065954715920985 ONLY on confirmed orders
+      // Fire Meta Pixel Purchase Event
       try {
-        const rawOrderId = String(data.order_id || '').trim();
+        const rawOrderId = String(data && data.order_id || '').trim();
         const draftId = String(waDraftOrderId || '').trim();
-
-        // STRICT VALIDATION: Order must be a real confirmed Shopify order!
-        // 1. Must not be empty
-        // 2. Must not equal the draft order ID
-        // 3. Must not be a Shopify draft order name (e.g. #D1322 or D1322)
-        const isDraftOrder = !rawOrderId || 
-                             rawOrderId === draftId || 
-                             rawOrderId.replace(/^#/, '') === draftId.replace(/^#/, '') ||
-                             /^#?D\d+/i.test(rawOrderId);
+        const isDraftOrder = !rawOrderId || rawOrderId === draftId ||
+          rawOrderId.replace(/^#/, '') === draftId.replace(/^#/, '') || /^#?D\d+/i.test(rawOrderId);
 
         if (isDraftOrder) {
-          console.warn('⚠️ [Pixel Guard] Refusing to fire Meta Pixel Purchase event: Order is a Draft Order (' + rawOrderId + ') and NOT a confirmed Shopify order.');
+          console.warn('⚠️ [Pixel Guard] Refusing to fire Meta Pixel: Order is a Draft (' + rawOrderId + ')');
         } else {
           const orderNum = rawOrderId.replace(/^#/, '');
           const dedupeKey = 'wa_pixel_purchase_done_' + orderNum;
-
-          if (sessionStorage.getItem(dedupeKey)) {
-            console.log('ℹ️ [Pixel Guard] Meta Pixel Purchase already fired for order #' + orderNum + ' in this session. Skipping duplicate fire.');
-          } else {
+          if (!sessionStorage.getItem(dedupeKey)) {
             sessionStorage.setItem(dedupeKey, 'true');
-
             const totEl = document.getElementById('wa-total');
             let finalPrice = totEl ? (parseFloat(totEl.getAttribute('data-base-total') || totEl.innerText.replace(/[^0-9.]/g, '')) || 0) : 0;
-            if (waWalletApplied && waWalletAppliedAmt > 0) {
-              finalPrice = Math.max(0, finalPrice - waWalletAppliedAmt);
-            }
-
+            if (waWalletApplied && waWalletAppliedAmt > 0) finalPrice = Math.max(0, finalPrice - waWalletAppliedAmt);
+            const addr = payload.shipping_address;
             const cleanPhone = String(waPhone || addr?.phone || '').replace(/\D/g, '');
             const userMatchingData = {};
             if (waEmail) userMatchingData.em = waEmail.toLowerCase().trim();
@@ -2506,90 +2475,145 @@ function renderPaymentMethods() {
             if (addr?.city) userMatchingData.ct = addr.city.toLowerCase().trim();
             if (addr?.zip) userMatchingData.zp = String(addr.zip).trim();
             userMatchingData.country = 'in';
-
-            // 1. Initialize Pixel with Advanced Matching parameters
             waEnsureMetaPixel(userMatchingData);
-
             const cartItems = (window._waLastCart && window._waLastCart.items) ? window._waLastCart.items : [];
             const purchaseParams = {
-              value: Number(finalPrice.toFixed(2)),
-              currency: 'INR',
-              content_type: 'product',
-              order_id: orderNum,
-              num_items: cartItems.length ? cartItems.reduce((s, i) => s + (i.quantity || 1), 0) : 1
+              value: Number(finalPrice.toFixed(2)), currency: 'INR', content_type: 'product',
+              order_id: orderNum, num_items: cartItems.length ? cartItems.reduce((s, i) => s + (i.quantity || 1), 0) : 1
             };
-
             if (cartItems.length > 0) {
-              purchaseParams.contents = cartItems.map(item => ({
-                id: String(item.variant_id || item.id),
-                quantity: item.quantity || 1,
-                item_price: item.price ? (item.price / 100) : undefined
-              }));
+              purchaseParams.contents = cartItems.map(item => ({ id: String(item.variant_id || item.id), quantity: item.quantity || 1, item_price: item.price ? (item.price / 100) : undefined }));
             }
-
             const eventId = 'order_' + orderNum;
-
-            // 2. Fire Purchase Event explicitly for target pixel with deduplication eventID
-            if (window.fbq) {
-              window.fbq('trackSingle', META_PIXEL_ID, 'Purchase', purchaseParams, { eventID: eventId });
-            }
-
-            // 3. Fallback Direct HTTP Image Beacon (100% Guaranteed delivery)
+            if (window.fbq) window.fbq('trackSingle', META_PIXEL_ID, 'Purchase', purchaseParams, { eventID: eventId });
+            // Beacon fallback
             try {
               const beaconImg = document.createElement('img');
-              beaconImg.height = 1;
-              beaconImg.width = 1;
-              beaconImg.style.display = 'none';
-              let beaconSrc = `https://www.facebook.com/tr/?id=${META_PIXEL_ID}&ev=Purchase` +
-                `&cd[value]=${encodeURIComponent(finalPrice.toFixed(2))}` +
-                `&cd[currency]=INR` +
-                `&cd[content_type]=product` +
-                `&cd[order_id]=${encodeURIComponent(orderNum)}` +
-                `&eid=${encodeURIComponent(eventId)}` +
-                `&noscript=1`;
-
+              beaconImg.height = 1; beaconImg.width = 1; beaconImg.style.display = 'none';
+              let beaconSrc = `https://www.facebook.com/tr/?id=${META_PIXEL_ID}&ev=Purchase&cd[value]=${encodeURIComponent(finalPrice.toFixed(2))}&cd[currency]=INR&cd[content_type]=product&cd[order_id]=${encodeURIComponent(orderNum)}&eid=${encodeURIComponent(eventId)}&noscript=1`;
               if (userMatchingData.em) beaconSrc += `&ud[em]=${encodeURIComponent(userMatchingData.em)}`;
               if (userMatchingData.ph) beaconSrc += `&ud[ph]=${encodeURIComponent(userMatchingData.ph)}`;
               if (userMatchingData.fn) beaconSrc += `&ud[fn]=${encodeURIComponent(userMatchingData.fn)}`;
               if (userMatchingData.ln) beaconSrc += `&ud[ln]=${encodeURIComponent(userMatchingData.ln)}`;
               if (userMatchingData.zp) beaconSrc += `&ud[zp]=${encodeURIComponent(userMatchingData.zp)}`;
-
               beaconImg.src = beaconSrc;
               document.body.appendChild(beaconImg);
-            } catch(bErr) {
-              console.error('Meta Pixel Beacon Error:', bErr);
-            }
-
-            console.log('✅ Meta Pixel Purchase successfully fired for confirmed order #' + orderNum + ' (Pixel ID: 1065954715920985):', purchaseParams);
-
-            // Also publish to Shopify Analytics Web Pixels API for Google Analytics/other listeners
+            } catch(bErr) {}
+            console.log('✅ [Pixel] Purchase fired for order #' + orderNum + ':', purchaseParams);
             if (window.Shopify && window.Shopify.analytics && typeof window.Shopify.analytics.publish === 'function') {
-               window.Shopify.analytics.publish("checkout_completed", {
-                 checkout: {
-                   order: { id: orderNum },
-                   currencyCode: "INR",
-                   totalPrice: { amount: finalPrice, currencyCode: "INR" }
-                 }
-               });
+              window.Shopify.analytics.publish('checkout_completed', { checkout: { order: { id: orderNum }, currencyCode: 'INR', totalPrice: { amount: finalPrice, currencyCode: 'INR' } } });
             }
           }
         }
-      } catch(pixelErr) {
-        console.error('Meta Pixel Purchase Tracking Error:', pixelErr);
+      } catch(pixelErr) { console.error('Meta Pixel Purchase Tracking Error:', pixelErr); }
+    }
+
+    try {
+      let addr = payload.shipping_address;
+      if (!addr && waAddresses && waAddresses.length > 0) {
+        addr = waAddresses.find(a =>
+          String(a.id) === String(waSelectedAddress) ||
+          String(a.id).replace('shopify_', '') === String(waSelectedAddress).replace('shopify_', '')
+        ) || waAddresses[0];
       }
+      if (!addr) throw new Error('Shipping address is missing. Please select or add an address.');
+
+      // Show spinner immediately
+      showVerifyingSpinner(true);
+
+      const res = await fetch(`${WA_API_BASE}/checkout/complete`, {
+        method: 'POST',
+        signal: controller.signal,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          merchant_key: MERCHANT_KEY,
+          draft_order_id: waDraftOrderId,
+          shipping_address: addr,
+          email: waEmail,
+          phone: waPhone,
+          device_id: localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id'),
+          payment_method: payload.payment_method || waSelectedPayment,
+          cashfree_order_id: payload.cashfree_order_id,
+          wallet_credit_amount: (waWalletApplied && waWalletAppliedAmt > 0) ? waWalletAppliedAmt : 0
+        })
+      });
+      clearTimeout(timeoutId);
+      const data = await res.json();
+
+      // ✅ Order confirmed immediately
+      if (res.ok && data.success) {
+        showVerifyingSpinner(false);
+        try { await fetch('/cart/clear.js', { method: 'POST' }); if (window.lxRefreshCartUI) window.lxRefreshCartUI(); } catch(e) {}
+        showSuccessScreen(data);
+        return;
+      }
+
+      // ⏳ Payment pending — poll until webhook confirms (max 60s)
+      if (res.status === 202 && data.payment_pending) {
+        const verifyMsg = document.getElementById('wa-verify-msg');
+        let pollCount = 0;
+        const maxPolls = 20; // 20 × 3s = 60s
+
+        const pollInterval = setInterval(async () => {
+          pollCount++;
+          if (verifyMsg) verifyMsg.innerHTML = `Verifying your payment… (${pollCount * 3}s)<br><span style="font-size:13px;font-weight:400;opacity:0.75;">Please do not close this window</span>`;
+
+          try {
+            const pollRes = await fetch(`${WA_API_BASE}/checkout/complete`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                merchant_key: MERCHANT_KEY, draft_order_id: waDraftOrderId,
+                shipping_address: addr, email: waEmail, phone: waPhone,
+                device_id: localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id'),
+                payment_method: payload.payment_method || waSelectedPayment,
+                cashfree_order_id: payload.cashfree_order_id,
+                wallet_credit_amount: (waWalletApplied && waWalletAppliedAmt > 0) ? waWalletAppliedAmt : 0
+              })
+            });
+            const pollData = await pollRes.json();
+
+            if (pollRes.ok && pollData.success) {
+              clearInterval(pollInterval);
+              showVerifyingSpinner(false);
+              try { await fetch('/cart/clear.js', { method: 'POST' }); if (window.lxRefreshCartUI) window.lxRefreshCartUI(); } catch(e) {}
+              showSuccessScreen(pollData);
+              return;
+            }
+
+            if (pollRes.status === 202 && pollData.payment_pending) {
+              // keep polling
+            } else if (!pollData.success) {
+              clearInterval(pollInterval);
+              showVerifyingSpinner(false);
+              showFailedScreen(pollData.error);
+            }
+          } catch(pollErr) { /* network blip — keep polling */ }
+
+          if (pollCount >= maxPolls) {
+            clearInterval(pollInterval);
+            showVerifyingSpinner(false);
+            showFailedScreen('Payment could not be verified within 60 seconds. If your amount was deducted, please contact us.');
+          }
+        }, 3000);
+
+        return; // polling handles the rest
+      }
+
+      // ❌ Definitive failure
+      showVerifyingSpinner(false);
+      if (!data.success) throw new Error(data.error || 'Failed to complete order.');
 
     } catch (err) {
       clearTimeout(timeoutId);
+      showVerifyingSpinner(false);
       console.error('Order Complete Error:', err);
       if (errEl) {
         errEl.innerText = 'Error: ' + (err.message || 'Failed to complete order. Please try again.');
         errEl.style.display = 'block';
         errEl.scrollIntoView({ behavior: 'smooth' });
       }
-      if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = originalBtnHTML;
-      }
+      if (btn) { btn.disabled = false; btn.innerHTML = originalBtnHTML; }
     }
   }
 
