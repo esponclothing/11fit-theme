@@ -471,8 +471,8 @@
         {% for option in product.options_with_values %}
           {% assign option_name_lower = option.name | downcase %}
           {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
-            <div class="fit11-variant-selectors top-color-selector mobile-only-color" style="padding: 0 16px; margin-bottom: 0px; margin-top: 0px;">
-              <div class="fit11-option-fieldset" role="group" style="border:none; padding:0; margin:0; min-width: 0; width: 100%;">
+            <div class="fit11-variant-selectors top-color-selector mobile-only-color variant-radios product-form__input fit11-theme-variant-picker" data-variant-picker style="padding: 0 16px; margin-bottom: 0px; margin-top: 0px;">
+              <div class="fit11-option-fieldset product-form__input" role="group" style="border:none; padding:0; margin:0; min-width: 0; width: 100%;">
                 <div class="fit11-option-name-row" style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 12px;">
                   <span class="fit11-option-name-label" style="font-weight: 500; font-size: 13px; text-transform: none; letter-spacing: normal; white-space: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; padding-bottom: 4px;">Selected Color - <span class="fit11-selected-color-label" style="font-weight: 700; color: var(--lux-text); text-transform: capitalize;">{{ option.selected_value }}</span></span>
                 </div>
@@ -607,7 +607,7 @@
         {% for option in product.options_with_values %}
           {% assign option_name_lower = option.name | downcase %}
           {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
-            <div class="fit11-variant-selectors top-color-selector desktop-only-color" style="margin-bottom: 0px; margin-top: 8px; width: 100%;">
+            <div class="fit11-variant-selectors top-color-selector desktop-only-color variant-radios product-form__input fit11-theme-variant-picker" data-variant-picker style="margin-bottom: 0px; margin-top: 8px; width: 100%;">
               <div class="fit11-option-fieldset product-form__input" role="group" style="border:none; padding:0; margin:0; min-width: 0; width: 100%;">
                 <div class="fit11-option-name-row" style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 12px;">
                   <span class="fit11-option-name-label form__label" style="font-weight: 500; font-size: 13px; text-transform: none; letter-spacing: normal; white-space: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; padding-bottom: 4px;">Selected Color - <span class="fit11-selected-color-label" style="font-weight: 700; color: var(--lux-text); text-transform: capitalize;">{{ option.selected_value }}</span></span>
@@ -704,12 +704,12 @@
       {% endif %}
 
       {% comment %} ── VARIANT SELECTOR (SIZE / OTHER THAN COLOR) ── {% endcomment %}
-      <div class="fit11-main-action-btns" id="fit11MainBtnContainer">
+      <div class="fit11-main-action-btns fit11-theme-variant-picker" id="fit11MainBtnContainer">
 {% if combo_active %}
   {% render '11fit-combo', product: product, combo_count: combo_count, combo_price: combo_price %}
 {% else %}
         {% unless product.has_only_default_variant %}
-          <div class="fit11-variant-selectors" style="margin: 2px 0 4px 0;">
+          <div class="fit11-variant-selectors variant-radios product-form__input fit11-theme-variant-picker" data-variant-picker style="margin: 2px 0 4px 0;">
             {% for option in product.options_with_values %}
               {% assign option_name_lower = option.name | downcase %}
               {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
@@ -1534,17 +1534,47 @@
     });
   }
 
+  /* Qikify Theme Variant Picker Auto-Hide & Spacing Sync */
+  function syncQikifyThemeVariantPickerVisibility() {
+    var qikifyWidget = document.querySelector('.qikify-volume-discount, .qvd-container, [class*="qvd-"], #qikify-volume-discount, [class*="qikify-upsell"]');
+    if (!qikifyWidget) return;
+
+    var hasTierDropdowns = qikifyWidget.querySelector('.qvd-tier-items, .qvd-item-option, .qvd-variant-selector, select, [class*="qvd-option"], [class*="qvd-select"]') !== null;
+    var hasHideClass = document.querySelector('.qikify-hide-variant, body.qikify-hide-variant-picker, [class*="qvd-hide"]') !== null;
+
+    if (hasTierDropdowns || hasHideClass) {
+      document.querySelectorAll('.fit11-theme-variant-picker, .top-color-selector, .desktop-only-color, .mobile-only-color').forEach(function(el) {
+        el.style.setProperty('display', 'none', 'important');
+        el.style.setProperty('margin', '0', 'important');
+        el.style.setProperty('padding', '0', 'important');
+      });
+      var mainBtnContainer = document.getElementById('fit11MainBtnContainer');
+      if (mainBtnContainer) {
+        mainBtnContainer.style.setProperty('display', 'none', 'important');
+        mainBtnContainer.style.setProperty('margin', '0', 'important');
+        mainBtnContainer.style.setProperty('padding', '0', 'important');
+      }
+    }
+  }
+
   if (typeof MutationObserver !== 'undefined') {
     var appObserver = new MutationObserver(function(mutations) {
       anchorQikifyAppWidget();
+      syncQikifyThemeVariantPickerVisibility();
     });
     var pageElem = document.getElementById('fit11-page-{{ section.id }}') || document.body;
     if (pageElem) {
       appObserver.observe(pageElem, { childList: true, subtree: true });
     }
   }
-  setInterval(anchorQikifyAppWidget, 500);
-  document.addEventListener('DOMContentLoaded', anchorQikifyAppWidget);
+  setInterval(function() {
+    anchorQikifyAppWidget();
+    syncQikifyThemeVariantPickerVisibility();
+  }, 400);
+  document.addEventListener('DOMContentLoaded', function() {
+    anchorQikifyAppWidget();
+    syncQikifyThemeVariantPickerVisibility();
+  });
 
   /* FASHION BAG FLY ANIMATION */
   function playBagAnimation(sourceButton) {
