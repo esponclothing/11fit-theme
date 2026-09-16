@@ -147,8 +147,21 @@
   .fit11-combo-title::before { content: ''; width: 4px; height: 14px; background: var(--lux-accent); display: block; }
 
   .fit11-app-wrapper { width: 100%; margin: 0 !important; padding: 0 !important; }
-  .fit11-app-wrapper:empty { display: none !important; }
   .fit11-app-wrapper > div, .fit11-app-wrapper > iframe { box-sizing: border-box !important; max-width: 100% !important; margin: 0 !important; }
+
+  /* ── QIKIFY / THIRD PARTY APP EMBEDS & OFFERS ── */
+  .fit11-info [class*="qikify"],
+  .fit11-info [class*="qvd"],
+  .fit11-info [class*="qk-"],
+  .fit11-info .qikify-app-container,
+  .fit11-app-wrapper {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
 
   .fit11-btn-cart { width: 100% !important; height: 54px !important; margin: 24px 0 0 0 !important; background: var(--lux-text); color: var(--lux-surface); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; border: none; display: flex; align-items: center; justify-content: center; gap: 12px; transition: opacity 0.3s ease, background 0.4s ease; cursor: pointer; font-family: var(--font-body); border-radius: 4px; }
   .fit11-btn-cart:hover { opacity: 0.9; }
@@ -462,7 +475,7 @@
     </div>
 
     {% comment %} ── RIGHT: DETAILS ── {% endcomment %}
-    <div class="fit11-info">
+    <div class="fit11-info product__info-container product__info-wrapper" id="ProductInfo-{{ section.id }}" data-section="{{ section.id }}">
 
 {% assign combo_active = false %}
 {% assign combo_count = 0 %}
@@ -500,9 +513,9 @@
         {% endif %}
 
         <div class="fit11-price-and-share" style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
-          <div class="fit11-price-wrapper">
+          <div class="fit11-price-wrapper price price--large price--show-badge">
             <div class="fit11-price-top">
-              <span class="fit11-price-main">{{ final_price_cents | money_without_trailing_zeros }}</span>
+              <span class="fit11-price-main price-item price-item--regular">{{ final_price_cents | money_without_trailing_zeros }}</span>
               <span class="fit11-price-off"{% if final_compare_at_cents <= final_price_cents or final_compare_at_cents == blank %} style="display:none;"{% endif %}>
                 {% if final_compare_at_cents > final_price_cents %}
                   {{ final_compare_at_cents | minus: final_price_cents | money_without_trailing_zeros }} OFF
@@ -510,7 +523,7 @@
               </span>
             </div>
             <div class="fit11-price-mrp"{% if final_compare_at_cents <= final_price_cents or final_compare_at_cents == blank %} style="display:none;"{% endif %}>
-              MRP: <span class="fit11-price-old">{{ final_compare_at_cents | money_without_trailing_zeros }}</span> <span class="fit11-price-taxes">Inclusive of all Taxes</span>
+              MRP: <span class="fit11-price-old price-item price-item--last">{{ final_compare_at_cents | money_without_trailing_zeros }}</span> <span class="fit11-price-taxes">Inclusive of all Taxes</span>
             </div>
             <div class="fit11-price-lowest"{% if final_compare_at_cents <= final_price_cents or final_compare_at_cents == blank %} style="display:none;"{% endif %}>Lowest price in last 30 days</div>
           </div>
@@ -527,9 +540,9 @@
       <div class="product-form__error-message-wrapper" role="alert" hidden style="margin-bottom: 10px; color: #d00000; font-size: 13px;">
         <span class="product-form__error-message"></span>
       </div>
-      {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline', style: 'width: 100%; flex-direction: column; min-width: 0;' %}
+      {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form__form', style: 'width: 100%; flex-direction: column; min-width: 0;' %}
 
-        <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}">
+        <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}" class="product-variant-id">
         <input type="hidden" name="quantity" value="1" class="qty-input">
 
         {% comment %} ── COLOR VARIANTS AS THUMBNAILS (DESKTOP) ── {% endcomment %}
@@ -538,9 +551,9 @@
             {% assign option_name_lower = option.name | downcase %}
             {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
               <div class="fit11-variant-selectors top-color-selector desktop-only-color" style="margin-bottom: 0px; margin-top: 8px; width: 100%;">
-                <div class="fit11-option-fieldset" role="group" style="border:none; padding:0; margin:0; min-width: 0; width: 100%;">
+                <div class="fit11-option-fieldset product-form__input" role="group" style="border:none; padding:0; margin:0; min-width: 0; width: 100%;">
                   <div class="fit11-option-name-row" style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 12px;">
-                    <span class="fit11-option-name-label" style="font-weight: 500; font-size: 13px; text-transform: none; letter-spacing: normal; white-space: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; padding-bottom: 4px;">Selected Color - <span class="fit11-selected-color-label" style="font-weight: 700; color: var(--lux-text); text-transform: capitalize;">{{ option.selected_value }}</span></span>
+                    <span class="fit11-option-name-label form__label" style="font-weight: 500; font-size: 13px; text-transform: none; letter-spacing: normal; white-space: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; padding-bottom: 4px;">Selected Color - <span class="fit11-selected-color-label" style="font-weight: 700; color: var(--lux-text); text-transform: capitalize;">{{ option.selected_value }}</span></span>
                   </div>
                   <div class="fit11-variant-pills">
                     {% for value in option.values %}
@@ -638,11 +651,14 @@
 
           {%- for block in section.blocks -%}
             {%- if block.type == '@app' -%}
-              <div class="fit11-app-wrapper">
+              <div class="fit11-app-wrapper" {{ block.shopify_attributes }}>
                 {% render block %}
               </div>
             {%- endif -%}
           {%- endfor -%}
+
+          {% comment %} ── QIKIFY & THIRD-PARTY APP OFFER CONTAINER HOOKS ── {% endcomment %}
+          <div class="qikify-app-container qikify-upsell-wrapper qikify-discount-wrapper qikify-volume-discount qvd-product-container qk-custom-container qikify-offer-wrapper" style="width: 100%; margin: 8px 0; clear: both;"></div>
 
           {% comment %} ── VARIANT SELECTOR (OTHER THAN COLOR) ── {% endcomment %}
 {% if combo_active %}
@@ -659,9 +675,9 @@
                   {% continue %}
                 {% endif %}
 
-                <div class="fit11-option-fieldset" role="group" style="min-width: 0; width: 100%;">
+                <div class="fit11-option-fieldset product-form__input" role="group" style="min-width: 0; width: 100%;">
                   <div class="fit11-option-name-row" style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 8px;">
-                    <span class="fit11-option-name-label" style="font-size: 12px; font-weight: 500; color: var(--lux-text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-family: var(--font-body);">{{ option.name }}</span>
+                    <span class="fit11-option-name-label form__label" style="font-size: 12px; font-weight: 500; color: var(--lux-text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-family: var(--font-body);">{{ option.name }}</span>
                     {% if option_name_lower == 'size' %}
                       <div class="fit11-size-chart-link" onclick="fit11ToggleModal(true)" style="display: flex; align-items: center; gap: 4px; font-size: 11px; text-decoration: underline; color: var(--lux-accent); font-weight: 500; cursor: pointer;">
                         <i class="ti ti-ruler-2"></i><span>Size Guide</span>
@@ -704,7 +720,8 @@
         </div>
 
 {% unless combo_active %}
-        <div class="fit11-main-buttons-container">
+        <div class="fit11-main-buttons-container product-form__buttons">
+          <div class="qikify-before-atc" style="width: 100%;"></div>
           <button type="submit" name="add" id="fit11MainAddToCartBtnProd" class="fit11-btn-cart product-form__submit" style="width: 100%; margin: 0 !important; background: #222 !important; color: #fff !important; border-radius: 6px; border: none; font-weight: 600; font-size: 14px; height: 50px !important; display: flex; align-items: center; justify-content: center; gap: 8px;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
             <span class="fit11-btn-text">ADD TO CART</span>
@@ -713,6 +730,7 @@
               <svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg" style="animation: rotator 1.4s linear infinite;"><circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30" style="stroke: currentColor; stroke-dasharray: 187; stroke-dashoffset: 0; transform-origin: center; animation: dash 1.4s ease-in-out infinite;"></circle></svg>
             </div>
           </button>
+          <div class="qikify-after-atc" style="width: 100%;"></div>
         </div>
         {% render 'campaign-product-carousel' %}
         <div class="fit11-original-buttons-anchor"></div>
