@@ -150,51 +150,98 @@
   .fit11-app-wrapper:empty { display: none !important; }
   .fit11-app-wrapper > div, .fit11-app-wrapper > iframe { box-sizing: border-box !important; max-width: 100% !important; margin: 0 !important; }
 
-  /* ── QIKIFY / THIRD PARTY APP EMBEDS & OFFERS ── */
-  .fit11-info [class*="qikify"],
-  .fit11-info [class*="qvd"],
-  .fit11-info [class*="qk-"],
-  .fit11-info .qikify-app-container,
-  .fit11-app-wrapper,
-  .fit11-app-wrapper-container,
-  .qvd-container,
-  .qvd-tier-items,
-  .qvd-item-option,
-  .qvd-option-wrapper,
-  .qvd-variant-selector,
-  .qikify-options-container,
-  .qikify-variant-wrapper {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-    height: auto !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
-  .fit11-app-wrapper-container {
-    margin: 6px 0 !important;
+  /* ── QIKIFY / APP BLOCKS CONTAINER FIX & BLANK SPACE ELIMINATION ── */
+  #fit11AppWrapperContainer {
+    width: 100%;
+    clear: both;
+    margin: 0 !important;
     padding: 0 !important;
-    clear: both !important;
+  }
+  #fit11AppWrapperContainer:empty,
+  #fit11AppWrapperContainer:not(:has(.fit11-app-wrapper:not(:empty))),
+  #qikify-volume:not(:has(.qvl-volume-tier, .qvl-product-offer)),
+  .qikify-volume:not(:has(.qvl-volume-tier, .qvl-product-offer)) {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border: none !important;
   }
 
-  /* ── QIKIFY DROPDOWN & VARIANT SELECTOR STYLING ── */
-  .fit11-info [class*="qikify"] select,
-  .fit11-info [class*="qvd"] select,
-  .fit11-info select.qikify-variant-select,
-  .fit11-app-wrapper select,
-  .fit11-app-wrapper-container select,
-  .qvd-variant-selector select,
-  .qvd-item-option select {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
+  #fit11AppWrapperContainer svg,
+  #qikify-volume svg,
+  .qikify-volume svg:not(.qvl-icon),
+  svg:has(> symbol[id^="qvl-"]),
+  svg:has(> symbol#qvl-icon-arrow-down) {
+    display: none !important;
+    position: absolute !important;
+    width: 0 !important;
+    height: 0 !important;
+    max-width: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  /* ── HIDE THEME VARIANT PICKERS (COLOR SWATCHES & SIZE PILLS) WHEN QIKIFY IS ACTIVE ── */
+  body.qikify-offer-active .top-color-selector,
+  body.qikify-offer-active #fit11MainBtnContainer,
+  body.qikify-offer-active .fit11-theme-variant-picker,
+  body.qikify-offer-active .mobile-only-color,
+  body.qikify-offer-active .desktop-only-color,
+  body:has(.qvl-volume-tier) .top-color-selector,
+  body:has(.qvl-volume-tier) #fit11MainBtnContainer,
+  body:has(.qvl-volume-tier) .fit11-theme-variant-picker,
+  body:has(.qvl-volume-tier) .mobile-only-color,
+  body:has(.qvl-volume-tier) .desktop-only-color,
+  body:has(.qvl-product-offer) .top-color-selector,
+  body:has(.qvl-product-offer) #fit11MainBtnContainer,
+  body:has(.qvl-product-offer) .fit11-theme-variant-picker,
+  body:has(.qvl-product-offer) .mobile-only-color,
+  body:has(.qvl-product-offer) .desktop-only-color,
+  body:has(.qvl-volume-box) .top-color-selector,
+  body:has(.qvl-volume-box) #fit11MainBtnContainer,
+  body:has(.qvl-volume-box) .fit11-theme-variant-picker,
+  body:has(#qvl-embed-placeholder .qvl-volume-tier) .top-color-selector,
+  body:has(#qvl-embed-placeholder .qvl-volume-tier) #fit11MainBtnContainer,
+  body:has(#qvl-embed-placeholder .qvl-volume-tier) .fit11-theme-variant-picker,
+  body:has(#qvl-embed-placeholder:not(:empty)) .top-color-selector,
+  body:has(#qvl-embed-placeholder:not(:empty)) #fit11MainBtnContainer,
+  body:has(#qvl-embed-placeholder:not(:empty)) .fit11-theme-variant-picker {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  /* ── QIKIFY OFFERS & DROPDOWNS STYLING ── */
+  #qvl-embed-placeholder {
     width: 100% !important;
+    margin: 4px 0 !important;
+    clear: both !important;
+  }
+  .qvl-product-offer-container,
+  .qvl-product-offer,
+  .qvl-volume-box,
+  .qvl-volume-tier {
     max-width: 100% !important;
-    height: 42px !important;
-    padding: 6px 12px !important;
+    box-sizing: border-box !important;
+  }
+  .qvl-variant-opt__select,
+  .qvl-product-offer select,
+  #qvl-embed-placeholder select {
+    width: 100% !important;
+    height: 40px !important;
+    padding: 4px 10px !important;
     border: 1.5px solid #cbd5e0 !important;
     border-radius: 6px !important;
     background-color: #ffffff !important;
@@ -202,22 +249,12 @@
     font-size: 13px !important;
     font-weight: 500 !important;
     font-family: var(--font-body) !important;
-    margin: 6px 0 8px 0 !important;
+    margin: 4px 0 !important;
     cursor: pointer !important;
     outline: none !important;
     -webkit-appearance: menulist !important;
     appearance: menulist !important;
     box-sizing: border-box !important;
-  }
-  .fit11-info [class*="qikify"] .qvd-item-option,
-  .fit11-info [class*="qikify"] .qvd-option-wrapper,
-  .fit11-info [class*="qvd"] .qvd-variant-selector,
-  .fit11-info .qvd-tier-items {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    margin: 6px 0 !important;
-    height: auto !important;
   }
 
   .fit11-btn-cart { width: 100% !important; height: 54px !important; margin: 24px 0 0 0 !important; background: var(--lux-text); color: var(--lux-surface); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; border: none; display: flex; align-items: center; justify-content: center; gap: 12px; transition: opacity 0.3s ease, background 0.4s ease; cursor: pointer; font-family: var(--font-body); border-radius: 4px; }
@@ -755,17 +792,24 @@
 {% endif %}
       </div>
 
-      {% comment %} ── QIKIFY & APP OFFERS CONTAINER (LOCATED DIRECTLY ABOVE ADD TO CART) ── {% endcomment %}
-      <div class="fit11-app-wrapper-container" id="fit11AppWrapperContainer" style="width: 100%; margin: 2px 0; clear: both;">
-        {%- for block in section.blocks -%}
-          {%- if block.type == '@app' -%}
-            <div class="fit11-app-wrapper" {{ block.shopify_attributes }}>
-              {% render block %}
-            </div>
-          {%- endif -%}
-        {%- endfor -%}
-        <div class="qikify-app-container qikify-upsell-wrapper qikify-discount-wrapper qikify-volume-discount qvd-product-container qk-custom-container qikify-offer-wrapper" style="width: 100%; margin: 4px 0; clear: both;"></div>
-      </div>
+      {% comment %} ── APP BLOCKS CONTAINER ── {% endcomment %}
+      {% assign has_app_blocks = false %}
+      {%- for block in section.blocks -%}
+        {%- if block.type == '@app' -%}
+          {% assign has_app_blocks = true %}
+        {%- endif -%}
+      {%- endfor -%}
+      {% if has_app_blocks %}
+        <div class="fit11-app-wrapper-container" id="fit11AppWrapperContainer" style="width: 100%; margin: 0; clear: both;">
+          {%- for block in section.blocks -%}
+            {%- if block.type == '@app' -%}
+              <div class="fit11-app-wrapper" {{ block.shopify_attributes }}>
+                {% render block %}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {% endif %}
 
       {% comment %} ── ADD TO CART FORM ── {% endcomment %}
       <product-form class="product-form" data-hide-errors="false" style="width: 100%; margin-top: 4px;">
@@ -794,6 +838,9 @@
           </select>
           <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}" class="product-variant-id">
           <input type="hidden" name="quantity" value="1" class="qty-input">
+
+          <!-- Qikify Volume Discount Placeholder (Positioned Directly Above Add to Cart Button) -->
+          <div id="qvl-embed-placeholder" class="qikify-volume-discount-embed" style="width: 100%; margin: 4px 0;"></div>
 
 {% unless combo_active %}
           <div class="fit11-main-buttons-container product-form__buttons" style="margin-top: 8px;">
@@ -1514,52 +1561,29 @@
     });
   }
 
-  /* Ensure Qikify Volume Discount / App widgets stay anchored directly above Add to Cart */
-  function anchorQikifyAppWidget() {
-    var targetContainer = document.getElementById('fit11AppWrapperContainer');
-    if (!targetContainer) return;
-
-    var qikifyWidgets = document.querySelectorAll(
-      '.qikify-volume-discount:not(#fit11AppWrapperContainer *), ' +
-      '[class*="qvd-"]:not(#fit11AppWrapperContainer *):not(#fit11AppWrapperContainer), ' +
-      '[id*="qikify-volume"]:not(#fit11AppWrapperContainer *), ' +
-      '[class*="qikify-upsell"]:not(#fit11AppWrapperContainer *), ' +
-      '.qikify-app-container:not(#fit11AppWrapperContainer *)'
-    );
-
-    qikifyWidgets.forEach(function(widget) {
-      if (!targetContainer.contains(widget) && widget.parentElement && widget !== targetContainer) {
-        targetContainer.appendChild(widget);
-      }
-    });
-  }
-
   /* Qikify Theme Variant Picker Auto-Hide & Spacing Sync */
   function syncQikifyThemeVariantPickerVisibility() {
-    var qikifyWidget = document.querySelector('.qikify-volume-discount, .qvd-container, [class*="qvd-"], #qikify-volume-discount, [class*="qikify-upsell"]');
-    if (!qikifyWidget) return;
+    var qikifyOffer = document.querySelector(
+      '.qvl-volume-tier, .qvl-product-offer, .qvl-volume-box, ' +
+      '#qvl-embed-placeholder .qvl-volume-tier, [data-offer-id], ' +
+      '.qvl-variant-opt__select, .qvl-tier-items'
+    );
 
-    var hasTierDropdowns = qikifyWidget.querySelector('.qvd-tier-items, .qvd-item-option, .qvd-variant-selector, select, [class*="qvd-option"], [class*="qvd-select"]') !== null;
-    var hasHideClass = document.querySelector('.qikify-hide-variant, body.qikify-hide-variant-picker, [class*="qvd-hide"]') !== null;
-
-    if (hasTierDropdowns || hasHideClass) {
-      document.querySelectorAll('.fit11-theme-variant-picker, .top-color-selector, .desktop-only-color, .mobile-only-color').forEach(function(el) {
+    if (qikifyOffer) {
+      document.body.classList.add('qikify-offer-active');
+      document.documentElement.classList.add('qikify-offer-active');
+      document.querySelectorAll('.fit11-theme-variant-picker, .top-color-selector, .desktop-only-color, .mobile-only-color, #fit11MainBtnContainer').forEach(function(el) {
         el.style.setProperty('display', 'none', 'important');
+        el.style.setProperty('height', '0', 'important');
         el.style.setProperty('margin', '0', 'important');
         el.style.setProperty('padding', '0', 'important');
+        el.style.setProperty('overflow', 'hidden', 'important');
       });
-      var mainBtnContainer = document.getElementById('fit11MainBtnContainer');
-      if (mainBtnContainer) {
-        mainBtnContainer.style.setProperty('display', 'none', 'important');
-        mainBtnContainer.style.setProperty('margin', '0', 'important');
-        mainBtnContainer.style.setProperty('padding', '0', 'important');
-      }
     }
   }
 
   if (typeof MutationObserver !== 'undefined') {
     var appObserver = new MutationObserver(function(mutations) {
-      anchorQikifyAppWidget();
       syncQikifyThemeVariantPickerVisibility();
     });
     var pageElem = document.getElementById('fit11-page-{{ section.id }}') || document.body;
@@ -1567,14 +1591,8 @@
       appObserver.observe(pageElem, { childList: true, subtree: true });
     }
   }
-  setInterval(function() {
-    anchorQikifyAppWidget();
-    syncQikifyThemeVariantPickerVisibility();
-  }, 400);
-  document.addEventListener('DOMContentLoaded', function() {
-    anchorQikifyAppWidget();
-    syncQikifyThemeVariantPickerVisibility();
-  });
+  setInterval(syncQikifyThemeVariantPickerVisibility, 200);
+  document.addEventListener('DOMContentLoaded', syncQikifyThemeVariantPickerVisibility);
 
   /* FASHION BAG FLY ANIMATION */
   function playBagAnimation(sourceButton) {
