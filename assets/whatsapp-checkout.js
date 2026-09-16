@@ -1317,15 +1317,54 @@
 
     const fname = (document.getElementById('wa-first-name') || {}).value?.trim() || '';
     const lname = (document.getElementById('wa-last-name') || {}).value?.trim() || '';
-    const email = (document.getElementById('wa-email') || {}).value?.trim() || '';
+    const emailEl = document.getElementById('wa-email');
+    const emailVal = (emailEl ? emailEl.value : '').trim();
     const address1 = (document.getElementById('wa-address1') || {}).value?.trim() || '';
     const address2 = (document.getElementById('wa-address2') || {}).value?.trim() || '';
     const zip = (document.getElementById('wa-zip') || {}).value?.trim() || '';
     const district = (document.getElementById('wa-addr-district') || {}).value?.trim() || '';
 
     const errEl = document.getElementById('wa-pin-error');
+    let emailErrEl = document.getElementById('wa-email-error');
+    if (!emailErrEl && emailEl && emailEl.parentElement && emailEl.parentElement.parentElement && emailEl.parentElement.parentElement.parentElement) {
+      emailErrEl = document.createElement('div');
+      emailErrEl.id = 'wa-email-error';
+      emailErrEl.style.color = '#ef4444';
+      emailErrEl.style.fontSize = '12px';
+      emailErrEl.style.marginTop = '6px';
+      emailErrEl.style.fontWeight = '600';
+      emailEl.parentElement.parentElement.parentElement.appendChild(emailErrEl);
+    }
 
-    // Validation
+    // Email validation early
+    if (emailEl && waPaymentSettings && waPaymentSettings.email_required === true && !emailVal) {
+      if (emailErrEl) {
+        emailErrEl.innerText = 'Please enter your email address to continue.';
+        emailErrEl.style.display = 'block';
+      }
+      emailEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      emailEl.focus();
+      return;
+    }
+    if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+      if (emailErrEl) {
+        emailErrEl.innerText = 'Please enter a valid email address.';
+        emailErrEl.style.display = 'block';
+      }
+      emailEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      emailEl.focus();
+      return;
+    }
+    if (emailErrEl) emailErrEl.style.display = 'none';
+    if (emailVal) {
+      waEmail = emailVal;
+      try {
+        localStorage.setItem('fit11_user_email', emailVal);
+        localStorage.setItem('fit11_verified_email', emailVal);
+      } catch(e) {}
+    }
+
+    // Address validation
     if (!fname) { if (errEl) { errEl.textContent = 'Please enter your First Name.'; errEl.style.display = 'block'; } document.getElementById('wa-first-name').focus(); return; }
     if (!address1) { if (errEl) { errEl.textContent = 'Please enter your Address.'; errEl.style.display = 'block'; } document.getElementById('wa-address1').focus(); return; }
     if (!zip || zip.length !== 6) { if (errEl) { errEl.textContent = 'Please enter a valid 6-digit PIN code.'; errEl.style.display = 'block'; } document.getElementById('wa-zip').focus(); return; }
@@ -1339,7 +1378,7 @@
     const addr = {
       first_name: fname,
       last_name: lname,
-      email: email,
+      email: emailVal,
       address1: address1,
       address2: finalAddress2,
       city: cityVal,
@@ -1350,7 +1389,7 @@
     };
 
     const btn = document.getElementById('wa-save-addr-btn');
-    if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving & Proceeding...'; }
 
     try {
       const saveRes = await fetch(WA_API_BASE + '/addresses', {
@@ -1367,22 +1406,27 @@
         const errData = await saveRes.json().catch(() => ({}));
         throw new Error(errData.error || `Server error ${saveRes.status}`);
       }
-      // FIX: Clear stale sessionStorage cache so loadAddresses() hits the API fresh
-      // Without this, customers see a blank form again immediately after saving
+      // Clear stale sessionStorage cache so loadAddresses() hits the API fresh
       try { sessionStorage.removeItem(`wa_addr_${waPhone}`); } catch(e) {}
       // Optimistically add to in-memory list so the address appears instantly
-      const newAddr = { ...addr, id: 'local_' + Date.now() };
+      const newAddrId = waEditingAddressId || ('local_' + Date.now());
+      const newAddr = { ...addr, id: newAddrId };
       waAddresses = waAddresses.filter(a => {
         const norm = s => (s||'').toLowerCase().replace(/\s/g,'');
         return !(norm(a.address1) === norm(newAddr.address1) && norm(a.zip) === norm(newAddr.zip));
       });
       waAddresses.unshift(newAddr);
-      waSelectedAddress = newAddr;
+      waSelectedAddress = newAddr.id;
       document.getElementById('wa-new-address-form').style.display = 'none';
       document.getElementById('wa-add-addr-btn').style.display = 'block';
       if (errEl) errEl.style.display = 'none';
       waEditingAddressId = null;
       await loadAddresses();
+
+      // AUTO-ADVANCE: Immediately move directly to Step 4 (Payment) seamlessly!
+      if (typeof waGoToStep === 'function') {
+        waGoToStep(4);
+      }
     } catch (e) { 
       alert('Failed to save address. Error: ' + e.message); console.error(e); 
     } finally {
