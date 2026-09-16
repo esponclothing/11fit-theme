@@ -142,11 +142,12 @@
   .fit11-price-lowest { font-size: 12px; font-weight: 500; color: #8A2BE2; font-family: var(--font-body); margin-bottom: 8px; }
 
   /* ── MAIN DESKTOP BUTTON & APP BLOCKS ── */
-  .fit11-main-action-btns { background: transparent; padding: 0; margin: 0; width: 100%; border-radius: 0; }
-  .fit11-combo-title { font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+  .fit11-main-action-btns { background: transparent; padding: 0 !important; margin: 0 !important; width: 100%; border-radius: 0; }
+  .fit11-combo-title { font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
   .fit11-combo-title::before { content: ''; width: 4px; height: 14px; background: var(--lux-accent); display: block; }
 
   .fit11-app-wrapper { width: 100%; margin: 0 !important; padding: 0 !important; }
+  .fit11-app-wrapper:empty { display: none !important; }
   .fit11-app-wrapper > div, .fit11-app-wrapper > iframe { box-sizing: border-box !important; max-width: 100% !important; margin: 0 !important; }
 
   /* ── QIKIFY / THIRD PARTY APP EMBEDS & OFFERS ── */
@@ -155,16 +156,27 @@
   .fit11-info [class*="qk-"],
   .fit11-info .qikify-app-container,
   .fit11-app-wrapper,
-  .fit11-app-wrapper-container {
+  .fit11-app-wrapper-container,
+  .qvd-container,
+  .qvd-tier-items,
+  .qvd-item-option,
+  .qvd-option-wrapper,
+  .qvd-variant-selector,
+  .qikify-options-container,
+  .qikify-variant-wrapper {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
   }
   .fit11-app-wrapper-container {
-    margin: 12px 0 6px 0 !important;
+    margin: 6px 0 !important;
+    padding: 0 !important;
     clear: both !important;
   }
 
@@ -173,34 +185,39 @@
   .fit11-info [class*="qvd"] select,
   .fit11-info select.qikify-variant-select,
   .fit11-app-wrapper select,
-  .fit11-app-wrapper-container select {
+  .fit11-app-wrapper-container select,
+  .qvd-variant-selector select,
+  .qvd-item-option select {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
     width: 100% !important;
     max-width: 100% !important;
-    height: 40px !important;
+    height: 42px !important;
     padding: 6px 12px !important;
-    border: 1px solid #d0d0d0 !important;
+    border: 1.5px solid #cbd5e0 !important;
     border-radius: 6px !important;
     background-color: #ffffff !important;
     color: #111111 !important;
     font-size: 13px !important;
     font-weight: 500 !important;
     font-family: var(--font-body) !important;
-    margin: 6px 0 !important;
+    margin: 6px 0 8px 0 !important;
     cursor: pointer !important;
     outline: none !important;
     -webkit-appearance: menulist !important;
     appearance: menulist !important;
+    box-sizing: border-box !important;
   }
   .fit11-info [class*="qikify"] .qvd-item-option,
   .fit11-info [class*="qikify"] .qvd-option-wrapper,
-  .fit11-info [class*="qvd"] .qvd-variant-selector {
+  .fit11-info [class*="qvd"] .qvd-variant-selector,
+  .fit11-info .qvd-tier-items {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
     margin: 6px 0 !important;
+    height: auto !important;
   }
 
   .fit11-btn-cart { width: 100% !important; height: 54px !important; margin: 24px 0 0 0 !important; background: var(--lux-text); color: var(--lux-surface); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; border: none; display: flex; align-items: center; justify-content: center; gap: 12px; transition: opacity 0.3s ease, background 0.4s ease; cursor: pointer; font-family: var(--font-body); border-radius: 4px; }
@@ -216,11 +233,11 @@
   .fit11-sticky-bar.fit11-is-visible { bottom: 0; }
 
   /* ── VARIANT SELECTORS (LUXURY ADAPTATION) ── */
-  .fit11-variant-selectors { display: flex; flex-direction: column; gap: 20px; margin-bottom: 8px; width: 100%; min-width: 0; }
+  .fit11-variant-selectors { display: flex; flex-direction: column; gap: 6px !important; margin: 4px 0 !important; width: 100%; min-width: 0; }
   .fit11-option-fieldset { border: none; padding: 0; margin: 0; }
-  .fit11-option-name { font-size: 12px; font-weight: 500; color: var(--lux-text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.1em; font-family: var(--font-body); white-space: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; }
+  .fit11-option-name { font-size: 12px; font-weight: 500; color: var(--lux-text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.1em; font-family: var(--font-body); white-space: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; }
   .fit11-option-name::-webkit-scrollbar { display: none; }
-  .fit11-variant-pills { display: flex; flex-wrap: nowrap; gap: 10px; }
+  .fit11-variant-pills { display: flex; flex-wrap: nowrap; gap: 8px; }
   .fit11-variant-radio { display: none; }
   .fit11-variant-pill {
     display: inline-flex; align-items: center; justify-content: center;
@@ -381,9 +398,9 @@
     .fit11-title { font-size: 20px; text-align: left; }
     .fit11-price-row { justify-content: flex-start; }
 
-    .fit11-main-action-btns { width: 100%; padding: 20px 0; border-left: none; border-right: none; border-radius: 0; margin: 0; background: transparent; }
-    .fit11-offers-wrapper { order: 1; }
-    .fit11-app-wrapper { order: 2; width: 100%; padding: 4px; padding-top: 15px; margin-left: -4px; overflow: visible; }
+    .fit11-main-action-btns { width: 100%; padding: 0 !important; border-left: none; border-right: none; border-radius: 0; margin: 0 !important; background: transparent; }
+    .fit11-offers-wrapper { order: 1; margin: 8px 0 !important; }
+    .fit11-app-wrapper { order: 2; width: 100%; padding: 0 !important; margin: 0 !important; overflow: visible; }
 
     #fit11-form-cart-main { width: 100%; margin: 0; padding: 0; }
     .fit11-main-action-btns .fit11-btn-cart { display: flex !important; width: 100% !important; height: 52px !important; margin: 16px 0 0 0 !important; }
@@ -575,6 +592,16 @@
         </div>
       </div>
 
+      <script>
+        window.ShopifyAnalytics = window.ShopifyAnalytics || {};
+        window.ShopifyAnalytics.meta = window.ShopifyAnalytics.meta || {};
+        window.ShopifyAnalytics.meta.product = {{ product | json }};
+        window.ShopifyAnalytics.meta.selectedVariantId = {{ product.selected_or_first_available_variant.id | json }};
+        window.ProductJson = window.ProductJson || {};
+        window.ProductJson["{{ product.id }}"] = {{ product | json }};
+        window.product = {{ product | json }};
+      </script>
+
       {% comment %} ── COLOR VARIANTS AS THUMBNAILS (DESKTOP) ── {% endcomment %}
       {% unless product.has_only_default_variant %}
         {% for option in product.options_with_values %}
@@ -682,7 +709,7 @@
   {% render '11fit-combo', product: product, combo_count: combo_count, combo_price: combo_price %}
 {% else %}
         {% unless product.has_only_default_variant %}
-          <div class="fit11-variant-selectors" style="margin-top: 4px; margin-bottom: 8px;">
+          <div class="fit11-variant-selectors" style="margin: 2px 0 4px 0;">
             {% for option in product.options_with_values %}
               {% assign option_name_lower = option.name | downcase %}
               {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
@@ -690,7 +717,7 @@
               {% endif %}
 
               <div class="fit11-option-fieldset product-form__input" role="group" style="min-width: 0; width: 100%;">
-                <div class="fit11-option-name-row" style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 8px;">
+                <div class="fit11-option-name-row" style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 6px;">
                   <span class="fit11-option-name-label form__label" style="font-size: 12px; font-weight: 500; color: var(--lux-text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-family: var(--font-body);">{{ option.name }}</span>
                   {% if option_name_lower == 'size' %}
                     <div class="fit11-size-chart-link" onclick="fit11ToggleModal(true)" style="display: flex; align-items: center; gap: 4px; font-size: 11px; text-decoration: underline; color: var(--lux-accent); font-weight: 500; cursor: pointer;">
@@ -729,7 +756,7 @@
       </div>
 
       {% comment %} ── QIKIFY & APP OFFERS CONTAINER (LOCATED DIRECTLY ABOVE ADD TO CART) ── {% endcomment %}
-      <div class="fit11-app-wrapper-container" id="fit11AppWrapperContainer" style="width: 100%; margin: 8px 0; clear: both;">
+      <div class="fit11-app-wrapper-container" id="fit11AppWrapperContainer" style="width: 100%; margin: 2px 0; clear: both;">
         {%- for block in section.blocks -%}
           {%- if block.type == '@app' -%}
             <div class="fit11-app-wrapper" {{ block.shopify_attributes }}>
