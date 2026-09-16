@@ -154,13 +154,53 @@
   .fit11-info [class*="qvd"],
   .fit11-info [class*="qk-"],
   .fit11-info .qikify-app-container,
-  .fit11-app-wrapper {
+  .fit11-app-wrapper,
+  .fit11-app-wrapper-container {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
+  }
+  .fit11-app-wrapper-container {
+    margin: 12px 0 6px 0 !important;
+    clear: both !important;
+  }
+
+  /* ── QIKIFY DROPDOWN & VARIANT SELECTOR STYLING ── */
+  .fit11-info [class*="qikify"] select,
+  .fit11-info [class*="qvd"] select,
+  .fit11-info select.qikify-variant-select,
+  .fit11-app-wrapper select,
+  .fit11-app-wrapper-container select {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 40px !important;
+    padding: 6px 12px !important;
+    border: 1px solid #d0d0d0 !important;
+    border-radius: 6px !important;
+    background-color: #ffffff !important;
+    color: #111111 !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    font-family: var(--font-body) !important;
+    margin: 6px 0 !important;
+    cursor: pointer !important;
+    outline: none !important;
+    -webkit-appearance: menulist !important;
+    appearance: menulist !important;
+  }
+  .fit11-info [class*="qikify"] .qvd-item-option,
+  .fit11-info [class*="qikify"] .qvd-option-wrapper,
+  .fit11-info [class*="qvd"] .qvd-variant-selector {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin: 6px 0 !important;
   }
 
   .fit11-btn-cart { width: 100% !important; height: 54px !important; margin: 24px 0 0 0 !important; background: var(--lux-text); color: var(--lux-surface); font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; border: none; display: flex; align-items: center; justify-content: center; gap: 12px; transition: opacity 0.3s ease, background 0.4s ease; cursor: pointer; font-family: var(--font-body); border-radius: 4px; }
@@ -530,213 +570,229 @@
           <i class="ti ti-share" onclick="if(navigator.share){navigator.share({url: window.location.href, title: document.title});}" style="font-size: 24px; color: var(--lux-text); cursor: pointer; padding: 4px; margin-top: 4px;"></i>
         </div>
 
-        {% comment %} Ratings now below MRP {% endcomment %}
         <div class="fit11-rating-row" style="justify-content: flex-start;">
           <div class="AirReviews-Widget AirReviews-Widget--Stars"></div>
         </div>
       </div>
 
-      <product-form class="product-form" data-hide-errors="false" style="width: 100%;">
-      <div class="product-form__error-message-wrapper" role="alert" hidden style="margin-bottom: 10px; color: #d00000; font-size: 13px;">
-        <span class="product-form__error-message"></span>
-      </div>
-      {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form__form', style: 'width: 100%; flex-direction: column; min-width: 0;' %}
-
-        <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}" class="product-variant-id">
-        <input type="hidden" name="quantity" value="1" class="qty-input">
-
-        {% comment %} ── COLOR VARIANTS AS THUMBNAILS (DESKTOP) ── {% endcomment %}
-        {% unless product.has_only_default_variant %}
-          {% for option in product.options_with_values %}
-            {% assign option_name_lower = option.name | downcase %}
-            {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
-              <div class="fit11-variant-selectors top-color-selector desktop-only-color" style="margin-bottom: 0px; margin-top: 8px; width: 100%;">
-                <div class="fit11-option-fieldset product-form__input" role="group" style="border:none; padding:0; margin:0; min-width: 0; width: 100%;">
-                  <div class="fit11-option-name-row" style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 12px;">
-                    <span class="fit11-option-name-label form__label" style="font-weight: 500; font-size: 13px; text-transform: none; letter-spacing: normal; white-space: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; padding-bottom: 4px;">Selected Color - <span class="fit11-selected-color-label" style="font-weight: 700; color: var(--lux-text); text-transform: capitalize;">{{ option.selected_value }}</span></span>
-                  </div>
-                  <div class="fit11-variant-pills">
-                    {% for value in option.values %}
-                      <input type="radio"
-                             id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}-desktop"
-                             name="{{ option.name }}"
-                             value="{{ value | escape }}"
-                             {% if option.selected_value == value %}checked{% endif %}
-                             class="fit11-variant-radio"
-                             data-is-color="true">
-
-                      <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}-desktop" class="fit11-variant-pill is-color" title="{{ value }}">
-                        {% assign variant_image = null %}
-                        {% for variant in product.variants %}
-                          {% if variant.options contains value and variant.featured_image %}
-                            {% assign variant_image = variant.featured_image %}
-                            {% break %}
-                          {% endif %}
-                        {% endfor %}
-
-                        <div class="fit11-color-swatch-wrap">
-                          {% if variant_image != null %}
-                            <span class="fit11-color-swatch" style="background-image: url('{{ variant_image | img_url: '200x250' }}'); background-size: cover; background-position: center;"></span>
-                          {% else %}
-                            {% assign color_handle = value | handle %}
-                            {% assign css_color = color_handle %}
-                            {% case color_handle %}
-                              {% when 'navy-blue' %}{% assign css_color = '#000080' %}
-                              {% when 'bottle-green' %}{% assign css_color = '#006A4E' %}
-                              {% when 'light-baby-pink' %}{% assign css_color = '#F4C2C2' %}
-                              {% when 'lavender' %}{% assign css_color = '#E6E6FA' %}
-                              {% when 'baby-blue' %}{% assign css_color = '#89CFF0' %}
-                              {% when 'flamingo' %}{% assign css_color = '#FC8EAC' %}
-                              {% when 'jade' %}{% assign css_color = '#00A86B' %}
-                              {% when 'off-white' %}{% assign css_color = '#FAF9F6' %}
-                              {% when 'maroon' %}{% assign css_color = '#800000' %}
-                              {% when 'white' %}{% assign css_color = '#FFFFFF' %}
-                              {% when 'black' %}{% assign css_color = '#000000' %}
-                              {% when 'red' %}{% assign css_color = '#FF0000' %}
-                              {% else %}{% assign css_color = value | split: ' ' | last | downcase %}
-                            {% endcase %}
-                            <span class="fit11-color-swatch" style="background-color: {{ css_color }};"></span>
-                          {% endif %}
-                        </div>
-                        <span class="fit11-color-name">{{ value }}</span>
-                      </label>
-                    {% endfor %}
-                  </div>
+      {% comment %} ── COLOR VARIANTS AS THUMBNAILS (DESKTOP) ── {% endcomment %}
+      {% unless product.has_only_default_variant %}
+        {% for option in product.options_with_values %}
+          {% assign option_name_lower = option.name | downcase %}
+          {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
+            <div class="fit11-variant-selectors top-color-selector desktop-only-color" style="margin-bottom: 0px; margin-top: 8px; width: 100%;">
+              <div class="fit11-option-fieldset product-form__input" role="group" style="border:none; padding:0; margin:0; min-width: 0; width: 100%;">
+                <div class="fit11-option-name-row" style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 12px;">
+                  <span class="fit11-option-name-label form__label" style="font-weight: 500; font-size: 13px; text-transform: none; letter-spacing: normal; white-space: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; padding-bottom: 4px;">Selected Color - <span class="fit11-selected-color-label" style="font-weight: 700; color: var(--lux-text); text-transform: capitalize;">{{ option.selected_value }}</span></span>
                 </div>
-              </div>
-            {% endif %}
-          {% endfor %}
-        {% endunless %}
+                <div class="fit11-variant-pills">
+                  {% for value in option.values %}
+                    <input type="radio"
+                           id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}-desktop"
+                           name="{{ option.name }}"
+                           value="{{ value | escape }}"
+                           {% if option.selected_value == value %}checked{% endif %}
+                           class="fit11-variant-radio"
+                           data-is-color="true">
 
-        {% comment %} ── HIGHLIGHTED COMBO SELECTION AREA (APP + VARIANTS) ── {% endcomment %}
-        <div class="fit11-main-action-btns" id="fit11MainBtnContainer">
-
-          {% comment %} ── NEW OFFERS & DISCOUNTS SECTION (MOVED ABOVE APP BLOCK) ── {% endcomment %}
-          {% assign offer_blocks = section.blocks | where: "type", "offer" %}
-          {% assign active_campaign = product.metafields.custom.active_campaign.value %}
-
-          {% if offer_blocks.size > 0 or active_campaign != blank %}
-            <div class="fit11-offers-wrapper" style="margin-top: 8px; margin-bottom: 20px;">
-              <div class="fit11-offers-header">
-                <div class="fit11-offers-title-wrap">
-                  <img src="{{ '11fit-discount-icon.gif' | asset_url }}" style="width: 28px; height: 28px; object-fit: contain; margin-left: -4px;">
-                  <span class="fit11-offers-title">{{ section.settings.offers_heading | default: "Offers & Discounts" }}</span>
-                </div>
-                {% if section.settings.show_view_all %}
-                  <div class="fit11-offers-view-all" onclick="fit11ToggleOffersModal(true)">View all Offers</div>
-                {% endif %}
-              </div>
-
-              <div class="fit11-offers-scroll">
-                {% if active_campaign != blank %}
-                  {% render 'campaign-banner', inline_card: true %}
-                {% endif %}
-                {% for block in offer_blocks %}
-                  <div class="fit11-offer-card" onclick="fit11CopyCoupon(this, '{{ block.settings.offer_code }}')" {{ block.shopify_attributes }}>
-                    <div class="fit11-offer-content-wrap">
-                      <div class="fit11-offer-code">{{ block.settings.offer_code }}</div>
-                      <div class="fit11-offer-desc">{{ block.settings.offer_desc }}</div>
-                      {% if block.settings.offer_code != blank %}
-                        <div class="fit11-copy-hint"><i class="ti ti-copy"></i> Click to Copy</div>
-                      {% endif %}
-                    </div>
-                    {% if block.settings.offer_timer != blank %}
-                      <div class="fit11-offer-timer">{{ block.settings.offer_timer }}</div>
-                    {% endif %}
-                  </div>
-                {% endfor %}
-              </div>
-            </div>
-          {% endif %}
-
-          {%- for block in section.blocks -%}
-            {%- if block.type == '@app' -%}
-              <div class="fit11-app-wrapper" {{ block.shopify_attributes }}>
-                {% render block %}
-              </div>
-            {%- endif -%}
-          {%- endfor -%}
-
-          {% comment %} ── QIKIFY & THIRD-PARTY APP OFFER CONTAINER HOOKS ── {% endcomment %}
-          <div class="qikify-app-container qikify-upsell-wrapper qikify-discount-wrapper qikify-volume-discount qvd-product-container qk-custom-container qikify-offer-wrapper" style="width: 100%; margin: 8px 0; clear: both;"></div>
-
-          {% comment %} ── VARIANT SELECTOR (OTHER THAN COLOR) ── {% endcomment %}
-{% if combo_active %}
-  {% render '11fit-combo', product: product, combo_count: combo_count, combo_price: combo_price %}
-  <script type="application/json" id="ProductVariantsData">
-    {{ product.variants | json }}
-  </script>
-{% else %}
-          {% unless product.has_only_default_variant %}
-            <div class="fit11-variant-selectors">
-              {% for option in product.options_with_values %}
-                {% assign option_name_lower = option.name | downcase %}
-                {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
-                  {% continue %}
-                {% endif %}
-
-                <div class="fit11-option-fieldset product-form__input" role="group" style="min-width: 0; width: 100%;">
-                  <div class="fit11-option-name-row" style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 8px;">
-                    <span class="fit11-option-name-label form__label" style="font-size: 12px; font-weight: 500; color: var(--lux-text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-family: var(--font-body);">{{ option.name }}</span>
-                    {% if option_name_lower == 'size' %}
-                      <div class="fit11-size-chart-link" onclick="fit11ToggleModal(true)" style="display: flex; align-items: center; gap: 4px; font-size: 11px; text-decoration: underline; color: var(--lux-accent); font-weight: 500; cursor: pointer;">
-                        <i class="ti ti-ruler-2"></i><span>Size Guide</span>
-                      </div>
-                    {% endif %}
-                  </div>
-                  <div class="fit11-variant-pills">
-                    {% for value in option.values %}
-                      {% assign val_avail = false %}
+                    <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}-desktop" class="fit11-variant-pill is-color" title="{{ value }}">
+                      {% assign variant_image = null %}
                       {% for variant in product.variants %}
-                        {% if variant.available and variant.options contains value %}
-                          {% assign val_avail = true %}
+                        {% if variant.options contains value and variant.featured_image %}
+                          {% assign variant_image = variant.featured_image %}
                           {% break %}
                         {% endif %}
                       {% endfor %}
-                      {% if val_avail %}
-                        <input type="radio"
-                               id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
-                               name="{{ option.name }}"
-                               value="{{ value | escape }}"
-                               {% if option.selected_value == value %}checked{% endif %}
-                               class="fit11-variant-radio">
 
-                        <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="fit11-variant-pill">
-                          {{ value }}
-                        </label>
+                      <div class="fit11-color-swatch-wrap">
+                        {% if variant_image != null %}
+                          <span class="fit11-color-swatch" style="background-image: url('{{ variant_image | img_url: '200x250' }}'); background-size: cover; background-position: center;"></span>
+                        {% else %}
+                          {% assign color_handle = value | handle %}
+                          {% assign css_color = color_handle %}
+                          {% case color_handle %}
+                            {% when 'navy-blue' %}{% assign css_color = '#000080' %}
+                            {% when 'bottle-green' %}{% assign css_color = '#006A4E' %}
+                            {% when 'light-baby-pink' %}{% assign css_color = '#F4C2C2' %}
+                            {% when 'lavender' %}{% assign css_color = '#E6E6FA' %}
+                            {% when 'baby-blue' %}{% assign css_color = '#89CFF0' %}
+                            {% when 'flamingo' %}{% assign css_color = '#FC8EAC' %}
+                            {% when 'jade' %}{% assign css_color = '#00A86B' %}
+                            {% when 'off-white' %}{% assign css_color = '#FAF9F6' %}
+                            {% when 'maroon' %}{% assign css_color = '#800000' %}
+                            {% when 'white' %}{% assign css_color = '#FFFFFF' %}
+                            {% when 'black' %}{% assign css_color = '#000000' %}
+                            {% when 'red' %}{% assign css_color = '#FF0000' %}
+                            {% else %}{% assign css_color = value | split: ' ' | last | downcase %}
+                          {% endcase %}
+                          <span class="fit11-color-swatch" style="background-color: {{ css_color }};"></span>
+                        {% endif %}
+                      </div>
+                      <span class="fit11-color-name">{{ value }}</span>
+                    </label>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endunless %}
+
+      {% comment %} ── NEW OFFERS & DISCOUNTS SECTION ── {% endcomment %}
+      {% assign offer_blocks = section.blocks | where: "type", "offer" %}
+      {% assign active_campaign = product.metafields.custom.active_campaign.value %}
+
+      {% if offer_blocks.size > 0 or active_campaign != blank %}
+        <div class="fit11-offers-wrapper" style="margin-top: 8px; margin-bottom: 16px;">
+          <div class="fit11-offers-header">
+            <div class="fit11-offers-title-wrap">
+              <img src="{{ '11fit-discount-icon.gif' | asset_url }}" style="width: 28px; height: 28px; object-fit: contain; margin-left: -4px;">
+              <span class="fit11-offers-title">{{ section.settings.offers_heading | default: "Offers & Discounts" }}</span>
+            </div>
+            {% if section.settings.show_view_all %}
+              <div class="fit11-offers-view-all" onclick="fit11ToggleOffersModal(true)">View all Offers</div>
+            {% endif %}
+          </div>
+
+          <div class="fit11-offers-scroll">
+            {% if active_campaign != blank %}
+              {% render 'campaign-banner', inline_card: true %}
+            {% endif %}
+            {% for block in offer_blocks %}
+              <div class="fit11-offer-card" onclick="fit11CopyCoupon(this, '{{ block.settings.offer_code }}')" {{ block.shopify_attributes }}>
+                <div class="fit11-offer-content-wrap">
+                  <div class="fit11-offer-code">{{ block.settings.offer_code }}</div>
+                  <div class="fit11-offer-desc">{{ block.settings.offer_desc }}</div>
+                  {% if block.settings.offer_code != blank %}
+                    <div class="fit11-copy-hint"><i class="ti ti-copy"></i> Click to Copy</div>
+                  {% endif %}
+                </div>
+                {% if block.settings.offer_timer != blank %}
+                  <div class="fit11-offer-timer">{{ block.settings.offer_timer }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% comment %} ── VARIANT SELECTOR (SIZE / OTHER THAN COLOR) ── {% endcomment %}
+      <div class="fit11-main-action-btns" id="fit11MainBtnContainer">
+{% if combo_active %}
+  {% render '11fit-combo', product: product, combo_count: combo_count, combo_price: combo_price %}
+{% else %}
+        {% unless product.has_only_default_variant %}
+          <div class="fit11-variant-selectors" style="margin-top: 4px; margin-bottom: 8px;">
+            {% for option in product.options_with_values %}
+              {% assign option_name_lower = option.name | downcase %}
+              {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
+                {% continue %}
+              {% endif %}
+
+              <div class="fit11-option-fieldset product-form__input" role="group" style="min-width: 0; width: 100%;">
+                <div class="fit11-option-name-row" style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 8px;">
+                  <span class="fit11-option-name-label form__label" style="font-size: 12px; font-weight: 500; color: var(--lux-text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-family: var(--font-body);">{{ option.name }}</span>
+                  {% if option_name_lower == 'size' %}
+                    <div class="fit11-size-chart-link" onclick="fit11ToggleModal(true)" style="display: flex; align-items: center; gap: 4px; font-size: 11px; text-decoration: underline; color: var(--lux-accent); font-weight: 500; cursor: pointer;">
+                      <i class="ti ti-ruler-2"></i><span>Size Guide</span>
+                    </div>
+                  {% endif %}
+                </div>
+                <div class="fit11-variant-pills">
+                  {% for value in option.values %}
+                    {% assign val_avail = false %}
+                    {% for variant in product.variants %}
+                      {% if variant.available and variant.options contains value %}
+                        {% assign val_avail = true %}
+                        {% break %}
                       {% endif %}
                     {% endfor %}
-                  </div>
+                    {% if val_avail %}
+                      <input type="radio"
+                             id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
+                             name="{{ option.name }}"
+                             value="{{ value | escape }}"
+                             {% if option.selected_value == value %}checked{% endif %}
+                             class="fit11-variant-radio">
+
+                      <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="fit11-variant-pill">
+                        {{ value }}
+                      </label>
+                    {% endif %}
+                  {% endfor %}
                 </div>
-              {% endfor %}
-
-              <script type="application/json" id="ProductVariantsData">
-                {{ product.variants | json }}
-              </script>
-            </div>
-          {% endunless %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endunless %}
 {% endif %}
+      </div>
 
+      {% comment %} ── QIKIFY & APP OFFERS CONTAINER (LOCATED DIRECTLY ABOVE ADD TO CART) ── {% endcomment %}
+      <div class="fit11-app-wrapper-container" id="fit11AppWrapperContainer" style="width: 100%; margin: 8px 0; clear: both;">
+        {%- for block in section.blocks -%}
+          {%- if block.type == '@app' -%}
+            <div class="fit11-app-wrapper" {{ block.shopify_attributes }}>
+              {% render block %}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+        <div class="qikify-app-container qikify-upsell-wrapper qikify-discount-wrapper qikify-volume-discount qvd-product-container qk-custom-container qikify-offer-wrapper" style="width: 100%; margin: 4px 0; clear: both;"></div>
+      </div>
+
+      {% comment %} ── ADD TO CART FORM ── {% endcomment %}
+      <product-form class="product-form" data-hide-errors="false" style="width: 100%; margin-top: 4px;">
+        <div class="product-form__error-message-wrapper" role="alert" hidden style="margin-bottom: 10px; color: #d00000; font-size: 13px;">
+          <span class="product-form__error-message"></span>
         </div>
+        {% form 'product', product, id: 'fit11-form-cart-main', class: 'fit11-form-inline product-form__form', style: 'width: 100%; flex-direction: column; min-width: 0;' %}
+
+          <!-- Full Variant Select for Third-Party Apps (e.g. Qikify Volume Discounts) -->
+          <select name="id" id="fit11-variant-id-select" class="product-variant-id product-form__variants no-js-hidden" style="display: none !important;">
+            {% for variant in product.variants %}
+              <option
+                value="{{ variant.id }}"
+                {% if variant == product.selected_or_first_available_variant %}selected="selected"{% endif %}
+                {% unless variant.available %}disabled="disabled"{% endunless %}
+                data-price="{{ variant.price }}"
+                data-compare-at-price="{{ variant.compare_at_price }}"
+                data-sku="{{ variant.sku }}"
+                data-option1="{{ variant.option1 | escape }}"
+                data-option2="{{ variant.option2 | escape }}"
+                data-option3="{{ variant.option3 | escape }}"
+              >
+                {{ variant.title }} - {{ variant.price | money }}
+              </option>
+            {% endfor %}
+          </select>
+          <input type="hidden" name="id" id="fit11-variant-id" value="{{ product.selected_or_first_available_variant.id }}" class="product-variant-id">
+          <input type="hidden" name="quantity" value="1" class="qty-input">
 
 {% unless combo_active %}
-        <div class="fit11-main-buttons-container product-form__buttons">
-          <div class="qikify-before-atc" style="width: 100%;"></div>
-          <button type="submit" name="add" id="fit11MainAddToCartBtnProd" class="fit11-btn-cart product-form__submit" style="width: 100%; margin: 0 !important; background: #222 !important; color: #fff !important; border-radius: 6px; border: none; font-weight: 600; font-size: 14px; height: 50px !important; display: flex; align-items: center; justify-content: center; gap: 8px;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-            <span class="fit11-btn-text">ADD TO CART</span>
-            <span class="sold-out-message hidden">Sold Out</span>
-            <div class="loading__spinner hidden" style="width:20px; height:20px; margin-left:8px;">
-              <svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg" style="animation: rotator 1.4s linear infinite;"><circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30" style="stroke: currentColor; stroke-dasharray: 187; stroke-dashoffset: 0; transform-origin: center; animation: dash 1.4s ease-in-out infinite;"></circle></svg>
-            </div>
-          </button>
-          <div class="qikify-after-atc" style="width: 100%;"></div>
-        </div>
-        {% render 'campaign-product-carousel' %}
-        <div class="fit11-original-buttons-anchor"></div>
+          <div class="fit11-main-buttons-container product-form__buttons" style="margin-top: 8px;">
+            <div class="qikify-before-atc" style="width: 100%;"></div>
+            <button type="submit" name="add" id="fit11MainAddToCartBtnProd" class="fit11-btn-cart product-form__submit" style="width: 100%; margin: 0 !important; background: #222 !important; color: #fff !important; border-radius: 6px; border: none; font-weight: 600; font-size: 14px; height: 50px !important; display: flex; align-items: center; justify-content: center; gap: 8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+              <span class="fit11-btn-text">ADD TO CART</span>
+              <span class="sold-out-message hidden">Sold Out</span>
+              <div class="loading__spinner hidden" style="width:20px; height:20px; margin-left:8px;">
+                <svg aria-hidden="true" focusable="false" role="presentation" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg" style="animation: rotator 1.4s linear infinite;"><circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30" style="stroke: currentColor; stroke-dasharray: 187; stroke-dashoffset: 0; transform-origin: center; animation: dash 1.4s ease-in-out infinite;"></circle></svg>
+              </div>
+            </button>
+            <div class="qikify-after-atc" style="width: 100%;"></div>
+          </div>
+          {% render 'campaign-product-carousel' %}
+          <div class="fit11-original-buttons-anchor"></div>
 {% endunless %}
-      {% endform %}
+        {% endform %}
       </product-form>
+
+      <script type="application/json" id="ProductJson-{{ section.id }}" data-product-json>
+        {{ product | json }}
+      </script>
+      <script type="application/json" id="ProductVariantsData">
+        {{ product.variants | json }}
+      </script>
 
       {% comment %} ── TRUST BADGES ── {% endcomment %}
       <div class="fit11-trust-badges">
@@ -1369,6 +1425,12 @@
 
       if (matchedVariant && variantIdInput) {
         variantIdInput.value = matchedVariant.id;
+        var selectEl = sectionContainer.querySelector('#fit11-variant-id-select');
+        if (selectEl) {
+          selectEl.value = matchedVariant.id;
+          selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        variantIdInput.dispatchEvent(new Event('change', { bubbles: true }));
         window.history.replaceState({}, '', '?variant=' + matchedVariant.id);
 
         var priceMain = sectionContainer.querySelector('.fit11-price-main');
@@ -1424,6 +1486,38 @@
       });
     });
   }
+
+  /* Ensure Qikify Volume Discount / App widgets stay anchored directly above Add to Cart */
+  function anchorQikifyAppWidget() {
+    var targetContainer = document.getElementById('fit11AppWrapperContainer');
+    if (!targetContainer) return;
+
+    var qikifyWidgets = document.querySelectorAll(
+      '.qikify-volume-discount:not(#fit11AppWrapperContainer *), ' +
+      '[class*="qvd-"]:not(#fit11AppWrapperContainer *):not(#fit11AppWrapperContainer), ' +
+      '[id*="qikify-volume"]:not(#fit11AppWrapperContainer *), ' +
+      '[class*="qikify-upsell"]:not(#fit11AppWrapperContainer *), ' +
+      '.qikify-app-container:not(#fit11AppWrapperContainer *)'
+    );
+
+    qikifyWidgets.forEach(function(widget) {
+      if (!targetContainer.contains(widget) && widget.parentElement && widget !== targetContainer) {
+        targetContainer.appendChild(widget);
+      }
+    });
+  }
+
+  if (typeof MutationObserver !== 'undefined') {
+    var appObserver = new MutationObserver(function(mutations) {
+      anchorQikifyAppWidget();
+    });
+    var pageElem = document.getElementById('fit11-page-{{ section.id }}') || document.body;
+    if (pageElem) {
+      appObserver.observe(pageElem, { childList: true, subtree: true });
+    }
+  }
+  setInterval(anchorQikifyAppWidget, 500);
+  document.addEventListener('DOMContentLoaded', anchorQikifyAppWidget);
 
   /* FASHION BAG FLY ANIMATION */
   function playBagAnimation(sourceButton) {
