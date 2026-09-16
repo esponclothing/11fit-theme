@@ -1353,7 +1353,7 @@
     if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
 
     try {
-      await fetch(WA_API_BASE + '/addresses', {
+      const saveRes = await fetch(WA_API_BASE + '/addresses', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -1363,6 +1363,21 @@
           address_data: waEditingAddressId ? Object.assign({ id: waEditingAddressId }, addr) : addr 
         })
       });
+      if (!saveRes.ok) {
+        const errData = await saveRes.json().catch(() => ({}));
+        throw new Error(errData.error || `Server error ${saveRes.status}`);
+      }
+      // FIX: Clear stale sessionStorage cache so loadAddresses() hits the API fresh
+      // Without this, customers see a blank form again immediately after saving
+      try { sessionStorage.removeItem(`wa_addr_${waPhone}`); } catch(e) {}
+      // Optimistically add to in-memory list so the address appears instantly
+      const newAddr = { ...addr, id: 'local_' + Date.now() };
+      waAddresses = waAddresses.filter(a => {
+        const norm = s => (s||'').toLowerCase().replace(/\s/g,'');
+        return !(norm(a.address1) === norm(newAddr.address1) && norm(a.zip) === norm(newAddr.zip));
+      });
+      waAddresses.unshift(newAddr);
+      waSelectedAddress = newAddr;
       document.getElementById('wa-new-address-form').style.display = 'none';
       document.getElementById('wa-add-addr-btn').style.display = 'block';
       if (errEl) errEl.style.display = 'none';
