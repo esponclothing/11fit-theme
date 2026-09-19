@@ -157,9 +157,18 @@
             "title": "Accessories",
             "link": "shopify://collections/accessories"
           }
+        },
+        "category_girls_tops": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/Front_1_c_1_00aa8071-ec65-4241-99a9-0b7584d91c75.jpg",
+            "title": "Girls Tops",
+            "link": "shopify://collections/girls-trending-tops"
+          }
         }
       },
       "block_order": [
+        "category_girls_tops",
         "category_QgxK7J",
         "category_k7wwaT",
         "category_cLGiAM",
