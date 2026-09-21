@@ -1,256 +1,381 @@
 {% comment %}
-  11FIT Exit-Intent Recovery Popup
-  Triggered when customer is about to bounce/leave.
-  OFFER: Free Express Shipping (Priority Dispatch & Doorstep Delivery) - NO CASH DISCOUNT
-  Features: SessionStorage cap (1x per 24h), desktop mouseleave detection, mobile back-gesture / scroll-up detection.
+  11FIT Luxury Exit-Intent Recovery Modal
+  Engineered for High-Converting Direct-to-Consumer Activewear
+  Zero Cheap Emojis • Crisp Vector Typography • Minimalist Luxury Aesthetics
 {% endcomment %}
 
-<div id="fit11-exit-modal" class="fit11-exit-overlay" style="display: none;" aria-hidden="true" role="dialog">
-  <div class="fit11-exit-backdrop" onclick="fit11CloseExitPopup()"></div>
+<div id="fit11-exit-modal" class="fit11-modal-overlay" style="display: none;" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="fit11-modal-backdrop" onclick="fit11CloseExitPopup()"></div>
   
-  <div class="fit11-exit-box">
-    <!-- Close X Button -->
-    <button type="button" class="fit11-exit-close" onclick="fit11CloseExitPopup()" aria-label="Close modal">
-      &times;
+  <div class="fit11-modal-container">
+    <!-- Close Button -->
+    <button type="button" class="fit11-close-btn" onclick="fit11CloseExitPopup()" aria-label="Close dialog">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
     </button>
 
-    <!-- Top Badge -->
-    <div class="fit11-exit-badge">
-      <span>⚡ EXCLUSIVE VISITOR BENEFIT</span>
+    <!-- Top Monogram & Eyebrow -->
+    <div class="fit11-eyebrow-wrapper">
+      <span class="fit11-brand-crest">11FIT</span>
+      <span class="fit11-eyebrow-divider">|</span>
+      <span class="fit11-eyebrow-text">SESSION COMPLIMENT</span>
     </div>
 
     <!-- Main Title -->
-    <h3 class="fit11-exit-title">
-      Wait! Don't Leave Your Comfort Behind
-    </h3>
+    <h2 class="fit11-modal-heading">
+      Complimentary Express Shipping
+    </h2>
 
-    <!-- Offer Callout Box -->
-    <div class="fit11-exit-offer-card">
-      <div class="fit11-exit-truck-icon">🚚</div>
-      <div class="fit11-exit-offer-text">
-        <span class="fit11-exit-offer-main">FREE EXPRESS SHIPPING</span>
-        <span class="fit11-exit-offer-sub">Unlocked For Your Order Today Only</span>
+    <p class="fit11-modal-subheading">
+      Your checkout has been pre-authorized for complimentary priority courier dispatch to any address in India.
+    </p>
+
+    <!-- Shipping Privilege Highlight Card -->
+    <div class="fit11-privilege-card">
+      <div class="fit11-privilege-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C5A059" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="1" y="3" width="15" height="13"></rect>
+          <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+          <circle cx="5.5" cy="18.5" r="2.5"></circle>
+          <circle cx="18.5" cy="18.5" r="2.5"></circle>
+        </svg>
+      </div>
+      <div class="fit11-privilege-content">
+        <div class="fit11-privilege-title">ZERO DELIVERY CHARGES APPLIED</div>
+        <div class="fit11-privilege-note">Valid for both Cash on Delivery (COD) &amp; Prepaid Orders</div>
       </div>
     </div>
 
-    <!-- Value Points -->
-    <ul class="fit11-exit-perks">
-      <li>
-        <span class="fit11-perk-icon">⚡</span>
-        <div>
-          <strong>Priority Dispatch in 24 Hours</strong>
-          <p>Express courier via Bluedart &amp; Delhivery</p>
+    <!-- 4 Architectural Feature Pillars (Clean 2x2 Grid) -->
+    <div class="fit11-perks-grid">
+      <div class="fit11-perk-item">
+        <div class="fit11-perk-icon-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C5A059" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
         </div>
-      </li>
-      <li>
-        <span class="fit11-perk-icon">💵</span>
         <div>
-          <strong>Cash on Delivery (COD) Available</strong>
-          <p>Pay comfortably at your doorstep</p>
+          <span class="fit11-perk-title">24-Hour Dispatch</span>
+          <span class="fit11-perk-desc">Ships from Rohtak, Haryana</span>
         </div>
-      </li>
-      <li>
-        <span class="fit11-perk-icon">🔄</span>
-        <div>
-          <strong>100% Free Doorstep Size Exchanges</strong>
-          <p>Hassle-free 7-day replacement guarantee</p>
-        </div>
-      </li>
-    </ul>
+      </div>
 
-    <!-- Action Buttons -->
-    <button type="button" class="fit11-exit-cta" onclick="fit11ClaimShipping()">
-      Claim Free Express Shipping &amp; Order Now
-      <span style="font-size: 18px;">&rarr;</span>
+      <div class="fit11-perk-item">
+        <div class="fit11-perk-icon-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C5A059" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </div>
+        <div>
+          <span class="fit11-perk-title">Doorstep COD</span>
+          <span class="fit11-perk-desc">Pay upon delivery</span>
+        </div>
+      </div>
+
+      <div class="fit11-perk-item">
+        <div class="fit11-perk-icon-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C5A059" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+        </div>
+        <div>
+          <span class="fit11-perk-title">7-Day Free Exchange</span>
+          <span class="fit11-perk-desc">Hassle-free size replacement</span>
+        </div>
+      </div>
+
+      <div class="fit11-perk-item">
+        <div class="fit11-perk-icon-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C5A059" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <div>
+          <span class="fit11-perk-title">Quality Assured</span>
+          <span class="fit11-perk-desc">4-Way Lycra &amp; Cotton</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Primary Action Button -->
+    <button type="button" class="fit11-primary-btn" onclick="fit11ClaimShipping()">
+      <span>CLAIM FREE SHIPPING &amp; CONTINUE</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 19 12 12 19"></polyline>
+      </svg>
     </button>
 
-    <button type="button" class="fit11-exit-decline" onclick="fit11CloseExitPopup()">
-      No thanks, I'll pay for shipping later
+    <!-- Subtle Dismiss Link -->
+    <button type="button" class="fit11-dismiss-btn" onclick="fit11CloseExitPopup()">
+      Continue without priority delivery
     </button>
   </div>
 </div>
 
 <style>
-  .fit11-exit-overlay {
+  .fit11-modal-overlay {
     position: fixed;
     inset: 0;
     z-index: 999999999;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 16px;
+    padding: 20px;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
-  .fit11-exit-backdrop {
+
+  .fit11-modal-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    animation: fit11FadeIn 0.25s ease-out forwards;
+    background: rgba(11, 15, 25, 0.78);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    animation: fit11Fade 0.25s ease-out forwards;
   }
-  .fit11-exit-box {
+
+  .fit11-modal-container {
     position: relative;
     z-index: 2;
-    background: #ffffff;
-    border: 1.5px solid #c5a059;
-    border-radius: 16px;
-    max-width: 440px;
+    background: #0f172a;
+    border: 1px solid rgba(197, 160, 89, 0.35);
+    border-radius: 14px;
+    max-width: 460px;
     width: 100%;
-    padding: 28px 24px 22px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(197, 160, 89, 0.2);
+    padding: 36px 32px 28px;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
     text-align: center;
-    animation: fit11ScaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    box-sizing: border-box;
+    animation: fit11SlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
-  .fit11-exit-close {
+
+  .fit11-close-btn {
     position: absolute;
-    top: 12px;
-    right: 14px;
-    background: #f1f5f9;
-    border: none;
-    font-size: 24px;
-    line-height: 1;
-    color: #64748b;
-    cursor: pointer;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
     width: 32px;
     height: 32px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
+    cursor: pointer;
+    transition: all 0.2s ease;
   }
-  .fit11-exit-close:hover {
-    background: #e2e8f0;
-    color: #0f172a;
+
+  .fit11-close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.25);
   }
-  .fit11-exit-badge {
-    display: inline-block;
-    background: #fffbeb;
-    border: 1px solid #fde68a;
-    color: #b45309;
+
+  .fit11-eyebrow-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .fit11-brand-crest {
     font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.8px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    margin-bottom: 12px;
+    font-weight: 900;
+    letter-spacing: 2.5px;
+    color: #C5A059;
+    text-transform: uppercase;
   }
-  .fit11-exit-title {
-    font-size: 20px;
-    font-weight: 800;
-    color: #0f172a;
-    margin: 0 0 14px;
-    line-height: 1.3;
+
+  .fit11-eyebrow-divider {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 11px;
   }
-  .fit11-exit-offer-card {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    border: 1px solid #c5a059;
-    border-radius: 12px;
+
+  .fit11-eyebrow-text {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #94a3b8;
+    text-transform: uppercase;
+  }
+
+  .fit11-modal-heading {
+    font-size: 23px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+    margin: 0 0 10px 0;
+    line-height: 1.25;
+  }
+
+  .fit11-modal-subheading {
+    font-size: 13px;
+    line-height: 1.55;
+    color: #94a3b8;
+    margin: 0 0 22px 0;
+  }
+
+  .fit11-privilege-card {
+    background: rgba(197, 160, 89, 0.08);
+    border: 1px solid rgba(197, 160, 89, 0.25);
+    border-radius: 8px;
     padding: 14px 18px;
     display: flex;
     align-items: center;
     gap: 14px;
     text-align: left;
-    margin-bottom: 18px;
+    margin-bottom: 22px;
   }
-  .fit11-exit-truck-icon {
-    font-size: 32px;
-    line-height: 1;
-  }
-  .fit11-exit-offer-text {
+
+  .fit11-privilege-icon {
+    flex-shrink: 0;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
-  .fit11-exit-offer-main {
-    font-size: 16px;
-    font-weight: 900;
-    color: #c5a059;
-    letter-spacing: 0.5px;
+
+  .fit11-privilege-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: #C5A059;
+    letter-spacing: 1px;
+    text-transform: uppercase;
   }
-  .fit11-exit-offer-sub {
+
+  .fit11-privilege-note {
     font-size: 12px;
-    color: #e2e8f0;
+    color: #cbd5e1;
     margin-top: 2px;
   }
-  .fit11-exit-perks {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 20px;
+
+  .fit11-perks-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 12px;
     text-align: left;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    margin-bottom: 26px;
+    padding: 16px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   }
-  .fit11-exit-perks li {
+
+  .fit11-perk-item {
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    font-size: 13px;
-    color: #334155;
   }
-  .fit11-exit-perks li strong {
-    color: #0f172a;
+
+  .fit11-perk-icon-box {
+    margin-top: 2px;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .fit11-perk-title {
     display: block;
-    font-size: 13px;
-  }
-  .fit11-exit-perks li p {
-    margin: 0;
-    color: #64748b;
     font-size: 12px;
-  }
-  .fit11-perk-icon {
-    font-size: 16px;
-    line-height: 1.3;
-  }
-  .fit11-exit-cta {
-    width: 100%;
-    background: #c5a059;
-    color: #ffffff;
-    font-size: 15px;
     font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+  }
+
+  .fit11-perk-desc {
+    display: block;
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 2px;
+    line-height: 1.2;
+  }
+
+  .fit11-primary-btn {
+    width: 100%;
+    background: #C5A059;
+    color: #0f172a;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
     border: none;
-    border-radius: 10px;
-    padding: 14px 20px;
+    border-radius: 8px;
+    padding: 15px 20px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    box-shadow: 0 4px 14px rgba(197, 160, 89, 0.4);
-    transition: all 0.2s;
+    gap: 10px;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .fit11-exit-cta:hover {
-    background: #b38e47;
+
+  .fit11-primary-btn:hover {
+    background: #d4b26f;
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(197, 160, 89, 0.5);
+    box-shadow: 0 8px 24px rgba(197, 160, 89, 0.25);
   }
-  .fit11-exit-decline {
-    background: none;
+
+  .fit11-primary-btn:active {
+    transform: translateY(0);
+  }
+
+  .fit11-dismiss-btn {
+    display: inline-block;
+    background: transparent;
     border: none;
-    color: #94a3b8;
-    font-size: 12px;
-    margin-top: 12px;
-    cursor: pointer;
-    text-decoration: underline;
-    transition: color 0.15s;
-  }
-  .fit11-exit-decline:hover {
     color: #64748b;
+    font-size: 12px;
+    margin-top: 14px;
+    cursor: pointer;
+    transition: color 0.15s;
+    letter-spacing: 0.3px;
   }
-  @keyframes fit11FadeIn {
+
+  .fit11-dismiss-btn:hover {
+    color: #94a3b8;
+  }
+
+  @keyframes fit11Fade {
     from { opacity: 0; }
     to { opacity: 1; }
   }
-  @keyframes fit11ScaleUp {
-    from { opacity: 0; transform: scale(0.92); }
-    to { opacity: 1; transform: scale(1); }
+
+  @keyframes fit11SlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .fit11-modal-container {
+      padding: 30px 20px 22px;
+    }
+    .fit11-modal-heading {
+      font-size: 20px;
+    }
+    .fit11-perks-grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
   }
 </style>
 
 <script>
 (function() {
-  var STORAGE_KEY = 'fit11_exit_shipping_shown';
-  var POPUP_COOLDOWN_HOURS = 24; // Show at most once every 24 hours
+  var STORAGE_KEY = 'fit11_exit_shipping_shown_v2';
+  var POPUP_COOLDOWN_HOURS = 24;
 
   function hasShownRecently() {
     try {
@@ -288,7 +413,6 @@
 
   window.fit11ClaimShipping = function() {
     fit11CloseExitPopup();
-    // Scroll to buy now button, product form, or open checkout modal
     var buyBtn = document.querySelector('.product-form__buttons button[type="submit"], #wa-checkout-trigger, .fit11-sticky-btn, button[name="add"], .fit11-buy-btn');
     if (buyBtn) {
       buyBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
