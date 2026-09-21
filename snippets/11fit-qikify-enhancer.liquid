@@ -89,6 +89,9 @@
       matchingRadio.dispatchEvent(new Event('change', { bubbles: true }));
       matchingRadio.dispatchEvent(new Event('click', { bubbles: true }));
     }
+    if (typeof window.updateSelectedVariant === 'function') {
+      window.updateSelectedVariant();
+    }
 
     // 2. Direct 11fit slide switching via window.variantsData & window.goToSlide
     if (window.variantsData && typeof window.goToSlide === 'function') {
