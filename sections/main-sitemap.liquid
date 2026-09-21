@@ -1,0 +1,52 @@
+
+<div class="fit11-sitemap-section page-width" style="padding: 40px 0; max-width: 1100px; margin: 0 auto; font-family: inherit;">
+  <div style="text-align: center; margin-bottom: 40px;">
+    <span style="background: #c5a059; color: #000; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 4px 12px; border-radius: 20px;">11FIT Directory</span>
+    <h1 style="font-size: 32px; font-weight: 800; color: #0f172a; margin: 15px 0 8px;">11FIT HTML Sitemap & Store Directory</h1>
+    <p style="color: #64748b; font-size: 15px; margin: 0;">Explore all 11FIT collections, products, style guides, and customer service pages.</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+    <!-- Collections -->
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);">
+      <h2 style="font-size: 18px; font-weight: 700; color: #0f172a; border-bottom: 2px solid #c5a059; padding-bottom: 8px; margin-top: 0;">🛍️ Top Collections</h2>
+      <ul style="list-style: none; padding: 0; margin: 15px 0 0; line-height: 2;">
+        {% for collection in collections %}
+          {% unless collection.handle == 'frontpage' or collection.handle == 'all' %}
+            <li><a href="{{ collection.url }}" style="color: #334155; text-decoration: none; font-weight: 500;" onmouseover="this.style.color='#c5a059'" onmouseout="this.style.color='#334155'">• {{ collection.title }} ({{ collection.products_count }} items)</a></li>
+          {% endunless %}
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Style & Fitness Journals -->
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);">
+      <h2 style="font-size: 18px; font-weight: 700; color: #0f172a; border-bottom: 2px solid #c5a059; padding-bottom: 8px; margin-top: 0;">📖 Style & Fitness Guides</h2>
+      <ul style="list-style: none; padding: 0; margin: 15px 0 0; line-height: 2;">
+        {% for article in blogs.journal.articles limit: 10 %}
+          <li><a href="{{ article.url }}" style="color: #334155; text-decoration: none; font-weight: 500;" onmouseover="this.style.color='#c5a059'" onmouseout="this.style.color='#334155'">• {{ article.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Customer Support & Legal -->
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);">
+      <h2 style="font-size: 18px; font-weight: 700; color: #0f172a; border-bottom: 2px solid #c5a059; padding-bottom: 8px; margin-top: 0;">ℹ️ Customer Service & Policies</h2>
+      <ul style="list-style: none; padding: 0; margin: 15px 0 0; line-height: 2;">
+        <li><a href="/pages/about-us" style="color: #334155; text-decoration: none; font-weight: 500;">• About 11FIT & Espon Clothing</a></li>
+        <li><a href="/pages/faq" style="color: #334155; text-decoration: none; font-weight: 500;">• Help & FAQs</a></li>
+        <li><a href="/policies/shipping-policy" style="color: #334155; text-decoration: none; font-weight: 500;">• Shipping Policy</a></li>
+        <li><a href="/policies/refund-policy" style="color: #334155; text-decoration: none; font-weight: 500;">• Returns & Refund Policy</a></li>
+        <li><a href="/policies/terms-of-service" style="color: #334155; text-decoration: none; font-weight: 500;">• Terms of Service</a></li>
+        <li><a href="/policies/privacy-policy" style="color: #334155; text-decoration: none; font-weight: 500;">• Privacy Policy</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "11FIT HTML Sitemap",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,91 @@
+{% comment %}
+  11FIT Schema Breadcrumb Navigation
+  Generates Google Rich Snippets Breadcrumb trail with microdata
+{% endcomment %}
+{%- unless template == 'index' or template == 'cart' or template == '404' -%}
+  <nav class="fit11-breadcrumbs page-width" aria-label="breadcrumbs" itemscope itemtype="https://schema.org/BreadcrumbList">
+    <ol class="fit11-breadcrumbs-list" style="display: flex; flex-wrap: wrap; align-items: center; list-style: none; padding: 12px 0; margin: 0; font-size: 13px; color: #64748b;">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="display: inline-flex; align-items: center;">
+        <a itemprop="item" href="{{ routes.root_url }}" style="color: #64748b; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#0f172a'" onmouseout="this.style.color='#64748b'">
+          <span itemprop="name">Home</span>
+        </a>
+        <meta itemprop="position" content="1" />
+        <span class="separator" style="margin: 0 8px; color: #cbd5e1;">/</span>
+      </li>
+
+      {%- if template contains 'page' -%}
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="display: inline-flex; align-items: center;">
+          <span itemprop="name" style="color: #0f172a; font-weight: 600;">{{ page.title }}</span>
+          <meta itemprop="item" content="{{ canonical_url }}" />
+          <meta itemprop="position" content="2" />
+        </li>
+      {%- elsif template contains 'product' -%}
+        {%- if collection.url -%}
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="display: inline-flex; align-items: center;">
+            <a itemprop="item" href="{{ collection.url }}" style="color: #64748b; text-decoration: none;">
+              <span itemprop="name">{{ collection.title }}</span>
+            </a>
+            <meta itemprop="position" content="2" />
+            <span class="separator" style="margin: 0 8px; color: #cbd5e1;">/</span>
+          </li>
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="display: inline-flex; align-items: center;">
+            <span itemprop="name" style="color: #0f172a; font-weight: 600;">{{ product.title }}</span>
+            <meta itemprop="item" content="{{ canonical_url }}" />
+            <meta itemprop="position" content="3" />
+          </li>
+        {%- else -%}
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="display: inline-flex; align-items: center;">
+            <a itemprop="item" href="/collections/all" style="color: #64748b; text-decoration: none;">
+              <span itemprop="name">Shop</span>
+            </a>
+            <meta itemprop="position" content="2" />
+            <span class="separator" style="margin: 0 8px; color: #cbd5e1;">/</span>
+          </li>
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="display: inline-flex; align-items: center;">
+            <span itemprop="name" style="color: #0f172a; font-weight: 600;">{{ product.title }}</span>
+            <meta itemprop="item" content="{{ canonical_url }}" />
+            <meta itemprop="position" content="3" />
+          </li>
+        {%- endif -%}
+      {%- elsif template contains 'collection' and collection.handle -%}
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="display: inline-flex; align-items: center;">
+          <a itemprop="item" href="/collections" style="color: #64748b; text-decoration: none;">
+            <span itemprop="name">Collections</span>
+          </a>
+          <meta itemprop="position" content="2" />
+          <span class="separator" style="margin: 0 8px; color: #cbd5e1;">/</span>
+        </li>
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="display: inline-flex; align-items: center;">
+          <span itemprop="name" style="color: #0f172a; font-weight: 600;">{{ collection.title }}</span>
+          <meta itemprop="item" content="{{ canonical_url }}" />
+          <meta itemprop="position" content="3" />
+        </li>
+      {%- elsif template contains 'blog' -%}
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="display: inline-flex; align-items: center;">
+          <span itemprop="name" style="color: #0f172a; font-weight: 600;">{{ blog.title }}</span>
+          <meta itemprop="item" content="{{ canonical_url }}" />
+          <meta itemprop="position" content="2" />
+        </li>
+      {%- elsif template contains 'article' -%}
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="display: inline-flex; align-items: center;">
+          <a itemprop="item" href="{{ blog.url }}" style="color: #64748b; text-decoration: none;">
+            <span itemprop="name">{{ blog.title }}</span>
+          </a>
+          <meta itemprop="position" content="2" />
+          <span class="separator" style="margin: 0 8px; color: #cbd5e1;">/</span>
+        </li>
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="display: inline-flex; align-items: center;">
+          <span itemprop="name" style="color: #0f172a; font-weight: 600;">{{ article.title }}</span>
+          <meta itemprop="item" content="{{ canonical_url }}" />
+          <meta itemprop="position" content="3" />
+        </li>
+      {%- else -%}
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="display: inline-flex; align-items: center;">
+          <span itemprop="name" style="color: #0f172a; font-weight: 600;">{{ page_title }}</span>
+          <meta itemprop="item" content="{{ canonical_url }}" />
+          <meta itemprop="position" content="2" />
+        </li>
+      {%- endif -%}
+    </ol>
+  </nav>
+{%- endunless -%}

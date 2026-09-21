@@ -1,6 +1,15 @@
 <!doctype html>
 <html class="js" lang="{{ request.locale.iso_code }}">
   <head>
+
+    <!-- Core Web Vitals SEO Speed Engine -->
+    <link rel="dns-prefetch" href="//cdn.shopify.com">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
     <script>
       (function() {
         var lastAddedProductTime = 0;
@@ -638,6 +647,7 @@
 
     {% sections 'header-group' %}
 
+    {% render '11fit-breadcrumbs' %}
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
       {{ content_for_layout }}
     </main>
