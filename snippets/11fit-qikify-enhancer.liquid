@@ -1,0 +1,210 @@
+<style>
+  /* Clean styling for Qikify Multibuy with separate Color and Size boxes */
+  .qvl-multibuy__quantity {
+    display: none !important;
+  }
+  .fit11-qikify-dual-selects {
+    display: flex !important;
+    gap: 8px !important;
+    width: 100% !important;
+    align-items: center !important;
+  }
+  .fit11-qikify-select {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    height: 38px !important;
+    padding: 6px 24px 6px 10px !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #1e293b !important;
+    background-color: #ffffff !important;
+    cursor: pointer !important;
+    outline: none !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 8px center !important;
+    background-size: 14px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04) !important;
+    transition: all 0.2s ease !important;
+  }
+  .fit11-qikify-select:focus,
+  .fit11-qikify-select:hover {
+    border-color: #00a629 !important;
+    box-shadow: 0 0 0 2px rgba(0, 166, 41, 0.15) !important;
+  }
+  .qvl-multibuy-recommendation__content {
+    gap: 8px !important;
+  }
+  .qvl-multibuy__action {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  .qvl-multibuy__button {
+    flex-shrink: 0 !important;
+    height: 38px !important;
+    padding: 0 18px !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+  }
+</style>
+
+<script>
+(function() {
+  function enhanceQikify() {
+    const boxes = document.querySelectorAll('.qvl-multibuy-recommendation__box');
+    if (!boxes || !boxes.length) return;
+
+    boxes.forEach(box => {
+      if (box.dataset.enhancedDualSelect) return;
+      const originalSelect = box.querySelector('select.qvl-variant-opt__select');
+      if (!originalSelect) return;
+
+      const options = Array.from(originalSelect.options);
+      if (!options.length) return;
+
+      const hasSlash = options.some(o => o.text && o.text.includes('/'));
+      if (!hasSlash) return;
+
+      const colorMap = {};
+      const allColors = new Set();
+      const allSizes = new Set();
+      const variantLookup = {};
+
+      options.forEach(opt => {
+        const text = opt.text.trim();
+        const parts = text.split('/').map(s => s.trim());
+        const color = parts[0] || '';
+        const size = parts[1] || '';
+        if (color) allColors.add(color);
+        if (size) allSizes.add(size);
+        if (color && size) {
+          if (!colorMap[color]) colorMap[color] = [];
+          if (!colorMap[color].includes(size)) colorMap[color].push(size);
+          variantLookup[`${color.toLowerCase()}|||${size.toLowerCase()}`] = opt.value;
+        }
+      });
+
+      if (allColors.size === 0 || allSizes.size === 0) return;
+
+      box.dataset.enhancedDualSelect = 'true';
+
+      // Hide original select wrapper
+      const originalWrapper = box.querySelector('.qvl-variant-opt__selector');
+      if (originalWrapper) {
+        originalWrapper.style.setProperty('display', 'none', 'important');
+      }
+
+      // Hide quantity selector
+      const qtyElem = box.querySelector('.qvl-multibuy__quantity');
+      if (qtyElem) {
+        qtyElem.style.setProperty('display', 'none', 'important');
+      }
+
+      // Find current selected values
+      const currentSelectedOpt = originalSelect.options[originalSelect.selectedIndex] || options[0];
+      const curParts = (currentSelectedOpt.text || '').split('/').map(s => s.trim());
+      let selectedColor = curParts[0] || Array.from(allColors)[0];
+      let selectedSize = curParts[1] || Array.from(allSizes)[0];
+
+      // Build Container
+      const dualContainer = document.createElement('div');
+      dualContainer.className = 'fit11-qikify-dual-selects';
+
+      // Build Color Select
+      const colorSelect = document.createElement('select');
+      colorSelect.className = 'fit11-qikify-select fit11-qikify-color-select';
+      colorSelect.setAttribute('aria-label', 'Select Color');
+
+      Array.from(allColors).forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        if (c.toLowerCase() === selectedColor.toLowerCase()) opt.selected = true;
+        colorSelect.appendChild(opt);
+      });
+
+      // Build Size Select
+      const sizeSelect = document.createElement('select');
+      sizeSelect.className = 'fit11-qikify-select fit11-qikify-size-select';
+      sizeSelect.setAttribute('aria-label', 'Select Size');
+
+      function refreshSizes() {
+        const activeColor = colorSelect.value;
+        const availableSizes = colorMap[activeColor] || Array.from(allSizes);
+        const prevSize = sizeSelect.value || selectedSize;
+        sizeSelect.innerHTML = '';
+        availableSizes.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s;
+          opt.textContent = s;
+          if (s.toLowerCase() === prevSize.toLowerCase()) opt.selected = true;
+          sizeSelect.appendChild(opt);
+        });
+        if (!sizeSelect.value && availableSizes.length > 0) {
+          sizeSelect.value = availableSizes[0];
+        }
+      }
+
+      function syncToOriginalSelect() {
+        const c = colorSelect.value;
+        const s = sizeSelect.value;
+        const key = `${c.toLowerCase()}|||${s.toLowerCase()}`;
+        const targetVarId = variantLookup[key];
+        if (targetVarId && originalSelect.value !== targetVarId) {
+          originalSelect.value = targetVarId;
+          originalSelect.dispatchEvent(new Event('change', { bubbles: true }));
+          originalSelect.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      }
+
+      colorSelect.addEventListener('change', () => {
+        refreshSizes();
+        syncToOriginalSelect();
+      });
+
+      sizeSelect.addEventListener('change', () => {
+        syncToOriginalSelect();
+      });
+
+      refreshSizes();
+      syncToOriginalSelect();
+
+      dualContainer.appendChild(colorSelect);
+      dualContainer.appendChild(sizeSelect);
+
+      const actionBox = box.querySelector('.qvl-multibuy__action');
+      const pickBtn = box.querySelector('.qvl-multibuy__button');
+      if (actionBox) {
+        if (pickBtn) {
+          actionBox.insertBefore(dualContainer, pickBtn);
+        } else {
+          actionBox.appendChild(dualContainer);
+        }
+      }
+    });
+  }
+
+  const obs = new MutationObserver(function() {
+    enhanceQikify();
+  });
+
+  if (document.body) {
+    obs.observe(document.body, { childList: true, subtree: true });
+  } else {
+    document.addEventListener('DOMContentLoaded', function() {
+      obs.observe(document.body, { childList: true, subtree: true });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', enhanceQikify);
+  setTimeout(enhanceQikify, 500);
+  setTimeout(enhanceQikify, 1500);
+  setTimeout(enhanceQikify, 3000);
+})();
+</script>
