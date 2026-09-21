@@ -868,23 +868,30 @@
       <div class="fit11-highlights-wrapper">
         <h3 class="fit11-highlights-title">Key Highlights</h3>
         <div class="fit11-highlights-grid">
+          {% assign seen_labels = '|brand|' %}
           <div class="fit11-highlight-item">
             <span class="fit11-highlight-label">Brand</span>
             <span class="fit11-highlight-val">{{ product.vendor }}</span>
           </div>
           {% if product.type != blank %}
-          <div class="fit11-highlight-item">
-            <span class="fit11-highlight-label">Category</span>
-            <span class="fit11-highlight-val">{{ product.type }}</span>
-          </div>
+            {% assign seen_labels = seen_labels | append: 'category|' %}
+            <div class="fit11-highlight-item">
+              <span class="fit11-highlight-label">Category</span>
+              <span class="fit11-highlight-val">{{ product.type }}</span>
+            </div>
           {% endif %}
           {% for tag in product.tags %}
             {% if tag contains ':' %}
               {% assign parts = tag | split: ':' %}
-              <div class="fit11-highlight-item">
-                <span class="fit11-highlight-label">{{ parts[0] | replace: '_', ' ' | capitalize }}</span>
-                <span class="fit11-highlight-val">{{ parts[1] | strip }}</span>
-              </div>
+              {% assign label_raw = parts[0] | strip | downcase %}
+              {% assign label_key = '|' | append: label_raw | append: '|' %}
+              {% unless seen_labels contains label_key %}
+                {% assign seen_labels = seen_labels | append: label_raw | append: '|' %}
+                <div class="fit11-highlight-item">
+                  <span class="fit11-highlight-label">{{ parts[0] | replace: '_', ' ' | capitalize }}</span>
+                  <span class="fit11-highlight-val">{{ parts[1] | strip }}</span>
+                </div>
+              {% endunless %}
             {% endif %}
           {% endfor %}
         </div>

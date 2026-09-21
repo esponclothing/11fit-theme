@@ -739,7 +739,7 @@
                               {%- endif -%}
                             {%- endif -%}
                             {%- if s_combo_active == false -%}
-                              {%- if prod.tags contains 'Sub: Crop Top' or prod.tags contains 'Sub: Crop Tops' or prod.tags contains 'Sub: Baby Tee' or prod.tags contains 'Sub: Baby Tees' or prod.tags contains 'Combo' or prod.tags contains 'Multibuy' -%}
+                              {%- if prod.tags contains 'Sub: Crop Tops' or prod.tags contains 'Sub: Baby Tees' or prod.tags contains 'Sub: Crop Tanks' or prod.tags contains "Category: Women's Tops" or prod.tags contains 'Combo' or prod.tags contains 'Multibuy' or prod.tags contains 'Bundle' or prod.tags contains 'Offer' or prod.description contains 'Buy 2' or prod.description contains 'Buy 3' or prod.description contains 'Pack of' -%}
                                 {%- assign s_combo_active = true -%}
                                 {%- assign s_combo_is_metafield = false -%}
                                 {%- assign s_combo_count = '2 & 3' -%}
@@ -1150,7 +1150,7 @@
                                     {%- endif -%}
                                   {%- endif -%}
                                   {%- if s_combo_active == false -%}
-                                    {%- if slider_product.tags contains 'Sub: Crop Top' or slider_product.tags contains 'Sub: Crop Tops' or slider_product.tags contains 'Sub: Baby Tee' or slider_product.tags contains 'Sub: Baby Tees' or slider_product.tags contains 'Combo' or slider_product.tags contains 'Multibuy' -%}
+                                    {%- if slider_product.tags contains 'Sub: Crop Tops' or slider_product.tags contains 'Sub: Baby Tees' or slider_product.tags contains 'Sub: Crop Tanks' or slider_product.tags contains "Category: Women's Tops" or slider_product.tags contains 'Combo' or slider_product.tags contains 'Multibuy' or slider_product.tags contains 'Bundle' or slider_product.tags contains 'Offer' or slider_product.description contains 'Buy 2' or slider_product.description contains 'Buy 3' or slider_product.description contains 'Pack of' -%}
                                       {%- assign s_combo_active = true -%}
                                       {%- assign s_combo_is_metafield = false -%}
                                       {%- assign s_combo_count = '2 & 3' -%}
