@@ -58,7 +58,7 @@
         "font_size_mobile": 10,
         "text_bold": true,
         "text_uppercase": true,
-        "speed": 10,
+        "speed": 20,
         "direction": "normal",
         "padding_y": 5
       }
