@@ -1,0 +1,114 @@
+{% comment %}
+  11FIT SEO Rich Content Section for Collection Pages
+  Optimized for Google Search & AI Overviews (ChatGPT, Perplexity, Gemini)
+  Provides 250-300 words of semantic text, internal links, and a clean expandable UI
+{% endcomment %}
+
+<div class="fit11-seo-content-section page-width" style="padding: 40px 20px 60px; max-width: 1200px; margin: 0 auto;">
+  <div class="fit11-seo-card" style="background: #fdfdfd; border: 1.5px solid #ececec; border-radius: 12px; padding: 28px 32px; box-shadow: 0 4px 16px rgba(0,0,0,0.02);">
+    
+    {%- assign c_title = collection.title | default: "Activewear & Gym Apparel" -%}
+    {%- assign c_handle = collection.handle | default: "all" -%}
+
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #f0f0f0; padding-bottom: 12px;">
+      <h2 style="font-size: 20px; font-weight: 700; color: #111827; margin: 0; display: flex; align-items: center; gap: 8px;">
+        <span style="color: #c5a059;">★</span>
+        {% if c_handle contains 'short' %}
+          Why 11FIT 4-Way Lycra Shorts are India's Favorite Workout &amp; Running Shorts
+        {% elsif c_handle contains 'track' or c_handle contains 'pant' %}
+          Why 11FIT Lycra Track Pants are the Ultimate Gym &amp; Streetwear Bottoms
+        {% elsif c_handle contains 'top' or c_handle contains 'tee' or c_handle contains 'girl' %}
+          Aesthetic Y2K Graphic Baby Tees &amp; Bio-Washed Crop Tops by 11FIT India
+        {% else %}
+          Premium Men's Activewear &amp; Everyday Streetwear by 11FIT India
+        {% endif %}
+      </h2>
+      <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #6b7280; background: #f3f4f6; padding: 4px 10px; border-radius: 20px;">
+        11FIT Buyers Guide
+      </span>
+    </div>
+
+    <div class="fit11-seo-text-wrap" id="fit11SeoTextWrap" style="position: relative; max-height: 150px; overflow: hidden; transition: max-height 0.4s ease; color: #4b5563; font-size: 14px; line-height: 1.7;">
+      
+      {% if c_handle contains 'short' %}
+        <p style="margin-top: 0;">
+          Finding the perfect pair of <strong>gym shorts for men in India</strong> requires a balance between ultra-stretch flexibility, moisture-wicking breathability, and functional utility. <strong>11FIT Air Flex Shorts</strong> are engineered with advanced <strong>4-way lycra microfibers</strong> that flex effortlessly with every deep squat, sprint, and workout drill without losing their tailored silhouette.
+        </p>
+        <p>
+          Unlike conventional cotton athletic shorts that retain heavy sweat and cause painful chafing, our performance fabric keeps you cool and dry throughout intense gym sessions, outdoor running, or casual summer travel. Each pair is equipped with <strong>dual anti-slip deep zipper pockets</strong>, securely locking your smartphone, gym locker keys, and earbuds in place.
+        </p>
+        <p>
+          Explore our signature <a href="/collections/all" style="color: #c5a059; font-weight: 600; text-decoration: underline;">Men's Activewear Collection</a>, pair them with our moisture-wicking tees, or explore our <a href="/collections/all" style="color: #c5a059; font-weight: 600; text-decoration: underline;">4-Way Lycra Track Pants</a> for complete athletic comfort. Take advantage of our exclusive <strong>3 Shorts for ₹899 Combo</strong> with <strong>Free Pan-India Delivery and Cash on Delivery (COD)</strong> backed by a 7-day doorstep size exchange policy.
+        </p>
+      {% elsif c_handle contains 'track' or c_handle contains 'pant' %}
+        <p style="margin-top: 0;">
+          Upgrade your everyday training and airport fashion with <strong>11FIT Lycra Track Pants and Joggers</strong>. Precision-crafted in Rohtak, Haryana, our men's athletic track pants utilize high-recovery four-way stretch fabric that maintains sleek shape retention throughout full-day wear.
+        </p>
+        <p>
+          Featuring ergonomic tailored fits, tapered ankle cuffs, and secure deep zippered pockets, these track pants seamlessly transition from morning cardio sessions to evening outings. Pair with our bestselling <a href="/collections/all" style="color: #c5a059; font-weight: 600; text-decoration: underline;">Gym Shorts</a> and oversized tees for a complete streetwear aesthetic.
+        </p>
+        <p>
+          Enjoy 100% Cash on Delivery across India, fast 2–4 business days delivery to Delhi NCR, Mumbai, Bangalore, Hyderabad, and express shipping pan-India.
+        </p>
+      {% elsif c_handle contains 'top' or c_handle contains 'tee' or c_handle contains 'girl' %}
+        <p style="margin-top: 0;">
+          Step into the trending <strong>Y2K coquette and anime aesthetic</strong> with <strong>11FIT Baby Tees and Graphic Crop Tops</strong>. Crafted from 100% combed bio-washed cotton rib jersey (220 GSM), our fitted tees hug your body comfortably while offering breathable all-day ease.
+        </p>
+        <p>
+          From dainty pastel pink ribbon bow graphics to playful chibi anime prints, each piece is designed for versatile styling with high-waisted denim, cargo skirts, or relaxed sweatpants. Discover our mix &amp; match multibuy savings: Buy 2 for ₹999 or Buy 3 for just ₹1,399 with doorstep COD across India.
+        </p>
+      {% else %}
+        <p style="margin-top: 0;">
+          <strong>11FIT (Espon Clothing Pvt. Ltd.)</strong> is India's fast-growing direct-to-consumer sportswear and streetwear label. Manufactured in Rohtak, Haryana, we believe premium quality gym clothing, 4-way lycra shorts, and heavyweight streetwear should be accessible without inflated designer markups.
+        </p>
+        <p>
+          Every garment is tested for squat-proof durability, skin-friendly softness, and long-lasting color fastness. With hassle-free 7-day doorstep size exchanges, express courier tracking via Delhivery and Blue Dart, and Pan-India Cash on Delivery, experience uncompromised fitness fashion with 11FIT.
+        </p>
+      {% endif %}
+
+      <!-- Fade Gradient Overlay for Collapsed State -->
+      <div id="fit11SeoFade" style="position: absolute; bottom: 0; left: 0; right: 0; height: 60px; background: linear-gradient(to bottom, rgba(253, 253, 253, 0), #fdfdfd); pointer-events: none;"></div>
+    </div>
+
+    <div style="margin-top: 12px; text-align: center;">
+      <button type="button" id="fit11SeoToggleBtn" onclick="fit11ToggleSeoContent()" style="background: none; border: 1.5px solid #c5a059; color: #c5a059; padding: 6px 18px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;">
+        <span id="fit11SeoBtnText">Read Full Buyers Guide</span>
+        <span id="fit11SeoBtnArrow" style="font-size: 14px;">↓</span>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function fit11ToggleSeoContent() {
+    var wrap = document.getElementById('fit11SeoTextWrap');
+    var fade = document.getElementById('fit11SeoFade');
+    var btnText = document.getElementById('fit11SeoBtnText');
+    var btnArrow = document.getElementById('fit11SeoBtnArrow');
+    
+    if (wrap.style.maxHeight === 'none' || wrap.style.maxHeight === '2000px') {
+      wrap.style.maxHeight = '150px';
+      fade.style.display = 'block';
+      btnText.innerText = 'Read Full Buyers Guide';
+      btnArrow.innerText = '↓';
+    } else {
+      wrap.style.maxHeight = '2000px';
+      fade.style.display = 'none';
+      btnText.innerText = 'Show Less';
+      btnArrow.innerText = '↑';
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "11FIT SEO Content Block",
+  "settings": [],
+  "presets": [
+    {
+      "name": "11FIT SEO Content Block"
+    }
+  ]
+}
+{% endschema %}

@@ -68,12 +68,17 @@
         "faq_1",
         "faq_2"
       ]
+    },
+    "seo_bottom_block": {
+      "type": "11fit-collection-seo-block",
+      "settings": {}
     }
   },
   "order": [
     "banner",
     "subcategories",
     "product-grid",
-    "seo_faq"
+    "seo_faq",
+    "seo_bottom_block"
   ]
 }

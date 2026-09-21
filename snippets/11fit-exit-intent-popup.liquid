@@ -1,0 +1,339 @@
+{% comment %}
+  11FIT Exit-Intent Recovery Popup
+  Triggered when customer is about to bounce/leave.
+  OFFER: Free Express Shipping (Priority Dispatch & Doorstep Delivery) - NO CASH DISCOUNT
+  Features: SessionStorage cap (1x per 24h), desktop mouseleave detection, mobile back-gesture / scroll-up detection.
+{% endcomment %}
+
+<div id="fit11-exit-modal" class="fit11-exit-overlay" style="display: none;" aria-hidden="true" role="dialog">
+  <div class="fit11-exit-backdrop" onclick="fit11CloseExitPopup()"></div>
+  
+  <div class="fit11-exit-box">
+    <!-- Close X Button -->
+    <button type="button" class="fit11-exit-close" onclick="fit11CloseExitPopup()" aria-label="Close modal">
+      &times;
+    </button>
+
+    <!-- Top Badge -->
+    <div class="fit11-exit-badge">
+      <span>⚡ EXCLUSIVE VISITOR BENEFIT</span>
+    </div>
+
+    <!-- Main Title -->
+    <h3 class="fit11-exit-title">
+      Wait! Don't Leave Your Comfort Behind
+    </h3>
+
+    <!-- Offer Callout Box -->
+    <div class="fit11-exit-offer-card">
+      <div class="fit11-exit-truck-icon">🚚</div>
+      <div class="fit11-exit-offer-text">
+        <span class="fit11-exit-offer-main">FREE EXPRESS SHIPPING</span>
+        <span class="fit11-exit-offer-sub">Unlocked For Your Order Today Only</span>
+      </div>
+    </div>
+
+    <!-- Value Points -->
+    <ul class="fit11-exit-perks">
+      <li>
+        <span class="fit11-perk-icon">⚡</span>
+        <div>
+          <strong>Priority Dispatch in 24 Hours</strong>
+          <p>Express courier via Bluedart &amp; Delhivery</p>
+        </div>
+      </li>
+      <li>
+        <span class="fit11-perk-icon">💵</span>
+        <div>
+          <strong>Cash on Delivery (COD) Available</strong>
+          <p>Pay comfortably at your doorstep</p>
+        </div>
+      </li>
+      <li>
+        <span class="fit11-perk-icon">🔄</span>
+        <div>
+          <strong>100% Free Doorstep Size Exchanges</strong>
+          <p>Hassle-free 7-day replacement guarantee</p>
+        </div>
+      </li>
+    </ul>
+
+    <!-- Action Buttons -->
+    <button type="button" class="fit11-exit-cta" onclick="fit11ClaimShipping()">
+      Claim Free Express Shipping &amp; Order Now
+      <span style="font-size: 18px;">&rarr;</span>
+    </button>
+
+    <button type="button" class="fit11-exit-decline" onclick="fit11CloseExitPopup()">
+      No thanks, I'll pay for shipping later
+    </button>
+  </div>
+</div>
+
+<style>
+  .fit11-exit-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .fit11-exit-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: fit11FadeIn 0.25s ease-out forwards;
+  }
+  .fit11-exit-box {
+    position: relative;
+    z-index: 2;
+    background: #ffffff;
+    border: 1.5px solid #c5a059;
+    border-radius: 16px;
+    max-width: 440px;
+    width: 100%;
+    padding: 28px 24px 22px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(197, 160, 89, 0.2);
+    text-align: center;
+    animation: fit11ScaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .fit11-exit-close {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    background: #f1f5f9;
+    border: none;
+    font-size: 24px;
+    line-height: 1;
+    color: #64748b;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .fit11-exit-close:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+  }
+  .fit11-exit-badge {
+    display: inline-block;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #b45309;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .fit11-exit-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 14px;
+    line-height: 1.3;
+  }
+  .fit11-exit-offer-card {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border: 1px solid #c5a059;
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-align: left;
+    margin-bottom: 18px;
+  }
+  .fit11-exit-truck-icon {
+    font-size: 32px;
+    line-height: 1;
+  }
+  .fit11-exit-offer-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .fit11-exit-offer-main {
+    font-size: 16px;
+    font-weight: 900;
+    color: #c5a059;
+    letter-spacing: 0.5px;
+  }
+  .fit11-exit-offer-sub {
+    font-size: 12px;
+    color: #e2e8f0;
+    margin-top: 2px;
+  }
+  .fit11-exit-perks {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .fit11-exit-perks li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: #334155;
+  }
+  .fit11-exit-perks li strong {
+    color: #0f172a;
+    display: block;
+    font-size: 13px;
+  }
+  .fit11-exit-perks li p {
+    margin: 0;
+    color: #64748b;
+    font-size: 12px;
+  }
+  .fit11-perk-icon {
+    font-size: 16px;
+    line-height: 1.3;
+  }
+  .fit11-exit-cta {
+    width: 100%;
+    background: #c5a059;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(197, 160, 89, 0.4);
+    transition: all 0.2s;
+  }
+  .fit11-exit-cta:hover {
+    background: #b38e47;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(197, 160, 89, 0.5);
+  }
+  .fit11-exit-decline {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 12px;
+    margin-top: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.15s;
+  }
+  .fit11-exit-decline:hover {
+    color: #64748b;
+  }
+  @keyframes fit11FadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes fit11ScaleUp {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+  }
+</style>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'fit11_exit_shipping_shown';
+  var POPUP_COOLDOWN_HOURS = 24; // Show at most once every 24 hours
+
+  function hasShownRecently() {
+    try {
+      var lastShown = localStorage.getItem(STORAGE_KEY);
+      if (!lastShown) return false;
+      var elapsed = Date.now() - parseInt(lastShown, 10);
+      return elapsed < (POPUP_COOLDOWN_HOURS * 60 * 60 * 1000);
+    } catch(e) {
+      return false;
+    }
+  }
+
+  function markAsShown() {
+    try {
+      localStorage.setItem(STORAGE_KEY, Date.now().toString());
+    } catch(e) {}
+  }
+
+  function showExitPopup() {
+    if (hasShownRecently()) return;
+    var modal = document.getElementById('fit11-exit-modal');
+    if (!modal) return;
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden', 'false');
+    markAsShown();
+  }
+
+  window.fit11CloseExitPopup = function() {
+    var modal = document.getElementById('fit11-exit-modal');
+    if (modal) {
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+    }
+  };
+
+  window.fit11ClaimShipping = function() {
+    fit11CloseExitPopup();
+    // Scroll to buy now button, product form, or open checkout modal
+    var buyBtn = document.querySelector('.product-form__buttons button[type="submit"], #wa-checkout-trigger, .fit11-sticky-btn, button[name="add"], .fit11-buy-btn');
+    if (buyBtn) {
+      buyBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      buyBtn.style.transition = 'transform 0.3s, box-shadow 0.3s';
+      buyBtn.style.transform = 'scale(1.05)';
+      buyBtn.style.boxShadow = '0 0 20px #c5a059';
+      setTimeout(function() {
+        buyBtn.style.transform = 'scale(1)';
+        buyBtn.style.boxShadow = '';
+      }, 1000);
+    } else {
+      window.location.href = '/products/11-fit-air-flex-4-way-lycra-active-shorts';
+    }
+  };
+
+  // 1. Desktop: Mouse leave top of viewport
+  document.addEventListener('mouseleave', function(e) {
+    if (e.clientY <= 15) {
+      showExitPopup();
+    }
+  });
+
+  // 2. Mobile: Fast scroll up after reading at least 35% of page
+  var maxScroll = 0;
+  var lastScrollTop = 0;
+  window.addEventListener('scroll', function() {
+    var currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    if (docHeight <= 0) return;
+    var scrollPct = (currentScroll / docHeight) * 100;
+    
+    if (scrollPct > maxScroll) {
+      maxScroll = scrollPct;
+    }
+    
+    if (maxScroll > 35 && (lastScrollTop - currentScroll) > 120) {
+      showExitPopup();
+    }
+    lastScrollTop = currentScroll;
+  }, { passive: true });
+
+  // 3. Fallback: Show after 45 seconds
+  setTimeout(function() {
+    showExitPopup();
+  }, 45000);
+
+})();
+</script>
