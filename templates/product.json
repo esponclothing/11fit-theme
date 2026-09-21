@@ -161,6 +161,40 @@
     "floating-video-pip": {
       "type": "floating-video-pip",
       "settings": {}
+    },
+    "seo_faq": {
+      "type": "11fit-faq",
+      "settings": {
+        "heading": "Frequently Asked Questions"
+      },
+      "blocks": {
+        "faq_1": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What makes 11FIT gym shorts & streetwear tees unique?",
+            "answer": "11FIT activewear shorts feature 4-way hyper-stretch quick-dry lycra with dual zipper pockets, while our graphic crop tops, baby tees, and oversized t-shirts are made from 100% super-combed bio-washed cotton."
+          }
+        },
+        "faq_2": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Is Cash on Delivery (COD) available across India?",
+            "answer": "Yes, 11FIT supports 100% verified Cash on Delivery (COD) along with UPI, Net Banking, and Credit/Debit Cards with express 2-4 day delivery."
+          }
+        },
+        "faq_3": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is the return and size exchange policy?",
+            "answer": "We offer a 7-day hassle-free return and size exchange policy. Size exchanges are 100% free of cost."
+          }
+        }
+      },
+      "block_order": [
+        "faq_1",
+        "faq_2",
+        "faq_3"
+      ]
     }
   },
   "order": [
@@ -169,6 +203,7 @@
     "featured_collection_gAYirN",
     "collection_list_nyGQ3i",
     "177953350468f29684",
-    "floating-video-pip"
+    "floating-video-pip",
+    "seo_faq"
   ]
 }

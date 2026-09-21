@@ -42,11 +42,38 @@
         "padding_top": 0,
         "padding_bottom": 36
       }
+    },
+    "seo_faq": {
+      "type": "11fit-faq",
+      "settings": {
+        "heading": "Frequently Asked Questions"
+      },
+      "blocks": {
+        "faq_1": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Which are the best gym shorts for boys and men in India?",
+            "answer": "11FIT 4-way stretch gym shorts are engineered for heavy gym workouts, running, and athletic training with breathable moisture wicking and dual secure zip pockets."
+          }
+        },
+        "faq_2": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where to buy high quality aesthetic crop tops & t-shirts for girls?",
+            "answer": "11FIT (11fit.in) offers 100% bio-washed cotton graphic crop tops, retro 90s Y2K baby tees, and ribbed cotton crop tanks with COD across India."
+          }
+        }
+      },
+      "block_order": [
+        "faq_1",
+        "faq_2"
+      ]
     }
   },
   "order": [
     "banner",
     "subcategories",
-    "product-grid"
+    "product-grid",
+    "seo_faq"
   ]
 }
