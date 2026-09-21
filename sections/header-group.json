@@ -14,32 +14,40 @@
     "11fit_marquee1_PC6iEd": {
       "type": "11fit-marquee1",
       "blocks": {
-        "announcement_f4heYr": {
+        "announcement_1": {
           "type": "announcement",
           "settings": {
-            "text": "FLAT 50% OFF ON FAST CHARGERS!",
+            "text": "PREMIUM 4-WAY STRETCH MEN'S ACTIVEWEAR & STREETWEAR",
             "icon": "fa-solid fa-bolt"
           }
         },
-        "announcement_QHAGMt": {
+        "announcement_2": {
           "type": "announcement",
           "settings": {
-            "text": "FREE SHIPPING ON ORDERS OVER ₹499",
+            "text": "FREE SHIPPING ON ALL PREPAID ORDERS OVER ₹499",
             "icon": "fa-solid fa-truck-fast"
           }
         },
-        "announcement_zHBnYF": {
+        "announcement_3": {
           "type": "announcement",
           "settings": {
-            "text": "CASH ON DELIVERY AVAILABLE",
-            "icon": "fa-solid fa-wallet"
+            "text": "CASH ON DELIVERY & 100% FREE SIZE EXCHANGES",
+            "icon": "fa-solid fa-shield-halved"
+          }
+        },
+        "announcement_4": {
+          "type": "announcement",
+          "settings": {
+            "text": "BUY MULTI-PACK COMBOS & SAVE UP TO 35%",
+            "icon": "fa-solid fa-tag"
           }
         }
       },
       "block_order": [
-        "announcement_f4heYr",
-        "announcement_QHAGMt",
-        "announcement_zHBnYF"
+        "announcement_1",
+        "announcement_2",
+        "announcement_3",
+        "announcement_4"
       ],
       "name": "11fit  Marquee",
       "settings": {
