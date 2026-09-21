@@ -52,6 +52,10 @@
       object-fit: cover;
     }
   }
+  /* Hide collection description on collection page as per design preference */
+  .collection-hero__description {
+    display: none !important;
+  }
 </style>
 
 {%- assign custom_banner_url = collection.metafields.price_editor.banner_image_url.value -%}
@@ -66,9 +70,9 @@
         {{- collection.title | escape -}}
       </h1>
 
-      {%- if section.settings.show_collection_description -%}
-        <div class="collection-hero__description rte">{{ collection.description }}</div>
-      {%- endif -%}
+      {%- comment -%}
+        Collection description is hidden from page display (visual UI) while preserving SEO/Schema in <head>.
+      {%- endcomment -%}
     </div>
 
     {%- if custom_banner_url != blank -%}
