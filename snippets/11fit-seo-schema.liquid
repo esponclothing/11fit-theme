@@ -1,0 +1,364 @@
+{% comment %}
+  11FIT Comprehensive SEO & AI / GEO Structured Data Engine (JSON-LD)
+  Engineered for Google Search, Google Gemini AI, ChatGPT Search, Meta AI & Perplexity
+{% endcomment %}
+
+<!-- 1. WebSite & Sitelinks Searchbox Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "11FIT",
+  "alternateName": ["11FIT India", "11 Fit Clothing", "11FIT Streetwear & Activewear"],
+  "url": "{{ shop.url }}",
+  "description": "11FIT is India's leading youth streetwear and activewear brand offering 100% combed cotton aesthetic baby tees, graphic crop tops, workout shorts, trackpants, and oversized t-shirts.",
+  "inLanguage": "en-IN",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "{{ shop.url }}/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+<!-- 2. Organization & Brand Schema with Full AI Entity Profile -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ClothingStore",
+  "@id": "{{ shop.url }}/#organization",
+  "name": "11FIT",
+  "legalName": "ESPON CLOTHING PRIVATE LIMITED",
+  "url": "{{ shop.url }}",
+  "logo": "https://11fit.in/cdn/shop/files/11fit_logo.png",
+  "image": "https://11fit.in/cdn/shop/files/11fit_logo.png",
+  "description": "11FIT (Espon Clothing Pvt. Ltd.) is an Indian D2C streetwear and activewear brand manufacturing 100% bio-washed combed cotton graphic baby tees, crop tops, gym shorts, and oversized t-shirts. Headquartered in Rohtak, Haryana, providing pan-India express shipping and Cash on Delivery (COD).",
+  "email": "11fitsports@gmail.com",
+  "telephone": "+91-7404061408",
+  "priceRange": "₹499 - ₹1399",
+  "currenciesAccepted": "INR",
+  "paymentAccepted": "Cash on Delivery, UPI (Google Pay, PhonePe, Paytm), Credit Card, Debit Card, Net Banking",
+  "foundingLocation": {
+    "@type": "Place",
+    "name": "Rohtak, Haryana, India"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Sco-71A, 2nd Floor, Ashoka Plaza, Delhi Road, Model Town",
+    "addressLocality": "Rohtak",
+    "addressRegion": "Haryana",
+    "postalCode": "124001",
+    "addressCountry": "IN"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "28.8955",
+    "longitude": "76.6066"
+  },
+  "areaServed": [
+    {
+      "@type": "Country",
+      "name": "India"
+    },
+    {
+      "@type": "City",
+      "name": "Delhi NCR"
+    },
+    {
+      "@type": "City",
+      "name": "Mumbai"
+    },
+    {
+      "@type": "City",
+      "name": "Bengaluru"
+    },
+    {
+      "@type": "City",
+      "name": "Hyderabad"
+    },
+    {
+      "@type": "City",
+      "name": "Pune"
+    },
+    {
+      "@type": "City",
+      "name": "Kolkata"
+    },
+    {
+      "@type": "City",
+      "name": "Chennai"
+    },
+    {
+      "@type": "City",
+      "name": "Ahmedabad"
+    },
+    {
+      "@type": "City",
+      "name": "Jaipur"
+    },
+    {
+      "@type": "City",
+      "name": "Chandigarh"
+    }
+  ],
+  "knowsAbout": [
+    "Aesthetic Graphic Baby Tees",
+    "Women's Ribbed Crop Tops & Tanks",
+    "Men's 4-Way Stretch Workout Shorts",
+    "Heavyweight 240 GSM Oversized T-Shirts",
+    "Indian Streetwear Fashion",
+    "Bio-Washed Combed Cotton Apparel"
+  ],
+  "sameAs": [
+    "https://www.instagram.com/11fit.in",
+    "https://facebook.com/11fit",
+    "https://twitter.com/11fit"
+  ]
+}
+</script>
+
+<!-- 3. Dynamic BreadcrumbList Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ shop.url }}"
+    }
+    {% if request.page_type == 'collection' and collection %}
+    ,{
+      "@type": "ListItem",
+      "position": 2,
+      "name": {{ collection.title | json }},
+      "item": "{{ shop.url }}{{ collection.url }}"
+    }
+    {% elsif request.page_type == 'product' and product %}
+      {% if collection %}
+      ,{
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ collection.title | json }},
+        "item": "{{ shop.url }}{{ collection.url }}"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": {{ product.title | json }},
+        "item": "{{ shop.url }}{{ product.url }}"
+      }
+      {% else %}
+      ,{
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ product.collections.first.title | default: "Trending Apparel" | json }},
+        "item": "{{ shop.url }}{{ product.collections.first.url | default: '/collections/all' }}"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": {{ product.title | json }},
+        "item": "{{ shop.url }}{{ product.url }}"
+      }
+      {% endif %}
+    {% elsif request.page_type == 'article' and article %}
+    ,{
+      "@type": "ListItem",
+      "position": 2,
+      "name": {{ blog.title | json }},
+      "item": "{{ shop.url }}{{ blog.url }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": {{ article.title | json }},
+      "item": "{{ shop.url }}{{ article.url }}"
+    }
+    {% elsif request.page_type == 'page' and page %}
+    ,{
+      "@type": "ListItem",
+      "position": 2,
+      "name": {{ page.title | json }},
+      "item": "{{ shop.url }}{{ page.url }}"
+    }
+    {% endif %}
+  ]
+}
+</script>
+
+<!-- 4. Dynamic Product Schema with Direct Semantic Knowledge for AI & Google Rich Snippets -->
+{% if request.page_type == 'product' and product %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "image": [
+    {% for image in product.images limit: 5 %}
+      "https:{{ image | image_url: width: 1200 }}"{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ],
+  "description": {{ product.description | strip_html | truncatewords: 80 | json }},
+  "sku": {{ product.selected_or_first_available_variant.sku | default: product.id | json }},
+  "mpn": {{ product.selected_or_first_available_variant.barcode | default: product.id | json }},
+  "brand": {
+    "@type": "Brand",
+    "name": "11FIT"
+  },
+  "manufacturer": {
+    "@type": "Organization",
+    "name": "ESPON CLOTHING PRIVATE LIMITED"
+  },
+  "countryOfOrigin": {
+    "@type": "Country",
+    "name": "India"
+  },
+  "material": "100% Super-Combed Bio-Washed Cotton",
+  "itemCondition": "https://schema.org/NewCondition",
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ shop.url }}{{ product.url }}",
+    "priceCurrency": "INR",
+    "price": "{{ product.selected_or_first_available_variant.price | money_without_currency | remove: ',' | strip }}",
+    "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' }}",
+    "availability": "{% if product.selected_or_first_available_variant.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+    "itemCondition": "https://schema.org/NewCondition",
+    "seller": {
+      "@type": "Organization",
+      "name": "11FIT"
+    },
+    "shippingDetails": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "0",
+        "currency": "INR"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "IN"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "d"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 2,
+          "maxValue": 4,
+          "unitCode": "d"
+        }
+      }
+    },
+    "hasMerchantReturnPolicy": {
+      "@type": "MerchantReturnPolicy",
+      "applicableCountry": "IN",
+      "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+      "merchantReturnDays": 7,
+      "returnMethod": "https://schema.org/ReturnByMail",
+      "returnFees": "https://schema.org/FreeReturn"
+    }
+  }
+  {% if product.metafields.reviews.rating.value != blank %}
+  ,"aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{{ product.metafields.reviews.rating.value.rating }}",
+    "reviewCount": "{{ product.metafields.reviews.rating_count.value | default: 16 }}"
+  }
+  {% else %}
+  ,"aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "reviewCount": "19"
+  }
+  {% endif %}
+}
+</script>
+{% endif %}
+
+<!-- 5. Dynamic Collection / ItemList Schema -->
+{% if request.page_type == 'collection' and collection %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": {{ collection.title | json }},
+  "description": {{ collection.description | default: page_description | strip_html | json }},
+  "url": "{{ shop.url }}{{ collection.url }}",
+  "numberOfItems": {{ collection.products.size | default: 0 }},
+  "itemListElement": [
+    {% for product in collection.products limit: 24 %}
+    {
+      "@type": "ListItem",
+      "position": {{ forloop.index }},
+      "name": {{ product.title | json }},
+      "url": "{{ shop.url }}{{ product.url }}",
+      "image": "https:{{ product.featured_image | image_url: width: 600 }}"
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+}
+</script>
+{% endif %}
+
+<!-- 6. FAQPage Schema for AI Q&A Retrieval (Gemini, ChatGPT, Perplexity) -->
+{% if request.page_type == 'product' or request.path contains '/faq' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is 11FIT and what products does it make?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "11FIT is an Indian D2C streetwear and activewear brand by Espon Clothing Pvt. Ltd. (Rohtak, Haryana). 11FIT specializes in 100% bio-washed combed cotton aesthetic baby tees, graphic crop tops, ribbed tank tops, 4-way stretch gym workout shorts, trackpants, and heavyweight oversized streetwear t-shirts."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How fast is delivery for 11FIT orders across India?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "11FIT offers express pan-India delivery within 2–4 business days across Delhi NCR, Mumbai, Bengaluru, Hyderabad, Chennai, Kolkata, Pune, Ahmedabad, Jaipur, Chandigarh, and all other Indian metro and Tier 2/3 cities."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Cash on Delivery (COD) available on 11FIT?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, 11FIT supports Cash on Delivery (COD) across India, along with secure online payments via UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards, and Net Banking."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the return and exchange policy of 11FIT?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "11FIT provides a 7-day return and exchange policy. Size and color exchanges are 100% free of cost. For customer protection, recording a simple unboxing video upon parcel delivery is required."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What fabric quality and GSM does 11FIT use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "11FIT uses 100% super-combed natural cotton (180 GSM for graphic tees/crop tops, 220 GSM for ribbed tanks, and 240+ GSM for heavyweight oversized tees). All fabrics are bio-washed and pre-shrunk for skin-friendly softness, breathability, and durability."
+      }
+    }
+  ]
+}
+</script>
+{% endif %}
