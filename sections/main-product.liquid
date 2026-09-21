@@ -187,41 +187,7 @@
     pointer-events: none !important;
   }
 
-  /* ── HIDE THEME VARIANT PICKERS (COLOR SWATCHES & SIZE PILLS) WHEN QIKIFY IS ACTIVE ── */
-  body.qikify-offer-active .top-color-selector,
-  body.qikify-offer-active #fit11MainBtnContainer,
-  body.qikify-offer-active .fit11-theme-variant-picker,
-  body.qikify-offer-active .mobile-only-color,
-  body.qikify-offer-active .desktop-only-color,
-  body:has(.qvl-volume-tier) .top-color-selector,
-  body:has(.qvl-volume-tier) #fit11MainBtnContainer,
-  body:has(.qvl-volume-tier) .fit11-theme-variant-picker,
-  body:has(.qvl-volume-tier) .mobile-only-color,
-  body:has(.qvl-volume-tier) .desktop-only-color,
-  body:has(.qvl-product-offer) .top-color-selector,
-  body:has(.qvl-product-offer) #fit11MainBtnContainer,
-  body:has(.qvl-product-offer) .fit11-theme-variant-picker,
-  body:has(.qvl-product-offer) .mobile-only-color,
-  body:has(.qvl-product-offer) .desktop-only-color,
-  body:has(.qvl-volume-box) .top-color-selector,
-  body:has(.qvl-volume-box) #fit11MainBtnContainer,
-  body:has(.qvl-volume-box) .fit11-theme-variant-picker,
-  body:has(#qvl-embed-placeholder .qvl-volume-tier) .top-color-selector,
-  body:has(#qvl-embed-placeholder .qvl-volume-tier) #fit11MainBtnContainer,
-  body:has(#qvl-embed-placeholder .qvl-volume-tier) .fit11-theme-variant-picker,
-  body:has(#qvl-embed-placeholder:not(:empty)) .top-color-selector,
-  body:has(#qvl-embed-placeholder:not(:empty)) #fit11MainBtnContainer,
-  body:has(#qvl-embed-placeholder:not(:empty)) .fit11-theme-variant-picker {
-    display: none !important;
-    height: 0 !important;
-    min-height: 0 !important;
-    max-height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-  }
+
 
   /* ── QIKIFY OFFERS & DROPDOWNS STYLING ── */
   #qvl-embed-placeholder {
@@ -1557,38 +1523,7 @@
     });
   }
 
-  /* Qikify Theme Variant Picker Auto-Hide & Spacing Sync */
-  function syncQikifyThemeVariantPickerVisibility() {
-    var qikifyOffer = document.querySelector(
-      '.qvl-volume-tier, .qvl-product-offer, .qvl-volume-box, ' +
-      '#qvl-embed-placeholder .qvl-volume-tier, [data-offer-id], ' +
-      '.qvl-variant-opt__select, .qvl-tier-items'
-    );
 
-    if (qikifyOffer) {
-      document.body.classList.add('qikify-offer-active');
-      document.documentElement.classList.add('qikify-offer-active');
-      document.querySelectorAll('.fit11-theme-variant-picker, .top-color-selector, .desktop-only-color, .mobile-only-color, #fit11MainBtnContainer').forEach(function(el) {
-        el.style.setProperty('display', 'none', 'important');
-        el.style.setProperty('height', '0', 'important');
-        el.style.setProperty('margin', '0', 'important');
-        el.style.setProperty('padding', '0', 'important');
-        el.style.setProperty('overflow', 'hidden', 'important');
-      });
-    }
-  }
-
-  if (typeof MutationObserver !== 'undefined') {
-    var appObserver = new MutationObserver(function(mutations) {
-      syncQikifyThemeVariantPickerVisibility();
-    });
-    var pageElem = document.getElementById('fit11-page-{{ section.id }}') || document.body;
-    if (pageElem) {
-      appObserver.observe(pageElem, { childList: true, subtree: true });
-    }
-  }
-  setInterval(syncQikifyThemeVariantPickerVisibility, 200);
-  document.addEventListener('DOMContentLoaded', syncQikifyThemeVariantPickerVisibility);
 
   /* FASHION BAG FLY ANIMATION */
   function playBagAnimation(sourceButton) {
