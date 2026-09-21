@@ -720,6 +720,7 @@
                           {%- assign handle_check_comma = prod.handle | append: "," -%}
                           {%- unless shown_handles_str contains handle_check_comma -%}
                             {%- assign s_combo_active = false -%}
+                            {%- assign s_combo_is_metafield = false -%}
                             {%- assign s_combo_count = 0 -%}
                             {%- if prod.metafields.price_editor.combo_config != blank -%}
                               {%- assign s_c_val = prod.metafields.price_editor.combo_config.value -%}
@@ -730,10 +731,18 @@
                               {%- assign s_c_price = s_c_val.price | plus: 0 -%}
                               {%- if s_c_count > 0 -%}
                                 {%- assign s_combo_active = true -%}
+                                {%- assign s_combo_is_metafield = true -%}
                                 {%- assign s_combo_count = s_c_count -%}
                                 {%- assign s_combo_price_cents = s_c_price | times: 100 -%}
                                 {%- assign s_compare_at_base = prod.compare_at_price | default: prod.price -%}
                                 {%- assign s_final_compare_at_cents = s_compare_at_base | times: s_c_count -%}
+                              {%- endif -%}
+                            {%- endif -%}
+                            {%- if s_combo_active == false -%}
+                              {%- if prod.description contains 'Buy 2 for' or prod.description contains 'Buy 3 for' or prod.tags contains 'Category: Baby Tees' or prod.tags contains 'Category: Crop Tops' or prod.tags contains 'Category: Crop Tanks' or prod.tags contains 'Combo' or prod.tags contains 'multibuy' -%}
+                                {%- assign s_combo_active = true -%}
+                                {%- assign s_combo_is_metafield = false -%}
+                                {%- assign s_combo_count = '2 & 3' -%}
                               {%- endif -%}
                             {%- endif -%}
                             <div class="slider-item">
@@ -756,9 +765,9 @@
                                   {%- endif -%}
                                 </div>
                                 <div class="slider-item-details">
-                                  <div class="slider-item-title">{{ prod.title }}{% if s_combo_active %} - Pack of {{ s_combo_count }}{% endif %}</div>
+                                  <div class="slider-item-title">{{ prod.title }}{% if s_combo_active and s_combo_is_metafield %} - Pack of {{ s_combo_count }}{% endif %}</div>
                                   <div class="slider-item-price-row">
-                                    {%- if s_combo_active -%}
+                                    {%- if s_combo_active and s_combo_is_metafield -%}
                                       {%- assign s_discount_amount = s_final_compare_at_cents | minus: s_combo_price_cents -%}
                                       {%- assign s_discount_percentage = s_discount_amount | times: 100.0 | divided_by: s_final_compare_at_cents | round -%}
                                       <span class="slider-item-price">{{ s_combo_price_cents | money_without_trailing_zeros }}</span>
@@ -1122,6 +1131,7 @@
                                 {%- if slider_product != blank -%}
                                   {%- assign has_items = true -%}
                                   {%- assign s_combo_active = false -%}
+                                  {%- assign s_combo_is_metafield = false -%}
                                   {%- assign s_combo_count = 0 -%}
                                   {%- if slider_product.metafields.price_editor.combo_config != blank -%}
                                     {%- assign s_c_val = slider_product.metafields.price_editor.combo_config.value -%}
@@ -1132,10 +1142,18 @@
                                     {%- assign s_c_price = s_c_val.price | plus: 0 -%}
                                     {%- if s_c_count > 0 -%}
                                       {%- assign s_combo_active = true -%}
+                                      {%- assign s_combo_is_metafield = true -%}
                                       {%- assign s_combo_count = s_c_count -%}
                                       {%- assign s_combo_price_cents = s_c_price | times: 100 -%}
                                       {%- assign s_compare_at_base = slider_product.compare_at_price | default: slider_product.price -%}
                                       {%- assign s_final_compare_at_cents = s_compare_at_base | times: s_c_count -%}
+                                    {%- endif -%}
+                                  {%- endif -%}
+                                  {%- if s_combo_active == false -%}
+                                    {%- if slider_product.description contains 'Buy 2 for' or slider_product.description contains 'Buy 3 for' or slider_product.tags contains 'Category: Baby Tees' or slider_product.tags contains 'Category: Crop Tops' or slider_product.tags contains 'Category: Crop Tanks' or slider_product.tags contains 'Combo' or slider_product.tags contains 'multibuy' -%}
+                                      {%- assign s_combo_active = true -%}
+                                      {%- assign s_combo_is_metafield = false -%}
+                                      {%- assign s_combo_count = '2 & 3' -%}
                                     {%- endif -%}
                                   {%- endif -%}
                                   <div class="slider-item">

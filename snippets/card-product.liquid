@@ -41,6 +41,7 @@
     endif
 
     assign card_combo_active = false
+    assign card_combo_is_metafield = false
     assign card_combo_count = 0
     if card_product.metafields.price_editor.combo_config != blank
       assign card_c_val = card_product.metafields.price_editor.combo_config.value
@@ -51,10 +52,19 @@
       assign card_c_price = card_c_val.price | plus: 0
       if card_c_count > 0
         assign card_combo_active = true
+        assign card_combo_is_metafield = true
         assign card_combo_count = card_c_count
         assign card_combo_price_cents = card_c_price | times: 100
         assign card_compare_at_base = card_product.compare_at_price | default: card_product.price
         assign card_final_compare_at_cents = card_compare_at_base | times: card_c_count
+      endif
+    endif
+
+    if card_combo_active == false
+      if card_product.description contains 'Buy 2 for' or card_product.description contains 'Buy 3 for' or card_product.tags contains 'Category: Baby Tees' or card_product.tags contains 'Category: Crop Tops' or card_product.tags contains 'Category: Crop Tanks' or card_product.tags contains 'Combo' or card_product.tags contains 'multibuy'
+        assign card_combo_active = true
+        assign card_combo_is_metafield = false
+        assign card_combo_count = '2 & 3'
       endif
     endif
   -%}
@@ -279,7 +289,7 @@
                 class="full-unstyled-link"
                 aria-labelledby="StandardCardNoMediaLink-{{ section_id }}-{{ card_product.id }} NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}"
               >
-                {{ card_product.title | escape }}{% if card_combo_active %} - Pack of {{ card_combo_count }}{% endif %}
+                {{ card_product.title | escape }}{% if card_combo_active and card_combo_is_metafield %} - Pack of {{ card_combo_count }}{% endif %}
               </a>
             </h3>
           </div>
@@ -300,7 +310,7 @@
               class="full-unstyled-link"
               aria-labelledby="CardLink-{{ section_id }}-{{ card_product.id }} Badge-{{ section_id }}-{{ card_product.id }}"
             >
-              {{ card_product.title | escape }}{% if card_combo_active %} - Pack of {{ card_combo_count }}{% endif %}
+              {{ card_product.title | escape }}{% if card_combo_active and card_combo_is_metafield %} - Pack of {{ card_combo_count }}{% endif %}
             </a>
           </h3>
             <div class="card-information">
@@ -310,7 +320,7 @@
             {%- endif -%}
 
             <!-- Price block -->
-            {% if card_combo_active %}
+            {% if card_combo_active and card_combo_is_metafield %}
               {% assign discount_amount = card_final_compare_at_cents | minus: card_combo_price_cents %}
               {% assign discount_percentage = discount_amount | times: 100.0 | divided_by: card_final_compare_at_cents | round %}
               <div class="fit11-card-price-row">
@@ -637,7 +647,7 @@
                       </div>
                       <div class="quick-add-modal__content-info--bulk-details large-up-hide">
                         <a href="{{ card_product.url }}" class="full-unstyled-link">
-                          <h3>{{ card_product.title | escape }}{% if card_combo_active %} - Pack of {{ card_combo_count }}{% endif %}</h3>
+                          <h3>{{ card_product.title | escape }}{% if card_combo_active and card_combo_is_metafield %} - Pack of {{ card_combo_count }}{% endif %}</h3>
                         </a>
                         {% render 'price', product: card_product, price_class: '', show_compare_at_price: true %}
                         {%- if card_product.quantity_price_breaks_configured? -%}
@@ -651,7 +661,7 @@
                       <div class="quick-add-modal__content-info--bulk-details small-hide medium-hide">
                         <a href="{{ card_product.url }}" class="full-unstyled-link">
                           <h3 class="h2">
-                            {{ card_product.title | escape }}{% if card_combo_active %} - Pack of {{ card_combo_count }}{% endif %}
+                            {{ card_product.title | escape }}{% if card_combo_active and card_combo_is_metafield %} - Pack of {{ card_combo_count }}{% endif %}
                           </h3>
                         </a>
                         {% render 'price', product: card_product, price_class: '', show_compare_at_price: true %}

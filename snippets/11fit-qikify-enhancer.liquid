@@ -3,6 +3,13 @@
   .qvl-multibuy__quantity {
     display: none !important;
   }
+  .qvl-offer-box {
+    position: relative !important;
+    overflow: visible !important;
+    border-radius: 14px !important;
+    border: 1.5px solid #fed7aa !important;
+    box-shadow: 0 4px 16px rgba(249, 115, 22, 0.08) !important;
+  }
   .fit11-qikify-dual-selects {
     display: flex !important;
     gap: 8px !important;
@@ -52,15 +59,109 @@
     border-radius: 8px !important;
     font-weight: 700 !important;
   }
+  .qvl-multibuy-recommendation__image {
+    position: relative !important;
+  }
   .qvl-multibuy-recommendation__image img,
   .qvl-multibuy__item img {
     transition: opacity 0.25s ease-in-out !important;
+    border-radius: 6px !important;
+  }
+
+  /* FIT11 Signature Rotating Offer Badge */
+  .fit11-qikify-corner-badge {
+    position: absolute !important;
+    top: -1px !important;
+    left: -1px !important;
+    background: linear-gradient(135deg, #e11d48 0%, #f97316 100%) !important;
+    color: #fff !important;
+    font-size: 9px !important;
+    font-weight: 800 !important;
+    padding: 5px 12px !important;
+    border-radius: 12px 0 12px 0 !important;
+    z-index: 10 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    box-shadow: 0 3px 10px rgba(225, 29, 72, 0.35) !important;
+    border-width: 0 1.5px 1.5px 0 !important;
+    border-style: solid !important;
+    border-color: #ff925c !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    font-family: inherit !important;
+    line-height: 1 !important;
+    overflow: hidden !important;
+    height: 11px !important;
+  }
+  .fit11-qikify-item-badge {
+    position: absolute !important;
+    top: 2px !important;
+    left: 2px !important;
+    background: linear-gradient(135deg, #e11d48 0%, #f97316 100%) !important;
+    color: #fff !important;
+    font-size: 7.5px !important;
+    font-weight: 800 !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    z-index: 5 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    box-shadow: 0 2px 6px rgba(225, 29, 72, 0.3) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 2px !important;
+    line-height: 1 !important;
+  }
+  .qvl-offer-box__header-badge {
+    background: linear-gradient(135deg, #e11d48 0%, #f97316 100%) !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    font-size: 10px !important;
+    padding: 3px 10px !important;
+    border-radius: 20px !important;
+    box-shadow: 0 2px 8px rgba(225, 29, 72, 0.3) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
   }
 </style>
 
 <script>
 (function() {
   const productDataCache = {};
+
+  const colorEmojis = {
+    'black': '⚫',
+    'white': '⚪',
+    'lavender': '🟣',
+    'navy blue': '🔵',
+    'navy': '🔵',
+    'blue': '🔵',
+    'sky blue': '🔷',
+    'skyblue': '🔷',
+    'grey': '🔘',
+    'gray': '🔘',
+    'grey melange': '🔘',
+    'gray melange': '🔘',
+    'beige': '🟤',
+    'brown': '🟤',
+    'red': '🔴',
+    'pink': '🌸',
+    'light baby pink': '🌸',
+    'baby pink': '🌸',
+    'yellow': '🟡',
+    'golden yellow': '🟡',
+    'green': '🟢',
+    'olive': '🫒',
+    'orange': '🟠',
+    'purple': '🟣'
+  };
+
+  function getColorEmoji(colorName) {
+    if (!colorName) return '';
+    const key = colorName.trim().toLowerCase();
+    return colorEmojis[key] ? (colorEmojis[key] + ' ') : '';
+  }
 
   async function fetchProductJson(handle) {
     if (!handle) return null;
@@ -114,22 +215,43 @@
         }
       }
     }
-
-    // 3. Fallback for Dawn / standard media-gallery component
-    const mediaGallery = document.querySelector('media-gallery');
-    if (mediaGallery && typeof mediaGallery.setActiveMedia === 'function') {
-      const targetMedia = document.querySelector('[data-media-id]');
-      if (targetMedia) {
-        // mediaGallery.setActiveMedia(...);
-      }
-    }
   }
 
   function enhanceQikify() {
+    // 1. Inject Rotating Offer Badge on Qikify Offer Boxes
+    const offerBoxes = document.querySelectorAll('.qvl-offer-box');
+    offerBoxes.forEach(ob => {
+      if (ob.dataset.fit11BadgeInjected) return;
+      ob.dataset.fit11BadgeInjected = 'true';
+      
+      const badge = document.createElement('span');
+      badge.className = 'fit11-combo-badge fit11-qikify-corner-badge';
+      badge.innerHTML = `
+        <span style="color: #ffe600; font-size: 10px; line-height: 1;">★</span>
+        <span class="fit11-badge-rotator-grid">
+          <span style="height: 11px; line-height: 11px; display: block; white-space: nowrap;">Pack of 2 & 3</span>
+          <span style="height: 11px; line-height: 11px; display: block; white-space: nowrap; color: #ffe600;">Best Value</span>
+          <span style="height: 11px; line-height: 11px; display: block; white-space: nowrap;">Limited Time</span>
+        </span>
+      `;
+      ob.appendChild(badge);
+    });
+
+    // 2. Enhance Boxes (Separate Selectors & Item Badges)
     const boxes = document.querySelectorAll('.qvl-multibuy-recommendation__box, .qvl-multibuy__item');
     if (!boxes || !boxes.length) return;
 
     boxes.forEach(box => {
+      // Add mini item badge on image wrapper
+      const imgWrapper = box.querySelector('.qvl-multibuy-recommendation__image');
+      if (imgWrapper && !imgWrapper.dataset.fit11ItemBadge) {
+        imgWrapper.dataset.fit11ItemBadge = 'true';
+        const itemBadge = document.createElement('span');
+        itemBadge.className = 'fit11-qikify-item-badge';
+        itemBadge.innerHTML = `<span style="color: #ffe600;">★</span> COMBO`;
+        imgWrapper.appendChild(itemBadge);
+      }
+
       if (box.dataset.enhancedDualSelect) return;
       const originalSelect = box.querySelector('select.qvl-variant-opt__select');
       if (!originalSelect) return;
@@ -206,7 +328,7 @@
       Array.from(allColors).forEach(c => {
         const opt = document.createElement('option');
         opt.value = c;
-        opt.textContent = c;
+        opt.textContent = getColorEmoji(c) + c;
         if (c.toLowerCase() === selectedColor.toLowerCase()) opt.selected = true;
         colorSelect.appendChild(opt);
       });
