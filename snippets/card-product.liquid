@@ -61,7 +61,7 @@
     endif
 
     if card_combo_active == false
-      if card_product.description contains 'Buy 2 for' or card_product.description contains 'Buy 3 for' or card_product.tags contains 'Category: Baby Tees' or card_product.tags contains 'Category: Crop Tops' or card_product.tags contains 'Category: Crop Tanks' or card_product.tags contains 'Combo' or card_product.tags contains 'multibuy'
+      if card_product.description contains 'Buy 2' or card_product.description contains 'Buy 3' or card_product.tags contains 'Sub: Crop Top' or card_product.tags contains 'Sub: Crop Tops' or card_product.tags contains 'Sub: Crop Tank' or card_product.tags contains 'Sub: Crop Tanks' or card_product.tags contains 'Sub: Baby Tee' or card_product.tags contains 'Sub: Baby Tees' or card_product.tags contains "Category: Women's Tops" or card_product.tags contains 'Combo' or card_product.tags contains 'multibuy'
         assign card_combo_active = true
         assign card_combo_is_metafield = false
         assign card_combo_count = '2 & 3'
