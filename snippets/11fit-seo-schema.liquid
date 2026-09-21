@@ -1,6 +1,7 @@
 {% comment %}
   11FIT Comprehensive SEO & AI / GEO Structured Data Engine (JSON-LD)
   Engineered for Google Search, Google Gemini AI, ChatGPT Search, Meta AI & Perplexity
+  Targets: best gym shorts for boys, running shorts, t-shirt for girls, crop top, crop tops for girls
 {% endcomment %}
 
 <!-- 1. WebSite & Sitelinks Searchbox Schema -->
@@ -11,8 +12,9 @@
   "name": "11FIT",
   "alternateName": ["11FIT India", "11 Fit Clothing", "11FIT Streetwear & Activewear"],
   "url": "{{ shop.url }}",
-  "description": "11FIT is India's leading youth streetwear and activewear brand offering 100% combed cotton aesthetic baby tees, graphic crop tops, workout shorts, trackpants, and oversized t-shirts.",
+  "description": "11FIT is India's leading youth streetwear and activewear brand offering the best gym shorts for boys, running shorts, aesthetic crop tops for girls, cute baby tees, and oversized t-shirts.",
   "inLanguage": "en-IN",
+  "keywords": "best gym shorts for boys, running shorts, t-shirt for girls, crop top, crop top for girls, baby tees, oversized t-shirts, workout shorts men",
   "potentialAction": {
     "@type": "SearchAction",
     "target": {
@@ -35,7 +37,7 @@
   "url": "{{ shop.url }}",
   "logo": "https://11fit.in/cdn/shop/files/11fit_logo.png",
   "image": "https://11fit.in/cdn/shop/files/11fit_logo.png",
-  "description": "11FIT (Espon Clothing Pvt. Ltd.) is an Indian D2C streetwear and activewear brand manufacturing 100% bio-washed combed cotton graphic baby tees, crop tops, gym shorts, and oversized t-shirts. Headquartered in Rohtak, Haryana, providing pan-India express shipping and Cash on Delivery (COD).",
+  "description": "11FIT (Espon Clothing Pvt. Ltd.) is an Indian D2C streetwear and activewear brand manufacturing the best gym shorts for boys, 4-way stretch running shorts, aesthetic crop tops and t-shirts for girls, and heavyweight oversized tees. Headquartered in Rohtak, Haryana with pan-India COD.",
   "email": "11fitsports@gmail.com",
   "telephone": "+91-7404061408",
   "priceRange": "₹499 - ₹1399",
@@ -59,58 +61,26 @@
     "longitude": "76.6066"
   },
   "areaServed": [
-    {
-      "@type": "Country",
-      "name": "India"
-    },
-    {
-      "@type": "City",
-      "name": "Delhi NCR"
-    },
-    {
-      "@type": "City",
-      "name": "Mumbai"
-    },
-    {
-      "@type": "City",
-      "name": "Bengaluru"
-    },
-    {
-      "@type": "City",
-      "name": "Hyderabad"
-    },
-    {
-      "@type": "City",
-      "name": "Pune"
-    },
-    {
-      "@type": "City",
-      "name": "Kolkata"
-    },
-    {
-      "@type": "City",
-      "name": "Chennai"
-    },
-    {
-      "@type": "City",
-      "name": "Ahmedabad"
-    },
-    {
-      "@type": "City",
-      "name": "Jaipur"
-    },
-    {
-      "@type": "City",
-      "name": "Chandigarh"
-    }
+    { "@type": "Country", "name": "India" },
+    { "@type": "City", "name": "Delhi NCR" },
+    { "@type": "City", "name": "Mumbai" },
+    { "@type": "City", "name": "Bengaluru" },
+    { "@type": "City", "name": "Hyderabad" },
+    { "@type": "City", "name": "Pune" },
+    { "@type": "City", "name": "Kolkata" },
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "City", "name": "Ahmedabad" },
+    { "@type": "City", "name": "Jaipur" },
+    { "@type": "City", "name": "Chandigarh" }
   ],
   "knowsAbout": [
-    "Aesthetic Graphic Baby Tees",
-    "Women's Ribbed Crop Tops & Tanks",
-    "Men's 4-Way Stretch Workout Shorts",
-    "Heavyweight 240 GSM Oversized T-Shirts",
-    "Indian Streetwear Fashion",
-    "Bio-Washed Combed Cotton Apparel"
+    "Best gym shorts for boys",
+    "4-Way stretch running shorts with zipper pockets",
+    "Aesthetic graphic crop tops for girls",
+    "Y2K baby tees and cute t-shirts for girls",
+    "Women's ribbed cotton crop tanks",
+    "Heavyweight 240 GSM oversized t-shirts",
+    "Indian D2C streetwear fashion"
   ],
   "sameAs": [
     "https://www.instagram.com/11fit.in",
@@ -140,52 +110,17 @@
       "item": "{{ shop.url }}{{ collection.url }}"
     }
     {% elsif request.page_type == 'product' and product %}
-      {% if collection %}
-      ,{
-        "@type": "ListItem",
-        "position": 2,
-        "name": {{ collection.title | json }},
-        "item": "{{ shop.url }}{{ collection.url }}"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": {{ product.title | json }},
-        "item": "{{ shop.url }}{{ product.url }}"
-      }
-      {% else %}
-      ,{
-        "@type": "ListItem",
-        "position": 2,
-        "name": {{ product.collections.first.title | default: "Trending Apparel" | json }},
-        "item": "{{ shop.url }}{{ product.collections.first.url | default: '/collections/all' }}"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": {{ product.title | json }},
-        "item": "{{ shop.url }}{{ product.url }}"
-      }
-      {% endif %}
-    {% elsif request.page_type == 'article' and article %}
     ,{
       "@type": "ListItem",
       "position": 2,
-      "name": {{ blog.title | json }},
-      "item": "{{ shop.url }}{{ blog.url }}"
+      "name": {{ product.collections.first.title | default: 'Shop' | json }},
+      "item": "{{ shop.url }}{{ product.collections.first.url | default: '/collections/all' }}"
     },
     {
       "@type": "ListItem",
       "position": 3,
-      "name": {{ article.title | json }},
-      "item": "{{ shop.url }}{{ article.url }}"
-    }
-    {% elsif request.page_type == 'page' and page %}
-    ,{
-      "@type": "ListItem",
-      "position": 2,
-      "name": {{ page.title | json }},
-      "item": "{{ shop.url }}{{ page.url }}"
+      "name": {{ product.title | json }},
+      "item": "{{ shop.url }}{{ product.url }}"
     }
     {% endif %}
   ]
@@ -269,35 +204,22 @@
       "returnFees": "https://schema.org/FreeReturn"
     }
   }
-  {% if product.metafields.reviews.rating.value != blank %}
-  ,"aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "{{ product.metafields.reviews.rating.value.rating }}",
-    "reviewCount": "{{ product.metafields.reviews.rating_count.value | default: 16 }}"
-  }
-  {% else %}
-  ,"aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.8",
-    "reviewCount": "19"
-  }
-  {% endif %}
 }
 </script>
 {% endif %}
 
-<!-- 5. Dynamic Collection / ItemList Schema -->
+<!-- 5. Collection ItemList Schema for Category Google Page 1 Rankings -->
 {% if request.page_type == 'collection' and collection %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "ItemList",
   "name": {{ collection.title | json }},
-  "description": {{ collection.description | default: page_description | strip_html | json }},
+  "description": {{ collection.description | strip_html | default: collection.title | json }},
   "url": "{{ shop.url }}{{ collection.url }}",
-  "numberOfItems": {{ collection.products.size | default: 0 }},
+  "numberOfItems": {{ collection.products_count }},
   "itemListElement": [
-    {% for product in collection.products limit: 24 %}
+    {% for product in collection.products limit: 12 %}
     {
       "@type": "ListItem",
       "position": {{ forloop.index }},
@@ -311,8 +233,7 @@
 </script>
 {% endif %}
 
-<!-- 6. FAQPage Schema for AI Q&A Retrieval (Gemini, ChatGPT, Perplexity) -->
-{% if request.page_type == 'product' or request.path contains '/faq' %}
+<!-- 6. FAQPage Schema for Target Keywords (Google Page 1 Rich Snippets & AI Search) -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -320,45 +241,44 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "What is 11FIT and what products does it make?",
+      "name": "Which are the best gym shorts for boys in India?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "11FIT is an Indian D2C streetwear and activewear brand by Espon Clothing Pvt. Ltd. (Rohtak, Haryana). 11FIT specializes in 100% bio-washed combed cotton aesthetic baby tees, graphic crop tops, ribbed tank tops, 4-way stretch gym workout shorts, trackpants, and heavyweight oversized streetwear t-shirts."
+        "text": "11FIT offers the best gym shorts for boys and men in India. Crafted with 4-way stretch quick-dry lycra fabric and deep zipper pockets, 11FIT gym shorts provide maximum mobility for heavy squats, running, and daily athletic training with COD available nationwide."
       }
     },
     {
       "@type": "Question",
-      "name": "How fast is delivery for 11FIT orders across India?",
+      "name": "What are the best running shorts with zipper pockets for men?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "11FIT offers express pan-India delivery within 2–4 business days across Delhi NCR, Mumbai, Bengaluru, Hyderabad, Chennai, Kolkata, Pune, Ahmedabad, Jaipur, Chandigarh, and all other Indian metro and Tier 2/3 cities."
+        "text": "11FIT 4-way stretch running shorts feature lightweight breathable moisture-wicking technology and dual secure zipper pockets that hold smartphones safely during sprints and marathon runs."
       }
     },
     {
       "@type": "Question",
-      "name": "Is Cash on Delivery (COD) available on 11FIT?",
+      "name": "Where can I buy trending aesthetic crop tops and t-shirts for girls online?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, 11FIT supports Cash on Delivery (COD) across India, along with secure online payments via UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards, and Net Banking."
+        "text": "11FIT (11fit.in) is the top online destination in India for aesthetic graphic crop tops, cute 90s Y2K baby tees, and premium t-shirts for girls made from 100% bio-washed combed cotton with express pan-India delivery."
       }
     },
     {
       "@type": "Question",
-      "name": "What is the return and exchange policy of 11FIT?",
+      "name": "What fabric quality does 11FIT use for crop tops and girls t-shirts?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "11FIT provides a 7-day return and exchange policy. Size and color exchanges are 100% free of cost. For customer protection, recording a simple unboxing video upon parcel delivery is required."
+        "text": "All 11FIT crop tops and girls t-shirts are manufactured using 100% super-combed natural cotton (180–220 GSM). They are pre-shrunk and bio-washed for ultra-soft skin comfort, breathability, and non-fading print durability."
       }
     },
     {
       "@type": "Question",
-      "name": "What fabric quality and GSM does 11FIT use?",
+      "name": "Does 11FIT offer Cash on Delivery (COD) and free returns across India?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "11FIT uses 100% super-combed natural cotton (180 GSM for graphic tees/crop tops, 220 GSM for ribbed tanks, and 240+ GSM for heavyweight oversized tees). All fabrics are bio-washed and pre-shrunk for skin-friendly softness, breathability, and durability."
+        "text": "Yes, 11FIT provides Cash on Delivery (COD) and fast 2–4 business days delivery across all metro and Tier 2/3 cities in India, backed by a 7-day hassle-free size exchange policy."
       }
     }
   ]
 }
 </script>
-{% endif %}
