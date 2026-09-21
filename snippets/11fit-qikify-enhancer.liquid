@@ -153,7 +153,25 @@
     }
   }
 
+  
+  // Automatically anchor Qikify Volume Discount widget above Add to Cart button (before product details)
+  function anchorQikifyAboveAddToCart() {
+    const placeholder = document.getElementById('qvl-embed-placeholder') || document.querySelector('.qikify-before-atc');
+    if (!placeholder) return;
+
+    const qikifyWidgets = document.querySelectorAll(
+      '.qvl-product-offer-container, .qvl-product-offer, .qvl-volume-box, .qvl-volume-tier, [class*="qvl-multibuy"], .qikify-volume-discount'
+    );
+
+    qikifyWidgets.forEach(function(widget) {
+      if (!placeholder.contains(widget) && widget.parentElement && widget !== placeholder) {
+        placeholder.appendChild(widget);
+      }
+    });
+  }
+
   function enhanceQikify() {
+    anchorQikifyAboveAddToCart();
     // Remove any leftover product page widget badges
     document.querySelectorAll('.fit11-qikify-corner-badge, .fit11-qikify-item-badge').forEach(el => el.remove());
 

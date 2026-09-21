@@ -374,15 +374,12 @@
 
 <script>
 (function() {
-  var STORAGE_KEY = 'fit11_exit_shipping_shown_v2';
-  var POPUP_COOLDOWN_HOURS = 24;
+  var STORAGE_KEY = 'fit11_exit_shipping_session_shown';
 
   function hasShownRecently() {
     try {
-      var lastShown = localStorage.getItem(STORAGE_KEY);
-      if (!lastShown) return false;
-      var elapsed = Date.now() - parseInt(lastShown, 10);
-      return elapsed < (POPUP_COOLDOWN_HOURS * 60 * 60 * 1000);
+      // Use sessionStorage so user can test easily per browser session
+      return sessionStorage.getItem(STORAGE_KEY) === 'true';
     } catch(e) {
       return false;
     }
@@ -390,7 +387,7 @@
 
   function markAsShown() {
     try {
-      localStorage.setItem(STORAGE_KEY, Date.now().toString());
+      sessionStorage.setItem(STORAGE_KEY, 'true');
     } catch(e) {}
   }
 
@@ -428,6 +425,9 @@
     }
   };
 
+  // Expose global manual trigger for instant testing
+  window.showFit11ExitPopup = showExitPopup;
+
   // 1. Desktop: Mouse leave top of viewport
   document.addEventListener('mouseleave', function(e) {
     if (e.clientY <= 15) {
@@ -435,9 +435,23 @@
     }
   });
 
-  // 2. Mobile: Fast scroll up after reading at least 35% of page
+  // 2. Mobile: Hardware/Browser Back Button Trap
+  try {
+    if (window.history && window.history.pushState) {
+      window.history.pushState({ fit11ExitIntent: true }, '', window.location.href);
+      window.addEventListener('popstate', function(e) {
+        if (!hasShownRecently()) {
+          showExitPopup();
+        }
+      });
+    }
+  } catch(e) {}
+
+  // 3. Mobile: Accumulated Natural Scroll-Up Detection
   var maxScroll = 0;
   var lastScrollTop = 0;
+  var upScrollAccumulator = 0;
+
   window.addEventListener('scroll', function() {
     var currentScroll = window.pageYOffset || document.documentElement.scrollTop;
     var docHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -448,16 +462,29 @@
       maxScroll = scrollPct;
     }
     
-    if (maxScroll > 35 && (lastScrollTop - currentScroll) > 120) {
-      showExitPopup();
+    // User is scrolling UP after reaching at least 20% of page
+    if (currentScroll < lastScrollTop) {
+      upScrollAccumulator += (lastScrollTop - currentScroll);
+      if (maxScroll > 20 && upScrollAccumulator > 60) {
+        showExitPopup();
+      }
+    } else {
+      upScrollAccumulator = 0;
     }
     lastScrollTop = currentScroll;
   }, { passive: true });
 
-  // 3. Fallback: Show after 45 seconds
+  // 4. Mobile: When user switches tabs or taps address bar
+  document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'hidden') {
+      showExitPopup();
+    }
+  });
+
+  // 5. Mobile & Desktop Fallback Timer: Show after 18 seconds of browsing
   setTimeout(function() {
     showExitPopup();
-  }, 45000);
+  }, 18000);
 
 })();
 </script>
