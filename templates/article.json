@@ -36,9 +36,14 @@
         "share"
       ],
       "settings": {}
+    },
+    "shoppable_products": {
+      "type": "11fit-blog-shoppable",
+      "settings": {}
     }
   },
   "order": [
-    "main"
+    "main",
+    "shoppable_products"
   ]
 }

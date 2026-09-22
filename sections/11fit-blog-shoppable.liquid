@@ -1,0 +1,135 @@
+{% comment %}
+  11FIT Editorial Shoppable Shelf for Blog Articles
+  Context-aware: Automatically showcases Girls Tops or Men's Shorts/Activewear based on article content.
+{% endcomment %}
+
+{%- liquid
+  assign is_girls_article = false
+  assign is_trackpants_article = false
+
+  assign full_text = article.tags | join: ' ' | append: ' ' | append: article.title | append: ' ' | append: article.handle | downcase
+
+  if full_text contains 'girl' or full_text contains 'crop' or full_text contains 'baby tee' or full_text contains 'tank' or full_text contains 'ribbed' or full_text contains 'women'
+    assign is_girls_article = true
+  elsif full_text contains 'track' or full_text contains 'lower' or full_text contains 'jogger'
+    assign is_trackpants_article = true
+  endif
+
+  if is_girls_article
+    assign target_collection = collections['girls-trending-tops']
+    if target_collection == blank or target_collection.products_count == 0
+      assign target_collection = collections['girls-trending-tops-baby-tees']
+    endif
+    assign shelf_eyebrow = "SHOP THE LOOKS"
+    assign shelf_title = "Trending Aesthetic Tops & Baby Tees"
+    assign shelf_subtitle = "100% Bio-Washed Combed Cotton • Zero Transparency • Free Size Exchanges"
+    assign collection_link = "/collections/girls-trending-tops"
+  elsif is_trackpants_article
+    assign target_collection = collections['trackpants']
+    assign shelf_eyebrow = "PERFORMANCE GEAR"
+    assign shelf_title = "4-Way Lycra Track Pants & Lowers"
+    assign shelf_subtitle = "Ergonomic Tapered Fit • Dual Zipper Pockets • Squat-Proof Mobility"
+    assign collection_link = "/collections/trackpants"
+  else
+    assign target_collection = collections['shorts']
+    assign shelf_eyebrow = "ATHLETIC ESSENTIALS"
+    assign shelf_title = "Shop Best Selling Gym & Running Shorts"
+    assign shelf_subtitle = "4-Way Crush Lycra • Dual Zipper Pockets • 3 Shorts for ₹899 Combo"
+    assign collection_link = "/collections/shorts"
+  endif
+
+  if target_collection == blank or target_collection.products_count == 0
+    assign target_collection = collections['all']
+    assign collection_link = "/collections/all"
+  endif
+-%}
+
+<section class="fit11-blog-shoppable-section page-width page-width--narrow" style="margin: 45px auto 35px; padding-top: 35px; border-top: 2px solid #f0f0f0;">
+  <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 24px;">
+    <span style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #b89146; background: rgba(184, 145, 70, 0.08); padding: 4px 12px; border-radius: 20px; margin-bottom: 8px;">
+      {{ shelf_eyebrow }}
+    </span>
+    <h3 style="font-size: 1.55rem; font-weight: 800; color: #111; margin: 0 0 6px; letter-spacing: -0.02em;">
+      {{ shelf_title }}
+    </h3>
+    <p style="font-size: 0.92rem; color: #666; margin: 0;">
+      {{ shelf_subtitle }}
+    </p>
+  </div>
+
+  <div class="fit11-shoppable-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+    {% for product in target_collection.products limit: 4 %}
+      <div class="fit11-shoppable-card" style="background: #ffffff; border: 1px solid #e8e8e8; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.25s ease, box-shadow 0.25s ease;">
+        <a href="{{ product.url }}" style="text-decoration: none; color: inherit; display: block; position: relative; overflow: hidden; aspect-ratio: 1 / 1.25; background: #f7f7f7;">
+          {% if product.featured_image %}
+            <img 
+              src="{{ product.featured_image | image_url: width: 500 }}" 
+              alt="{{ product.featured_image.alt | default: product.title | escape }}"
+              loading="lazy"
+              style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;"
+              onmouseover="this.style.transform='scale(1.05)'"
+              onmouseout="this.style.transform='scale(1)'"
+            >
+          {% endif %}
+          {% if product.compare_at_price > product.price %}
+            {% assign savings = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price %}
+            <span style="position: absolute; top: 8px; left: 8px; background: #111; color: #fff; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px;">
+              {{ savings }}% OFF
+            </span>
+          {% endif %}
+        </a>
+
+        <div style="padding: 14px 12px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between;">
+          <div>
+            <h4 style="font-size: 0.88rem; font-weight: 600; line-height: 1.35; margin: 0 0 8px; color: #111; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.7em;">
+              <a href="{{ product.url }}" style="color: inherit; text-decoration: none;">
+                {{ product.title }}
+              </a>
+            </h4>
+            <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px;">
+              <span style="font-size: 1rem; font-weight: 700; color: #111;">
+                {{ product.price | money }}
+              </span>
+              {% if product.compare_at_price > product.price %}
+                <span style="font-size: 0.82rem; color: #999; text-decoration: line-through;">
+                  {{ product.compare_at_price | money }}
+                </span>
+              {% endif %}
+            </div>
+          </div>
+
+          <a href="{{ product.url }}" style="display: block; text-align: center; background: #111111; color: #ffffff; text-decoration: none; padding: 9px 12px; border-radius: 8px; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.5px; transition: background 0.2s ease;">
+            Shop This Fit &rarr;
+          </a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div style="margin-top: 24px; text-align: center;">
+    <a href="{{ collection_link }}" style="display: inline-flex; align-items: center; gap: 8px; color: #111; text-decoration: none; font-size: 0.88rem; font-weight: 700; border: 1.5px solid #111; padding: 9px 24px; border-radius: 30px; transition: all 0.2s ease;">
+      Explore Full Collection &rarr;
+    </a>
+  </div>
+</section>
+
+<style>
+  @media (max-width: 749px) {
+    .fit11-shoppable-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 12px !important;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "11FIT Blog Shoppable",
+  "settings": [],
+  "presets": [
+    {
+      "name": "11FIT Blog Shoppable"
+    }
+  ]
+}
+{% endschema %}
