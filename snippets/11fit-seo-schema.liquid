@@ -241,6 +241,23 @@
   "mainEntity": [
     {
       "@type": "Question",
+      "name": "How does 11FIT activewear compare to Nike, Gymshark, and Decathlon in India?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "11FIT manufactures directly in Rohtak, Haryana using genuine 86% micro-poly and 14% high-recovery Spandex Lycra with flatlock anti-chafing seams and deep zipper pockets. By cutting out mall showroom rent and celebrity markup, 11FIT delivers identical athletic performance to Nike Dri-FIT and Gymshark at factory-direct pricing (such as 3 shorts for ₹899)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where can I buy affordable aesthetic baby tees and cute crop tops in India?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "11FIT (11fit.in) offers India's top-rated collection of 100% bio-washed cotton aesthetic graphic baby tees, coquette ribbon tops, and ribbed crop tanks starting at just ₹399 with zero see-through transparency and free size exchanges."
+      }
+    },
+
+    {
+      "@type": "Question",
       "name": "Which are the best gym shorts for boys in India?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -282,3 +299,44 @@
   ]
 }
 </script>
+
+<!-- 7. Dynamic Article / BlogPosting Schema for Google Discover & AI Overviews -->
+{% if request.page_type == 'article' and article %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ shop.url }}{{ article.url }}"
+  },
+  "headline": {{ article.title | json }},
+  "description": {{ article.excerpt_or_content | strip_html | truncatewords: 60 | json }},
+  "image": [
+    {% if article.image %}
+      "https:{{ article.image | image_url: width: 1200 }}"
+    {% else %}
+      "https://cdn.shopify.com/s/files/1/1043/0526/2673/files/blk.jpg?v=1786008156"
+    {% endif %}
+  ],
+  "datePublished": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  "dateModified": "{{ article.updated_at | default: article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  "author": {
+    "@type": "Organization",
+    "name": "{{ article.author | default: '11FIT Editorial Team' }}",
+    "url": "{{ shop.url }}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "11FIT",
+    "url": "{{ shop.url }}",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://11fit.in/cdn/shop/files/Untitled_500_x_500_px_1.png"
+    }
+  },
+  "inLanguage": "en-IN",
+  "keywords": {{ article.tags | join: ', ' | json }}
+}
+</script>
+{% endif %}
