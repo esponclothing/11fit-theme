@@ -1709,6 +1709,211 @@ document.addEventListener('DOMContentLoaded', function() {
   })();
 </script>
 
+<!-- QIKIFY VOLUME COMBO SWATCH IMAGE FIX & DIVERSE DEFAULT SELECTION -->
+<script>
+  window.fit11VariantImages = {
+    {% for variant in product.variants %}
+      {% if variant.featured_image %}
+        {{ variant.option1 | downcase | json }}: {{ variant.featured_image.src | img_url: '100x100' | json }},
+      {% elsif variant.image %}
+        {{ variant.option1 | downcase | json }}: {{ variant.image.src | img_url: '100x100' | json }},
+      {% endif %}
+    {% endfor %}
+    {% for image in product.images %}
+      {% assign img_name = image.src | downcase %}
+      {% if img_name contains 'grey' %}
+        {% unless img_name contains 'l_grey' or img_name contains 'light' %}
+          "dark grey": {{ image.src | img_url: '100x100' | json }},
+        {% endunless %}
+      {% endif %}
+      {% if img_name contains 'l_grey' or img_name contains 'light_grey' %}
+        "light grey": {{ image.src | img_url: '100x100' | json }},
+      {% elsif img_name contains 'navy' %}
+        "navy blue": {{ image.src | img_url: '100x100' | json }},
+      {% elsif img_name contains 'black' %}
+        "black": {{ image.src | img_url: '100x100' | json }},
+      {% elsif img_name contains 'olive' %}
+        "olive green": {{ image.src | img_url: '100x100' | json }},
+      {% endif %}
+    {% endfor %}
+    "dark grey": "https://cdn.shopify.com/s/files/1/1043/0526/2673/files/GREY_100x100.png?v=1789620935"
+  };
+</script>
+
+<style>
+  .qvl-variant-opt__select-option-color,
+  .qvl-variant-opt__select-option-image {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    border-radius: 50% !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    display: inline-block !important;
+    flex-shrink: 0 !important;
+    border: 1px solid rgba(0,0,0,0.15) !important;
+  }
+</style>
+
+<script>
+(function() {
+  const defaultColors = ['Dark Grey', 'Navy Blue', 'Black', 'Olive green', 'Light Grey'];
+
+  function getMatchingImage(text) {
+    if (!text || !window.fit11VariantImages) return null;
+    const clean = text.trim().toLowerCase();
+    for (const [key, url] of Object.entries(window.fit11VariantImages)) {
+      const k = key.toLowerCase();
+      if (clean === k || clean.startsWith(k) || k.startsWith(clean)) {
+        return url;
+      }
+    }
+    return null;
+  }
+
+  function applySwatches() {
+    // Dropdown options
+    document.querySelectorAll('.qvl-variant-opt__select-option').forEach(el => {
+      const text = el.innerText.trim();
+      const imgUrl = getMatchingImage(text);
+      if (imgUrl) {
+        const swatch = el.querySelector('.qvl-variant-opt__select-option-color, .qvl-variant-opt__select-option-image');
+        if (swatch) {
+          if (swatch.style.backgroundImage !== 'url("' + imgUrl + '")' && swatch.style.backgroundImage !== "url('" + imgUrl + "')") {
+            swatch.style.setProperty('background-image', 'url(' + imgUrl + ')', 'important');
+            swatch.style.setProperty('background-size', 'cover', 'important');
+            swatch.style.setProperty('background-position', 'center', 'important');
+          }
+        }
+      }
+    });
+
+    // Selected previews
+    document.querySelectorAll('.qvl-variant-opt__selected-option').forEach(el => {
+      const text = el.innerText.trim();
+      const imgUrl = getMatchingImage(text);
+      if (imgUrl) {
+        const swatch = el.querySelector('.qvl-variant-opt__select-option-color, .qvl-variant-opt__select-option-image');
+        if (swatch) {
+          if (swatch.style.backgroundImage !== 'url("' + imgUrl + '")' && swatch.style.backgroundImage !== "url('" + imgUrl + "')") {
+            swatch.style.setProperty('background-image', 'url(' + imgUrl + ')', 'important');
+            swatch.style.setProperty('background-size', 'cover', 'important');
+            swatch.style.setProperty('background-position', 'center', 'important');
+          }
+        }
+      }
+    });
+  }
+
+  let isRunningDiversify = false;
+  async function diversifySlotDefaults() {
+    if (isRunningDiversify) return;
+    const visibleTier = document.querySelector('.qvl-volume-tier--selected, .qvl-volume-tier.active, .qvl-volume-tier--active') ||
+      Array.from(document.querySelectorAll('.qvl-volume-tier')).find(t => t.querySelector('input[type="radio"]:checked, .qvl-volume-tier__radio-tick--checked, .qvl-volume-tier__radio--checked'));
+    
+    if (!visibleTier) return;
+    if (visibleTier.dataset.fit11Diversified === 'true') return;
+
+    const slots = Array.from(visibleTier.querySelectorAll('.qvl-volume-tier__variant-select, .qvl-variant-opt__block'));
+    if (slots.length <= 1) {
+      visibleTier.dataset.fit11Diversified = 'true';
+      return;
+    }
+
+    // Check if slots currently share duplicate default colors
+    const currentColors = slots.map(s => s.querySelector('.qvl-variant-opt__selected-option')?.innerText.trim() || '');
+    const allSame = currentColors.length > 1 && currentColors.every(c => c && c === currentColors[0]);
+    if (!allSame && visibleTier.dataset.tierVisited) {
+      visibleTier.dataset.fit11Diversified = 'true';
+      return;
+    }
+    visibleTier.dataset.tierVisited = 'true';
+
+    isRunningDiversify = true;
+    try {
+      // Find available colors from options
+      let availableColors = [];
+      const firstSelect = slots[0].querySelector('.qvl-variant-opt__custom-select, [id*="Color"]');
+      const firstBtn = firstSelect?.querySelector('.qvl-variant-opt__selected-option');
+      let optionsContainer = firstSelect?.querySelector('.qvl-variant-opt__select-options');
+
+      if (!optionsContainer || optionsContainer.querySelectorAll('.qvl-variant-opt__select-option').length === 0) {
+        firstBtn?.click();
+        await new Promise(r => setTimeout(r, 60));
+        optionsContainer = firstSelect?.querySelector('.qvl-variant-opt__select-options');
+        const opts = Array.from(optionsContainer?.querySelectorAll('.qvl-variant-opt__select-option') || []);
+        availableColors = opts.map(o => o.innerText.trim()).filter(Boolean);
+        firstBtn?.click();
+        await new Promise(r => setTimeout(r, 60));
+      } else {
+        const opts = Array.from(optionsContainer.querySelectorAll('.qvl-variant-opt__select-option'));
+        availableColors = opts.map(o => o.innerText.trim()).filter(Boolean);
+      }
+
+      const colorPalette = availableColors.length > 1 ? availableColors : defaultColors;
+
+      for (let i = 1; i < slots.length; i++) {
+        const targetColor = colorPalette[i % colorPalette.length];
+        const slot = slots[i];
+        const customSelect = slot.querySelector('.qvl-variant-opt__custom-select, [id*="Color"]');
+        const btn = customSelect?.querySelector('.qvl-variant-opt__selected-option');
+        if (!btn) continue;
+
+        if (btn.innerText.trim().toLowerCase() === targetColor.toLowerCase()) continue;
+
+        btn.click();
+        await new Promise(r => setTimeout(r, 70));
+
+        const opts = Array.from(customSelect.querySelectorAll('.qvl-variant-opt__select-option'));
+        const targetOpt = opts.find(o => o.innerText.trim().toLowerCase() === targetColor.toLowerCase());
+        if (targetOpt) {
+          targetOpt.click();
+          await new Promise(r => setTimeout(r, 70));
+        } else {
+          btn.click();
+          await new Promise(r => setTimeout(r, 40));
+        }
+      }
+
+      visibleTier.dataset.fit11Diversified = 'true';
+    } catch(e) {
+      console.warn('Diversify error:', e);
+    } finally {
+      isRunningDiversify = false;
+      applySwatches();
+    }
+  }
+
+  // Observer for dynamic Qikify renders & updates
+  const observer = new MutationObserver(() => {
+    applySwatches();
+    diversifySlotDefaults();
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'style'] });
+
+  // Listen to tier selection clicks
+  document.addEventListener('click', (e) => {
+    const tier = e.target.closest('.qvl-volume-tier');
+    if (tier) {
+      setTimeout(() => {
+        diversifySlotDefaults();
+        applySwatches();
+      }, 120);
+    }
+  });
+
+  // Initial runs
+  applySwatches();
+  diversifySlotDefaults();
+  setTimeout(diversifySlotDefaults, 400);
+  setTimeout(diversifySlotDefaults, 1000);
+  setTimeout(diversifySlotDefaults, 2000);
+})();
+</script>
+
 {% schema %}
 {
   "name": "11fit Single Product",
