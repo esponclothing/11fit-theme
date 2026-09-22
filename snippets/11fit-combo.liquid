@@ -34,15 +34,146 @@
   <div onclick="fit11ToggleModal(true)" style="font-size: 13px; font-weight: 500; color: #1a1a1a; cursor: pointer; display: flex; align-items: center; gap: 4px;">Size Guide <i class="ti ti-chevron-right" style="font-size: 12px;"></i></div>
 </div>
 
+{% comment %} Build color → image map from product images by matching filenames/alt {% endcomment %}
+{% assign combo_color_images = '' %}
+{% for option in product.options_with_values %}
+  {% assign option_name_lower = option.name | downcase %}
+  {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
+    {% for color_val in option.values %}
+      {% assign color_lower = color_val | downcase | replace: ' ', '' | replace: '-', '' %}
+      {% assign matched_img = '' %}
+      {% for img in product.images %}
+        {% assign img_src_lower = img.src | downcase %}
+        {% assign img_alt_lower = img.alt | downcase | default: '' %}
+        {% if img_src_lower contains color_lower or img_alt_lower contains color_lower %}
+          {% unless matched_img != '' %}
+            {% assign matched_img = img.src %}
+          {% endunless %}
+        {% endif %}
+      {% endfor %}
+      {% if matched_img == '' %}
+        {% assign fallback_img = product.images | first %}
+        {% if fallback_img %}
+          {% assign matched_img = fallback_img.src %}
+        {% endif %}
+      {% endif %}
+      {% capture combo_color_images %}{{ combo_color_images }}|{{ color_val }}::{{ matched_img }}{% endcapture %}
+    {% endfor %}
+  {% endif %}
+{% endfor %}
+
+<style>
+  .fit11-combo-color-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border: 1.5px solid #d0d0d0;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1a1a1a;
+    text-align: left;
+    transition: border-color 0.2s;
+    position: relative;
+    font-family: inherit;
+  }
+  .fit11-combo-color-btn:focus { outline: none; border-color: #b89356; }
+  .fit11-combo-color-thumb {
+    width: 36px;
+    height: 44px;
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 1px solid #e8e8e8;
+    background: #f0f0f0;
+  }
+  .fit11-combo-color-thumb-placeholder {
+    width: 36px;
+    height: 44px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    border: 1px solid #e8e8e8;
+    background: #e0e0e0;
+  }
+  .fit11-combo-color-label { flex: 1; }
+  .fit11-combo-color-chevron {
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+  .fit11-combo-color-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    z-index: 999;
+    overflow: hidden;
+    display: none;
+    max-height: 280px;
+    overflow-y: auto;
+  }
+  .fit11-combo-color-dropdown.open { display: block; }
+  .fit11-combo-color-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1a1a1a;
+    transition: background 0.15s;
+    font-family: inherit;
+  }
+  .fit11-combo-color-option:hover { background: #f8f8f8; }
+  .fit11-combo-color-option.selected { background: #f0f7f0; }
+  .fit11-combo-color-option.disabled { opacity: 0.4; pointer-events: none; }
+</style>
+
 <div class="fit11-combo-selectors" style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 24px;">
   {% for i in (1..combo_count) %}
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-      <!-- Color Select -->
+      <!-- Color Visual Picker -->
       <div style="display: flex; flex-direction: column; gap: 8px;">
         <label style="font-size: 14px; font-weight: 500; color: #1a1a1a; margin: 0;">Color {{ i }}</label>
-        <div style="position: relative;">
-          <select id="combo-color-{{ i }}" class="combo-select combo-color-select" data-item="{{ i }}" data-option="color" onchange="updateComboSelection({{ i }}, 'color', this.value)" style="width: 100%; appearance: none; -webkit-appearance: none; padding: 12px 14px; border: 1px solid #d0d0d0; border-radius: 4px; font-size: 14px; color: #1a1a1a; background: #fff; outline: none; cursor: pointer; font-family: inherit;">
-            <option value="" disabled selected>Select</option>
+        <!-- Hidden native select (for form/JS compatibility) -->
+        <select id="combo-color-{{ i }}" class="combo-select combo-color-select" data-item="{{ i }}" data-option="color" style="display:none;" onchange="updateComboSelection({{ i }}, 'color', this.value); fit11SyncCustomPicker({{ i }});">
+          <option value="" disabled selected>Select</option>
+          {% for option in product.options_with_values %}
+            {% assign option_name_lower = option.name | downcase %}
+            {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
+              {% for value in option.values %}
+                {% assign val_avail = false %}
+                {% for variant in product.variants %}
+                  {% if variant.available and variant.options contains value %}
+                    {% assign val_avail = true %}
+                    {% break %}
+                  {% endif %}
+                {% endfor %}
+                {% if val_avail %}
+                  <option value="{{ value | escape }}">{{ value }}</option>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </select>
+        <!-- Custom visual picker -->
+        <div style="position: relative;" id="combo-color-wrap-{{ i }}">
+          <button type="button" class="fit11-combo-color-btn" id="combo-color-trigger-{{ i }}" onclick="fit11ToggleColorDropdown({{ i }})" aria-haspopup="listbox">
+            <span class="fit11-combo-color-thumb-placeholder" id="combo-color-img-{{ i }}"></span>
+            <span class="fit11-combo-color-label" id="combo-color-text-{{ i }}">Select Color</span>
+            <svg class="fit11-combo-color-chevron" id="combo-color-chevron-{{ i }}" width="10" height="6" viewBox="0 0 10 6" fill="none">
+              <path d="M1 1L5 5L9 1" stroke="#666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="fit11-combo-color-dropdown" id="combo-color-dd-{{ i }}" role="listbox">
             {% for option in product.options_with_values %}
               {% assign option_name_lower = option.name | downcase %}
               {% if option_name_lower contains 'color' or option_name_lower contains 'colour' %}
@@ -54,16 +185,36 @@
                       {% break %}
                     {% endif %}
                   {% endfor %}
-                  {% if val_avail %}
-                    <option value="{{ value | escape }}">{{ value }}</option>
+                  {% comment %} Find matching image for this color {% endcomment %}
+                  {% assign color_lower_img = value | downcase | replace: ' ', '' | replace: '-', '' %}
+                  {% assign opt_img_src = '' %}
+                  {% for img in product.images %}
+                    {% assign img_src_lower2 = img.src | downcase %}
+                    {% assign img_alt_lower2 = img.alt | downcase | default: '' %}
+                    {% if img_src_lower2 contains color_lower_img or img_alt_lower2 contains color_lower_img %}
+                      {% if opt_img_src == '' %}
+                        {% assign opt_img_src = img.src %}
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                  {% if opt_img_src == '' and product.images.first %}
+                    {% assign opt_img_src = product.images.first.src %}
                   {% endif %}
+                  <div
+                    class="fit11-combo-color-option{% unless val_avail %} disabled{% endunless %}"
+                    role="option"
+                    data-value="{{ value | escape }}"
+                    data-img="{{ opt_img_src | img_url: '100x125' }}"
+                    data-item="{{ i }}"
+                    onclick="fit11SelectComboColor({{ i }}, '{{ value | escape }}', '{{ opt_img_src | img_url: '100x125' }}')"
+                  >
+                    <img src="{{ opt_img_src | img_url: '100x125' }}" alt="{{ value }}" style="width:36px;height:44px;border-radius:4px;object-fit:cover;border:1px solid #e8e8e8;flex-shrink:0;" onerror="this.style.background='#e0e0e0';this.src='';">
+                    <span>{{ value }}</span>
+                  </div>
                 {% endfor %}
               {% endif %}
             {% endfor %}
-          </select>
-          <svg style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none;" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M1 1L5 5L9 1" stroke="#666666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+          </div>
         </div>
       </div>
       
@@ -426,16 +577,95 @@
     validateCombo();
   }
 
-  function initComboSelectionsFromDOM() {
-    let colorSelects = document.querySelectorAll('.combo-color-select');
-    if (colorSelects.length > 0) {
-      const availableColors = Array.from(colorSelects[0].options).filter(opt => opt.value !== '').map(opt => opt.value);
-      colorSelects.forEach((sel, index) => {
-        if (!sel.value && availableColors.length > 0) {
-           sel.value = availableColors[index % availableColors.length];
-        }
+  // ── Custom color picker functions ──
+  window.fit11ToggleColorDropdown = function(itemIndex) {
+    const dd = document.getElementById('combo-color-dd-' + itemIndex);
+    const chevron = document.getElementById('combo-color-chevron-' + itemIndex);
+    if (!dd) return;
+    const isOpen = dd.classList.contains('open');
+    // Close all other dropdowns
+    document.querySelectorAll('.fit11-combo-color-dropdown').forEach(d => {
+      d.classList.remove('open');
+    });
+    document.querySelectorAll('.fit11-combo-color-chevron').forEach(c => {
+      c.style.transform = '';
+    });
+    if (!isOpen) {
+      dd.classList.add('open');
+      if (chevron) chevron.style.transform = 'rotate(180deg)';
+    }
+  };
+
+  window.fit11SelectComboColor = function(itemIndex, value, imgSrc) {
+    const sel = document.getElementById('combo-color-' + itemIndex);
+    const btn = document.getElementById('combo-color-trigger-' + itemIndex);
+    const imgEl = document.getElementById('combo-color-img-' + itemIndex);
+    const textEl = document.getElementById('combo-color-text-' + itemIndex);
+    const dd = document.getElementById('combo-color-dd-' + itemIndex);
+    const chevron = document.getElementById('combo-color-chevron-' + itemIndex);
+
+    if (sel) { sel.value = value; }
+    if (textEl) textEl.textContent = value;
+    if (imgEl && imgSrc) {
+      imgEl.outerHTML = '<img class="fit11-combo-color-thumb" id="combo-color-img-' + itemIndex + '" src="' + imgSrc + '" alt="' + value + '" onerror="this.style.background=\'#e0e0e0\';this.src=\'\'">';
+    }
+    if (dd) dd.classList.remove('open');
+    if (chevron) chevron.style.transform = '';
+    if (btn) btn.style.borderColor = '#b89356';
+
+    // Mark selected option in dropdown
+    const ddEl = document.getElementById('combo-color-dd-' + itemIndex);
+    if (ddEl) {
+      ddEl.querySelectorAll('.fit11-combo-color-option').forEach(opt => {
+        opt.classList.toggle('selected', opt.dataset.value === value);
       });
     }
+
+    updateComboSelection(itemIndex, 'color', value);
+  };
+
+  window.fit11SyncCustomPicker = function(itemIndex) {
+    // sync hidden select back to custom picker display
+    const sel = document.getElementById('combo-color-' + itemIndex);
+    const val = sel ? sel.value : '';
+    if (!val) return;
+    const opt = document.querySelector('#combo-color-dd-' + itemIndex + ' [data-value="' + val + '"]');
+    if (opt) {
+      const img = opt.dataset.img || '';
+      fit11SelectComboColor(itemIndex, val, img);
+    }
+  };
+
+  // Close dropdowns when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('[id^="combo-color-wrap-"]')) {
+      document.querySelectorAll('.fit11-combo-color-dropdown').forEach(d => d.classList.remove('open'));
+      document.querySelectorAll('.fit11-combo-color-chevron').forEach(c => c.style.transform = '');
+    }
+  });
+
+  function initComboSelectionsFromDOM() {
+    // Collect available colors from first select
+    const colorSelects = document.querySelectorAll('.combo-color-select');
+    const availableColorOpts = colorSelects.length > 0
+      ? Array.from(colorSelects[0].options).filter(opt => opt.value !== '')
+      : [];
+
+    // Pre-select DIFFERENT colors per slot
+    colorSelects.forEach((sel, index) => {
+      if (!sel.value && availableColorOpts.length > 0) {
+        const targetOpt = availableColorOpts[index % availableColorOpts.length];
+        sel.value = targetOpt.value;
+        // Also update the custom picker UI
+        const dd = document.getElementById('combo-color-dd-' + (index + 1));
+        if (dd) {
+          const matchedOpt = dd.querySelector('[data-value="' + targetOpt.value + '"]');
+          if (matchedOpt) {
+            fit11SelectComboColor(index + 1, targetOpt.value, matchedOpt.dataset.img || '');
+          }
+        }
+      }
+    });
 
     document.querySelectorAll('.combo-select').forEach(function(sel) {
       const itemIndex = parseInt(sel.dataset.item);
