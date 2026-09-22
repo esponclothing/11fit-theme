@@ -82,6 +82,30 @@
     {%- endcase -%}
   {%- endfor -%}
 
+  <!-- RELATED GUIDES & CROSS-LINKING FOR SEO & GEO CRAWLERS -->
+  <div class="page-width page-width--narrow related-guides-wrap" style="margin-top: 50px; padding-top: 35px; border-top: 1px solid rgba(0,0,0,0.08);">
+    <h3 style="font-size: 1.35rem; font-weight: 700; margin-bottom: 20px; color: #111; letter-spacing: -0.02em;">
+      Trending Buying Guides &amp; Comparisons
+    </h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+      {% assign rel_count = 0 %}
+      {% for rel in blog.articles %}
+        {% if rel.id != article.id and rel_count < 3 %}
+          {% assign rel_count = rel_count | plus: 1 %}
+          <a href="{{ rel.url }}" style="text-decoration: none; color: inherit; background: #fafafa; border: 1px solid #e8e8e8; border-radius: 12px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
+            <div>
+              <span style="display: inline-block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; color: #b89146; margin-bottom: 8px;">11FIT Guide</span>
+              <h4 style="font-size: 0.98rem; font-weight: 600; line-height: 1.4; margin: 0 0 10px 0; color: #111;">{{ rel.title }}</h4>
+            </div>
+            <span style="font-size: 0.82rem; color: #111; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+              Read Full Analysis &rarr;
+            </span>
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
   <div class="article-template__back element-margin-top center{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
     <a href="{{ blog.url }}" class="article-template__link link animate-arrow">
       <span class="icon-wrap">
