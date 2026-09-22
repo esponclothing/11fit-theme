@@ -329,12 +329,12 @@
   /* ── ACCORDIONS & HIGHLIGHTS ── */
   .fit11-accord-group { border-top: none; margin-top: 0; width: 100%; }
   .fit11-accord { border-bottom: 1px solid var(--lux-border); width: 100%; }
-  .fit11-accord summary { display: flex; align-items: center; padding: 16px 0; cursor: pointer; list-style: none; font-size: 14px; font-weight: 600; color: var(--lux-text); user-select: none; }
+  .fit11-accord summary { font-family: 'Outfit', sans-serif !important; display: flex; align-items: center; padding: 16px 0; cursor: pointer; list-style: none; font-size: 14px; font-weight: 600; color: var(--lux-text); user-select: none; }
   .fit11-accord summary::-webkit-details-marker { display: none; }
   .fit11-accord summary i.ti-chevron-down { font-size: 18px; color: var(--lux-text); transition: transform .4s cubic-bezier(0.4, 0, 0.2, 1); font-weight: 300; flex-shrink: 0; }
   .fit11-accord[open] summary i.ti-chevron-down { transform: rotate(180deg); }
 
-  .fit11-acc-body { padding-bottom: 24px; font-size: 14px; color: var(--lux-text-muted); line-height: 1.8; font-weight: 300; word-break: break-word; }
+  .fit11-acc-body { font-family: 'Outfit', sans-serif !important; padding-bottom: 24px; font-size: 14px; color: var(--lux-text-muted); line-height: 1.8; font-weight: 300; word-break: break-word; }
 
   .fit11-highlights-wrapper { margin-top: 24px; margin-bottom: 8px; width: 100%; }
   .fit11-highlights-title { font-family: var(--font-heading); font-size: 18px; font-weight: 600; margin-bottom: 16px; color: var(--lux-text); }
@@ -391,8 +391,8 @@
     .fit11-price-row { justify-content: flex-start; }
 
     .fit11-main-action-btns { width: 100%; padding: 0 !important; border-left: none; border-right: none; border-radius: 0; margin: 0 !important; background: transparent; }
-    .fit11-offers-wrapper { order: 1; margin: 8px 0 !important; }
-    .fit11-app-wrapper { order: 2; width: 100%; padding: 0 !important; margin: 0 !important; overflow: visible; }
+    .fit11-offers-wrapper { order: unset !important; margin: 8px 0 !important; }
+    .fit11-app-wrapper { order: unset; width: 100%; padding: 0 !important; margin: 0 !important; overflow: visible; }
 
     #fit11-form-cart-main { width: 100%; margin: 0; padding: 0; }
     .fit11-main-action-btns .fit11-btn-cart { display: flex !important; width: 100% !important; height: 52px !important; margin: 16px 0 0 0 !important; }

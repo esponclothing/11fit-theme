@@ -1,19 +1,134 @@
+<style>
+  .fit11-faq-section,
+  .fit11-faq-section * {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    box-sizing: border-box;
+  }
+  .fit11-faq-section {
+    padding: 44px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .fit11-faq-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .fit11-faq-badge {
+    display: inline-block;
+    background: #eef6f0;
+    color: #1a202c;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid #d1fae5;
+    margin-bottom: 12px;
+  }
+  .fit11-faq-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  .fit11-faq-subtitle {
+    color: #718096;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.5;
+  }
+  .fit11-faq-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .fit11-faq-item {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px 20px;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  }
+  .fit11-faq-item:hover {
+    border-color: #cbd5e1;
+  }
+  .fit11-faq-item[open] {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  }
+  .fit11-faq-summary {
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 600;
+    font-size: 15px;
+    color: #1a202c;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+    user-select: none;
+  }
+  .fit11-faq-summary::-webkit-details-marker {
+    display: none;
+  }
+  .fit11-faq-icon {
+    font-size: 20px;
+    font-weight: 400;
+    color: #b89356;
+    margin-left: 12px;
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  .fit11-faq-item[open] .fit11-faq-icon {
+    transform: rotate(45deg);
+  }
+  .fit11-faq-answer {
+    font-family: 'Outfit', sans-serif !important;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #f1f5f9;
+    color: #4a5568;
+    font-size: 14px;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+  }
+  @media (max-width: 767px) {
+    .fit11-faq-section {
+      padding: 30px 16px;
+    }
+    .fit11-faq-title {
+      font-size: 22px;
+    }
+    .fit11-faq-summary {
+      font-size: 14px;
+    }
+    .fit11-faq-answer {
+      font-size: 13px;
+    }
+  }
+</style>
 
-<div class="fit11-faq-section page-width" style="padding: 40px 0; max-width: 900px; margin: 0 auto;">
-  <div style="text-align: center; margin-bottom: 30px;">
-    <span style="background: #f1f5f9; color: #0f172a; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 4px 12px; border-radius: 20px;">Frequently Asked Questions</span>
-    <h2 style="font-size: 26px; font-weight: 800; color: #0f172a; margin: 12px 0 6px;">{{ section.settings.heading | default: "Got Questions? We've Got Answers." }}</h2>
-    <p style="color: #64748b; font-size: 14px; margin: 0;">Everything you need to know about 11FIT fabrics, sizing, shipping, and returns.</p>
+<div class="fit11-faq-section page-width">
+  <div class="fit11-faq-header">
+    <span class="fit11-faq-badge">Frequently Asked Questions</span>
+    <h2 class="fit11-faq-title">{{ section.settings.heading | default: "Frequently Asked Questions" }}</h2>
+    <p class="fit11-faq-subtitle">Everything you need to know about 11FIT fabrics, sizing, shipping, and returns.</p>
   </div>
 
-  <div class="fit11-faq-accordion" style="display: flex; flex-direction: column; gap: 12px;">
+  <div class="fit11-faq-accordion">
     {% for block in section.blocks %}
-      <details class="fit11-faq-item" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; transition: border-color 0.2s;" {{ block.shopify_attributes }}>
-        <summary style="font-weight: 700; font-size: 15px; color: #0f172a; cursor: pointer; display: flex; justify-content: space-between; align-items: center; list-style: none;">
+      <details class="fit11-faq-item" {{ block.shopify_attributes }}>
+        <summary class="fit11-faq-summary">
           <span>{{ block.settings.question }}</span>
-          <span style="font-size: 18px; color: #c5a059; font-weight: 400; margin-left: 10px;">+</span>
+          <span class="fit11-faq-icon">+</span>
         </summary>
-        <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #f1f5f9; color: #475569; font-size: 14px; line-height: 1.6;">
+        <div class="fit11-faq-answer">
           {{ block.settings.answer }}
         </div>
       </details>
@@ -39,15 +154,6 @@
   ]
 }
 </script>
-
-<style>
-  .fit11-faq-item[open] summary span:last-child {
-    transform: rotate(45deg);
-  }
-  .fit11-faq-item summary::-webkit-details-marker {
-    display: none;
-  }
-</style>
 
 {% schema %}
 {
