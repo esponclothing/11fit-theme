@@ -1,3 +1,20 @@
+<!-- 11FIT-blog-font -->
+<style>
+.main-blog,
+.main-blog *,
+.blog-articles .card__heading,
+.blog-articles .card__heading *,
+.blog-articles .article-card__excerpt,
+.blog-articles .article-card__info,
+.title--primary {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+.main-blog .title--primary {
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  color: #0f172a !important;
+}
+</style>
 {{ 'component-article-card.css' | asset_url | stylesheet_tag }}
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'section-main-blog.css' | asset_url | stylesheet_tag }}
