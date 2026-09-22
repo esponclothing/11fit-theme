@@ -9,6 +9,11 @@
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    {%- if template == 'index' -%}
+      {% comment %} Preload Mobile and Desktop Hero LCP Banner for Core Web Vitals {% endcomment %}
+      <link rel="preload" as="image" href="//11fit.in/cdn/shop/files/WhatsApp_Image_2026-05-28_at_5.33.02_PM_1_800x.jpg?v=1779969831" media="(max-width: 768px)" fetchpriority="high">
+      <link rel="preload" as="image" href="//11fit.in/cdn/shop/files/ChatGPT_Image_May_22_2026_11_33_53_AM_1920x.png?v=1779429869" media="(min-width: 769px)" fetchpriority="high">
+    {%- endif -%}
   
     <script>
       (function() {
@@ -36,7 +41,12 @@
           }
         }
         wrapTrekkieTrack();
-        setInterval(wrapTrekkieTrack, 250);
+        var _trekkieCount = 0;
+        var _trekkieTimer = setInterval(function() {
+          wrapTrekkieTrack();
+          _trekkieCount++;
+          if (_trekkieCount > 10) clearInterval(_trekkieTimer);
+        }, 250);
       })();
     </script>
     <!-- Meta Pixel Code for 11FIT (Pixel ID: 1065954715920985) -->
