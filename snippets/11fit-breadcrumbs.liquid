@@ -2,7 +2,7 @@
   11FIT Schema Breadcrumb Navigation
   Generates Google Rich Snippets Breadcrumb trail with microdata
 {% endcomment %}
-{%- unless template == 'index' or template == 'cart' or template == '404' -%}
+{%- unless template == 'index' or template == 'cart' or template == '404' or template contains 'product' -%}
   <nav class="fit11-breadcrumbs page-width" aria-label="breadcrumbs" itemscope itemtype="https://schema.org/BreadcrumbList">
     <ol class="fit11-breadcrumbs-list" style="display: flex; flex-wrap: wrap; align-items: center; list-style: none; padding: 12px 0; margin: 0; font-size: 13px; color: #64748b;">
       <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="display: inline-flex; align-items: center;">
