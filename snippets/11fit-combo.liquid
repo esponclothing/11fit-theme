@@ -9,7 +9,7 @@
     <div style="background: #198754; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase;">Deal Applied</div>
   </div>
   <div class="fit11-offer-desc" style="font-size: 13px; color: #1a202c; font-weight: 500; margin-top: 4px;">
-    {{ combo_count }} {{ product.title | escape }} at <span style="color: #198754; font-weight: 700;">Rs.{{ price_per_item | round }} Each</span>
+    {{ combo_count }} {{ product.title | split: ' - ' | first | escape }} at <span style="color: #198754; font-weight: 700;">Rs.{{ price_per_item | round }} Each</span>
   </div>
   <div class="fit11-offer-desc" style="font-weight: 600; color: #d9480f; margin-top: 6px; font-size: 13px;">
     <i class="ti ti-flame"></i> You Saved ₹{{ total_saved | round }} Instantly!
