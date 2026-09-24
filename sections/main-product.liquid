@@ -547,8 +547,7 @@
 {% endif %}
 
       <div class="fit11-header-group">
-        <h1 class="fit11-title">
-          {{ product.title }}
+        <h1 class="fit11-title">{{ product.title | split: ' - ' | first }}
           {% if combo_active %} - Pack of {{ combo_count }}{% endif %}
         </h1>
 
