@@ -185,18 +185,40 @@
                       {% break %}
                     {% endif %}
                   {% endfor %}
-                  {% comment %} Find matching image for this color {% endcomment %}
-                  {% assign color_lower_img = value | downcase | replace: ' ', '' | replace: '-', '' %}
+                                    {% comment %} Find matching image for this color {% endcomment %}
+                  {% assign val_down = value | downcase %}
                   {% assign opt_img_src = '' %}
-                  {% for img in product.images %}
-                    {% assign img_src_lower2 = img.src | downcase %}
-                    {% assign img_alt_lower2 = img.alt | downcase | default: '' %}
-                    {% if img_src_lower2 contains color_lower_img or img_alt_lower2 contains color_lower_img %}
-                      {% if opt_img_src == '' %}
-                        {% assign opt_img_src = img.src %}
-                      {% endif %}
+                  {% for variant in product.variants %}
+                    {% if variant.options contains value and variant.featured_image %}
+                      {% assign opt_img_src = variant.featured_image.src %}
+                      {% break %}
                     {% endif %}
                   {% endfor %}
+                  {% if opt_img_src == '' %}
+                    {% for img in product.images %}
+                      {% assign isrc = img.src | downcase %}
+                      {% assign ialt = img.alt | downcase | default: '' %}
+                      {% if val_down contains 'black' and isrc contains 'blk' or isrc contains 'black' or ialt contains 'black' %}
+                        {% assign opt_img_src = img.src %}{% break %}
+                      {% elsif val_down contains 'light grey' and isrc contains 'l_grey' or isrc contains 'light' or ialt contains 'light' %}
+                        {% assign opt_img_src = img.src %}{% break %}
+                      {% elsif val_down contains 'dark grey' or val_down contains 'grey' or val_down contains 'gray' %}
+                        {% if isrc contains 'd-grey' or isrc contains 'dgrey' or isrc contains 'grey' or isrc contains 'gray' %}
+                          {% unless isrc contains 'l_grey' or isrc contains 'light' %}
+                            {% assign opt_img_src = img.src %}{% break %}
+                          {% endunless %}
+                        {% endif %}
+                      {% elsif val_down contains 'navy' or val_down contains 'blue' %}
+                        {% if isrc contains 'navy' or isrc contains 'blue' or ialt contains 'navy' %}
+                          {% assign opt_img_src = img.src %}{% break %}
+                        {% endif %}
+                      {% elsif val_down contains 'olive' or val_down contains 'green' %}
+                        {% if isrc contains 'olive' or isrc contains 'olv' or isrc contains 'green' or ialt contains 'olive' %}
+                          {% assign opt_img_src = img.src %}{% break %}
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
                   {% if opt_img_src == '' and product.images.first %}
                     {% assign opt_img_src = product.images.first.src %}
                   {% endif %}
