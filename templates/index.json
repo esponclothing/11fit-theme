@@ -31,8 +31,8 @@
         "slide_AAXJXD": {
           "type": "slide",
           "settings": {
-            "image_mobile": "shopify://shop_images/WhatsApp_Image_2026-05-28_at_5.33.02_PM_1.jpg",
-            "image_desktop": "shopify://shop_images/ChatGPT_Image_May_22_2026_11_33_53_AM.png",
+            "image_mobile": "shopify:\/\/shop_images\/WhatsApp_Image_2026-05-28_at_5.33.02_PM_1.jpg",
+            "image_desktop": "shopify:\/\/shop_images\/ChatGPT_Image_May_22_2026_11_33_53_AM.png",
             "link": "",
             "asset_mobile": "",
             "asset_desktop": ""
@@ -41,7 +41,7 @@
         "slide_AI_1": {
           "type": "slide",
           "settings": {
-            "link": "shopify://collections/all",
+            "link": "shopify:\/\/collections\/all",
             "asset_mobile": "hero_concept1_mob.png",
             "asset_desktop": "hero_concept1_pc.png"
           }
@@ -49,8 +49,8 @@
         "slide_GqHUEb": {
           "type": "slide",
           "settings": {
-            "image_mobile": "shopify://shop_images/WhatsApp_Image_2026-05-28_at_5.27.14_PM.jpg",
-            "image_desktop": "shopify://shop_images/WhatsApp_Image_2026-05-28_at_5.33.02_PM_1.jpg",
+            "image_mobile": "shopify:\/\/shop_images\/WhatsApp_Image_2026-05-28_at_5.27.14_PM.jpg",
+            "image_desktop": "shopify:\/\/shop_images\/WhatsApp_Image_2026-05-28_at_5.33.02_PM_1.jpg",
             "link": "",
             "asset_mobile": "",
             "asset_desktop": ""
@@ -59,7 +59,7 @@
         "slide_AI_2": {
           "type": "slide",
           "settings": {
-            "link": "shopify://collections/all",
+            "link": "shopify:\/\/collections\/all",
             "asset_mobile": "hero_concept2_mob.png",
             "asset_desktop": "hero_concept2_pc.png"
           }
@@ -111,41 +111,41 @@
         "category_cLGiAM": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/Black_92f0cb67-4e10-4821-a2cc-d771566ac2cd.jpg",
+            "image": "shopify:\/\/shop_images\/Black_92f0cb67-4e10-4821-a2cc-d771566ac2cd.jpg",
             "title": "Shorts",
-            "link": "shopify://collections/shorts"
+            "link": "shopify:\/\/collections\/shorts"
           }
         },
         "category_k7wwaT": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/red_02b1dcc5-a0fc-4f80-a045-5d91a2f2e3c7.jpg",
+            "image": "shopify:\/\/shop_images\/red_02b1dcc5-a0fc-4f80-a045-5d91a2f2e3c7.jpg",
             "title": "T-shirts",
-            "link": "shopify://collections/t-shirts"
+            "link": "shopify:\/\/collections\/t-shirts"
           }
         },
         "category_QgxK7J": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/Untitleddesign_50.jpg",
+            "image": "shopify:\/\/shop_images\/Untitleddesign_50.jpg",
             "title": "Trackpants",
-            "link": "shopify://collections/trackpants"
+            "link": "shopify:\/\/collections\/trackpants"
           }
         },
         "category_D6qQPw": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/Untitleddesign_48.jpg",
+            "image": "shopify:\/\/shop_images\/Untitleddesign_48.jpg",
             "title": "Swimwear",
-            "link": "shopify://collections/swimwear"
+            "link": "shopify:\/\/collections\/swimwear"
           }
         },
         "category_girls_tops": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/Front_1_c_2_2c664032-63a2-431d-9f6e-cd61d8793f3c.jpg",
+            "image": "shopify:\/\/shop_images\/Front_1_c_2_2c664032-63a2-431d-9f6e-cd61d8793f3c.jpg",
             "title": "Girls Tops",
-            "link": "shopify://collections/girls-trending-tops"
+            "link": "shopify:\/\/collections\/girls-trending-tops"
           }
         }
       },
@@ -255,37 +255,37 @@
         "grid_item_aX38br": {
           "type": "grid_item",
           "settings": {
-            "image": "shopify://shop_images/Untitleddesign_50.jpg",
+            "image": "shopify:\/\/shop_images\/Untitleddesign_50.jpg",
             "label": "Track Pants",
             "subtext": "Explore",
-            "link": "shopify://collections/trackpants"
+            "link": "shopify:\/\/collections\/trackpants"
           }
         },
         "grid_item_igBG8Q": {
           "type": "grid_item",
           "settings": {
-            "image": "shopify://shop_images/orange_72ca7a05-8898-48ab-9fa6-7c25e6f7b4ed.jpg",
+            "image": "shopify:\/\/shop_images\/orange_72ca7a05-8898-48ab-9fa6-7c25e6f7b4ed.jpg",
             "label": "T Shirts",
             "subtext": "Explore",
-            "link": "shopify://collections/t-shirts"
+            "link": "shopify:\/\/collections\/t-shirts"
           }
         },
         "grid_item_cJYDXY": {
           "type": "grid_item",
           "settings": {
-            "image": "shopify://shop_images/Black_92f0cb67-4e10-4821-a2cc-d771566ac2cd.jpg",
+            "image": "shopify:\/\/shop_images\/Black_92f0cb67-4e10-4821-a2cc-d771566ac2cd.jpg",
             "label": "Shorts",
             "subtext": "Explore",
-            "link": "shopify://collections/shorts"
+            "link": "shopify:\/\/collections\/shorts"
           }
         },
         "grid_item_gxHi3c": {
           "type": "grid_item",
           "settings": {
-            "image": "shopify://shop_images/Joggers.png",
+            "image": "shopify:\/\/shop_images\/Joggers.png",
             "label": "Joggers",
             "subtext": "Explore",
-            "link": "shopify://collections/joggers"
+            "link": "shopify:\/\/collections\/joggers"
           }
         }
       },
@@ -307,7 +307,7 @@
         "title": "Trending in Accessories",
         "view_all_text": "Discover More",
         "view_all_link": "",
-        "image_ratio": "3 / 4"
+        "image_ratio": "3 \/ 4"
       }
     },
     "11fit_flash_sale_L4kxCW": {
@@ -387,15 +387,15 @@
         "promo_banner_kq3Xnb": {
           "type": "promo_banner",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_9_2026_03_02_37_PM.png",
-            "link": "shopify://collections"
+            "image": "shopify:\/\/shop_images\/ChatGPT_Image_Aug_9_2026_03_02_37_PM.png",
+            "link": "shopify:\/\/collections"
           }
         },
         "promo_banner_7Hra3w": {
           "type": "promo_banner",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_9_2026_02_53_19_PM.png",
-            "link": "shopify://products/11-fit-air-flex-4-way-lycra-active-shorts"
+            "image": "shopify:\/\/shop_images\/ChatGPT_Image_Aug_9_2026_02_53_19_PM.png",
+            "link": "shopify:\/\/products\/11-fit-air-flex-4-way-lycra-active-shorts"
           }
         }
       },
@@ -480,7 +480,7 @@
         "review_QERBAr": {
           "type": "review",
           "settings": {
-            "review_image": "shopify://shop_images/ChatGPT_Image_Jun_1_2026_01_35_11_PM.png",
+            "review_image": "shopify:\/\/shop_images\/ChatGPT_Image_Jun_1_2026_01_35_11_PM.png",
             "star_rating": 5,
             "review_text": "The compression on these track pants is unmatched. I've tried every brand, but 11FIT holds up through the toughest sessions.",
             "author_name": "Rahul S.",
@@ -490,7 +490,7 @@
         "review_fGFNWC": {
           "type": "review",
           "settings": {
-            "review_image": "shopify://shop_images/ChatGPT_Image_Jun_1_2026_01_39_49_PM.png",
+            "review_image": "shopify:\/\/shop_images\/ChatGPT_Image_Jun_1_2026_01_39_49_PM.png",
             "star_rating": 5,
             "review_text": "Finally, shorts that actually fit perfectly and support high-impact cardio. The lycra fabric is so soft yet durable. Worth every rupee.",
             "author_name": "Priya M.",
@@ -500,7 +500,7 @@
         "review_yz4XEb": {
           "type": "review",
           "settings": {
-            "review_image": "shopify://shop_images/3_3be7e8fd-34b9-4355-bbec-105ef47b68e7.jpg",
+            "review_image": "shopify:\/\/shop_images\/3_3be7e8fd-34b9-4355-bbec-105ef47b68e7.jpg",
             "star_rating": 5,
             "review_text": "I wore the Air Flex track pants for my morning run and had zero discomfort. Absolutely premium quality gear for this price.",
             "author_name": "Arjun T.",
@@ -510,7 +510,7 @@
         "review_mQabat": {
           "type": "review",
           "settings": {
-            "review_image": "shopify://shop_images/3_e8604dc8-aa30-4634-8ed0-704e6b7d6b76.jpg",
+            "review_image": "shopify:\/\/shop_images\/3_e8604dc8-aa30-4634-8ed0-704e6b7d6b76.jpg",
             "star_rating": 5,
             "review_text": "The aesthetics are on point. I wear the joggers to the gym and out for chai. Fits perfectly and looks great.",
             "author_name": "Sneha D.",
@@ -520,7 +520,7 @@
         "review_Cg4UEG": {
           "type": "review",
           "settings": {
-            "review_image": "shopify://shop_images/Untitleddesign_50.jpg",
+            "review_image": "shopify:\/\/shop_images\/Untitleddesign_50.jpg",
             "star_rating": 5,
             "review_text": "Fast delivery and the packaging was premium. You can tell 11FIT cares about every detail. Ordered again within a week.",
             "author_name": "Vikram K.",
@@ -586,7 +586,7 @@
           "type": "faq_item",
           "settings": {
             "question": "What payment methods do you accept?",
-            "answer": "We offer a variety of secure payment options. You can pay via Cash on Delivery (COD), or use prepaid options including UPI, GPay, Paytm, PhonePe, and Credit/Debit Cards."
+            "answer": "We offer a variety of secure payment options. You can pay via Cash on Delivery (COD), or use prepaid options including UPI, GPay, Paytm, PhonePe, and Credit\/Debit Cards."
           }
         },
         "faq_item_EqCqhz": {
@@ -616,7 +616,7 @@
         "question_font_size": 13,
         "answer_font": "Poppins",
         "answer_font_size": 12,
-        "faq_image": "shopify://shop_images/ChatGPT_Image_Jun_1_2026_05_12_52_PM.png",
+        "faq_image": "shopify:\/\/shop_images\/ChatGPT_Image_Jun_1_2026_05_12_52_PM.png",
         "image_brightness": 65,
         "overlay_heading": "Premium",
         "overlay_subtext": "Engineered For Athletes"
