@@ -1498,7 +1498,10 @@
       const items = cart.items.map(i => ({ variant_id: i.variant_id, quantity: i.quantity }));
       
       let effectiveDiscountCode = discountCode;
-      if (!effectiveDiscountCode && cart.items && cart.items.length > 0) {
+      let effectiveCartDiscount = cart.total_discount || 0;
+
+      // Only auto-detect combo discount if no manual code and no cart discount already in cart
+      if (!effectiveDiscountCode && effectiveCartDiscount === 0 && cart.items && cart.items.length > 0) {
         const prodCounts = {};
         cart.items.forEach(it => {
           const pid = it.product_id || (it.properties && it.properties._combo_product_id);
@@ -1521,7 +1524,7 @@
           merchant_key: MERCHANT_KEY, 
           items, 
           discount_code: effectiveDiscountCode,
-          cart_discount: cart.total_discount || 0,
+          cart_discount: effectiveDiscountCode ? 0 : effectiveCartDiscount,
           phone: waPhone || null,
           device_id: localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id') || null,
           raw_cart: cart,
@@ -1535,28 +1538,30 @@
       waInvoiceUrl = data.invoice_url;
       waAppliedDiscountCode = discountCode;
       
-      document.getElementById('wa-subtotal').innerText = `₹${parseFloat(data.subtotal).toFixed(2)}`;
-      document.getElementById('wa-total').innerText = `₹${parseFloat(data.total_price).toFixed(2)}`;
-      document.getElementById('wa-total').setAttribute('data-base-total', parseFloat(data.total_price).toFixed(2));
-
-      document.getElementById('wa-subtotal').innerText = '₹' + parseFloat(data.subtotal).toFixed(2);
-      document.getElementById('wa-total').innerText = '₹' + parseFloat(data.total_price).toFixed(2);
-      document.getElementById('wa-total').setAttribute('data-base-total', parseFloat(data.total_price).toFixed(2));
+      const discVal = (data.discount_amount && parseFloat(data.discount_amount) > 0) ? parseFloat(data.discount_amount) : 0;
+      const originalMrp = cart.original_total_price ? (cart.original_total_price / 100) : (parseFloat(data.total_price) + discVal);
+      
+      const subEl = document.getElementById('wa-subtotal');
+      const totEl = document.getElementById('wa-total');
+      if (subEl) subEl.innerText = `₹${originalMrp.toFixed(2)}`;
+      if (totEl) {
+        totEl.innerText = `₹${parseFloat(data.total_price).toFixed(2)}`;
+        totEl.setAttribute('data-base-total', parseFloat(data.total_price).toFixed(2));
+      }
       
       const discEl = document.getElementById('wa-discount-amt');
       const yayEl = document.getElementById('wa-yay-saving');
       const yayAmt = document.getElementById('wa-yay-amt');
       
-      if (data.discount_amount && parseFloat(data.discount_amount) > 0) {
-        if(discEl) discEl.innerText = '-₹' + parseFloat(data.discount_amount).toFixed(2);
-        if(yayEl) yayEl.style.display = 'flex';
-        if(yayAmt) {
-          let discVal = parseFloat(data.discount_amount);
+      if (discVal > 0) {
+        if (discEl) discEl.innerText = '-₹' + discVal.toFixed(2);
+        if (yayEl) yayEl.style.display = 'flex';
+        if (yayAmt) {
           yayAmt.innerText = '₹' + (Number.isInteger(discVal) ? discVal.toString() : discVal.toFixed(2));
         }
       } else {
-        if(discEl) discEl.innerText = '-₹0.00';
-        if(yayEl) yayEl.style.display = 'none';
+        if (discEl) discEl.innerText = '-₹0.00';
+        if (yayEl) yayEl.style.display = 'none';
       }
       
       waPaymentSettings = data.payment_settings || {};
