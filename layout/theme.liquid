@@ -3,22 +3,12 @@
   <head>
 
     <!-- Core Web Vitals SEO Speed Engine -->
-    <!-- Preload LCP Hero Banner for Sub-2s Core Web Vitals -->
-    {% if template == 'index' or request.page_type == 'index' %}
-      <link rel="preload" as="image" href="//11fit.in/cdn/shop/files/WhatsApp_Image_2026-05-28_at_5.33.02_PM_1.jpg?format=webp&v=1779969831&width=750" media="(max-width: 768px)" fetchpriority="high">
-      <link rel="preload" as="image" href="//11fit.in/cdn/shop/files/ChatGPT_Image_May_22_2026_11_33_53_AM.png?format=webp&v=1779429869&width=1400" media="(min-width: 769px)" fetchpriority="high">
-    {% endif %}
     <link rel="dns-prefetch" href="//cdn.shopify.com">
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    {%- if template == 'index' -%}
-      {% comment %} Preload Mobile and Desktop Hero LCP Banner for Core Web Vitals {% endcomment %}
-      <link rel="preload" as="image" href="//11fit.in/cdn/shop/files/WhatsApp_Image_2026-05-28_at_5.33.02_PM_1_800x.jpg?v=1779969831" media="(max-width: 768px)" fetchpriority="high">
-      <link rel="preload" as="image" href="//11fit.in/cdn/shop/files/ChatGPT_Image_May_22_2026_11_33_53_AM_1920x.png?v=1779429869" media="(min-width: 769px)" fetchpriority="high">
-    {%- endif -%}
   
     <script>
       (function() {
@@ -46,12 +36,7 @@
           }
         }
         wrapTrekkieTrack();
-        var _trekkieCount = 0;
-        var _trekkieTimer = setInterval(function() {
-          wrapTrekkieTrack();
-          _trekkieCount++;
-          if (_trekkieCount > 10) clearInterval(_trekkieTimer);
-        }, 250);
+        setInterval(wrapTrekkieTrack, 250);
       })();
     </script>
     <!-- Meta Pixel Code for 11FIT (Pixel ID: 1065954715920985) -->
@@ -98,11 +83,19 @@
     </noscript>
 
     <title>
-      {{ page_title }}
-      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
-      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+      {%- if request.page_type == 'index' -%}
+        11FIT India – Premium Men's Gym Shorts, Track Pants & Graphic Oversized Tees
+      {%- else -%}
+        {{ page_title }}
+        {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+        {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+        {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+      {%- endif -%}
     </title>
+
+    {%- if request.page_type == 'index' and page_description == blank -%}
+      <meta name="description" content="Shop 11FIT India for premium men's active gym shorts with zipper pockets, 4-way lycra track pants, and heavyweight oversized streetwear t-shirts. Best prices, combos & fast pan-India delivery.">
+    {%- endif -%}
 
     {% if page_description %}
       <meta name="description" content="{{ page_description | escape }}">
@@ -649,7 +642,7 @@
         </svg>
         
         <div class="preloader-text-wrap">
-          <h1 class="preloader-title">11 Fit</h1>
+          <span class="preloader-title">11 Fit</span>
           <p class="preloader-subtitle">Elite Performance</p>
         </div>
       </div>
