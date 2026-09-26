@@ -2642,7 +2642,7 @@ function renderPaymentMethods() {
                 }))
               });
               console.log('✅ [Google Tag] Purchase fired for order #' + orderNum);
-            } catch(gtErr) { console.error('Google Tag Purchase Tracking Error:', gtErr); });
+            } catch(gtErr) { console.error('Google Tag Purchase Tracking Error:', gtErr); }
             // Beacon fallback
             try {
               const beaconImg = document.createElement('img');
