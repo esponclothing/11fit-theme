@@ -1450,13 +1450,31 @@
       }
 
       const items = cart.items.map(i => ({ variant_id: i.variant_id, quantity: i.quantity }));
+      
+      let effectiveDiscountCode = discountCode;
+      if (!effectiveDiscountCode && cart.items && cart.items.length > 0) {
+        const prodCounts = {};
+        cart.items.forEach(it => {
+          const pid = it.product_id || (it.properties && it.properties._combo_product_id);
+          if (pid) {
+            prodCounts[pid] = (prodCounts[pid] || 0) + (it.quantity || 1);
+          }
+        });
+        for (const pid in prodCounts) {
+          if (prodCounts[pid] >= 2) {
+            effectiveDiscountCode = '11FIT-COMBO-' + pid + '-' + prodCounts[pid];
+            break;
+          }
+        }
+      }
+
       const res = await fetch(`${WA_API_BASE}/checkout/calculate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           merchant_key: MERCHANT_KEY, 
           items, 
-          discount_code: discountCode,
+          discount_code: effectiveDiscountCode,
           cart_discount: cart.total_discount || 0,
           phone: waPhone || null,
           device_id: localStorage.getItem('fit11_device_id') || localStorage.getItem('wa_device_id') || null,
