@@ -1553,13 +1553,16 @@
       const yayEl = document.getElementById('wa-yay-saving');
       const yayAmt = document.getElementById('wa-yay-amt');
       
+      const discRow = document.getElementById('wa-discount-row');
       if (discVal > 0) {
+        if (discRow) discRow.style.display = 'flex';
         if (discEl) discEl.innerText = '-₹' + discVal.toFixed(2);
         if (yayEl) yayEl.style.display = 'flex';
         if (yayAmt) {
           yayAmt.innerText = '₹' + (Number.isInteger(discVal) ? discVal.toString() : discVal.toFixed(2));
         }
       } else {
+        if (discRow) discRow.style.display = 'none';
         if (discEl) discEl.innerText = '-₹0.00';
         if (yayEl) yayEl.style.display = 'none';
       }
