@@ -2579,11 +2579,11 @@ function renderPaymentMethods() {
       const sc = document.getElementById('wa-success-screen');
       if (sc) sc.style.display = 'flex';
       
-      // Update URL to /thank_you seamlessly without page reload for Google Ads & Analytics tracking
+      // Update URL for Google Ads & Analytics tracking (use valid URL to avoid 404 on refresh)
       try {
         const urlOrderNum = String(data && data.order_id || '').replace(/^#/, '');
         if (urlOrderNum) {
-          window.history.pushState({ order_id: urlOrderNum }, 'Thank You', '/thank_you?order_id=' + urlOrderNum);
+          window.history.pushState({ order_id: urlOrderNum }, 'Thank You', '/?order_confirmed=1&order_id=' + urlOrderNum);
         }
       } catch(e) {}
 
