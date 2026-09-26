@@ -1,6 +1,37 @@
   const WA_API_BASE = 'https://checkout.11fit.in/api';
   const MERCHANT_KEY = 'sk_live_11fit_106b31bb8dd7a7';
-  const META_PIXEL_ID = '1065954715920985';
+    const META_PIXEL_ID = '1065954715920985';
+  const GOOGLE_TAG_ID = 'GT-PHWGT7FX';
+
+  function waEnsureGoogleTag() {
+    try {
+      if (!window.dataLayer) window.dataLayer = [];
+      if (!window.gtag) {
+        window.gtag = function() { window.dataLayer.push(arguments); };
+      }
+    } catch(e) {
+      console.error('Google Tag init error:', e);
+    }
+  }
+
+  function waFireGoogleTag(eventName, eventParams = {}) {
+    try {
+      waEnsureGoogleTag();
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', eventName, eventParams);
+        console.log('✅ [Google Tag] Fired ' + eventName + ' via gtag:', eventParams);
+      }
+      if (window.dataLayer && Array.isArray(window.dataLayer)) {
+        window.dataLayer.push({
+          event: eventName,
+          ...eventParams
+        });
+        console.log('✅ [Google Tag] Pushed ' + eventName + ' to dataLayer:', eventParams);
+      }
+    } catch(e) {
+      console.warn('Google Tag event fire error:', e);
+    }
+  }
 
   function waEnsureMetaPixel(userData = {}) {
     try {
@@ -359,13 +390,28 @@
       waEnsureMetaPixel();
       const totEl = document.getElementById('wa-total');
       const baseTot = totEl ? (parseFloat(totEl.getAttribute('data-base-total') || totEl.innerText.replace(/[^0-9.]/g, '')) || 0) : 0;
-      if (window.fbq) {
+            if (window.fbq) {
         window.fbq('trackSingle', META_PIXEL_ID, 'InitiateCheckout', {
           value: baseTot,
           currency: 'INR',
           content_type: 'product'
         });
       }
+      // Track Google Tag begin_checkout
+      try {
+        const cartItems = (window._waLastCart && window._waLastCart.items) ? window._waLastCart.items : [];
+        waFireGoogleTag('begin_checkout', {
+          currency: 'INR',
+          value: baseTot,
+          items: cartItems.map(item => ({
+            item_id: String(item.variant_id || item.id),
+            item_name: item.title,
+            item_brand: '11FIT',
+            price: item.price ? (item.price / 100) : undefined,
+            quantity: item.quantity || 1
+          }))
+        });
+      } catch(gtErr) {}
     } catch(e) {}
 
     // Auto-fetch saved or cached phone & email from browser
@@ -2562,7 +2608,41 @@ function renderPaymentMethods() {
               purchaseParams.contents = cartItems.map(item => ({ id: String(item.variant_id || item.id), quantity: item.quantity || 1, item_price: item.price ? (item.price / 100) : undefined }));
             }
             const eventId = 'order_' + orderNum;
-            if (window.fbq) window.fbq('trackSingle', META_PIXEL_ID, 'Purchase', purchaseParams, { eventID: eventId });
+                        if (window.fbq) window.fbq('trackSingle', META_PIXEL_ID, 'Purchase', purchaseParams, { eventID: eventId });
+            
+            // Fire Google Tag Purchase Event with Enhanced Conversions
+            try {
+              if (typeof window.gtag === 'function') {
+                window.gtag('set', 'user_data', {
+                  email: waEmail || undefined,
+                  phone_number: cleanPhone ? ('+91' + cleanPhone.slice(-10)) : undefined,
+                  address: addr ? {
+                    first_name: addr.first_name,
+                    last_name: addr.last_name,
+                    postal_code: String(addr.zip || ''),
+                    city: addr.city,
+                    country: 'IN'
+                  } : undefined
+                });
+              }
+
+              waFireGoogleTag('purchase', {
+                transaction_id: String(orderNum),
+                value: Number(finalPrice.toFixed(2)),
+                tax: Number(((finalPrice * 0.05) / 1.05).toFixed(2)),
+                shipping: 0,
+                currency: 'INR',
+                coupon: waAppliedDiscountCode || undefined,
+                items: cartItems.map(item => ({
+                  item_id: String(item.variant_id || item.id),
+                  item_name: item.title,
+                  item_brand: '11FIT',
+                  price: item.price ? Number((item.price / 100).toFixed(2)) : undefined,
+                  quantity: item.quantity || 1
+                }))
+              });
+              console.log('✅ [Google Tag] Purchase fired for order #' + orderNum);
+            } catch(gtErr) { console.error('Google Tag Purchase Tracking Error:', gtErr); });
             // Beacon fallback
             try {
               const beaconImg = document.createElement('img');
