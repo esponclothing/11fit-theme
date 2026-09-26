@@ -2570,6 +2570,14 @@ function renderPaymentMethods() {
       }
       const sc = document.getElementById('wa-success-screen');
       if (sc) sc.style.display = 'flex';
+      
+      // Update URL to /thank_you seamlessly without page reload for Google Ads & Analytics tracking
+      try {
+        const urlOrderNum = String(data && data.order_id || '').replace(/^#/, '');
+        if (urlOrderNum) {
+          window.history.pushState({ order_id: urlOrderNum }, 'Thank You', '/thank_you?order_id=' + urlOrderNum);
+        }
+      } catch(e) {}
 
       // Fire Meta Pixel Purchase Event
       try {
