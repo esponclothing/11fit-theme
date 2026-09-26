@@ -1538,28 +1538,30 @@
       waInvoiceUrl = data.invoice_url;
       waAppliedDiscountCode = discountCode;
       
-      document.getElementById('wa-subtotal').innerText = `₹${parseFloat(data.subtotal).toFixed(2)}`;
-      document.getElementById('wa-total').innerText = `₹${parseFloat(data.total_price).toFixed(2)}`;
-      document.getElementById('wa-total').setAttribute('data-base-total', parseFloat(data.total_price).toFixed(2));
-
-      document.getElementById('wa-subtotal').innerText = '₹' + parseFloat(data.subtotal).toFixed(2);
-      document.getElementById('wa-total').innerText = '₹' + parseFloat(data.total_price).toFixed(2);
-      document.getElementById('wa-total').setAttribute('data-base-total', parseFloat(data.total_price).toFixed(2));
+      const discVal = (data.discount_amount && parseFloat(data.discount_amount) > 0) ? parseFloat(data.discount_amount) : 0;
+      const originalMrp = cart.original_total_price ? (cart.original_total_price / 100) : (parseFloat(data.total_price) + discVal);
+      
+      const subEl = document.getElementById('wa-subtotal');
+      const totEl = document.getElementById('wa-total');
+      if (subEl) subEl.innerText = `₹${originalMrp.toFixed(2)}`;
+      if (totEl) {
+        totEl.innerText = `₹${parseFloat(data.total_price).toFixed(2)}`;
+        totEl.setAttribute('data-base-total', parseFloat(data.total_price).toFixed(2));
+      }
       
       const discEl = document.getElementById('wa-discount-amt');
       const yayEl = document.getElementById('wa-yay-saving');
       const yayAmt = document.getElementById('wa-yay-amt');
       
-      if (data.discount_amount && parseFloat(data.discount_amount) > 0) {
-        if(discEl) discEl.innerText = '-₹' + parseFloat(data.discount_amount).toFixed(2);
-        if(yayEl) yayEl.style.display = 'flex';
-        if(yayAmt) {
-          let discVal = parseFloat(data.discount_amount);
+      if (discVal > 0) {
+        if (discEl) discEl.innerText = '-₹' + discVal.toFixed(2);
+        if (yayEl) yayEl.style.display = 'flex';
+        if (yayAmt) {
           yayAmt.innerText = '₹' + (Number.isInteger(discVal) ? discVal.toString() : discVal.toFixed(2));
         }
       } else {
-        if(discEl) discEl.innerText = '-₹0.00';
-        if(yayEl) yayEl.style.display = 'none';
+        if (discEl) discEl.innerText = '-₹0.00';
+        if (yayEl) yayEl.style.display = 'none';
       }
       
       waPaymentSettings = data.payment_settings || {};
