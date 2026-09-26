@@ -1,7 +1,7 @@
   const WA_API_BASE = 'https://checkout.11fit.in/api';
   const MERCHANT_KEY = 'sk_live_11fit_106b31bb8dd7a7';
     const META_PIXEL_ID = '1065954715920985';
-  const GOOGLE_TAG_ID = 'GT-PHWGT7FX';
+  const GOOGLE_TAG_ID = 'G-JKVFVNCWTN';
 
   function waEnsureGoogleTag() {
     try {
